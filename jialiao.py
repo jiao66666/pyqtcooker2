@@ -6,7 +6,7 @@ import sys
 class MainWindow:
     def __init__(self, root):
         self.root = root
-        self.root.title("控制面板")
+        self.root.title("极傲-炒菜机-加料电路控制面板")
         self.root.geometry("400x200")
         
         # 创建主框架
