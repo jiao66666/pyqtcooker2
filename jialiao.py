@@ -6,12 +6,12 @@ import sys
 class MainWindow:
     def __init__(self, root):
         self.root = root
-        self.root.title("极傲-炒菜机-加料电路控制面板")
+        self.root.title("极傲炒菜机-加料电路板Y24控制面板")
         self.root.geometry("400x200")
         
         # 创建主框架
-        main_frame = ttk.Frame(root, padding="10")
-        main_frame.pack(fill=tk.BOTH, expand=True)
+        main_frame = ttk.LabelFrame(root, text="加料通讯控制",padding="10")
+        main_frame.pack(fill=tk.BOTH, expand=True,padx=20,pady=10)
         
         # 创建选择框
         select_frame = ttk.Frame(main_frame)
