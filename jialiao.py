@@ -2,6 +2,7 @@
 import tkinter as tk
 from tkinter import ttk
 import sys
+from lib.communication import *
 
 class MainWindow:
     def __init__(self, root):
@@ -40,7 +41,7 @@ class MainWindow:
                 
     
     def on_button_start_clicked(self):
-        print("开按钮被点击")
+        print("启动钮被点击")
         # 这里可以添加开按钮的具体功能
         selected_number = self.combo_numbers.get()
         input_text = self.input_field.get()
@@ -48,6 +49,7 @@ class MainWindow:
     
 
 if __name__ == "__main__":
+    print("启动极傲炒菜机-加料电路板Y24控制面板。。。")
     root = tk.Tk()
     app = MainWindow(root)
     root.mainloop()
