@@ -356,6 +356,16 @@ if __name__ == "__main__":
             print(f"   数据: {test_data}")
             print(f"   CRC16: {crc}")
 
+            test_data2 = "YT+PING=1"
+            crc2 = comm.calculate_crc16(test_data2)
+            print(f"   数据: {test_data2}")
+            print(f"   CRC16: {crc2}")
+
+            test_data3 = "+PING:1"
+            crc3 = comm.calculate_crc16(test_data3)
+            print(f"   数据: {test_data3}")
+            print(f"   CRC16: {crc3}")
+
             # 测试命令构建
             print("\n4. 测试命令构建")
             cmd_with_crc = comm.build_command("OPENLOCK", 1, ["1"], use_crc=True)
