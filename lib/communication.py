@@ -336,33 +336,86 @@ class RS485Communication:
 
 # 示例用法
 if __name__ == "__main__":
+    print("=== RS485通信类接口测试 ===")
+
     # 创建通信对象
-    comm = RS485Communication(port="COM1")
+    print("1. 创建通信对象")
+    comm = RS485Communication(port="COM1", baudrate=9600, timeout=1.0)
+    print(f"   串口: {comm.port}, 波特率: {comm.baudrate}, 超时: {comm.timeout}秒")
 
     # 连接串口
+    print("\n2. 连接串口")
     if comm.connect():
-        try:
-            # 开锁示例
-            success, message = comm.open_lock(board_id=1, lock_id=1)
-            print(f"开锁结果: {success}, 消息: {message}")
+        print("   串口连接成功")
 
-            # 获取锁状态示例
+        try:
+            # 测试CRC计算
+            print("\n3. 测试CRC计算")
+            test_data = "YT+OPENLOCK=1,1"
+            crc = comm.calculate_crc16(test_data)
+            print(f"   数据: {test_data}")
+            print(f"   CRC16: {crc}")
+
+            # 测试命令构建
+            print("\n4. 测试命令构建")
+            cmd_with_crc = comm.build_command("OPENLOCK", 1, ["1"], use_crc=True)
+            cmd_without_crc = comm.build_command("OPENLOCK", 1, ["1"], use_crc=False)
+            print(f"   带CRC的命令: {repr(cmd_with_crc)}")
+            print(f"   不带CRC的命令: {repr(cmd_without_crc)}")
+
+            # 测试发送和接收原始命令
+            print("\n5. 测试发送和接收原始命令")
+            success = comm.send_command("OPENLOCK", 1, ["1"])
+            print(f"   发送命令结果: {success}")
+            if success:
+                response = comm.receive_response(timeout=2.0)
+                print(f"   接收到的响应: {response}")
+                if response:
+                    success, resp_type, params = comm.parse_response(response)
+                    print(f"   解析结果 - 成功: {success}, 类型: {resp_type}, 参数: {params}")
+
+            # 测试开锁命令
+            print("\n6. 测试开锁命令")
+            success, message = comm.open_lock(board_id=1, lock_id=1)
+            print(f"   开锁结果: {success}, 消息: {message}")
+
+            # 测试关锁命令
+            print("\n7. 测试关锁命令")
+            success, message = comm.close_lock(board_id=1, lock_id=1)
+            print(f"   关锁结果: {success}, 消息: {message}")
+
+            # 测试获取锁状态
+            print("\n8. 测试获取锁状态")
             success, result = comm.get_lock_status(board_id=1, lock_id=1)
             if success:
-                print(f"锁状态: {result} (0=关闭, 1=开启)")
+                print(f"   锁状态: {result} (0=关闭, 1=开启)")
             else:
-                print(f"获取锁状态失败: {result}")
+                print(f"   获取锁状态失败: {result}")
 
-            # 获取所有锁状态示例
+            # 测试获取所有锁状态
+            print("\n9. 测试获取所有锁状态")
             success, result = comm.get_all_locks_status(board_id=1)
             if success:
-                print(f"所有锁状态: {result}")
+                print(f"   所有锁状态: {result}")
+                for i, status in enumerate(result, 1):
+                    print(f"     锁{i}: {status} (0=关闭, 1=开启)")
             else:
-                print(f"获取所有锁状态失败: {result}")
+                print(f"   获取所有锁状态失败: {result}")
+
+            # 测试执行通用命令
+            print("\n10. 测试执行通用命令")
+            success, params = comm.execute_command("GETVERSION", 1)
+            if success:
+                print(f"   版本信息: {params}")
+            else:
+                print(f"   获取版本信息失败: {params[0] if params else '未知错误'}")
 
         finally:
             # 断开连接
-            print("断开串口连接")
+            print("\n11. 断开连接")
             comm.disconnect()
+            print("   串口连接已断开")
     else:
-        print("无法连接到串口")
+        print("   无法连接到串口")
+
+    print("\n=== 测试完成 ===")
