@@ -82,11 +82,13 @@ class RS485Communication:
         cmd_str = f"YT+{command}={board_id}"
         if params:
             cmd_str += f",{','.join(params)}"
+            print(f"将构建命令串(不带CRC):{cmd_str}")
 
         # 添加CRC校验（如果需要）
         if use_crc:
             crc = self.calculate_crc16(cmd_str)
             cmd_str += f"*{crc}"
+            print(f"将构建命令串(带上CRC):{cmd_str}")
 
         # 添加<CR><LF>结尾
         cmd_str += "\r\n"
@@ -368,6 +370,10 @@ if __name__ == "__main__":
 
             test_data4 = comm.build_command("PING", 1, [], use_crc=True)
             print(f"构建PING命令输出结果:{test_data4}")
+
+            test_data5 = comm.build_command("PING", 1, ["1","500","1","1","200"], use_crc=True)
+            print(f"构建PING命令输出结果:{test_data5}")
+
 
             # 测试命令构建
             print("\n4. 测试命令构建")
