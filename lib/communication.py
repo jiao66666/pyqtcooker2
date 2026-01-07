@@ -340,7 +340,7 @@ if __name__ == "__main__":
 
     # 创建通信对象
     print("1. 创建通信对象")
-    comm = RS485Communication(port="COM1", baudrate=9600, timeout=1.0)
+    comm = RS485Communication(port="COM2", baudrate=9600, timeout=1.0)
     print(f"   串口: {comm.port}, 波特率: {comm.baudrate}, 超时: {comm.timeout}秒")
 
     # 连接串口
@@ -365,6 +365,9 @@ if __name__ == "__main__":
             crc3 = comm.calculate_crc16(test_data3)
             print(f"   数据: {test_data3}")
             print(f"   CRC16: {crc3}")
+
+            test_data4 = comm.build_command("PING", 1, [], use_crc=True)
+            print(f"构建PING命令输出结果:{test_data4}")
 
             # 测试命令构建
             print("\n4. 测试命令构建")
