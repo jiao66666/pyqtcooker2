@@ -238,10 +238,61 @@ class RS485Communication:
         # 检查响应类型是否匹配命令
         if resp_type != command:
             return False, [f"响应类型不匹配，期望: {command}，实际: {resp_type}"]
-
+        
         return True, resp_params
 
     # 以下是针对具体命令的便捷方法
+
+    # 检查连接命令
+    def check_connection(self, board_id: int, use_crc: bool = True, timeout: float = None) -> Tuple[bool, str]:
+        """
+        开锁命令
+
+        参数:
+            board_id: 板子ID
+            use_crc: 是否使用CRC校验
+            timeout: 接收响应的超时时间
+
+        返回:
+            Tuple[bool, str]: 
+                - 命令是否执行成功
+                - 响应信息或错误信息
+        """
+        success, params = self.execute_command("PING", board_id, [], use_crc, timeout)
+        if success:
+            return True, f"锁控板连接成功"
+        else:
+            return False, f"锁控板连接失败: {params[0] if params else '未知错误'}"
+
+
+    # 检查连接命令
+    def restart_board(self, board_id: int, use_crc: bool = True, timeout: float = None) -> Tuple[bool, str]:
+        """
+        开锁命令
+
+        参数:
+            board_id: 板子ID
+            use_crc: 是否使用CRC校验
+            timeout: 接收响应的超时时间
+
+        返回:
+            Tuple[bool, str]: 
+                - 命令是否执行成功
+                - 响应信息或错误信息
+        """
+        success, params = self.execute_command("REBOOT", board_id, [], use_crc, timeout)
+        if success:
+            if params[0] != board_id:
+                return False, f"锁控板重启失败: 返回板子ID错误"
+            else:
+                result = params[1]
+                if result == 1:
+                    return True, f"锁控板重启成功"
+                else:
+                    return False, f"锁控板重启失败: {params[0] if params else '未知错误'}"
+        else:
+            return False, f"锁控板重启命令执行失败: {params[0] if params else '未知错误'}"
+
 
     def open_lock(self, board_id: int, lock_id: int, use_crc: bool = True, timeout: float = None) -> Tuple[bool, str]:
         """
@@ -373,6 +424,16 @@ if __name__ == "__main__":
 
             test_data5 = comm.build_command("PING", 1, ["1","500","1","1","200"], use_crc=True)
             print(f"构建PING命令输出结果:{test_data5}")
+
+
+
+            print("-------测试接口命令开始-------")
+            print("测试板子连通性命令>>>>>>>>")
+            comm.check_connection(board_id=1, use_crc=True, timeout=0.3)
+
+            print("测试板子重启命令>>>>>>>>>")
+            comm.restart_board(board_id=1, use_crc=True, timeout=0.3)
+
 
 
             # 测试命令构建
