@@ -48,7 +48,16 @@ class MainWindow:
         self.baudrate_combo['values'] = ('9600', '19200', '38400', '57600', '115200')
         self.baudrate_combo.current(0)
         self.baudrate_combo.pack(side=tk.LEFT, padx=5)
-        
+
+
+        self.status_text = StringVar()
+        self.status_text.set("未连接")
+        # 创建样式对象
+        style = ttk.Style()
+        # 配置样式
+        style.configure("Connected.TLabel", foreground="green")  # 设置为绿色
+        ttk.Label(select_frame_baud, textvariable=self.status_text, style="Connected.TLabel").pack(side=tk.LEFT, padx=5)
+
 
         self.button_connect = ttk.Button(button_frame_func, text="连接串口", command=self.on_button_connect_clicked)
         self.button_connect.pack(side=tk.LEFT, padx=5)
@@ -112,6 +121,12 @@ class MainWindow:
         self.comm = RS485Communication(port=port, baudrate=baudrate, timeout=1.0)
         print(f"   串口: {self.comm.port}, 波特率: {self.comm.baudrate}, 超时: {self.comm.timeout}秒")
         self.connected =  self.comm.connect()
+        if self.connected:
+            self.status_text.set("已连接")
+            print("   串口连接成功")
+        else:
+            self.status_text.set("连接失败")
+            print("   串口连接失败")
 
     def on_button_ping_clicked(self):
         print("板子ping按钮被点击")
