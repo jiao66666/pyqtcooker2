@@ -39,6 +39,7 @@ class RS485Communication:
                 stopbits=serial.STOPBITS_ONE,
                 timeout=self.timeout
             )
+            print(f"串口{self.port}已成功打开")
             return True
         except Exception as e:
             print(f"连接串口失败: {e}")
@@ -244,7 +245,7 @@ class RS485Communication:
     # 以下是针对具体命令的便捷方法
 
     # 检查连接命令
-    def check_connection(self, board_id: int, use_crc: bool = True, timeout: float = None) -> Tuple[bool, str]:
+    def check_ping(self, board_id: int, use_crc: bool = True, timeout: float = None) -> Tuple[bool, str]:
         """
         开锁命令
 
@@ -429,7 +430,7 @@ if __name__ == "__main__":
 
             print("-------测试接口命令开始-------")
             print("测试板子连通性命令>>>>>>>>")
-            comm.check_connection(board_id=1, use_crc=True, timeout=0.3)
+            comm.check_ping(board_id=1, use_crc=True, timeout=0.3)
 
             print("测试板子重启命令>>>>>>>>>")
             comm.restart_board(board_id=1, use_crc=True, timeout=0.3)
