@@ -1,7 +1,8 @@
 
 import tkinter as tk
 from tkinter import ttk
-import sys
+from tkinter import StringVar
+
 from lib.communication import *
 
 class MainWindow:
@@ -23,6 +24,31 @@ class MainWindow:
         button_frame_func = ttk.Frame(main_frame)
         button_frame_func.pack(fill=tk.X, pady=5)
         
+      # 创建选择框
+        select_frame_port = ttk.Frame(button_frame_func)
+        select_frame_port.pack(fill=tk.X, pady=5)
+        
+        
+        ttk.Label(select_frame_port, text="选择端口:").pack(side=tk.LEFT, padx=5)
+        self.port_var = StringVar()
+        self.port_combo = ttk.Combobox(select_frame_port, textvariable=self.port_var)
+        self.port_combo['values'] = ('COM1', 'COM2', 'COM3', 'COM4', 'COM5')
+        self.port_combo.current(1)
+        self.port_combo.pack(side=tk.LEFT, padx=5)
+
+
+              # 创建选择框
+        select_frame_baud = ttk.Frame(button_frame_func)
+        select_frame_baud.pack(fill=tk.X, pady=5)
+        
+        ttk.Label(select_frame_baud, text="选择波特率:").pack(side=tk.LEFT, padx=5)
+        self.baudrate_var = StringVar()
+        self.baudrate_combo = ttk.Combobox(select_frame_baud, textvariable=self.baudrate_var)
+        self.baudrate_combo['values'] = ('9600', '19200', '38400', '57600', '115200')
+        self.baudrate_combo.current(0)
+        self.baudrate_combo.pack(side=tk.LEFT, padx=5)
+        
+
         self.button_connect = ttk.Button(button_frame_func, text="连接串口", command=self.on_button_connect_clicked)
         self.button_connect.pack(side=tk.LEFT, padx=5)
 
@@ -70,7 +96,9 @@ class MainWindow:
     def on_button_connect_clicked(self):
         print("串口连接按钮被点击")
         print("初始化>>>创建通信对象")
-        self.comm = RS485Communication(port="COM2", baudrate=9600, timeout=1.0)
+        port = self.port_var.get()
+        baudrate = int(self.baudrate_var.get())
+        self.comm = RS485Communication(port=port, baudrate=baudrate, timeout=1.0)
         print(f"   串口: {self.comm.port}, 波特率: {self.comm.baudrate}, 超时: {self.comm.timeout}秒")
         self.connected =  self.comm.connect()
 
