@@ -13,7 +13,7 @@ class MainWindow:
         self.connected = False
         self.root = root
         self.root.title("极傲炒菜机-加料电路板Y24控制面板")
-        self.root.geometry("400x200")
+        self.root.geometry("400x400")
         self.root.protocol("WM_DELETE_WINDOW", self.on_closing)
 
         # 创建主框架
