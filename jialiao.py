@@ -7,10 +7,9 @@ from lib.communication import *
 class MainWindow:
     def __init__(self, root):
             # 创建通信对象
-        print("初始化>>>创建通信对象")
-        self.comm = RS485Communication(port="COM2", baudrate=9600, timeout=1.0)
-        print(f"   串口: {self.comm.port}, 波特率: {self.comm.baudrate}, 超时: {self.comm.timeout}秒")
-
+       
+        self.comm = None
+        self.connected = False
         self.root = root
         self.root.title("极傲炒菜机-加料电路板Y24控制面板")
         self.root.geometry("400x200")
@@ -70,14 +69,23 @@ class MainWindow:
 
     def on_button_connect_clicked(self):
         print("串口连接按钮被点击")
-        self.comm.connect()
+        print("初始化>>>创建通信对象")
+        self.comm = RS485Communication(port="COM2", baudrate=9600, timeout=1.0)
+        print(f"   串口: {self.comm.port}, 波特率: {self.comm.baudrate}, 超时: {self.comm.timeout}秒")
+        self.connected =  self.comm.connect()
 
     def on_button_ping_clicked(self):
         print("板子ping按钮被点击")
+        if not self.connected:
+            print("串口未连接，无法执行ping操作")
+            return
         self.comm.check_ping(board_id=1, use_crc=True, timeout=0.3)
 
     def on_button_reboot_clicked(self):
         print("重启按钮被点击")
+        if not self.connected:
+            print("串口未连接，无法执行重启操作")
+            return
         self.comm.restart_board(board_id=1, use_crc=True, timeout=0.3)
                       
     
