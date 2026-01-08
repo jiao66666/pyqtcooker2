@@ -8,13 +8,14 @@ from lib.communication import *
 class MainWindow:
     def __init__(self, root):
             # 创建通信对象
-       
+        
         self.comm = None
         self.connected = False
         self.root = root
         self.root.title("极傲炒菜机-加料电路板Y24控制面板")
         self.root.geometry("400x200")
-        
+        self.root.protocol("WM_DELETE_WINDOW", self.on_closing)
+
         # 创建主框架
         main_frame = ttk.LabelFrame(root, text="加料通讯控制",padding="10")
         main_frame.pack(fill=tk.BOTH, expand=True,padx=20,pady=10)
@@ -84,7 +85,17 @@ class MainWindow:
         self.button_on = ttk.Button(button_frame, text="启动", command=self.on_button_start_clicked)
         self.button_on.pack(side=tk.LEFT, padx=5)
                 
-    
+
+    def on_closing(self):
+        """窗口关闭时的处理函数"""
+        if self.comm and self.connected:
+            try:
+                self.comm.disconnect()
+                print("窗口关闭时断开串口连接")
+            except Exception as e:
+                print(f"断开连接时出错: {e}")
+        self.root.destroy()  # 关闭窗口
+
     def on_button_start_clicked(self):
         print("启动钮被点击")
         # 这里可以添加开按钮的具体功能
