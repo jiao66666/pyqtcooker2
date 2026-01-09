@@ -2,7 +2,7 @@
 import tkinter as tk
 from tkinter import ttk
 from tkinter import StringVar
-
+import tkinter.messagebox as msgbox
 from lib.communication import *
 
 class MainWindow:
@@ -83,15 +83,15 @@ class MainWindow:
         input_frame.pack(fill=tk.X, pady=5)
         
         ttk.Label(input_frame, text="保持时间(ms):").pack(side=tk.LEFT, padx=5)
-        self.input_field = ttk.Entry(input_frame)
-        self.input_field.pack(side=tk.LEFT, padx=5, fill=tk.X, expand=True)
+        self.input_keepruntime = ttk.Entry(input_frame)
+        self.input_keepruntime.pack(side=tk.LEFT, padx=5, fill=tk.X, expand=True)
 
 
         # 创建按钮
         button_frame = ttk.Frame(main_frame)
         button_frame.pack(fill=tk.X, pady=5)
         
-        self.button_on = ttk.Button(button_frame, text="启动", command=self.on_button_start_clicked)
+        self.button_on = ttk.Button(button_frame, text="运行启动", command=self.on_button_runchannel_clicked)
         self.button_on.pack(side=tk.LEFT, padx=5)
                 
 
@@ -105,13 +105,24 @@ class MainWindow:
                 print(f"断开连接时出错: {e}")
         self.root.destroy()  # 关闭窗口
 
-    def on_button_start_clicked(self):
-        print("启动钮被点击")
+    def on_button_runchannel_clicked(self):
+        print("启动运行按钮被点击")
         # 这里可以添加开按钮的具体功能
-        selected_number = self.combo_numbers.get()
-        input_text = self.input_field.get()
-        print(f"保存设置: 选择的加料通道={selected_number}, 保持时间={input_text}")
+        selected_channel = self.combo_numbers.get()
+        val_keepruntime = self.input_keepruntime.get()
 
+        if not val_keepruntime.strip():  # 检查是否为空或仅包含空格
+            print("输入数值不能为空") 
+            msgbox.showwarning("提示", "输入数值不能为空")
+            return 
+
+        print(f"保存设置: 选择的加料通道={selected_channel}, 保持时间={val_keepruntime}")
+        if self.connected:
+            channel_id = int(selected_channel)
+            params = [val_keepruntime]
+            self.comm.run_channel(board_id=1, channel_id=channel_id, params=params, use_crc=True, timeout=0.3)
+        else:
+            print("串口未连接，无法执行运行启动操作")    
 
     def on_button_connect_clicked(self):
         print("串口连接按钮被点击")
