@@ -93,6 +93,9 @@ class MainWindow:
         
         self.button_on = ttk.Button(button_frame, text="运行启动", command=self.on_button_runchannel_clicked)
         self.button_on.pack(side=tk.LEFT, padx=5)
+        
+        self.button_getfb = ttk.Button(button_frame, text="获取反馈", command=self.on_button_getchannel_clicked)
+        self.button_getfb.pack(side=tk.LEFT, padx=5)
                 
 
     def on_closing(self):
@@ -123,6 +126,21 @@ class MainWindow:
             self.comm.run_channel(board_id=1, channel_id=channel_id, params=params, use_crc=True, timeout=0.3)
         else:
             print("串口未连接，无法执行运行启动操作")    
+
+
+
+    def on_button_getchannel_clicked(self):
+        print("获取反馈按钮被点击")
+        # 这里可以添加开按钮的具体功能
+        selected_channel = self.combo_numbers.get()
+       
+        print(f"保存设置: 选择的获取通道={selected_channel}")
+        if self.connected:
+            channel_id = int(selected_channel)
+            params = []
+            self.comm.get_channel(board_id=1, channel_id=channel_id, params=params, use_crc=True, timeout=0.3)
+        else:
+            print("串口未连接，无法执行运行启动操作")                
 
     def on_button_connect_clicked(self):
         print("串口连接按钮被点击")
