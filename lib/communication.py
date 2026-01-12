@@ -351,6 +351,36 @@ class RS485Communication:
             return False, f"执行获取通道反馈失败: {params[0] if params else '未知错误'}"
 
 
+    def run_output(self, board_id: int, channel_id: int, params: List[str] = None, use_crc: bool = True, timeout: float = None) -> Tuple[bool, str]:
+        """
+        开关量控制命令
+
+        参数:
+            board_id: 板子ID
+            channel_id: 锁ID
+            use_crc: 是否使用CRC校验
+            timeout: 接收响应的超时时间
+
+        返回:
+            Tuple[bool, str]: 
+                - 命令是否执行成功
+                - 响应信息或错误信息
+        """
+
+        cmd_str =  str(channel_id)
+        if params:
+            cmd_str += f",{','.join(params)}"
+
+        success, params = self.execute_command("OUTPUT", board_id, [cmd_str], use_crc, timeout)
+        if success:
+            return True, f"通道{channel_id}开关量开启成功"
+        else:
+            return False, f"通道开关量开启失败: {params[0] if params else '未知错误'}"
+
+
+
+
+
 
     def open_lock(self, board_id: int, lock_id: int, use_crc: bool = True, timeout: float = None) -> Tuple[bool, str]:
         """
@@ -498,6 +528,11 @@ if __name__ == "__main__":
 
             print("测试板子通道获取反馈命令>>>>>>>>>")
             comm.get_channel(board_id=1, channel_id=1, params=[], use_crc=True, timeout=0.3)
+
+
+            
+            print("测试板子开关量控制命令>>>>>>>>>")
+            comm.run_output(board_id=1, channel_id=1, params=["0"], use_crc=True, timeout=0.3)
 
             # 测试命令构建
             print("\n4. 测试命令构建")
