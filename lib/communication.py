@@ -380,101 +380,6 @@ class RS485Communication:
 
 
 
-
-
-    def open_lock(self, board_id: int, lock_id: int, use_crc: bool = True, timeout: float = None) -> Tuple[bool, str]:
-        """
-        开锁命令
-
-        参数:
-            board_id: 板子ID
-            lock_id: 锁ID
-            use_crc: 是否使用CRC校验
-            timeout: 接收响应的超时时间
-
-        返回:
-            Tuple[bool, str]: 
-                - 命令是否执行成功
-                - 响应信息或错误信息
-        """
-        success, params = self.execute_command("OPENLOCK", board_id, [str(lock_id)], use_crc, timeout)
-        if success:
-            return True, f"锁{lock_id}开启成功"
-        else:
-            return False, f"开锁失败: {params[0] if params else '未知错误'}"
-
-    def close_lock(self, board_id: int, lock_id: int, use_crc: bool = True, timeout: float = None) -> Tuple[bool, str]:
-        """
-        关锁命令
-
-        参数:
-            board_id: 板子ID
-            lock_id: 锁ID
-            use_crc: 是否使用CRC校验
-            timeout: 接收响应的超时时间
-
-        返回:
-            Tuple[bool, str]: 
-                - 命令是否执行成功
-                - 响应信息或错误信息
-        """
-        success, params = self.execute_command("CLOSELOCK", board_id, [str(lock_id)], use_crc, timeout)
-        if success:
-            return True, f"锁{lock_id}关闭成功"
-        else:
-            return False, f"关锁失败: {params[0] if params else '未知错误'}"
-
-    def get_lock_status(self, board_id: int, lock_id: int, use_crc: bool = True, timeout: float = None) -> Tuple[bool, Union[str, int]]:
-        """
-        获取锁状态命令
-
-        参数:
-            board_id: 板子ID
-            lock_id: 锁ID
-            use_crc: 是否使用CRC校验
-            timeout: 接收响应的超时时间
-
-        返回:
-            Tuple[bool, Union[str, int]]: 
-                - 命令是否执行成功
-                - 锁状态（0=关闭，1=开启）或错误信息字符串
-        """
-        success, params = self.execute_command("GETLOCKSTATUS", board_id, [str(lock_id)], use_crc, timeout)
-        if success and len(params) >= 2:
-            try:
-                status = int(params[1])
-                return True, status
-            except ValueError:
-                return False, f"无效的状态值: {params[1]}"
-        else:
-            return False, f"获取锁状态失败: {params[0] if params else '未知错误'}"
-
-    def get_all_locks_status(self, board_id: int, use_crc: bool = True, timeout: float = None) -> Tuple[bool, Union[List[int], str]]:
-        """
-        获取所有锁状态命令
-
-        参数:
-            board_id: 板子ID
-            use_crc: 是否使用CRC校验
-            timeout: 接收响应的超时时间
-
-        返回:
-            Tuple[bool, Union[List[int], str]]: 
-                - 命令是否执行成功
-                - 所有锁状态列表（每个元素为0或1）或错误信息字符串
-        """
-        success, params = self.execute_command("GETALLLOCKSSTATUS", board_id, [], use_crc, timeout)
-        if success and len(params) >= 2:
-            try:
-                # 第一个参数是board_id，后面是各个锁的状态
-                status_list = [int(status) for status in params[1:]]
-                return True, status_list
-            except ValueError:
-                return False, f"无效的状态值: {params[1:]}"
-        else:
-            return False, f"获取所有锁状态失败: {params[0] if params else '未知错误'}"
-
-
 # 示例用法
 if __name__ == "__main__":
     print("=== RS485通信类接口测试 ===")
@@ -491,7 +396,7 @@ if __name__ == "__main__":
 
         try:
             # 测试CRC计算
-            print("\n3. 测试CRC计算")
+            print("\n测试CRC计算")
             test_data = "YT+OPENLOCK=1,1"
             crc = comm.calculate_crc16(test_data)
             print(f"   数据: {test_data}")
@@ -534,63 +439,10 @@ if __name__ == "__main__":
             print("测试板子开关量控制命令>>>>>>>>>")
             comm.run_output(board_id=1, channel_id=1, params=["0"], use_crc=True, timeout=0.3)
 
-            # 测试命令构建
-            print("\n4. 测试命令构建")
-            cmd_with_crc = comm.build_command("OPENLOCK", 1, ["1"], use_crc=True)
-            cmd_without_crc = comm.build_command("OPENLOCK", 1, ["1"], use_crc=False)
-            print(f"   带CRC的命令: {repr(cmd_with_crc)}")
-            print(f"   不带CRC的命令: {repr(cmd_without_crc)}")
-
-            # 测试发送和接收原始命令
-            print("\n5. 测试发送和接收原始命令")
-            success = comm.send_command("OPENLOCK", 1, ["1"])
-            print(f"   发送命令结果: {success}")
-            if success:
-                response = comm.receive_response(timeout=2.0)
-                print(f"   接收到的响应: {response}")
-                if response:
-                    success, resp_type, params = comm.parse_response(response)
-                    print(f"   解析结果 - 成功: {success}, 类型: {resp_type}, 参数: {params}")
-
-            # 测试开锁命令
-            print("\n6. 测试开锁命令")
-            success, message = comm.open_lock(board_id=1, lock_id=1)
-            print(f"   开锁结果: {success}, 消息: {message}")
-
-            # 测试关锁命令
-            print("\n7. 测试关锁命令")
-            success, message = comm.close_lock(board_id=1, lock_id=1)
-            print(f"   关锁结果: {success}, 消息: {message}")
-
-            # 测试获取锁状态
-            print("\n8. 测试获取锁状态")
-            success, result = comm.get_lock_status(board_id=1, lock_id=1)
-            if success:
-                print(f"   锁状态: {result} (0=关闭, 1=开启)")
-            else:
-                print(f"   获取锁状态失败: {result}")
-
-            # 测试获取所有锁状态
-            print("\n9. 测试获取所有锁状态")
-            success, result = comm.get_all_locks_status(board_id=1)
-            if success:
-                print(f"   所有锁状态: {result}")
-                for i, status in enumerate(result, 1):
-                    print(f"     锁{i}: {status} (0=关闭, 1=开启)")
-            else:
-                print(f"   获取所有锁状态失败: {result}")
-
-            # 测试执行通用命令
-            print("\n10. 测试执行通用命令")
-            success, params = comm.execute_command("GETVERSION", 1)
-            if success:
-                print(f"   版本信息: {params}")
-            else:
-                print(f"   获取版本信息失败: {params[0] if params else '未知错误'}")
-
+        
         finally:
             # 断开连接
-            print("\n11. 断开连接")
+            print("\n断开连接")
             comm.disconnect()
             print("   串口连接已断开")
     else:
