@@ -323,7 +323,7 @@ class RS485Communication:
             return False, f"通道开启失败: {params[0] if params else '未知错误'}"
 
 
-    # 启动通道命令
+    # 获取通道反馈命令
     def get_channel(self, board_id: int, channel_id: int, params: List[str] = None, use_crc: bool = True, timeout: float = None) -> Tuple[bool, str]:
         """
         开锁命令
@@ -349,6 +349,36 @@ class RS485Communication:
             return True, f"执行获取{channel_id}通道反馈成功"
         else:
             return False, f"执行获取通道反馈失败: {params[0] if params else '未知错误'}"
+
+    # 开关量获取反馈命令    
+    def get_output(self, board_id: int, channel_id: int, params: List[str] = None, use_crc: bool = True, timeout: float = None) -> Tuple[bool, str]:
+            """
+            开锁命令
+
+        该方法用于获取指定通道的输出反馈，可以传递额外的参数，并支持CRC校验和超时设置。
+            参数:
+                board_id: 板子ID，用于标识目标控制板
+                channel_id: 锁ID，用于标识具体的通道
+
+            params: 可选参数列表，用于传递额外的命令参数
+                use_crc: 是否使用CRC校验，默认为True
+                timeout: 接收响应的超时时间，单位为秒，None表示无超时限制
+
+            返回:
+                Tuple[bool, str]: 
+                    - 命令是否执行成功
+                    - 响应信息或错误信息
+            """
+
+            cmd_str =  str(channel_id)
+            if params:
+                cmd_str += f",{','.join(params)}"
+
+            success, params = self.execute_command("GETOUT", board_id, [cmd_str], use_crc, timeout)
+            if success:
+                return True, f"执行获取{channel_id}开关量反馈成功"
+            else:
+                return False, f"执行获取开关量反馈失败: {params[0] if params else '未知错误'}"        
 
 
     def run_output(self, board_id: int, channel_id: int, params: List[str] = None, use_crc: bool = True, timeout: float = None) -> Tuple[bool, str]:
@@ -438,6 +468,11 @@ if __name__ == "__main__":
             
             print("测试板子开关量控制命令>>>>>>>>>")
             comm.run_output(board_id=1, channel_id=1, params=["0"], use_crc=True, timeout=0.3)
+
+
+
+            print("测试板子开关量获取反馈命令>>>>>>>>>")
+            comm.get_output(board_id=1, channel_id=1, params=[], use_crc=True, timeout=0.3)
 
         
         finally:

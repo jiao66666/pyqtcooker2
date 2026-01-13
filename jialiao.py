@@ -94,7 +94,7 @@ class MainWindow:
         self.button_on = ttk.Button(button_frame, text="运行启动", command=self.on_button_runchannel_clicked)
         self.button_on.pack(side=tk.LEFT, padx=5)
         
-        self.button_getfb = ttk.Button(button_frame, text="获取反馈", command=self.on_button_getchannel_clicked)
+        self.button_getfb = ttk.Button(button_frame, text="获取通道反馈", command=self.on_button_getchannel_clicked)
         self.button_getfb.pack(side=tk.LEFT, padx=5)
 
         self.button_runoutput1 = ttk.Button(button_frame, text="开关量-开", command=lambda: self.on_button_runoutput_clicked("1"))
@@ -103,6 +103,10 @@ class MainWindow:
 
         self.button_runoutput0 = ttk.Button(button_frame, text="开关量-关", command=lambda: self.on_button_runoutput_clicked("0"))
         self.button_runoutput0.pack(side=tk.LEFT, padx=5)
+
+
+        self.button_getoutput = ttk.Button(button_frame, text="获取开关量反馈", command=self.on_button_getoutput_clicked)
+        self.button_getoutput.pack(side=tk.LEFT, padx=5)
                 
 
     def on_closing(self):
@@ -152,7 +156,7 @@ class MainWindow:
 
 
     def on_button_getchannel_clicked(self):
-        print("获取反馈按钮被点击")
+        print("获取通道反馈按钮被点击")
         # 这里可以添加开按钮的具体功能
         selected_channel = self.combo_numbers.get()
        
@@ -162,7 +166,20 @@ class MainWindow:
             params = []
             self.comm.get_channel(board_id=1, channel_id=channel_id, params=params, use_crc=True, timeout=0.3)
         else:
-            print("串口未连接，无法执行运行启动操作")                
+            print("串口未连接，无法执行运行启动操作")
+
+    def on_button_getoutput_clicked(self):
+        print("获取开关量反馈按钮被点击")
+        # 这里可以添加开按钮的具体功能
+        selected_channel = self.combo_numbers.get()
+       
+        print(f"保存设置: 选择的获取通道={selected_channel}")
+        if self.connected:
+            channel_id = int(selected_channel)
+            params = []
+            self.comm.get_output(board_id=1, channel_id=channel_id, params=params, use_crc=True, timeout=0.3)
+        else:
+            print("串口未连接，无法执行运行启动操作")                               
 
     def on_button_connect_clicked(self):
         print("串口连接按钮被点击")
