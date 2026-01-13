@@ -87,26 +87,33 @@ class MainWindow:
         self.input_keepruntime.pack(side=tk.LEFT, padx=5, fill=tk.X, expand=True)
 
 
-        # 创建按钮
+        # 创建按钮容器
         button_frame = ttk.Frame(main_frame)
         button_frame.pack(fill=tk.X, pady=5)
-        
-        self.button_on = ttk.Button(button_frame, text="运行启动", command=self.on_button_runchannel_clicked)
-        self.button_on.pack(side=tk.LEFT, padx=5)
-        
-        self.button_getfb = ttk.Button(button_frame, text="获取通道反馈", command=self.on_button_getchannel_clicked)
-        self.button_getfb.pack(side=tk.LEFT, padx=5)
 
-        self.button_runoutput1 = ttk.Button(button_frame, text="开关量-开", command=lambda: self.on_button_runoutput_clicked("1"))
-        self.button_runoutput1.pack(side=tk.LEFT, padx=5)
+        # 创建按钮列表
+        buttons = [
+            ("运行启动", self.on_button_runchannel_clicked),
+            ("获取通道反馈", self.on_button_getchannel_clicked),
+            ("开关量-开", lambda: self.on_button_runoutput_clicked("1")),
+            ("开关量-关", lambda: self.on_button_runoutput_clicked("0")),
+            ("获取开关量反馈", self.on_button_getoutput_clicked)
+        ]
 
+        # 创建第一行按钮容器
+        current_row = ttk.Frame(button_frame)
+        current_row.pack(fill=tk.X)
 
-        self.button_runoutput0 = ttk.Button(button_frame, text="开关量-关", command=lambda: self.on_button_runoutput_clicked("0"))
-        self.button_runoutput0.pack(side=tk.LEFT, padx=5)
+        # 创建按钮并添加到当前行
+        for i, (text, command) in enumerate(buttons):
+            button = ttk.Button(current_row, text=text, command=command)
+            button.pack(side=tk.LEFT, padx=5, fill=tk.X, expand=True)
+            
+            # 每隔2个按钮创建新的一行（可根据需要调整）
+            if (i + 1) % 2 == 0:
+                current_row = ttk.Frame(button_frame)
+                current_row.pack(fill=tk.X)
 
-
-        self.button_getoutput = ttk.Button(button_frame, text="获取开关量反馈", command=self.on_button_getoutput_clicked)
-        self.button_getoutput.pack(side=tk.LEFT, padx=5)
                 
 
     def on_closing(self):
