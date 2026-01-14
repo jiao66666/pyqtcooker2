@@ -97,7 +97,9 @@ class MainWindow:
             ("获取通道反馈", self.on_button_getchannel_clicked),
             ("开关量-开", lambda: self.on_button_runoutput_clicked("1")),
             ("开关量-关", lambda: self.on_button_runoutput_clicked("0")),
-            ("获取开关量反馈", self.on_button_getoutput_clicked)
+            ("获取开关量反馈", self.on_button_getoutput_clicked),
+            ("配置校验-开", lambda: self.on_button_setchecksum_clicked("1")),
+            ("配置校验-关", lambda: self.on_button_setchecksum_clicked("0")),
         ]
 
         # 创建第一行按钮容器
@@ -160,6 +162,21 @@ class MainWindow:
             self.comm.run_output(board_id=1, channel_id=channel_id, params=params, use_crc=True, timeout=0.3)
         else:
             print("串口未连接，无法执行运行启动操作")    
+
+
+    def on_button_setchecksum_clicked(self,status):
+        print("配置校验按钮被点击")
+        # 这里可以添加开按钮的具体功能
+        selected_channel = self.combo_numbers.get()
+      
+
+        print(f"保存设置: 选择的加料通道={selected_channel}")
+        if self.connected:
+            statusval = int(status)
+            params = []
+            self.comm.set_checksum(board_id=1, status=statusval, params=params, use_crc=True, timeout=0.3)
+        else:
+            print("串口未连接，无法执行运行启动操作")  
 
 
     def on_button_getchannel_clicked(self):

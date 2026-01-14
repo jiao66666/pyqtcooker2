@@ -323,6 +323,34 @@ class RS485Communication:
             return False, f"通道开启失败: {params[0] if params else '未知错误'}"
 
 
+
+    def set_checksum(self, board_id: int, status: int, params: List[str] = None, use_crc: bool = True, timeout: float = None) -> Tuple[bool, str]:
+        """
+        开锁命令
+
+        参数:
+            board_id: 板子ID
+            status:  0，关闭；1，开启
+            use_crc: 是否使用CRC校验
+            timeout: 接收响应的超时时间
+
+        返回:
+            Tuple[bool, str]: 
+                - 命令是否执行成功
+                - 响应信息或错误信息
+        """
+        cmd_str =  str(status)
+        if params:
+            cmd_str += f",{','.join(params)}"
+
+        success, params = self.execute_command("CHECKSUM", board_id, [cmd_str], use_crc, timeout)
+        if success:
+            return True, f"板子{board_id}校验开启成功"
+        else:
+            return False, f"板子校验功能执行失败: {params[0] if params else '未知错误'}"
+
+
+
     # 获取通道反馈命令
     def get_channel(self, board_id: int, channel_id: int, params: List[str] = None, use_crc: bool = True, timeout: float = None) -> Tuple[bool, str]:
         """
@@ -474,13 +502,17 @@ if __name__ == "__main__":
             print("测试板子开关量获取反馈命令>>>>>>>>>")
             comm.get_output(board_id=1, channel_id=1, params=[], use_crc=True, timeout=0.3)
 
+
+            print("测试板子配置校验功能命令>>>>>>>>>")
+            comm.set_checksum(board_id=1, status=0, params=[], use_crc=True, timeout=0.3)
+
         
         finally:
             # 断开连接
             print("\n断开连接")
             comm.disconnect()
             print("   串口连接已断开")
-    else:
+    else: 
         print("   无法连接到串口")
 
     print("\n=== 测试完成 ===")
