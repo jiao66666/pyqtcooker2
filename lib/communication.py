@@ -348,6 +348,32 @@ class RS485Communication:
             return True, f"板子{board_id}校验开启成功"
         else:
             return False, f"板子校验功能执行失败: {params[0] if params else '未知错误'}"
+        
+
+    def set_baudrate(self, board_id: int, baudrate: int, params: List[str] = None, use_crc: bool = True, timeout: float = None) -> Tuple[bool, str]:
+        """
+        开锁命令
+
+        参数:
+            board_id: 板子ID
+            status:  0，关闭；1，开启
+            use_crc: 是否使用CRC校验
+            timeout: 接收响应的超时时间
+
+        返回:
+            Tuple[bool, str]: 
+                - 命令是否执行成功
+                - 响应信息或错误信息
+        """
+        cmd_str =  str(baudrate)
+        if params:
+            cmd_str += f",{','.join(params)}"
+
+        success, params = self.execute_command("BAUDRATE", board_id, [cmd_str], use_crc, timeout)
+        if success:
+            return True, f"板子{board_id}波特率设置成功"
+        else:
+            return False, f"板子波特率设置执行失败: {params[0] if params else '未知错误'}"        
 
 
 
@@ -505,6 +531,11 @@ if __name__ == "__main__":
 
             print("测试板子配置校验功能命令>>>>>>>>>")
             comm.set_checksum(board_id=1, status=0, params=[], use_crc=True, timeout=0.3)
+
+
+            print("测试板子配置波特率功能命令>>>>>>>>>")
+            comm.set_baudrate(board_id=1, baudrate=9600, params=[], use_crc=True, timeout=0.3)
+
 
         
         finally:

@@ -97,9 +97,10 @@ class MainWindow:
             ("获取通道反馈", self.on_button_getchannel_clicked),
             ("开关量-开", lambda: self.on_button_runoutput_clicked("1")),
             ("开关量-关", lambda: self.on_button_runoutput_clicked("0")),
-            ("获取开关量反馈", self.on_button_getoutput_clicked),
             ("配置校验-开", lambda: self.on_button_setchecksum_clicked("1")),
             ("配置校验-关", lambda: self.on_button_setchecksum_clicked("0")),
+            ("获取开关量反馈", self.on_button_getoutput_clicked),
+            ("设置板子波特率", self.on_button_setbaudrate_clicked),
         ]
 
         # 创建第一行按钮容器
@@ -178,6 +179,17 @@ class MainWindow:
         else:
             print("串口未连接，无法执行运行启动操作")  
 
+
+    def on_button_setbaudrate_clicked(self):
+        print("设置波特率按钮被点击")
+        # 这里可以添加开按钮的具体功能
+
+        if self.connected:
+            baudrateval = int(self.baudrate_var.get())
+            params = []
+            self.comm.set_baudrate(board_id=1, baudrate=baudrateval, params=params, use_crc=True, timeout=0.3)
+        else:
+            print("串口未连接，无法执行运行启动操作")  
 
     def on_button_getchannel_clicked(self):
         print("获取通道反馈按钮被点击")
