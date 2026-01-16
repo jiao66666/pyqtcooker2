@@ -101,6 +101,7 @@ class MainWindow:
             ("配置校验-关", lambda: self.on_button_setchecksum_clicked("0")),
             ("获取开关量反馈", self.on_button_getoutput_clicked),
             ("设置板子波特率", self.on_button_setbaudrate_clicked),
+            ("测试PWM输出", self.on_button_runoutpwm_clicked),
         ]
 
         # 创建第一行按钮容器
@@ -178,6 +179,22 @@ class MainWindow:
             self.comm.set_checksum(board_id=1, status=statusval, params=params, use_crc=True, timeout=0.3)
         else:
             print("串口未连接，无法执行运行启动操作")  
+
+
+    def on_button_runoutpwm_clicked(self):
+        print("测试PWM输出按钮被点击")
+        # 这里可以添加开按钮的具体功能
+        selected_channel = self.combo_numbers.get()
+      
+
+        print(f"保存设置: 选择的加料通道={selected_channel}")
+        if self.connected:
+            channel_id = int(selected_channel)
+            params = ["1000","2000"]
+            self.comm.run_outpwm(board_id=1, channel_id=channel_id, params=params, use_crc=True, timeout=0.3)
+        else:
+            print("串口未连接，无法执行运行启动操作")  
+
 
 
     def on_button_setbaudrate_clicked(self):

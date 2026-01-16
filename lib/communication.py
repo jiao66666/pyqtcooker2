@@ -463,6 +463,33 @@ class RS485Communication:
 
 
 
+    def run_outpwm(self, board_id: int, channel_id: int, params: List[str] = None, use_crc: bool = True, timeout: float = None) -> Tuple[bool, str]:
+        """
+        控制PWM输出命令
+
+        参数:
+            board_id: 板子ID
+            channel_id: 锁ID
+            use_crc: 是否使用CRC校验
+            timeout: 接收响应的超时时间
+
+        返回:
+            Tuple[bool, str]: 
+                - 命令是否执行成功
+                - 响应信息或错误信息
+        """
+
+        cmd_str =  str(channel_id)
+        if params:
+            cmd_str += f",{','.join(params)}"
+
+        success, params = self.execute_command("PWM", board_id, [cmd_str], use_crc, timeout)
+        if success:
+            return True, f"通道{channel_id}PWM启动成功"
+        else:
+            return False, f"通道PWM开启失败: {params[0] if params else '未知错误'}"
+
+
 
 # 示例用法
 if __name__ == "__main__":
@@ -535,6 +562,10 @@ if __name__ == "__main__":
 
             print("测试板子配置波特率功能命令>>>>>>>>>")
             comm.set_baudrate(board_id=1, baudrate=9600, params=[], use_crc=True, timeout=0.3)
+
+            print("测试板子outpwm命令>>>>>>>>>")
+            comm.run_outpwm(board_id=1, channel_id=1, params=["1000","2000"], use_crc=True, timeout=0.3)
+
 
 
         
