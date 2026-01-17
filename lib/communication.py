@@ -489,6 +489,33 @@ class RS485Communication:
         else:
             return False, f"通道PWM开启失败: {params[0] if params else '未知错误'}"
 
+    #配置开锁默认参数指令
+    def set_defaultconfig(self, board_id: int, params: List[str] = None, use_crc: bool = True, timeout: float = None) -> Tuple[bool, str]:
+        """
+        控制PWM输出命令
+
+        参数:
+            board_id: 板子ID
+            use_crc: 是否使用CRC校验
+            timeout: 接收响应的超时时间
+
+        返回:
+            Tuple[bool, str]: 
+                - 命令是否执行成功
+                - 响应信息或错误信息
+        """
+
+        cmd_str =  ""
+        if params:
+            cmd_str += f"{','.join(params)}"
+
+        success, params = self.execute_command("DEFLOCK", board_id, [cmd_str], use_crc, timeout)
+        if success:
+            return True, f"开锁默认参数设置成功"
+        else:
+            return False, f"开锁默认参数设置失败: {params[0] if params else '未知错误'}"
+
+
 
 
 # 示例用法
@@ -565,6 +592,9 @@ if __name__ == "__main__":
 
             print("测试板子outpwm命令>>>>>>>>>")
             comm.run_outpwm(board_id=1, channel_id=1, params=["1000","2000"], use_crc=True, timeout=0.3)
+
+            print("设置默认开锁指令>>>>>>>>>")
+            comm.set_defaultconfig(board_id=1, params=["500","0","1","200"], use_crc=True, timeout=0.3)
 
 
 

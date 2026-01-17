@@ -102,6 +102,7 @@ class MainWindow:
             ("获取开关量反馈", self.on_button_getoutput_clicked),
             ("设置板子波特率", self.on_button_setbaudrate_clicked),
             ("测试PWM输出", self.on_button_runoutpwm_clicked),
+            ("设置默认参数", self.on_button_setdfconfig_clicked),
         ]
 
         # 创建第一行按钮容器
@@ -192,6 +193,16 @@ class MainWindow:
             channel_id = int(selected_channel)
             params = ["1000","2000"]
             self.comm.run_outpwm(board_id=1, channel_id=channel_id, params=params, use_crc=True, timeout=0.3)
+        else:
+            print("串口未连接，无法执行运行启动操作")  
+
+    def on_button_setdfconfig_clicked(self):
+        print("测试设置默认配置按钮被点击")
+        # 这里可以添加开按钮的具体功能
+       
+        if self.connected:
+            params = ["500","0","1","200"]
+            self.comm.set_defaultconfig(board_id=1, params=params, use_crc=True, timeout=0.3)
         else:
             print("串口未连接，无法执行运行启动操作")  
 
