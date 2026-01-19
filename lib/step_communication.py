@@ -242,7 +242,7 @@ class RS485Communication:
         
         return True, resp_params
 
-  
+
 
   
 
