@@ -3,7 +3,7 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter import StringVar
 import tkinter.messagebox as msgbox
-from lib.jialiao_communication import *
+from lib.step_communication import *
 
 class MainWindow:
     def __init__(self, root):
@@ -12,12 +12,12 @@ class MainWindow:
         self.comm = None
         self.connected = False
         self.root = root
-        self.root.title("极傲炒菜机-加料电路板Y24控制面板")
+        self.root.title("极傲炒菜机-五轴电机板控制面板")
         self.root.geometry("450x400")
         self.root.protocol("WM_DELETE_WINDOW", self.on_closing)
 
         # 创建主框架
-        main_frame = ttk.LabelFrame(root, text="加料通讯控制",padding="10")
+        main_frame = ttk.LabelFrame(root, text="五轴电路板控制",padding="10")
         main_frame.pack(fill=tk.BOTH, expand=True,padx=20,pady=10)
         
 
@@ -58,7 +58,7 @@ class MainWindow:
         style.configure("Connected.TLabel", foreground="green")  # 设置为绿色
         ttk.Label(select_frame_baud, textvariable=self.status_text, style="Connected.TLabel").pack(side=tk.LEFT, padx=5)
 
-
+        """
         self.button_connect = ttk.Button(button_frame_func, text="连接串口", command=self.on_button_connect_clicked)
         self.button_connect.pack(side=tk.LEFT, padx=5)
 
@@ -67,7 +67,7 @@ class MainWindow:
 
         self.button_reboot = ttk.Button(button_frame_func, text="板子重启", command=self.on_button_reboot_clicked)
         self.button_reboot.pack(side=tk.LEFT, padx=5)
-
+        """
 
         # 创建选择框
         select_frame = ttk.Frame(main_frame)
@@ -92,6 +92,7 @@ class MainWindow:
         button_frame.pack(fill=tk.X, pady=5)
 
         # 创建按钮列表
+        """
         buttons = [
             ("运行启动", self.on_button_runchannel_clicked),
             ("获取通道反馈", self.on_button_getchannel_clicked),
@@ -104,7 +105,7 @@ class MainWindow:
             ("测试PWM输出", self.on_button_runoutpwm_clicked),
             ("设置默认参数", self.on_button_setdfconfig_clicked),
         ]
-
+       
         # 创建第一行按钮容器
         current_row = ttk.Frame(button_frame)
         current_row.pack(fill=tk.X)
@@ -119,7 +120,7 @@ class MainWindow:
                 current_row = ttk.Frame(button_frame)
                 current_row.pack(fill=tk.X)
 
-                
+        """       
 
     def on_closing(self):
         """窗口关闭时的处理函数"""
@@ -146,138 +147,15 @@ class MainWindow:
         if self.connected:
             channel_id = int(selected_channel)
             params = [val_keepruntime]
-            self.comm.run_channel(board_id=1, channel_id=channel_id, params=params, use_crc=True, timeout=0.3)
+            ##self.comm.run_channel(board_id=1, channel_id=channel_id, params=params, use_crc=True, timeout=0.3)
         else:
             print("串口未连接，无法执行运行启动操作")    
 
 
-
-    def on_button_runoutput_clicked(self,status):
-        print("开关量按钮被点击")
-        # 这里可以添加开按钮的具体功能
-        selected_channel = self.combo_numbers.get()
-      
-
-        print(f"保存设置: 选择的加料通道={selected_channel}")
-        if self.connected:
-            channel_id = int(selected_channel)
-            params = [status]
-            self.comm.run_output(board_id=1, channel_id=channel_id, params=params, use_crc=True, timeout=0.3)
-        else:
-            print("串口未连接，无法执行运行启动操作")    
-
-
-    def on_button_setchecksum_clicked(self,status):
-        print("配置校验按钮被点击")
-        # 这里可以添加开按钮的具体功能
-        selected_channel = self.combo_numbers.get()
-      
-
-        print(f"保存设置: 选择的加料通道={selected_channel}")
-        if self.connected:
-            statusval = int(status)
-            params = []
-            self.comm.set_checksum(board_id=1, status=statusval, params=params, use_crc=True, timeout=0.3)
-        else:
-            print("串口未连接，无法执行运行启动操作")  
-
-
-    def on_button_runoutpwm_clicked(self):
-        print("测试PWM输出按钮被点击")
-        # 这里可以添加开按钮的具体功能
-        selected_channel = self.combo_numbers.get()
-      
-
-        print(f"保存设置: 选择的加料通道={selected_channel}")
-        if self.connected:
-            channel_id = int(selected_channel)
-            params = ["1000","2000"]
-            self.comm.run_outpwm(board_id=1, channel_id=channel_id, params=params, use_crc=True, timeout=0.3)
-        else:
-            print("串口未连接，无法执行运行启动操作")  
-
-    def on_button_setdfconfig_clicked(self):
-        print("测试设置默认配置按钮被点击")
-        # 这里可以添加开按钮的具体功能
-       
-        if self.connected:
-            params = ["500","0","1","200"]
-            self.comm.set_defaultconfig(board_id=1, params=params, use_crc=True, timeout=0.3)
-        else:
-            print("串口未连接，无法执行运行启动操作")  
-
-
-
-    def on_button_setbaudrate_clicked(self):
-        print("设置波特率按钮被点击")
-        # 这里可以添加开按钮的具体功能
-
-        if self.connected:
-            baudrateval = int(self.baudrate_var.get())
-            params = []
-            self.comm.set_baudrate(board_id=1, baudrate=baudrateval, params=params, use_crc=True, timeout=0.3)
-        else:
-            print("串口未连接，无法执行运行启动操作")  
-
-    def on_button_getchannel_clicked(self):
-        print("获取通道反馈按钮被点击")
-        # 这里可以添加开按钮的具体功能
-        selected_channel = self.combo_numbers.get()
-       
-        print(f"保存设置: 选择的获取通道={selected_channel}")
-        if self.connected:
-            channel_id = int(selected_channel)
-            params = []
-            self.comm.get_channel(board_id=1, channel_id=channel_id, params=params, use_crc=True, timeout=0.3)
-        else:
-            print("串口未连接，无法执行运行启动操作")
-
-    def on_button_getoutput_clicked(self):
-        print("获取开关量反馈按钮被点击")
-        # 这里可以添加开按钮的具体功能
-        selected_channel = self.combo_numbers.get()
-       
-        print(f"保存设置: 选择的获取通道={selected_channel}")
-        if self.connected:
-            channel_id = int(selected_channel)
-            params = []
-            self.comm.get_output(board_id=1, channel_id=channel_id, params=params, use_crc=True, timeout=0.3)
-        else:
-            print("串口未连接，无法执行运行启动操作")                               
-
-    def on_button_connect_clicked(self):
-        print("串口连接按钮被点击")
-        print("初始化>>>创建通信对象")
-        port = self.port_var.get()
-        baudrate = int(self.baudrate_var.get())
-        self.comm = RS485Communication(port=port, baudrate=baudrate, timeout=1.0)
-        print(f"   串口: {self.comm.port}, 波特率: {self.comm.baudrate}, 超时: {self.comm.timeout}秒")
-        self.connected =  self.comm.connect()
-        if self.connected:
-            self.status_text.set("已连接")
-            print("   串口连接成功")
-        else:
-            self.status_text.set("连接失败")
-            print("   串口连接失败")
-
-    def on_button_ping_clicked(self):
-        print("板子ping按钮被点击")
-        if not self.connected:
-            print("串口未连接，无法执行ping操作")
-            return
-        self.comm.check_ping(board_id=1, use_crc=True, timeout=0.3)
-
-    def on_button_reboot_clicked(self):
-        print("重启按钮被点击")
-        if not self.connected:
-            print("串口未连接，无法执行重启操作")
-            return
-        self.comm.restart_board(board_id=1, use_crc=True, timeout=0.3)
-                      
     
 
 if __name__ == "__main__":
-    print("启动极傲炒菜机-加料电路板Y24控制面板。。。")
+    print("启动极傲炒菜机-五轴电路板控制面板。。。")
     root = tk.Tk()
     app = MainWindow(root)
     root.mainloop()
