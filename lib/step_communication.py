@@ -50,18 +50,39 @@ class RS485Communication:
         if self.serial_conn and self.serial_conn.is_open:
             self.serial_conn.close()
 
-    def calculate_crc16(self, data: str) -> str:
+    def calculate_lrc(self, data: str) -> str:
         """
-        计算CRC16-MODBUS校验值
+        计算累加校验和 (LRC)
+
+        根据文档的要求：
+        1. 计算从 # 到 * (包含首尾) 的所有字符 ASCII 累加和。
+        2. 取和的低8位 (sum % 256)。
+        3. 转换为2位大写十六进制字符串。
 
         参数:
-            data: 要计算校验值的字符串
+            data: 完整指令字符串 (例如: "#RUN,1,0,2560000,360*")
 
         返回:
-            str: 4位十六进制CRC校验值（大写）
+            str: 2位十六进制校验值（大写）
         """
-        crc_value = self.crc16_func(data.encode('utf-8'))
-        return f"{crc_value:04X}"
+        total = 0
+        # 找到 # 和 * 的位置
+        start_idx = data.find('#')
+        end_idx = data.find('*')
+        
+        if start_idx != -1 and end_idx != -1 and end_idx > start_idx:
+            # 计算 # 到 * 之间的字符的ASCII累加和
+            for char in data[start_idx:end_idx + 1]:
+                total += ord(char)
+
+        # 取低8位 (对应C语言中的 uint8_t 自动溢出，或者 sum & 0xFF)
+        checksum = total % 256
+        
+        # 转换为2位大写十六进制字符串 (对应C语言中的转换逻辑)
+        return f"{checksum:02X}"
+
+
+
 
     def build_command(self, command: str, board_id: int, params: List[str] = None, use_crc: bool = True) -> str:
         """
@@ -79,22 +100,26 @@ class RS485Communication:
         if params is None:
             params = []
 
-        # 构建基本命令: YT+<指令名>=<板子ID>,<参数1>,<参数2>...
-        cmd_str = f"YT+{command}={board_id}"
+        # 构建基本命令: #<指令名>,<板子ID>,<参数1>,<参数2>...
+        cmd_str = f"#{command},{board_id}"
         if params:
             cmd_str += f",{','.join(params)}"
-            print(f"将构建命令串(不带CRC):{cmd_str}")
+        
+        # 打印命令字符串（调试用）
+        print(f"将构建命令串(不带CRC): {cmd_str}")
 
         # 添加CRC校验（如果需要）
         if use_crc:
-            crc = self.calculate_crc16(cmd_str)
+            # 计算LRC校验码，这里要计算从 # 到 * 之间的字符的累加和
+            crc = self.calculate_lrc(cmd_str + "*")  # 包含 * 进行校验
             cmd_str += f"*{crc}"
-            print(f"将构建命令串(带上CRC):{cmd_str}")
+            print(f"将构建命令串(带上CRC): {cmd_str}")
 
         # 添加<CR><LF>结尾
         cmd_str += "\r\n"
-
+        
         return cmd_str
+
 
     def send_command(self, command: str, board_id: int, params: List[str] = None, use_crc: bool = True) -> bool:
         """
@@ -242,7 +267,31 @@ class RS485Communication:
         
         return True, resp_params
 
+    def run_single_motor(self, board_id: int, motor_id: int, params: List[str] = None, use_crc: bool = True, timeout: float = None) -> Tuple[bool, str]:
+        """
+        控制PWM输出命令
 
+        参数:
+            board_id: 板子ID
+            motor_id: 电机ID
+            use_crc: 是否使用CRC校验
+            timeout: 接收响应的超时时间
+
+        返回:
+            Tuple[bool, str]: 
+                - 命令是否执行成功
+                - 响应信息或错误信息
+        """
+
+        cmd_str =  str(motor_id)
+        if params:
+            cmd_str += f",{','.join(params)}"
+
+        success, params = self.execute_command("RUN", board_id, [cmd_str], use_crc, timeout)
+        if success:
+            return True, f"电机{motor_id}运行成功"
+        else:
+            return False, f"电机运行失败: {params[0] if params else '未知错误'}"
 
   
 
@@ -263,7 +312,7 @@ if __name__ == "__main__":
         try:
             # 测试CRC计算
             print("\n测试五轴电机开始>>>>>>>>>>>>>>>")
-            
+            comm.run_single_motor(1, 0, ["2560000","360"])
 
 
 

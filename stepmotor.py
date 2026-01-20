@@ -61,51 +61,55 @@ class MainWindow:
   
         self.button_connect = ttk.Button(button_frame_func, text="连接串口", command=self.on_button_connect_clicked)
         self.button_connect.pack(side=tk.LEFT, padx=5)
-        """
-        self.button_ping = ttk.Button(button_frame_func, text="板子连通性", command=self.on_button_ping_clicked)
-        self.button_ping.pack(side=tk.LEFT, padx=5)
 
-        self.button_reboot = ttk.Button(button_frame_func, text="板子重启", command=self.on_button_reboot_clicked)
-        self.button_reboot.pack(side=tk.LEFT, padx=5)
-        """
-
-       
-
-        """
-        # 创建按钮容器
-        button_frame = ttk.Frame(main_frame)
-        button_frame.pack(fill=tk.X, pady=5)
-
-        # 创建按钮列表
+        separator = ttk.Separator(main_frame, orient='horizontal')
+        separator.pack(fill='x', pady=10)
         
-        buttons = [
-            ("运行启动", self.on_button_runchannel_clicked),
-            ("获取通道反馈", self.on_button_getchannel_clicked),
-            ("开关量-开", lambda: self.on_button_runoutput_clicked("1")),
-            ("开关量-关", lambda: self.on_button_runoutput_clicked("0")),
-            ("配置校验-开", lambda: self.on_button_setchecksum_clicked("1")),
-            ("配置校验-关", lambda: self.on_button_setchecksum_clicked("0")),
-            ("获取开关量反馈", self.on_button_getoutput_clicked),
-            ("设置板子波特率", self.on_button_setbaudrate_clicked),
-            ("测试PWM输出", self.on_button_runoutpwm_clicked),
-            ("设置默认参数", self.on_button_setdfconfig_clicked),
-        ]
-       
-        # 创建第一行按钮容器
-        current_row = ttk.Frame(button_frame)
-        current_row.pack(fill=tk.X)
+                # --- 第一行：电机号 ---
+        # 创建一个临时的 Frame 用于水平排列这一行的元素
+        runFrame = ttk.Frame(main_frame)
+        runFrame.pack(fill="x", pady=2) # fill="x" 让这一行横向填满
 
-        # 创建按钮并添加到当前行
-        for i, (text, command) in enumerate(buttons):
-            button = ttk.Button(current_row, text=text, command=command)
-            button.pack(side=tk.LEFT, padx=5, fill=tk.X, expand=True)
-            
-            # 每隔2个按钮创建新的一行（可根据需要调整）
-            if (i + 1) % 2 == 0:
-                current_row = ttk.Frame(button_frame)
-                current_row.pack(fill=tk.X)
+        # 标签
+        ttk.Label(runFrame, text="电 机号:").pack(side="left", padx=5)
+        
+        # 选择框
+        # StringVar 用于跟踪选择框的值
+        self.motor_id_var = tk.StringVar()
+        self.motor_id_var.set("0")  
+        motor_combobox = ttk.Combobox(runFrame, textvariable=self.motor_id_var, values=["0", "1", "2", "3", "4"], state="readonly", width=10)
+        motor_combobox.pack(side="left", padx=5)
 
-        """       
+        # --- 第二行：转动速度 ---
+        # 创建第二行的 Frame
+        row2_frame = ttk.Frame(main_frame)
+        row2_frame.pack(fill="x", pady=2)
+
+        ttk.Label(row2_frame, text="转动速度(角度/秒):").pack(side="left", padx=5)
+        
+        # 输入框
+        self.speed_var = tk.StringVar()
+        speed_entry = ttk.Entry(row2_frame, textvariable=self.speed_var, width=12)
+        speed_entry.pack(side="left", padx=5)
+
+        # --- 第三行：转动距离 ---
+        # 创建第三行的 Frame
+        row3_frame = ttk.Frame(main_frame)
+        row3_frame.pack(fill="x", pady=2)
+
+        ttk.Label(row3_frame, text="转动距离(圈):").pack(side="left", padx=5)
+        
+        # 输入框
+        self.distance_var = tk.StringVar()
+        distance_entry = ttk.Entry(row3_frame, textvariable=self.distance_var, width=12)
+        distance_entry.pack(side="left", padx=5)
+
+        self.button_run = ttk.Button(row3_frame, text="运行", command=self.on_button_run_clicked)
+        self.button_run.pack(side=tk.LEFT, padx=5)
+
+        separator = ttk.Separator(main_frame, orient='horizontal')
+        separator.pack(fill='x', pady=10)
+
 
     def on_closing(self):
         """窗口关闭时的处理函数"""
@@ -116,25 +120,6 @@ class MainWindow:
             except Exception as e:
                 print(f"断开连接时出错: {e}")
         self.root.destroy()  # 关闭窗口
-
-    def on_button_runchannel_clicked(self):
-        print("启动运行按钮被点击")
-        # 这里可以添加开按钮的具体功能
-        selected_channel = self.combo_numbers.get()
-        val_keepruntime = self.input_keepruntime.get()
-
-        if not val_keepruntime.strip():  # 检查是否为空或仅包含空格
-            print("输入数值不能为空") 
-            msgbox.showwarning("提示", "输入数值不能为空")
-            return 
-
-        print(f"保存设置: 选择的加料通道={selected_channel}, 保持时间={val_keepruntime}")
-        if self.connected:
-            channel_id = int(selected_channel)
-            params = [val_keepruntime]
-            ##self.comm.run_channel(board_id=1, channel_id=channel_id, params=params, use_crc=True, timeout=0.3)
-        else:
-            print("串口未连接，无法执行运行启动操作")    
 
     def on_button_connect_clicked(self):
         print("串口连接按钮被点击")
@@ -150,7 +135,44 @@ class MainWindow:
         else:
             self.status_text.set("连接失败")
             print("   串口连接失败")  
+
+    def on_button_run_clicked(self):
+        print("电机运行按钮被点击")               
+        if not self.connected:
+            print("   串口未连接，无法运行电机")    
+            return
+        
+        motor_id = int(self.motor_id_var.get())
+        speed = str(self.speed_var.get())
+        distance = int(self.distance_var.get())
+        pulses=str(self.convert_revolutions_to_pulses(distance))
+        print(f"   电机号: {motor_id}, 转动速度: {speed}转/秒, 转动距离: {distance}圈")
+        self.comm.run_single_motor(1, motor_id, [pulses,speed])
+                     
     
+
+    def convert_revolutions_to_pulses(self,revolutions: int, step_angle: float = 1.8, microstepping: int = 1) -> int:
+        """
+        将圈数转换为脉冲数
+
+        参数:
+            revolutions: 圈数
+            step_angle: 每步的角度（默认为 1.8°）
+            microstepping: 细分模式（默认为 1，即无细分）
+
+        返回:
+            int: 计算得到的脉冲数
+        """
+        # 计算每圈的脉冲数
+        pulses_per_revolution = 360 / step_angle * microstepping
+        # 计算总脉冲数
+        pulses = revolutions * pulses_per_revolution
+        return int(pulses)
+
+
+
+
+
 
 if __name__ == "__main__":
     print("启动极傲炒菜机-五轴电路板控制面板。。。")
