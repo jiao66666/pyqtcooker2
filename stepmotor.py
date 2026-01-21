@@ -13,7 +13,7 @@ class MainWindow:
         self.connected = False
         self.root = root
         self.root.title("极傲炒菜机-五轴电机板控制面板")
-        self.root.geometry("450x400")
+        self.root.geometry("600x400")
         self.root.protocol("WM_DELETE_WINDOW", self.on_closing)
 
         # 创建主框架
@@ -104,8 +104,15 @@ class MainWindow:
         distance_entry = ttk.Entry(row3_frame, textvariable=self.distance_var, width=12)
         distance_entry.pack(side="left", padx=5)
 
-        self.button_run = ttk.Button(row3_frame, text="运行", command=self.on_button_run_clicked)
+
+        self.button_enable = ttk.Button(row3_frame, text="使能电机", command=self.on_button_enable_clicked)
+        self.button_enable.pack(side=tk.LEFT, padx=5)
+
+        self.button_run = ttk.Button(row3_frame, text="单次运行", command=self.on_button_run_clicked)
         self.button_run.pack(side=tk.LEFT, padx=5)
+
+        self.button_runlong = ttk.Button(row3_frame, text="长运行", command=self.on_button_runlong_clicked)
+        self.button_runlong.pack(side=tk.LEFT, padx=5)
 
         separator = ttk.Separator(main_frame, orient='horizontal')
         separator.pack(fill='x', pady=10)
@@ -148,8 +155,31 @@ class MainWindow:
         pulses=str(self.convert_revolutions_to_pulses(distance))
         print(f"   电机号: {motor_id}, 转动速度: {speed}转/秒, 转动距离: {distance}圈")
         self.comm.run_single_motor(1, motor_id, [pulses,speed])
-                     
+
+
+    def on_button_enable_clicked(self):
+        print("电机使能按钮被点击")               
+        if not self.connected:
+            print("   串口未连接，无法运行电机")    
+            return
+        
+        motor_id = int(self.motor_id_var.get())
+
+        print(f" 使能电机号: {motor_id}")
+        self.comm.enable_single_motor(1, motor_id, [])
     
+
+    def on_button_runlong_clicked(self):
+        print("电机长运行按钮被点击")               
+        if not self.connected:
+            print("   串口未连接，无法运行电机")    
+            return
+        
+        motor_id = int(self.motor_id_var.get())
+        speed = str(self.speed_var.get())
+        print(f"   长运行电机号: {motor_id}, 转动速度: {speed}转/秒")
+        self.comm.run_single_motor_long(1, motor_id, ["-1",speed])
+
 
     def convert_revolutions_to_pulses(self,revolutions: int, step_angle: float = 1.8, microstepping: int = 1) -> int:
         """

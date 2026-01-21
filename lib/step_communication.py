@@ -293,7 +293,61 @@ class RS485Communication:
         else:
             return False, f"电机运行失败: {params[0] if params else '未知错误'}"
 
+
+    def run_single_motor_long(self, board_id: int, motor_id: int, params: List[str] = None, use_crc: bool = True, timeout: float = None) -> Tuple[bool, str]:
+        """
+        控制PWM输出命令
+
+        参数:
+            board_id: 板子ID
+            motor_id: 电机ID
+            use_crc: 是否使用CRC校验
+            timeout: 接收响应的超时时间
+
+        返回:
+            Tuple[bool, str]: 
+                - 命令是否执行成功
+                - 响应信息或错误信息
+        """
+
+        cmd_str =  str(motor_id)
+        if params:
+            cmd_str += f",{','.join(params)}"
+
+        success, params = self.execute_command("LONG", board_id, [cmd_str], use_crc, timeout)
+        if success:
+            return True, f"电机{motor_id}长运行成功"
+        else:
+            return False, f"电机长运行失败: {params[0] if params else '未知错误'}"
+
   
+
+    def enable_single_motor(self, board_id: int, motor_id: int, params: List[str] = None, use_crc: bool = True, timeout: float = None) -> Tuple[bool, str]:
+        """
+        控制PWM输出命令
+
+        参数:
+            board_id: 板子ID
+            motor_id: 电机ID
+            use_crc: 是否使用CRC校验
+            timeout: 接收响应的超时时间
+
+        返回:
+            Tuple[bool, str]: 
+                - 命令是否执行成功
+                - 响应信息或错误信息
+        """
+
+        cmd_str =  str(motor_id)
+        if params:
+            cmd_str += f",{','.join(params)}"
+
+        success, params = self.execute_command("ENABLE", board_id, [cmd_str], use_crc, timeout)
+        if success:
+            return True, f"电机{motor_id}使能成功"
+        else:
+            return False, f"电机使能失败: {params[0] if params else '未知错误'}"
+
 
 # 示例用法
 if __name__ == "__main__":
@@ -313,6 +367,15 @@ if __name__ == "__main__":
             # 测试CRC计算
             print("\n测试五轴电机开始>>>>>>>>>>>>>>>")
             comm.run_single_motor(1, 0, ["2560000","360"])
+
+             # 测试CRC计算
+            print("\n测试五轴电机长运行开始>>>>>>>>>>>>>>>")
+            comm.run_single_motor_long(1, 0, ["-1","360"])
+
+
+             # 测试CRC计算
+            print("\n测试五轴电机使能开始>>>>>>>>>>>>>>>")
+            comm.enable_single_motor(1, 2, [])
 
 
 
