@@ -5,7 +5,7 @@ import threading
 from typing import Optional, List, Tuple, Union
 
 class RS485Communication:
-    """RS485通信类，实现YT_LOCKER24路锁控板的通信协议"""
+    """RS485通信类，实现5轴电机主板通信协议"""
 
     def __init__(self, port: str, baudrate: int = 9600, timeout: float = 1.0):
         """
@@ -106,14 +106,14 @@ class RS485Communication:
             cmd_str += f",{','.join(params)}"
         
         # 打印命令字符串（调试用）
-        print(f"将构建命令串(不带CRC): {cmd_str}")
+        print(f"将构建命令串(不带LRC): {cmd_str}")
 
         # 添加CRC校验（如果需要）
         if use_crc:
             # 计算LRC校验码，这里要计算从 # 到 * 之间的字符的累加和
             crc = self.calculate_lrc(cmd_str + "*")  # 包含 * 进行校验
             cmd_str += f"*{crc}"
-            print(f"将构建命令串(带上CRC): {cmd_str}")
+            print(f"将构建命令串(带上LRC): {cmd_str}")
 
         # 添加<CR><LF>结尾
         cmd_str += "\r\n"
