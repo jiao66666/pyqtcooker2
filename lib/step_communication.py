@@ -347,7 +347,85 @@ class RS485Communication:
             return True, f"电机{motor_id}使能成功"
         else:
             return False, f"电机使能失败: {params[0] if params else '未知错误'}"
+        
+    def enable_all_motor(self, board_id: int, status: int = 1, params: List[str] = None, use_crc: bool = True, timeout: float = None) -> Tuple[bool, str]:
+        """
+        控制PWM输出命令
 
+        参数:
+            board_id: 板子ID
+            status: 是否全部使能，1-使能，0-失能
+            use_crc: 是否使用CRC校验
+            timeout: 接收响应的超时时间
+
+        返回:
+            Tuple[bool, str]: 
+                - 命令是否执行成功
+                - 响应信息或错误信息
+        """
+
+        cmd_str =  str(status)
+        cmd_str += f",10111"
+
+        success, params = self.execute_command("ENABLE", board_id, [cmd_str], use_crc, timeout)
+        if success:
+            return True, f"电机全部使能成功"
+        else:
+            return False, f"电机全部使能失败: {params[0] if params else '未知错误'}"        
+
+
+
+    def pause_single_motor(self, board_id: int, motor_id: int, params: List[str] = None, use_crc: bool = True, timeout: float = None) -> Tuple[bool, str]:
+        """
+        暂停单个电机
+
+        参数:
+            board_id: 板子ID
+            motor_id: 电机ID
+            use_crc: 是否使用CRC校验
+            timeout: 接收响应的超时时间
+
+        返回:
+            Tuple[bool, str]: 
+                - 命令是否执行成功
+                - 响应信息或错误信息
+        """
+
+        cmd_str =  str(motor_id)
+        if params:
+            cmd_str += f",{','.join(params)}"
+
+        success, params = self.execute_command("PAUSE", board_id, [cmd_str], use_crc, timeout)
+        if success:
+            return True, f"电机{motor_id}暂停成功"
+        else:
+            return False, f"电机暂停失败: {params[0] if params else '未知错误'}"
+        
+    def stop_single_motor(self, board_id: int, motor_id: int, params: List[str] = None, use_crc: bool = True, timeout: float = None) -> Tuple[bool, str]:
+        """
+        急停单个电机
+
+        参数:
+            board_id: 板子ID
+            motor_id: 电机ID
+            use_crc: 是否使用CRC校验
+            timeout: 接收响应的超时时间
+
+        返回:
+            Tuple[bool, str]: 
+                - 命令是否执行成功
+                - 响应信息或错误信息
+        """
+
+        cmd_str =  str(motor_id)
+        if params:
+            cmd_str += f",{','.join(params)}"
+
+        success, params = self.execute_command("STOP", board_id, [cmd_str], use_crc, timeout)
+        if success:
+            return True, f"电机{motor_id}暂停成功"
+        else:
+            return False, f"电机暂停失败: {params[0] if params else '未知错误'}"        
 
 # 示例用法
 if __name__ == "__main__":
@@ -377,6 +455,19 @@ if __name__ == "__main__":
             print("\n测试五轴电机使能开始>>>>>>>>>>>>>>>")
             comm.enable_single_motor(1, 2, [])
 
+
+            # 测试CRC计算
+            print("\n全部使能测试开始>>>>>>>>>>>>>>>")
+            comm.enable_all_motor(1)
+
+
+            # 测试CRC计算
+            print("\n暂停单个电机开始>>>>>>>>>>>>>>>")
+            comm.pause_single_motor(1,0,[])
+
+                        # 测试CRC计算
+            print("\n急停单个电机开始>>>>>>>>>>>>>>>")
+            comm.stop_single_motor(1,0,[])
 
 
         

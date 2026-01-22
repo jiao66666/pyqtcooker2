@@ -13,7 +13,7 @@ class MainWindow:
         self.connected = False
         self.root = root
         self.root.title("极傲炒菜机-五轴电机板控制面板")
-        self.root.geometry("600x400")
+        self.root.geometry("650x400")
         self.root.protocol("WM_DELETE_WINDOW", self.on_closing)
 
         # 创建主框架
@@ -104,15 +104,27 @@ class MainWindow:
         distance_entry = ttk.Entry(row3_frame, textvariable=self.distance_var, width=12)
         distance_entry.pack(side="left", padx=5)
 
+        row4_frame = ttk.Frame(main_frame)
+        row4_frame.pack(fill="x", pady=2)
 
-        self.button_enable = ttk.Button(row3_frame, text="使能电机", command=self.on_button_enable_clicked)
+        self.button_enable = ttk.Button(row4_frame, text="使能电机", command=self.on_button_enable_clicked)
         self.button_enable.pack(side=tk.LEFT, padx=5)
 
-        self.button_run = ttk.Button(row3_frame, text="单次运行", command=self.on_button_run_clicked)
+        self.button_run = ttk.Button(row4_frame, text="单次运行", command=self.on_button_run_clicked)
         self.button_run.pack(side=tk.LEFT, padx=5)
 
-        self.button_runlong = ttk.Button(row3_frame, text="长运行", command=self.on_button_runlong_clicked)
+        self.button_runlong = ttk.Button(row4_frame, text="长运行", command=self.on_button_runlong_clicked)
         self.button_runlong.pack(side=tk.LEFT, padx=5)
+
+
+        self.button_enableall = ttk.Button(row4_frame, text="使能全部", command=self.on_button_enableall_clicked)
+        self.button_enableall.pack(side=tk.LEFT, padx=5)
+
+        self.button_pause = ttk.Button(row4_frame, text="暂停电机", command=self.on_button_pause_clicked)
+        self.button_pause.pack(side=tk.LEFT, padx=5)
+
+        self.button_stop = ttk.Button(row4_frame, text="急停电机", command=self.on_button_stop_clicked)
+        self.button_stop.pack(side=tk.LEFT, padx=5)
 
         separator = ttk.Separator(main_frame, orient='horizontal')
         separator.pack(fill='x', pady=10)
@@ -168,6 +180,37 @@ class MainWindow:
         print(f" 使能电机号: {motor_id}")
         self.comm.enable_single_motor(1, motor_id, [])
     
+
+    def on_button_enableall_clicked(self):
+        print("电机使能全部按钮被点击")               
+        if not self.connected:
+            print("   串口未连接，无法运行电机")    
+            return
+        
+        self.comm.enable_all_motor(1)
+
+    def on_button_pause_clicked(self):
+        print("电机暂停按钮被点击")               
+        if not self.connected:
+            print("   串口未连接，无法运行电机")    
+            return
+        
+        motor_id = int(self.motor_id_var.get())
+
+        print(f" 暂停电机号: {motor_id}")
+        self.comm.pause_single_motor(1, motor_id, [])        
+
+
+    def on_button_stop_clicked(self):
+        print("电机急停按钮被点击")               
+        if not self.connected:
+            print("   串口未连接，无法运行电机")    
+            return
+        
+        motor_id = int(self.motor_id_var.get())
+
+        print(f" 急停电机号: {motor_id}")
+        self.comm.stop_single_motor(1, motor_id, [])
 
     def on_button_runlong_clicked(self):
         print("电机长运行按钮被点击")               
