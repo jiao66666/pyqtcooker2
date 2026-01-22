@@ -350,7 +350,7 @@ class RS485Communication:
         
     def enable_all_motor(self, board_id: int, status: int = 1, params: List[str] = None, use_crc: bool = True, timeout: float = None) -> Tuple[bool, str]:
         """
-        控制PWM输出命令
+        使能或失能全部电机
 
         参数:
             board_id: 板子ID
