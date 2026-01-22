@@ -3,7 +3,7 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter import StringVar
 import tkinter.messagebox as msgbox
-from lib.step_communication import *
+from lib.stepmotor_communication import *
 
 class MainWindow:
     def __init__(self, root):
