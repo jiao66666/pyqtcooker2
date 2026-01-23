@@ -374,6 +374,54 @@ class RS485Communication:
             return False, f"电机全部使能失败: {params[0] if params else '未知错误'}"        
 
 
+    def pause_all_motor(self, board_id: int,status: int = 0, params: List[str] = None, use_crc: bool = True, timeout: float = None) -> Tuple[bool, str]:
+        """
+        暂停全部电机
+
+        参数:
+            board_id: 板子ID
+            status: 是否全部使能，1-使能，0-失能
+            use_crc: 是否使用CRC校验
+            timeout: 接收响应的超时时间
+
+        返回:
+            Tuple[bool, str]: 
+                - 命令是否执行成功
+                - 响应信息或错误信息
+        """
+
+        cmd_str =  str(status)
+        success, params = self.execute_command("PAUSE", board_id, [cmd_str], use_crc, timeout)
+        if success:
+            return True, f"暂停全部电机成功"
+        else:
+            return False, f"暂停全部电机失败: {params[0] if params else '未知错误'}"   
+
+
+    def stop_all_motor(self, board_id: int, status: int = 0,  params: List[str] = None, use_crc: bool = True, timeout: float = None) -> Tuple[bool, str]:
+        """
+        急停全部电机
+
+        参数:
+            board_id: 板子ID
+            status: 是否全部使能，1-使能，0-失能
+            use_crc: 是否使用CRC校验
+            timeout: 接收响应的超时时间
+
+        返回:
+            Tuple[bool, str]: 
+                - 命令是否执行成功
+                - 响应信息或错误信息
+        """
+        cmd_str =  str(status)
+        success, params = self.execute_command("STOP", board_id, [cmd_str], use_crc, timeout)
+        if success:
+            return True, f"急停全部电机成功"
+        else:
+            return False, f"急停全部电机失败: {params[0] if params else '未知错误'}" 
+
+
+
 
     def pause_single_motor(self, board_id: int, motor_id: int, params: List[str] = None, use_crc: bool = True, timeout: float = None) -> Tuple[bool, str]:
         """
@@ -470,6 +518,12 @@ if __name__ == "__main__":
             comm.stop_single_motor(1,0,[])
 
 
+              # 测试CRC计算
+            print("\n暂停全部电机测试开始>>>>>>>>>>>>>>>")
+            comm.pause_all_motor(1,0,[])
+
+            print("\n急停全部电机测试开始>>>>>>>>>>>>>>>")
+            comm.stop_all_motor(1,0,[])
         
         finally:
             # 断开连接

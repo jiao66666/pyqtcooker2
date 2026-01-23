@@ -116,15 +116,25 @@ class MainWindow:
         self.button_runlong = ttk.Button(row4_frame, text="长运行", command=self.on_button_runlong_clicked)
         self.button_runlong.pack(side=tk.LEFT, padx=5)
 
-
-        self.button_enableall = ttk.Button(row4_frame, text="使能全部", command=self.on_button_enableall_clicked)
-        self.button_enableall.pack(side=tk.LEFT, padx=5)
-
         self.button_pause = ttk.Button(row4_frame, text="暂停电机", command=self.on_button_pause_clicked)
         self.button_pause.pack(side=tk.LEFT, padx=5)
 
         self.button_stop = ttk.Button(row4_frame, text="急停电机", command=self.on_button_stop_clicked)
         self.button_stop.pack(side=tk.LEFT, padx=5)
+
+        row5_frame = ttk.Frame(main_frame)
+        row5_frame.pack(fill="x", pady=2)
+
+        self.button_enableall = ttk.Button(row5_frame, text="使能全部", command=self.on_button_enableall_clicked)
+        self.button_enableall.pack(side=tk.LEFT, padx=5)
+
+        self.button_pauseall = ttk.Button(row5_frame, text="暂停全部", command=self.on_button_pauseall_clicked)
+        self.button_pauseall.pack(side=tk.LEFT, padx=5)
+
+        self.button_stopall = ttk.Button(row5_frame, text="急停全部", command=self.on_button_stopall_clicked)
+        self.button_stopall.pack(side=tk.LEFT, padx=5)
+
+
 
         separator = ttk.Separator(main_frame, orient='horizontal')
         separator.pack(fill='x', pady=10)
@@ -186,8 +196,24 @@ class MainWindow:
         if not self.connected:
             print("   串口未连接，无法运行电机")    
             return
-        
         self.comm.enable_all_motor(1)
+
+
+    def on_button_pauseall_clicked(self):
+        print("电机暂停全部按钮被点击")               
+        if not self.connected:
+            print("   串口未连接，无法运行电机")    
+            return
+        
+        self.comm.pause_all_motor(1)
+
+    def on_button_stopall_clicked(self):
+        print("电机急停全部按钮被点击")               
+        if not self.connected:
+            print("   串口未连接，无法运行电机")    
+            return
+        
+        self.comm.stop_all_motor(1)                
 
     def on_button_pause_clicked(self):
         print("电机暂停按钮被点击")               
