@@ -171,9 +171,22 @@ class MainWindow:
             print("   串口未连接，无法运行电机")    
             return
         
+        speed = self.speed_var.get()
+        distance = self.distance_var.get()
+
+        if speed == "" or speed == 0:
+            print("   请输入有效的速度值")
+            return
+        
+        if distance == "" or distance == 0:
+            print("   请输入有效的距离值")
+            return
+        
         motor_id = int(self.motor_id_var.get())
-        speed = str(self.speed_var.get())
-        distance = int(self.distance_var.get())
+        speed = str(speed)
+        distance = int(distance)
+
+         # 将圈数转换为脉冲数
         pulses=str(self.convert_revolutions_to_pulses(distance))
         print(f"   电机号: {motor_id}, 转动速度: {speed}转/秒, 转动距离: {distance}圈")
         self.comm.run_single_motor(1, motor_id, [pulses,speed])
