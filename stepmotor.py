@@ -33,7 +33,7 @@ class MainWindow:
         ttk.Label(select_frame_port, text="选择端口:").pack(side=tk.LEFT, padx=5)
         self.port_var = StringVar()
         self.port_combo = ttk.Combobox(select_frame_port, textvariable=self.port_var)
-        self.port_combo['values'] = ('COM1', 'COM2', 'COM3', 'COM4', 'COM5')
+        self.port_combo['values'] = ('COM1', 'COM2', 'COM3', 'COM4', 'COM5','COM6','COM7','COM8','COM9','COM10')
         self.port_combo.current(1)
         self.port_combo.pack(side=tk.LEFT, padx=5)
 
