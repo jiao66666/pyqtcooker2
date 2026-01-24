@@ -474,6 +474,59 @@ class RS485Communication:
             return True, f"电机{motor_id}暂停成功"
         else:
             return False, f"电机暂停失败: {params[0] if params else '未知错误'}"        
+        
+
+    def adjust_single_speed(self, board_id: int, motor_id: int, params: List[str] = None, use_crc: bool = True, timeout: float = None) -> Tuple[bool, str]:
+        """
+        调整单个电机速度
+
+        参数:
+            board_id: 板子ID
+            motor_id: 电机ID
+            use_crc: 是否使用CRC校验
+            timeout: 接收响应的超时时间
+
+        返回:
+            Tuple[bool, str]: 
+                - 命令是否执行成功
+                - 响应信息或错误信息
+        """
+
+        cmd_str =  str(motor_id)
+        if params:
+            cmd_str += f",{','.join(params)}"
+
+        success, params = self.execute_command("SPEED", board_id, [cmd_str], use_crc, timeout)
+        if success:
+            return True, f"电机{motor_id}调整速度成功"
+        else:
+            return False, f"电机调整速度失败: {params[0] if params else '未知错误'}"   
+
+    def adjust_all_speed(self, board_id: int, motor_id: int, params: List[str] = None, use_crc: bool = True, timeout: float = None) -> Tuple[bool, str]:
+        """
+        调整所有电机速度
+
+        参数:
+            board_id: 板子ID
+            motor_id: 电机ID
+            use_crc: 是否使用CRC校验
+            timeout: 接收响应的超时时间
+
+        返回:
+            Tuple[bool, str]: 
+                - 命令是否执行成功
+                - 响应信息或错误信息
+        """
+
+        cmd_str =  str(motor_id)
+        if params:
+            cmd_str += f",{','.join(params)}"
+
+        success, params = self.execute_command("SPEED", board_id, [cmd_str], use_crc, timeout)
+        if success:
+            return True, f"全部电机调整速度成功"
+        else:
+            return False, f"全部电机调整速度失败: {params[0] if params else '未知错误'}"                     
 
 # 示例用法
 if __name__ == "__main__":
@@ -524,6 +577,15 @@ if __name__ == "__main__":
 
             print("\n急停全部电机测试开始>>>>>>>>>>>>>>>")
             comm.stop_all_motor(1,0,[])
+
+            
+            print("\n调整单个电机速度测试开始>>>>>>>>>>>>>>>")
+            comm.adjust_single_speed(1,0,['720'])
+
+
+            
+            print("\n调整全部电机速度测试开始>>>>>>>>>>>>>>>")
+            comm.adjust_all_speed(1,0,['360','360','360','0','360'])
         
         finally:
             # 断开连接

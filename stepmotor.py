@@ -122,6 +122,9 @@ class MainWindow:
         self.button_stop = ttk.Button(row4_frame, text="急停电机", command=self.on_button_stop_clicked)
         self.button_stop.pack(side=tk.LEFT, padx=5)
 
+        self.button_speed = ttk.Button(row4_frame, text="调整速度", command=self.on_button_speed_clicked)
+        self.button_speed.pack(side=tk.LEFT, padx=5)
+
         row5_frame = ttk.Frame(main_frame)
         row5_frame.pack(fill="x", pady=2)
 
@@ -134,6 +137,8 @@ class MainWindow:
         self.button_stopall = ttk.Button(row5_frame, text="急停全部", command=self.on_button_stopall_clicked)
         self.button_stopall.pack(side=tk.LEFT, padx=5)
 
+        self.button_speedall = ttk.Button(row5_frame, text="提速全部", command=self.on_button_speedall_clicked)
+        self.button_speedall.pack(side=tk.LEFT, padx=5)
 
 
         separator = ttk.Separator(main_frame, orient='horizontal')
@@ -281,9 +286,34 @@ class MainWindow:
         pulses = revolutions * pulses_per_revolution
         return int(pulses)
 
+    def on_button_speed_clicked(self):
+        print("电机调整单个速度按钮被点击")               
+        if not self.connected:
+            print("   串口未连接，无法运行电机")    
+            return
+        
+        motor_id = int(self.motor_id_var.get())
+        speed = str(self.speed_var.get())
+        if speed == "" or speed == "0":
+            print("   请输入有效的速度值")
+            return
+        print(f"   电机号: {motor_id}, 调整速度: {speed}转/秒")
+        self.comm.adjust_single_speed(1, motor_id, [speed])
 
-
-
+    def on_button_speedall_clicked(self):
+        print("电机调整所有速度按钮被点击")               
+        if not self.connected:
+            print("   串口未连接，无法运行电机")    
+            return
+        
+      
+        speed = str(self.speed_var.get())
+        if speed == "" or speed == "0":
+            print("   请输入有效的速度值")
+            return
+        print(f"   调整速度: {speed}转/秒")
+        speedstr = ','.join([speed] * 5)
+        self.comm.adjust_single_speed(1, 0, [speedstr])
 
 
 if __name__ == "__main__":
