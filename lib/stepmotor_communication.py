@@ -526,7 +526,52 @@ class RS485Communication:
         if success:
             return True, f"全部电机调整速度成功"
         else:
-            return False, f"全部电机调整速度失败: {params[0] if params else '未知错误'}"                     
+            return False, f"全部电机调整速度失败: {params[0] if params else '未知错误'}"    
+
+    def set_bautrate(self, bautrate: int, params: List[str] = None, use_crc: bool = True, timeout: float = None) -> Tuple[bool, str]:
+        """
+        调整所有电机速度
+
+        参数:
+            bautrate: 波特率
+            use_crc: 是否使用CRC校验
+            timeout: 接收响应的超时时间
+
+        返回:
+            Tuple[bool, str]: 
+                - 命令是否执行成功
+                - 响应信息或错误信息
+        """
+
+
+        success, params = self.execute_command("SETBaudRate", bautrate, [], use_crc, timeout)
+        if success:
+            return True, f"设置波特率成功"
+        else:
+            return False, f"设置波特率失败: {params[0] if params else '未知错误'}"          
+
+    def set_boardaddr(self, board_id: int,  params: List[str] = None, use_crc: bool = True, timeout: float = None) -> Tuple[bool, str]:
+        """
+        调整所有电机速度
+
+        参数:
+            board_id: 板子ID
+            status: none use
+            use_crc: 是否使用CRC校验
+            timeout: 接收响应的超时时间
+
+        返回:
+            Tuple[bool, str]: 
+                - 命令是否执行成功
+                - 响应信息或错误信息
+        """
+
+
+        success, params = self.execute_command("SETAddr", board_id, ['2'], use_crc, timeout)
+        if success:
+            return True, f"设置主板地址成功"
+        else:
+            return False, f"设置主板地址失败: {params[0] if params else '未知错误'}"                             
 
 # 示例用法
 if __name__ == "__main__":

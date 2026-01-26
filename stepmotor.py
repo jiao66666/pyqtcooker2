@@ -62,6 +62,10 @@ class MainWindow:
         self.button_connect = ttk.Button(button_frame_func, text="连接串口", command=self.on_button_connect_clicked)
         self.button_connect.pack(side=tk.LEFT, padx=5)
 
+
+        self.button_setbaut = ttk.Button(button_frame_func, text="设置波特率", command=self.on_button_baut_clicked)
+        self.button_setbaut.pack(side=tk.LEFT, padx=5)
+
         separator = ttk.Separator(main_frame, orient='horizontal')
         separator.pack(fill='x', pady=10)
         
@@ -144,6 +148,20 @@ class MainWindow:
         separator = ttk.Separator(main_frame, orient='horizontal')
         separator.pack(fill='x', pady=10)
 
+        row6_frame = ttk.Frame(main_frame)
+        row6_frame.pack(fill="x", pady=2)
+
+        ttk.Label(row6_frame, text="请输入板子号:").pack(side="left", padx=5)
+        # 输入框
+        self.board_var = tk.StringVar()
+        board_entry = ttk.Entry(row6_frame, textvariable=self.board_var, width=12)
+        board_entry.pack(side="left", padx=5)
+
+        self.button_setboardid = ttk.Button(row6_frame, text="设置板号", command=self.on_button_boardid_clicked)
+        self.button_setboardid.pack(side=tk.LEFT, padx=5)
+
+
+
 
     def on_closing(self):
         """窗口关闭时的处理函数"""
@@ -169,6 +187,31 @@ class MainWindow:
         else:
             self.status_text.set("连接失败")
             print("   串口连接失败")  
+
+
+    def on_button_baut_clicked(self):
+        print("波特率设置按钮被点击")
+        baudrate = int(self.baudrate_var.get())
+        if not self.connected:
+            print("   串口未连接，无法配置电机")    
+            return
+        
+        self.comm.set_bautrate(baudrate, [])
+
+
+    def on_button_boardid_clicked(self):
+        print("板号设置按钮被点击")
+        boardid_var=self.board_var.get()
+        if boardid_var =="" or boardid_var == 0:
+            print("   请输入有效的板子号")
+            return
+        
+        boardid = int(boardid_var)
+        if not self.connected:
+            print("   串口未连接，无法配置电机")    
+            return
+        
+        self.comm.set_boardaddr(boardid, [2])        
 
     def on_button_run_clicked(self):
         print("电机运行按钮被点击")               
