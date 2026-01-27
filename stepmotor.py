@@ -13,7 +13,7 @@ class MainWindow:
         self.connected = False
         self.root = root
         self.root.title("极傲炒菜机-五轴电机板控制面板")
-        self.root.geometry("650x400")
+        self.root.geometry("750x400")
         self.root.protocol("WM_DELETE_WINDOW", self.on_closing)
 
         # 创建主框架
@@ -129,6 +129,9 @@ class MainWindow:
         self.button_speed = ttk.Button(row4_frame, text="调整速度", command=self.on_button_speed_clicked)
         self.button_speed.pack(side=tk.LEFT, padx=5)
 
+        self.button_readone = ttk.Button(row4_frame, text="读取单个", command=self.on_button_readone_clicked)
+        self.button_readone.pack(side=tk.LEFT, padx=5)
+
         row5_frame = ttk.Frame(main_frame)
         row5_frame.pack(fill="x", pady=2)
 
@@ -143,6 +146,9 @@ class MainWindow:
 
         self.button_speedall = ttk.Button(row5_frame, text="提速全部", command=self.on_button_speedall_clicked)
         self.button_speedall.pack(side=tk.LEFT, padx=5)
+
+        self.button_readall = ttk.Button(row5_frame, text="读取全部", command=self.on_button_readall_clicked)
+        self.button_readall.pack(side=tk.LEFT, padx=5)
 
 
         separator = ttk.Separator(main_frame, orient='horizontal')
@@ -357,6 +363,25 @@ class MainWindow:
         print(f"   调整速度: {speed}转/秒")
         speedstr = ','.join([speed] * 5)
         self.comm.adjust_single_speed(1, 0, [speedstr])
+
+    def on_button_readone_clicked(self):
+        print("读取单个电机按钮被点击")               
+        if not self.connected:
+            print("   串口未连接，无法运行电机")    
+            return
+        
+        motor_id = int(self.motor_id_var.get())
+    
+        self.comm.read_single_status(1, motor_id, [])        
+
+    def on_button_readall_clicked(self):
+        print("读取所有电机按钮被点击")               
+        if not self.connected:
+            print("   串口未连接，无法运行电机")    
+            return
+        
+        #motor_id = int(self.motor_id_var.get())
+        self.comm.read_all_status(1)  
 
 
 if __name__ == "__main__":

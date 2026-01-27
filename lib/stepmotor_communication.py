@@ -571,7 +571,63 @@ class RS485Communication:
         if success:
             return True, f"设置主板地址成功"
         else:
-            return False, f"设置主板地址失败: {params[0] if params else '未知错误'}"                             
+            return False, f"设置主板地址失败: {params[0] if params else '未知错误'}"     
+
+
+
+
+    def read_single_status(self, board_id: int, motor_id: int, params: List[str] = None, use_crc: bool = True, timeout: float = None) -> Tuple[bool, str]:
+        """
+        读取单个电机状态
+
+        参数:
+            board_id: 板子ID
+            motor_id: 电机ID
+            use_crc: 是否使用CRC校验
+            timeout: 接收响应的超时时间
+
+        返回:
+            Tuple[bool, str]: 
+                - 命令是否执行成功
+                - 响应信息或错误信息
+        """
+
+        cmd_str =  str(motor_id)
+        if params:
+            cmd_str += f",{','.join(params)}"
+
+        success, params = self.execute_command("RunStatus", board_id, [cmd_str], use_crc, timeout)
+        if success:
+            return True, f"全部电机调整速度成功"
+        else:
+            return False, f"全部电机调整速度失败: {params[0] if params else '未知错误'}"             
+
+
+    def read_all_status(self, board_id: int, motor_id: int = 0, params: List[str] = None, use_crc: bool = True, timeout: float = None) -> Tuple[bool, str]:
+        """
+        读取所有电机状态
+
+        参数:
+            board_id: 板子ID
+            motor_id: 电机ID
+            use_crc: 是否使用CRC校验
+            timeout: 接收响应的超时时间
+
+        返回:
+            Tuple[bool, str]: 
+                - 命令是否执行成功
+                - 响应信息或错误信息
+        """
+
+        cmd_str =  str(motor_id)
+        if params:
+            cmd_str += f",{','.join(params)}"
+
+        success, params = self.execute_command("ALLRunStatus", board_id, [cmd_str], use_crc, timeout)
+        if success:
+            return True, f"全部电机调整速度成功"
+        else:
+            return False, f"全部电机调整速度失败: {params[0] if params else '未知错误'}"                                       
 
 # 示例用法
 if __name__ == "__main__":
