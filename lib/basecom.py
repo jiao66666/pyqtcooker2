@@ -3,11 +3,16 @@ import time
 import crcmod
 import threading
 from typing import Optional, List, Tuple, Union
+from enum import Enum
 
+
+class BoardType(Enum):
+    FIVE_AXIS = 1  # 五轴板
+    FEEDER = 2     # 加料板
 
 class RS485Communication:
     """RS485通信类，实现主板通信协议"""
-    def __init__(self, port: str, baudrate: int = 9600, timeout: float = 1.0, boardtype: int = 1):
+    def __init__(self, port: str, baudrate: int = 9600, timeout: float = 1.0, boardtype: BoardType = BoardType.FIVE_AXIS):
         """
         初始化RS485通信
 
@@ -115,27 +120,27 @@ class RS485Communication:
 
         # 构建基本命令: #<指令名>,<板子ID>,<参数1>,<参数2>...
 
-        if self.boardtype == 1:
+        if self.boardtype == BoardType.FIVE_AXIS:
            cmd_str = f"#{command}"
-        elif self.boardtype == 2:
+        elif self.boardtype == BoardType.FEEDER:
            cmd_str = f"YT+{command}="
 
         if params:
-            if self.boardtype == 1:
+            if self.boardtype == BoardType.FIVE_AXIS:
               cmd_str += f",{','.join(params)}"
-            elif self.boardtype == 2:
+            elif self.boardtype == BoardType.FEEDER:
               cmd_str += f"{','.join(params)}"    
         
         # 打印命令字符串（调试用）
         print(f"将构建命令串(不带LRC): {cmd_str}")
 
         # 计算并添加校验码
-        if self.boardtype == 'lrc':
+        if self.boardtype == BoardType.FIVE_AXIS:
             # 计算LRC校验码，这里要计算从 # 到 * 之间的字符的累加和
             lrc = self.calculate_lrc(cmd_str + "*")  # 包含 * 进行校验
             cmd_str += f"*{lrc}"
             print(f"将构建命令串(带上LRC): {cmd_str}")
-        elif self.boardtype == 'crc':
+        elif self.boardtype == BoardType.FEEDER:
             # 添加CRC校验（如果需要）
             crc = self.calculate_crc16(cmd_str)
             cmd_str += f"*{crc}"
@@ -299,8 +304,8 @@ if __name__ == "__main__":
 
     # 创建通信对象
     print("1. 创建通信对象")
-    comm1 = RS485Communication(port="COM2", baudrate=9600, timeout=2.0, boardtype=1)
-    comm2 = RS485Communication(port="COM3", baudrate=115200, timeout=2.0, boardtype=2)
+    comm1 = RS485Communication(port="COM2", baudrate=9600, timeout=2.0, boardtype=BoardType.FIVE_AXIS)
+    comm2 = RS485Communication(port="COM3", baudrate=115200, timeout=2.0, boardtype=BoardType.FEEDER)
     print(f"   串口: {comm1.port}, 波特率: {comm1.baudrate}, 超时: {comm1.timeout}秒, 主板类型: {comm1.boardtype}")
     print(f"   串口: {comm2.port}, 波特率: {comm2.baudrate}, 超时: {comm2.timeout}秒, 主板类型: {comm2.boardtype}")
 
