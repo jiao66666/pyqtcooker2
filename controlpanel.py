@@ -4,13 +4,17 @@ from tkinter import ttk
 from tkinter import StringVar
 import tkinter.messagebox as msgbox
 from lib.stepmotor_communication import *
+from lib.basecom import RS485Communication,BoardType
 
 class MainWindow:
     def __init__(self, root):
         # 创建通信对象  root为tkinter的根窗口
         
-        self.comm = None
-        self.connected = False
+        self.comm1 = None
+        self.connected1 = False
+        self.comm2 = None
+        self.connected2 = False
+
         self.root = root
         self.root.title("极傲炒菜机-电机板控制系统")
         self.root.geometry("800x600")
@@ -61,7 +65,7 @@ class MainWindow:
         style.configure("Connected.TLabel", foreground="green")  # 设置为绿色
         ttk.Label(select_frame_baud, textvariable=self.status_text, style="Connected.TLabel").pack(side=tk.LEFT, padx=5)
 
-        self.button_connect = ttk.Button(connection_section_frame, text="连接串口", command=self.on_button_connect_clicked)
+        self.button_connect = ttk.Button(connection_section_frame, text="连接串口", command=lambda:self.on_button_connect_clicked(BoardType.FIVE_AXIS))
         self.button_connect.pack(side=tk.LEFT, padx=5)
 
         separator = ttk.Separator(main_frame, orient='horizontal')
@@ -171,7 +175,7 @@ class MainWindow:
         style.configure("Connected.TLabel", foreground="green")  # 设置为绿色
         ttk.Label(select_frame_baud2, textvariable=self.status_text2, style="Connected.TLabel").pack(side=tk.LEFT, padx=5)
 
-        self.button_connect2 = ttk.Button(connection_section_frame2, text="连接串口", command=self.on_button_connect_clicked)
+        self.button_connect2 = ttk.Button(connection_section_frame2, text="连接串口", command=lambda:self.on_button_connect_clicked(BoardType.FEEDER))
         self.button_connect2.pack(side=tk.LEFT, padx=5)
 
         separator_sub = ttk.Separator(sub_frame, orient='horizontal')
@@ -224,28 +228,51 @@ class MainWindow:
 
     def on_closing(self):
         """窗口关闭时的处理函数"""
-        if self.comm and self.connected:
+        if self.comm1 and self.connected1:
             try:
-                self.comm.disconnect()
-                print("窗口关闭时断开串口连接")
+                self.comm1.disconnect()
+                print("窗口关闭时断开串口连接1")
             except Exception as e:
                 print(f"断开连接时出错: {e}")
+
+        if self.comm2 and self.connected2:
+            try:
+                self.comm2.disconnect()
+                print("窗口关闭时断开串口连接2")
+            except Exception as e:
+                print(f"断开连接时出错: {e}")    
+
         self.root.destroy()  # 关闭窗口
 
-    def on_button_connect_clicked(self):
+    def on_button_connect_clicked(self,boardtype:BoardType):
         print("串口连接按钮被点击")
-        print("初始化>>>创建通信对象")
-        port = self.port_var.get()
-        baudrate = int(self.baudrate_var.get())
-        self.comm = RS485Communication(port=port, baudrate=baudrate, timeout=1.0)
-        print(f"   串口: {self.comm.port}, 波特率: {self.comm.baudrate}, 超时: {self.comm.timeout}秒")
-        self.connected =  self.comm.connect()
-        if self.connected:
-            self.status_text.set("已连接")
-            print("   串口连接成功")
-        else:
-            self.status_text.set("连接失败")
-            print("   串口连接失败")  
+        print(f"初始化>>>创建通信对象, 主板类型:{boardtype.value}")
+        
+        if boardtype == BoardType.FIVE_AXIS:
+            port = self.port_var.get()
+            baudrate = int(self.baudrate_var.get())
+            self.comm1 = RS485Communication(port=port, baudrate=baudrate, timeout=1.0)
+            print(f"   串口: {self.comm1.port}, 波特率: {self.comm1.baudrate}, 超时: {self.comm1.timeout}秒")
+            self.connected1 =  self.comm1.connect()
+            if self.connected1:
+                self.status_text.set("已连接")
+                print("   串口连接成功")
+            else:
+                self.status_text.set("连接失败")
+                print("   串口连接失败")  
+
+        elif boardtype == BoardType.FEEDER:   
+            port = self.port_var2.get()
+            baudrate = int(self.baudrate_var2.get())
+            self.comm2 = RS485Communication(port=port, baudrate=baudrate, timeout=1.0)
+            print(f"   串口: {self.comm2.port}, 波特率: {self.comm2.baudrate}, 超时: {self.comm2.timeout}秒")
+            self.connected2 =  self.comm2.connect()
+            if self.connected2:
+                self.status_text2.set("已连接")
+                print("   串口连接成功")
+            else:
+                self.status_text2.set("连接失败")
+                print("   串口连接失败")       
 
 
     def on_button_run_clicked(self):
