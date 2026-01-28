@@ -7,7 +7,7 @@ from typing import Optional, List, Tuple, Union
 
 class RS485Communication:
     """RS485通信类，实现主板通信协议"""
-    def __init__(self, port: str, baudrate: int = 9600, timeout: float = 1.0):
+    def __init__(self, port: str, baudrate: int = 9600, timeout: float = 1.0, boardtype: int = 1):
         """
         初始化RS485通信
 
@@ -15,10 +15,12 @@ class RS485Communication:
             port: 串口名称，如 'COM1' 或 '/dev/ttyUSB0'
             baudrate: 波特率，默认为9600
             timeout: 读取超时时间，单位秒，默认为1.0
+            boardtype: 主板类型，1表示五轴电机板，2表示加料电机板，默认为1
         """
         self.port = port
         self.baudrate = baudrate
         self.timeout = timeout
+        self.boardtype = boardtype
         self.serial_conn: Optional[serial.Serial] = None
         self.lock = threading.Lock()
         self.crc16_func = crcmod.mkCrcFun(0x18005, rev=True, initCrc=0xFFFF, xorOut=0x0000)
@@ -97,16 +99,14 @@ class RS485Communication:
 
 
 
-    def build_command(self, command: str, params: List[str] = None, checksum_method: str = 'lrc',cmdtype: int = 1) -> str:
+    def build_command(self, command: str, params: List[str] = None) -> str:
         """
         构建命令字符串
 
         参数:
             command: 命令名称，如 'OPENLOCK'
             params: 参数列表，默认为空
-            checksum_method: 使用何种校验方法，默认为lrc
-            cmdtype: 命令类型，默认为1,五轴电机板 2，加料电机板
-
+        
         返回:
             str: 完整的命令字符串，包含<CR><LF>结尾
         """
@@ -115,47 +115,45 @@ class RS485Communication:
 
         # 构建基本命令: #<指令名>,<板子ID>,<参数1>,<参数2>...
 
-        if cmdtype == 1:
+        if self.boardtype == 1:
            cmd_str = f"#{command}"
-        elif cmdtype == 2:
+        elif self.boardtype == 2:
            cmd_str = f"YT+{command}="
 
         if params:
-            if cmdtype == 1:
+            if self.boardtype == 1:
               cmd_str += f",{','.join(params)}"
-            elif cmdtype == 2:
+            elif self.boardtype == 2:
               cmd_str += f"{','.join(params)}"    
         
         # 打印命令字符串（调试用）
         print(f"将构建命令串(不带LRC): {cmd_str}")
 
         # 计算并添加校验码
-        if checksum_method == 'crc':
-            # 添加CRC校验（如果需要）
-            crc = self.calculate_crc16(cmd_str)
-            cmd_str += f"*{crc}"
-            print(f"将构建命令串(带上CRC):{cmd_str}")
-        elif checksum_method == 'lrc':
+        if self.boardtype == 'lrc':
             # 计算LRC校验码，这里要计算从 # 到 * 之间的字符的累加和
             lrc = self.calculate_lrc(cmd_str + "*")  # 包含 * 进行校验
             cmd_str += f"*{lrc}"
             print(f"将构建命令串(带上LRC): {cmd_str}")
+        elif self.boardtype == 'crc':
+            # 添加CRC校验（如果需要）
+            crc = self.calculate_crc16(cmd_str)
+            cmd_str += f"*{crc}"
+            print(f"将构建命令串(带上CRC):{cmd_str}")    
         # 添加<CR><LF>结尾
         cmd_str += "\r\n"
         
         return cmd_str
     
 
-    def send_command(self,  command: str,  params: List[str] = None, checksum_method: str = 'lrc', cmdtype: int = 1) -> bool:
+    def send_command(self,  command: str,  params: List[str] = None) -> bool:
         """
         发送命令
 
         参数:
             command: 命令名称，如 'OPENLOCK'
             params: 参数列表，默认为空
-            checksum_method: 使用何种校验方法，默认为lrc
-            cmdtype: 命令类型，默认为1,五轴电机板 2，加料电机板
-
+        
         返回:
             bool: 发送是否成功
         """
@@ -165,7 +163,7 @@ class RS485Communication:
 
         try:
             with self.lock:
-                cmd_str = self.build_command(command, params, checksum_method,cmdtype)
+                cmd_str = self.build_command(command, params)
                 self.serial_conn.write(cmd_str.encode('utf-8'))
                 self.serial_conn.flush()
                 return True
@@ -174,7 +172,7 @@ class RS485Communication:
             return False
         
     def execute_command(self, command: str, params: List[str] = None, 
-                       checksum_method: str = 'lrc', cmdtype: int = 1, timeout: float = None) -> Tuple[bool, List[str]]:
+                       ) -> Tuple[bool, List[str]]:
         """
         执行命令并接收响应
 
@@ -191,11 +189,11 @@ class RS485Communication:
                 - 响应参数列表（如果是错误响应，则包含错误信息）
         """
         # 发送命令
-        if not self.send_command(command, params, checksum_method,cmdtype):
+        if not self.send_command(command, params):
             return False, ["发送命令失败"]
 
         # 接收响应
-        response = self.receive_response(timeout)
+        response = self.receive_response(self.timeout)
         if response is None:
             return False, ["接收响应超时"]
 
@@ -301,25 +299,28 @@ if __name__ == "__main__":
 
     # 创建通信对象
     print("1. 创建通信对象")
-    comm = RS485Communication(port="COM2", baudrate=9600, timeout=1.0)
-    print(f"   串口: {comm.port}, 波特率: {comm.baudrate}, 超时: {comm.timeout}秒")
+    comm1 = RS485Communication(port="COM2", baudrate=9600, timeout=2.0, boardtype=1)
+    comm2 = RS485Communication(port="COM3", baudrate=115200, timeout=2.0, boardtype=2)
+    print(f"   串口: {comm1.port}, 波特率: {comm1.baudrate}, 超时: {comm1.timeout}秒, 主板类型: {comm1.boardtype}")
+    print(f"   串口: {comm2.port}, 波特率: {comm2.baudrate}, 超时: {comm2.timeout}秒, 主板类型: {comm2.boardtype}")
 
     # 连接串口
     print("\n2. 连接串口")
-    if comm.connect():
+    if comm1.connect() and comm2.connect():
         print("   串口连接成功")
 
         try:
            print("\n3. 发送步进电机测试命令: RUN 1 0 2560000 360")
-           comm.execute_command("RUN", ["1", "0","2560000","360"], checksum_method='lrc', cmdtype=1,timeout=2.0)
+           comm1.execute_command("RUN", ["1", "0","2560000","360"])
 
            print("\n4. 发送DC电机测试命令: YT+CHECKSUM")
-           comm.execute_command("CHECKSUM", ["1", "0"], checksum_method='crc', cmdtype=2,timeout=2.0)
+           comm2.execute_command("CHECKSUM", ["1", "0"])
 
         finally:
             # 断开连接
             print("\n断开连接")
-            comm.disconnect()
+            comm1.disconnect()
+            comm2.disconnect()
             print("   串口连接已断开")
     else: 
         print("   无法连接到串口")
