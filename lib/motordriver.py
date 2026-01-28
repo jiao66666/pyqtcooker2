@@ -1,6 +1,6 @@
 # motor_driver.py
-from basecom import RS485Communication,BoardType
-from tools import circles_to_pulses
+from lib.basecom import RS485Communication,BoardType
+from lib.tools import circles_to_pulses
 class MotorDriver:
     def __init__(self, rs485_instance: RS485Communication, motor_id: int, board_type: BoardType = BoardType.FIVE_AXIS,name: str = ""):
         """

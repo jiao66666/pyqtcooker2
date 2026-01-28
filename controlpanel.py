@@ -5,6 +5,7 @@ from tkinter import StringVar
 import tkinter.messagebox as msgbox
 from lib.stepmotor_communication import *
 from lib.basecom import RS485Communication,BoardType
+from lib.motordriver import MotorDriver
 
 class MainWindow:
     def __init__(self, root):
@@ -12,8 +13,10 @@ class MainWindow:
         
         self.comm1 = None
         self.connected1 = False
+        self.motors1 = []
         self.comm2 = None
         self.connected2 = False
+        self.motors2 = []
 
         self.root = root
         self.root.title("极傲炒菜机-电机板控制系统")
@@ -264,6 +267,7 @@ class MainWindow:
             if self.connected1:
                 self.status_text.set("已连接")
                 print("   串口连接成功")
+                self.init_motors(BoardType.FIVE_AXIS)
             else:
                 self.status_text.set("连接失败")
                 print("   串口连接失败")  
@@ -276,9 +280,24 @@ class MainWindow:
             if self.connected2:
                 self.status_text2.set("已连接")
                 print("   串口连接成功")
+                self.init_motors(BoardType.FEEDER)
+              
             else:
                 self.status_text2.set("连接失败")
-                print("   串口连接失败")                  
+                print("   串口连接失败")
+
+    def init_motors(self,boardtype:BoardType):
+
+        if boardtype == BoardType.FIVE_AXIS:
+            print("初始化>>>创建五轴电机对象...")
+            for i in range(5):
+                motor = MotorDriver(rs485_instance=self.comm1, motor_id=i, board_type=BoardType.FIVE_AXIS, name=f"{i}号电机")
+                self.motors1.append(motor)   
+        elif boardtype == BoardType.FEEDER:
+            print("初始化>>>创建加料电机对象...")
+            for i in range(24):
+                motor = MotorDriver(rs485_instance=self.comm2, motor_id=i, board_type=BoardType.FEEDER, name=f"{i}号加料电机")
+                self.motors2.append(motor)                                   
 
     def on_button_disconnect_clicked(self,boardtype:BoardType):
         print("断开串口连接按钮被点击")
