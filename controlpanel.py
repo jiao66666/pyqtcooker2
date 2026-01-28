@@ -6,6 +6,8 @@ import tkinter.messagebox as msgbox
 from lib.stepmotor_communication import *
 from lib.basecom import RS485Communication,BoardType
 from lib.motordriver import MotorDriver
+from lib.tools import circles_to_pulses
+
 
 class MainWindow:
     def __init__(self, root):
@@ -330,7 +332,7 @@ class MainWindow:
 
     def on_button_run_clicked(self):
         print("电机运行按钮被点击")               
-        if not self.connected:
+        if not self.connected1:
             print("   串口未连接，无法运行电机")    
             return
         
@@ -347,12 +349,14 @@ class MainWindow:
         
         motor_id = int(self.motor_id_var.get())
         speed = str(speed)
-        distance = int(distance)
+        circle = int(distance)
 
-         # 将圈数转换为脉冲数
-        pulses=str(self.convert_revolutions_to_pulses(distance))
-        print(f"   电机号: {motor_id}, 转动速度: {speed}转/秒, 转动距离: {distance}圈")
-        self.comm.run_single_motor(1, motor_id, [pulses,speed])
+        print(f"   电机号: {motor_id}, 转动速度: {speed}度/秒, 转动距离: {distance}圈")
+        if self.motors1 and self.motors1[motor_id]:
+            print("找到电机对象，开始运行电机>>>>>>>>")
+            self.motors1[motor_id].run(circle, int(speed))
+        else:
+            print(f" 未找到电机对象，无法运行电机号: {motor_id}")
 
 
     def on_button_enable_clicked(self):
