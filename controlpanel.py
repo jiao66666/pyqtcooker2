@@ -3,7 +3,6 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter import StringVar
 import tkinter.messagebox as msgbox
-from lib.stepmotor_communication import *
 from lib.basecom import RS485Communication,BoardType
 from lib.motordriver import MotorDriver
 from lib.tools import circles_to_pulses
