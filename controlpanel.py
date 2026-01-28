@@ -68,6 +68,9 @@ class MainWindow:
         self.button_connect = ttk.Button(connection_section_frame, text="连接串口", command=lambda:self.on_button_connect_clicked(BoardType.FIVE_AXIS))
         self.button_connect.pack(side=tk.LEFT, padx=5)
 
+        self.button_disconnect = ttk.Button(connection_section_frame, text="断开连接", command=lambda:self.on_button_disconnect_clicked(BoardType.FIVE_AXIS))
+        self.button_disconnect.pack(side=tk.LEFT, padx=5)
+
         separator = ttk.Separator(main_frame, orient='horizontal')
         separator.pack(fill='x', pady=10)
         
@@ -178,6 +181,10 @@ class MainWindow:
         self.button_connect2 = ttk.Button(connection_section_frame2, text="连接串口", command=lambda:self.on_button_connect_clicked(BoardType.FEEDER))
         self.button_connect2.pack(side=tk.LEFT, padx=5)
 
+        self.button_disconnect2 = ttk.Button(connection_section_frame2, text="断开连接", command=lambda:self.on_button_disconnect_clicked(BoardType.FEEDER))
+        self.button_disconnect2.pack(side=tk.LEFT, padx=5)
+
+
         separator_sub = ttk.Separator(sub_frame, orient='horizontal')
         separator_sub.pack(fill='x', pady=10)
 
@@ -260,8 +267,7 @@ class MainWindow:
             else:
                 self.status_text.set("连接失败")
                 print("   串口连接失败")  
-
-        elif boardtype == BoardType.FEEDER:   
+        elif boardtype == BoardType.FEEDER:
             port = self.port_var2.get()
             baudrate = int(self.baudrate_var2.get())
             self.comm2 = RS485Communication(port=port, baudrate=baudrate, timeout=1.0)
@@ -272,8 +278,36 @@ class MainWindow:
                 print("   串口连接成功")
             else:
                 self.status_text2.set("连接失败")
-                print("   串口连接失败")       
+                print("   串口连接失败")                  
 
+    def on_button_disconnect_clicked(self,boardtype:BoardType):
+        print("断开串口连接按钮被点击")
+        print(f"断开主板类型:{boardtype.value}")
+        
+        if boardtype == BoardType.FIVE_AXIS:
+            if self.comm1 and self.connected1:
+                success = self.comm1.disconnect()
+                if success:
+                  self.comm1 = None
+                  self.connected1 = False
+                  self.status_text.set("未连接")
+                  print(" 断开连接成功")
+            else:
+                self.status_text.set("断开连接失败")
+                print("   断开连接失败")                 
+
+        elif boardtype == BoardType.FEEDER:   
+            if self.comm2 and self.connected2:
+                success = self.comm2.disconnect()
+                if success:
+                  self.comm2 = None
+                  self.connected2 = False
+                  self.status_text2.set("未连接")
+                  print(" 断开连接成功")
+            else:
+                self.status_text2.set("断开连接失败")
+                print("   断开连接失败")
+            
 
     def on_button_run_clicked(self):
         print("电机运行按钮被点击")               

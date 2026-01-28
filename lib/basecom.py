@@ -56,6 +56,8 @@ class RS485Communication:
         """断开串口连接"""
         if self.serial_conn and self.serial_conn.is_open:
             self.serial_conn.close()
+            return True
+        return False
 
     def calculate_lrc(self, data: str) -> str:
         """
