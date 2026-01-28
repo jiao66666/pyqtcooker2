@@ -309,6 +309,11 @@ if __name__ == "__main__":
     print(f"   串口: {comm1.port}, 波特率: {comm1.baudrate}, 超时: {comm1.timeout}秒, 主板类型: {comm1.boardtype}")
     print(f"   串口: {comm2.port}, 波特率: {comm2.baudrate}, 超时: {comm2.timeout}秒, 主板类型: {comm2.boardtype}")
 
+
+    print("boardtype val1:")
+    print(BoardType.FIVE_AXIS)
+    print("boardtype val2:")
+    print(BoardType.FEEDER) 
     # 连接串口
     print("\n2. 连接串口")
     if comm1.connect() and comm2.connect():
