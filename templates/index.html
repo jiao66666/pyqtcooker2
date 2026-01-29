@@ -8,9 +8,40 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-    <h1>Welcome to the Machine Control Interface</h1>
-    <button onclick="startMotor()">Start Motor</button>
-    <button onclick="stopMotor()">Stop Motor</button>
+    <h1>极傲炒菜机-网页控制端系统</h1>
+    <div class="connect_container">
+        <div class="port_row">
+            <label for="port">端口:</label>
+            <select id="port_select" name="port_select">
+                <option value="1">COM1</option>
+                <option value="2">COM2</option>
+                <option value="3">COM3</option>
+                <option value="4">COM4</option>
+                <option value="5">COM5</option>
+                <option value="6" selected>COM6</option>
+                <option value="7">COM7</option>
+                <option value="8">COM8</option>
+                <option value="9">COM9</option>
+                <option value="10">COM10</option>
+            </select>
+        </div>
+        <div class="baud_row">
+            <label for="baud">波特率:</label>
+            <select id="baud_select" name="baud_select">
+                <option value="9600">9600</option>
+                <option value="19200">19200</option>
+                <option value="38400">38400</option>
+                <option value="57600">57600</option>
+                <option value="115200" selected>115200</option>
+            </select>
+        </div>
+        <div class="connectbtn_row nomb">
+            <button onclick="connect()" class="mr5">连接串口</button>
+            <button onclick="disconnect()">断开连接</button>
+        </div>
+    </div>
+
+    <hr style="border: 1px solid #ccc; width: 100%; margin: 10px auto;">
 
     <div id="status-history"></div> <!-- 用于显示历史消息 -->
 
