@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Machine Control</title>
+</head>
+<body>
+    <h1>Welcome to the Machine Control Interface</h1>
+    <button onclick="startMotor()">Start Motor</button>
+    <button onclick="stopMotor()">Stop Motor</button>
+    <p id="status"></p>
+
+    <script>
+        // JavaScript 代码直接写在这里
+        function startMotor() {
+            fetch('/start_motor')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById("status").innerText = data.message;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    document.getElementById("status").innerText = "Error starting motor.";
+                });
+        }
+
+        function stopMotor() {
+            fetch('/stop_motor')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById("status").innerText = data.message;
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    document.getElementById("status").innerText = "Error stopping motor.";
+                });
+        }
+    </script>
+</body>
+</html>
+
