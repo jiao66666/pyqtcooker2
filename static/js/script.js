@@ -36,11 +36,26 @@ function addMessage(message) {
 }
 
 // 启动电机
-function startMotor() {
-    fetch('/start_motor')
+function connect() {
+       // 获取 select 元素
+        var portSelect = document.getElementById("port_select");
+        console.log("选中的端口是:", portSelect.value);
+        var baudrateSelect = document.getElementById("baud_select");
+        console.log("选中的波特率是:", baudrateSelect.value);
+
+        fetch('/connect', {
+            method: 'POST', 
+            headers: {
+                'Content-Type': 'application/json'  
+            },
+            body: JSON.stringify({
+                port: portSelect.value,  
+                baudrate: baudrateSelect.value 
+            })
+        })
         .then(response => response.json())
         .then(data => {
-            addMessage(`Motor started: ${data.message}`);  // 将收到的消息保存并显示
+            addMessage(`连接参数 : ${data.message},${data.port},${data.baudrate}`);  // 将收到的消息保存并显示
         })
         .catch(error => {
             console.error('Error:', error);
