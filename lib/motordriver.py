@@ -58,6 +58,61 @@ class MotorDriver:
             print(f"错误: {resp}")
             return False
         return True
+    
+    def enable(self):
+        """使能电机"""
+        print("####使能电机####")
+        if not self.com or not self.com.connected:
+            print("错误: 串口未连接，无法运行电机")
+            return False
+        print(f"[{self.name}] ID:{self.motor_id} 使能中... 主板类型:{self.board_id}")
+      
+         # 发送运行命令
+        success, resp = self.com.execute_command(
+            "ENABLE", 
+            [str(self.board_id), str(self.motor_id)]
+        )
+        if not success:
+            print(f"错误: {resp}")
+            return False
+        return True
+    
+    def pause(self):
+        """暂停电机"""
+        print("####暂停电机####")
+        if not self.com or not self.com.connected:
+            print("错误: 串口未连接，无法运行电机")
+            return False
+        print(f"[{self.name}] ID:{self.motor_id} 暂停中... 主板类型:{self.board_id}")
+      
+         # 发送运行命令
+        success, resp = self.com.execute_command(
+            "PAUSE", 
+            [str(self.board_id), str(self.motor_id)]
+        )
+        if not success:
+            print(f"错误: {resp}")
+            return False
+        return True    
+    
+    def stop(self):
+        """急停电机"""
+        print("####急停电机####")
+        if not self.com or not self.com.connected:
+            print("错误: 串口未连接，无法运行电机")
+            return False
+        print(f"[{self.name}] ID:{self.motor_id} 急停中... 主板类型:{self.board_id}")
+      
+         # 发送运行命令
+        success, resp = self.com.execute_command(
+            "STOP", 
+            [str(self.board_id), str(self.motor_id)]
+        )
+        if not success:
+            print(f"错误: {resp}")
+            return False
+        return True      
+
 
 if __name__ == "__main__":
     print("=== RS485通信类接口测试 ===")

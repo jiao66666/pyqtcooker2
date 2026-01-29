@@ -380,42 +380,55 @@ class MainWindow:
 
     def on_button_enable_clicked(self):
         print("电机使能按钮被点击")               
-        if not self.connected:
+        if not self.connected1:
             print("   串口未连接，无法运行电机")    
             return
         
         motor_id = int(self.motor_id_var.get())
 
         print(f" 使能电机号: {motor_id}")
-        self.comm.enable_single_motor(1, motor_id, [])
+        if self.motors1 and self.motors1[motor_id]:
+            print("找到电机对象，开始使能电机>>>>>>>>")
+            self.motors1[motor_id].enable()
+        else:
+            print(f" 未找到电机对象，无法运行电机号: {motor_id}")
     
             
     def on_button_pause_clicked(self):
         print("电机暂停按钮被点击")               
-        if not self.connected:
+        if not self.connected1:
             print("   串口未连接，无法运行电机")    
             return
         
         motor_id = int(self.motor_id_var.get())
 
         print(f" 暂停电机号: {motor_id}")
-        self.comm.pause_single_motor(1, motor_id, [])        
+        if self.motors1 and self.motors1[motor_id]:
+            print("找到电机对象，暂停电机>>>>>>>>")
+            self.motors1[motor_id].pause()
+        else:
+            print(f" 未找到电机对象，无法运行电机号: {motor_id}")
 
 
     def on_button_stop_clicked(self):
         print("电机急停按钮被点击")               
-        if not self.connected:
+        if not self.connected1:
             print("   串口未连接，无法运行电机")    
             return
         
         motor_id = int(self.motor_id_var.get())
 
         print(f" 急停电机号: {motor_id}")
-        self.comm.stop_single_motor(1, motor_id, [])
+        if self.motors1 and self.motors1[motor_id]:
+            print("找到电机对象，暂停电机>>>>>>>>")
+            self.motors1[motor_id].stop()
+        else:
+            print(f" 未找到电机对象，无法运行电机号: {motor_id}")
 
 
     def on_button_runchannel_clicked(self):
         print("启动运行按钮被点击")
+        """
         # 这里可以添加开按钮的具体功能
         selected_channel = self.combo_numbers.get()
         val_keepruntime = self.input_keepruntime.get()
@@ -431,7 +444,8 @@ class MainWindow:
             params = [val_keepruntime]
             self.comm.run_channel(board_id=1, channel_id=channel_id, params=params, use_crc=True, timeout=0.3)
         else:
-            print("串口未连接，无法执行运行启动操作")          
+            print("串口未连接，无法执行运行启动操作")     
+       """          
  
 
 if __name__ == "__main__":
