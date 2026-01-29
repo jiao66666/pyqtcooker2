@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Machine Control</title>
+    <title>极傲炒菜机-网页控制端系统</title>
     <!-- 引入外部 CSS 文件 -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
@@ -43,6 +43,37 @@
 
     <hr style="border: 1px solid #ccc; width: 100%; margin: 10px auto;">
 
+
+    <div class="motor_container">
+        <div class="motor">
+            <div class="motor_row fcenter">
+                <button onclick="startMotor(0)">向内翻转</button>
+            </div>
+            <div class="motor_row">
+                <button onclick="stopMotor(0)">向左移动</button>
+                <div class="motor_tag">1号锅</div>
+                <button onclick="stopMotor(0)">向右移动</button>
+            </div>
+            <div class="motor_row fcenter">
+                <button onclick="startMotor(0)">向内翻转</button>
+            </div>
+        </div>
+        <div class="motor ">
+            <div class="motor_row fcenter">
+                <button onclick="startMotor(0)">向内翻转</button>
+            </div>
+            <div class="motor_row">
+                <button onclick="stopMotor(0)">向左移动</button>
+                <div class="motor_tag">2号锅</div>
+                <button onclick="stopMotor(0)">向右移动</button>
+            </div>
+            <div class="motor_row fcenter">
+                <button onclick="startMotor(0)">向内翻转</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="prompt">控制台消息</div>
     <div id="status-history"></div> <!-- 用于显示历史消息 -->
 
     <!-- 引入外部 JS 文件 -->
