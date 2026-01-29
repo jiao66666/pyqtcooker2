@@ -29,7 +29,7 @@ class RS485Communication:
         self.serial_conn: Optional[serial.Serial] = None
         self.lock = threading.Lock()
         self.crc16_func = crcmod.mkCrcFun(0x18005, rev=True, initCrc=0xFFFF, xorOut=0x0000)
-
+        self.connected = False
     def connect(self) -> bool:
         """
         连接到串口
@@ -47,6 +47,7 @@ class RS485Communication:
                 timeout=self.timeout
             )
             print(f"串口{self.port}已成功打开")
+            self.connected = True
             return True
         except Exception as e:
             print(f"连接串口失败: {e}")
@@ -56,6 +57,7 @@ class RS485Communication:
         """断开串口连接"""
         if self.serial_conn and self.serial_conn.is_open:
             self.serial_conn.close()
+            self.connected = False
             return True
         return False
 

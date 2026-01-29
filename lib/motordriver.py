@@ -17,12 +17,19 @@ class MotorDriver:
         # 如果需要，可以在这里缓存电机状态
         self.current_position = 0 
 
-    def run(self, circles: int, anglespeed: int = 1000):
-        """运转电机"""
+    def run(self, circles: int, anglespeed: int, direction: int):
+        """单次运转电机"""
         print("####运行电机####")
+        if not self.com or not self.com.connected:
+            print("错误: 串口未连接，无法运行电机")
+            return False
         print(f"[{self.name}] ID:{self.motor_id} 运行 {circles} 圈, 角速度 {anglespeed}, 主板类型:{self.board_id}")
         # 计算脉冲数
         pulses = circles_to_pulses(circles, step_angle=1.8, microsteps=32)
+        if direction >=0:
+            pulses = abs(pulses)
+        else:
+            pulses = -abs(pulses)    
          # 发送运行命令
         success, resp = self.com.execute_command(
             "RUN", 
@@ -33,6 +40,24 @@ class MotorDriver:
             return False
         return True
 
+
+    def runlong(self, anglespeed: int, direction: int):
+        """长运转电机"""
+        print("####运行电机####")
+        if not self.com or not self.com.connected:
+            print("错误: 串口未连接，无法运行电机")
+            return False
+        print(f"[{self.name}] ID:{self.motor_id} 连续运行, 角速度 {anglespeed}, 主板类型:{self.board_id}")
+      
+         # 发送运行命令
+        success, resp = self.com.execute_command(
+            "LONG", 
+            [str(self.board_id), str(self.motor_id), str(direction), str(anglespeed)]
+        )
+        if not success:
+            print(f"错误: {resp}")
+            return False
+        return True
 
 if __name__ == "__main__":
     print("=== RS485通信类接口测试 ===")

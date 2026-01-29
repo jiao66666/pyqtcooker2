@@ -124,9 +124,6 @@ class MainWindow:
         self.button_enable = ttk.Button(button_group_row1, text="使能电机", command=self.on_button_enable_clicked)
         self.button_enable.pack(side=tk.LEFT, padx=5)
 
-        self.button_run = ttk.Button(button_group_row1, text="单次运行", command=self.on_button_run_clicked)
-        self.button_run.pack(side=tk.LEFT, padx=5)
-
 
         self.button_stop = ttk.Button(button_group_row1, text="急停电机", command=self.on_button_stop_clicked)
         self.button_stop.pack(side=tk.LEFT, padx=5)
@@ -138,8 +135,19 @@ class MainWindow:
         button_group_row2 = ttk.Frame(runFrame)
         button_group_row2.pack(fill=tk.X, pady=2)
      
-        self.button_runlong = ttk.Button(button_group_row2, text="长运行", command=self.on_button_runlong_clicked)
-        self.button_runlong.pack(side=tk.LEFT, padx=5)
+
+        self.button_run1 = ttk.Button(button_group_row2, text="正向运行", command=lambda:self.on_button_run_clicked(1))
+        self.button_run1.pack(side=tk.LEFT, padx=5)
+
+        self.button_run2 = ttk.Button(button_group_row2, text="反向运行", command=lambda:self.on_button_run_clicked(-1))
+        self.button_run2.pack(side=tk.LEFT, padx=5)
+
+
+        self.button_runlong1 = ttk.Button(button_group_row2, text="正向长运行", command=lambda:self.on_button_runlong_clicked(1))
+        self.button_runlong1.pack(side=tk.LEFT, padx=5)
+
+        self.button_runlong2 = ttk.Button(button_group_row2, text="反向长运行", command=lambda:self.on_button_runlong_clicked(-1))
+        self.button_runlong2.pack(side=tk.LEFT, padx=5)
 
 
 
@@ -329,8 +337,8 @@ class MainWindow:
                 print("   断开连接失败")
             
 
-    def on_button_run_clicked(self):
-        print("电机运行按钮被点击")               
+    def on_button_run_clicked(self,direction:int):
+        print(f"电机运行按钮被点击, 方向: {direction}")               
         if not self.connected1:
             print("   串口未连接，无法运行电机")    
             return
@@ -353,10 +361,22 @@ class MainWindow:
         print(f"   电机号: {motor_id}, 转动速度: {speed}度/秒, 转动距离: {distance}圈")
         if self.motors1 and self.motors1[motor_id]:
             print("找到电机对象，开始运行电机>>>>>>>>")
-            self.motors1[motor_id].run(circle, int(speed))
+            self.motors1[motor_id].run(circle, int(speed),direction)
         else:
             print(f" 未找到电机对象，无法运行电机号: {motor_id}")
 
+
+    def on_button_runlong_clicked(self,direction:int):
+        print(f"电机长运行按钮被点击, 方向: {direction}")               
+
+        motor_id = int(self.motor_id_var.get())
+        speed = str(self.speed_var.get())
+        print(f"   长运行电机号: {motor_id}, 转动速度: {speed}转/秒")
+        if self.motors1 and self.motors1[motor_id]:
+            print("找到电机对象，开始运行电机>>>>>>>>")
+            self.motors1[motor_id].runlong(int(speed),direction)
+        else:
+            print(f" 未找到电机对象，无法运行电机号: {motor_id}")
 
     def on_button_enable_clicked(self):
         print("电机使能按钮被点击")               
@@ -392,17 +412,6 @@ class MainWindow:
 
         print(f" 急停电机号: {motor_id}")
         self.comm.stop_single_motor(1, motor_id, [])
-
-    def on_button_runlong_clicked(self):
-        print("电机长运行按钮被点击")               
-        if not self.connected:
-            print("   串口未连接，无法运行电机")    
-            return
-        
-        motor_id = int(self.motor_id_var.get())
-        speed = str(self.speed_var.get())
-        print(f"   长运行电机号: {motor_id}, 转动速度: {speed}转/秒")
-        self.comm.run_single_motor_long(1, motor_id, ["-1",speed])
 
 
     def on_button_runchannel_clicked(self):
