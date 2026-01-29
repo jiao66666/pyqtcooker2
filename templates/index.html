@@ -4,33 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Machine Control</title>
-    <style>
-        /* 固定高度和滚动条样式 */
-        #status-history {
-            height: 500px;  /* 固定高度 */
-            width: 100%;
-            overflow-y: auto;  /* 允许垂直滚动 */
-            border: 1px solid #ccc;
-            padding: 10px;
-            box-sizing: border-box;
-        }
-
-        .message {
-            border: 1px solid #ccc;
-            padding: 8px;
-            margin-bottom: 5px;
-            background-color: #f9f9f9;
-        }
-
-        .timestamp {
-            font-size: 0.9em;
-            color: gray;
-        }
-
-        .message-text {
-            font-size: 1.1em;
-        }
-    </style>
+    <!-- 引入外部 CSS 文件 -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
     <h1>Welcome to the Machine Control Interface</h1>
@@ -39,70 +14,7 @@
 
     <div id="status-history"></div> <!-- 用于显示历史消息 -->
 
-    <script>
-        // 保存历史消息的数组
-        let messageHistory = [];
-
-        // 显示历史消息的函数
-        function displayMessageHistory() {
-            const historyContainer = document.getElementById("status-history");
-            historyContainer.innerHTML = "";  // 清空历史消息区域
-
-            // 倒序显示消息：最新的消息在最上面
-            // 这里我们使用 messageHistory.reverse() 来反转消息显示顺序
-            messageHistory.forEach(msg => {
-                const msgDiv = document.createElement("div");
-                msgDiv.classList.add("message");
-
-                const timestampDiv = document.createElement("div");
-                timestampDiv.classList.add("timestamp");
-                timestampDiv.textContent = msg.timestamp;
-
-                const messageDiv = document.createElement("div");
-                messageDiv.classList.add("message-text");
-                messageDiv.textContent = msg.message;
-
-                msgDiv.appendChild(timestampDiv);
-                msgDiv.appendChild(messageDiv);
-                historyContainer.appendChild(msgDiv);
-            });
-
-            // 确保滚动条始终位于顶部
-            historyContainer.scrollTop = 0;
-        }
-
-        // 记录收到的消息并显示
-        function addMessage(message) {
-            const timestamp = new Date().toLocaleString();  // 获取当前时间戳
-            messageHistory.unshift({ message, timestamp });  // 将新消息插入到历史记录的头部
-            displayMessageHistory();  // 更新页面上显示的消息
-        }
-
-        // 启动电机
-        function startMotor() {
-            fetch('/start_motor')
-                .then(response => response.json())
-                .then(data => {
-                    addMessage(`Motor started: ${data.message}`);  // 将收到的消息保存并显示
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    addMessage("Error starting motor.");
-                });
-        }
-
-        // 停止电机
-        function stopMotor() {
-            fetch('/stop_motor')
-                .then(response => response.json())
-                .then(data => {
-                    addMessage(`Motor stopped: ${data.message}`);  // 将收到的消息保存并显示
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    addMessage("Error stopping motor.");
-                });
-        }
-    </script>
+    <!-- 引入外部 JS 文件 -->
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>
 </html>

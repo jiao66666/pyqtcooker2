@@ -1,0 +1,25 @@
+/* 固定高度和滚动条样式 */
+#status-history {
+    height: 300px;  /* 固定高度 */
+    width: 100%;
+    overflow-y: auto;  /* 允许垂直滚动 */
+    border: 1px solid #ccc;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.message {
+    border: 1px solid #ccc;
+    padding: 8px;
+    margin-bottom: 5px;
+    background-color: #f9f9f9;
+}
+
+.timestamp {
+    font-size: 0.9em;
+    color: gray;
+}
+
+.message-text {
+    font-size: 1.1em;
+}
