@@ -63,8 +63,36 @@ function connect() {
         .then(data => {
             if(data.status === "success"){
                 updateConnectStatus("已连接");
-            } else{
-                updateConnectStatus("连接失败");
+            }
+            addMessage(`返回信息 : ${data.message}`);  // 将收到的消息保存并显示
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            addMessage("抛出异常");
+        });
+}
+
+
+function disconnect() {
+       // 获取 select 元素
+        var portSelect = document.getElementById("port_select");
+        console.log("选中的端口是:", portSelect.value);
+        var baudrateSelect = document.getElementById("baud_select");
+        console.log("选中的波特率是:", baudrateSelect.value);
+
+        fetch('/disconnect', {
+            method: 'POST', 
+            headers: {
+                'Content-Type': 'application/json'  
+            },
+            body: JSON.stringify({
+                boardtype: '1',  // 五轴板
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if(data.status === "success"){
+                updateConnectStatus("未连接");
             }
             addMessage(`返回信息 : ${data.message}`);  // 将收到的消息保存并显示
         })
@@ -73,7 +101,6 @@ function connect() {
             addMessage("Error starting motor.");
         });
 }
-
 // 停止电机
 function stopMotor() {
     fetch('/stop_motor')

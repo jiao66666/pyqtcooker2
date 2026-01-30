@@ -24,7 +24,7 @@ body {
 }
 
 .message-text {
-    font-size: 1.1em;
+    font-size: 12px;
 }
 
 .connect_container {
@@ -105,6 +105,9 @@ body {
 }
 .motor_tag{
     margin:5px 10px;
+    font-size:10px;
+    color:red;
+    font-weight: bold;
 }
 .connect_status{
     font-size:14px;

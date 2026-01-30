@@ -1,18 +1,11 @@
 # flaskcontrol.py
-from flask import Flask, render_template, jsonify,request, g
+from flask import Flask, render_template, jsonify,request
 from lib.boardcontroller import BoardController
 from lib.boardtype import BoardType
 
 app = Flask(__name__)
-# 在请求处理过程中使用 g 对象存储 boardcontroller1
-@app.before_request
-def before_request():
-    # 假设 boardcontroller1 和 boardcontroller2 需要在请求开始时创建
-    if not hasattr(g, 'boardcontroller1'):
-        g.boardcontroller1 = None
-    if not hasattr(g, 'boardcontroller2'):
-        g.boardcontroller2 = None
 
+boardercontrollers = {}
 
 # 渲染前端的 HTML 页面
 @app.route('/')
@@ -29,13 +22,13 @@ def connect():
     success = False
     print("收到参数 :", port, baudrate,boardtype)
     if boardtype == '1':
-        if not g.boardcontroller1:
-           g.boardcontroller1 = BoardController(BoardType.FIVE_AXIS, board_name="五轴控制板")
+        if not boardercontrollers.get("boardcontroller1"):
+           boardercontrollers["boardcontroller1"] = BoardController(BoardType.FIVE_AXIS, board_name="五轴控制板")
 
-        if g.boardcontroller1.connected:
+        if  boardercontrollers["boardcontroller1"].connected:
            print("已经连接到主板，无需重复连接")
-           return   
-        success = g.boardcontroller1.connect(port=port,baudrate=baudrate)
+           return jsonify({"status": "fail","message": "已经连接到主板，无需重复连接"}) 
+        success =  boardercontrollers["boardcontroller1"].connect(port=port,baudrate=baudrate)
 
     if success :
         print("连接成功!")
@@ -43,6 +36,29 @@ def connect():
     else:
         print("连接失败!")
         return jsonify({"status": "fail","message": "连接失败!"})
+    
+
+@app.route('/disconnect', methods=['POST'])
+def disconnect():
+    data = request.get_json()
+    boardtype = data.get('boardtype')  # 获取 'boardtype' 参数
+    success = False
+    print("收到参数 :", boardtype)
+    if boardtype == '1':
+        if not boardercontrollers.get("boardcontroller1"):
+           print("找不到主板控制器，无法操作")
+           return jsonify({"status": "fail","message": "找不到主板控制器，无法操作"})    
+
+        if not  boardercontrollers["boardcontroller1"].connected:
+           print("已经断开，无需重复操作")
+           return jsonify({"status": "fail","message": "已经断开，无需重复操作"})       
+        success =  boardercontrollers["boardcontroller1"].disconnect()
+    if success :
+        print("断开连接成功!")
+        return jsonify({"status": "success","message": "断开连接成功!"})
+    else:
+        print("断开连接失败!")
+        return jsonify({"status": "fail","message": "断开连接失败!"})    
 
 @app.route('/run', methods=['POST'])
 def run():
