@@ -25,7 +25,7 @@ class MotorDriver:
         print("使能所有电机....")
         success, resp = self.com.execute_command(
             "ENABLE", 
-            [str(self.board_id),"0",str("01111")]
+            [str(self.board_id),"0",str("11111")]
         )
         if not success:
             print(f"错误: {resp}")
