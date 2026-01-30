@@ -146,8 +146,8 @@ class RS485Communication:
             crc = self.calculate_crc16(cmd_str)
             cmd_str += f"*{crc}"
             print(f"将构建命令串(带上CRC):{cmd_str}")    
-        # 添加<CR><LF>结尾
-        cmd_str += "\r\n" 
+        # 添加<CR><LF>结尾，此板不需要
+        #cmd_str += "\r\n" 
         
         return cmd_str
     
@@ -318,6 +318,9 @@ if __name__ == "__main__":
 
            print("\n4. 发送DC电机测试命令: YT+CHECKSUM")
            comm2.execute_command("CHECKSUM", ["1", "0"])
+
+           print("test lrc")
+           comm1.build_command("RUN",["1","0","2560000","360"])
 
         finally:
             # 断开连接

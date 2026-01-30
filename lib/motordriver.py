@@ -20,6 +20,18 @@ class MotorDriver:
         # 如果需要，可以在这里缓存电机状态
         self.current_position = 0 
 
+    
+    def enable_all_motors(self):
+        print("使能所有电机....")
+        success, resp = self.com.execute_command(
+            "ENABLE", 
+            [str(self.board_id),"0",str("01111")]
+        )
+        if not success:
+            print(f"错误: {resp}")
+            return False
+        return True  
+
     def run(self, circles: int, anglespeed: int, direction: int):
         """单次运转电机"""
         print("####运行电机####")
