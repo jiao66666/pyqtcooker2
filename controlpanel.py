@@ -3,10 +3,8 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter import StringVar
 import tkinter.messagebox as msgbox
-from lib.basecom import RS485Communication,BoardType
-from lib.motordriver import MotorDriver
-from lib.tools import circles_to_pulses
 from lib.boardcontroller import BoardController
+from lib.boardtype import BoardType
 
 
 class MainWindow:

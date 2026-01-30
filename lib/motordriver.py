@@ -1,5 +1,6 @@
 # motor_driver.py
-from lib.basecom import RS485Communication,BoardType
+from lib.basecom import RS485Communication
+from lib.boardtype import BoardType
 from lib.tools import circles_to_pulses
 
 # 定义电机驱动类

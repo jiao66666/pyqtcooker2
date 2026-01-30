@@ -3,12 +3,9 @@ import time
 import crcmod
 import threading
 from typing import Optional, List, Tuple, Union
-from enum import Enum
+from lib.boardtype import BoardType
 
 
-class BoardType(Enum):
-    FIVE_AXIS = 1  # 五轴板
-    FEEDER = 2     # 加料板
 
 class RS485Communication:
     """RS485通信类，实现主板通信协议"""

@@ -1,5 +1,7 @@
 # flaskcontrol.py
 from flask import Flask, render_template, jsonify,request
+from lib.boardcontroller import BoardController
+from lib.boardtype import BoardType
 
 
 app = Flask(__name__)

@@ -1,5 +1,8 @@
-from lib.basecom import RS485Communication,BoardType
+from lib.basecom import RS485Communication
 from lib.motordriver import MotorDriver
+from lib.boardtype import BoardType
+
+
 class BoardController:
     def __init__(self, board_type: BoardType,board_name: str = ""):
         """
