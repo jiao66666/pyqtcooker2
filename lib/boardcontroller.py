@@ -22,7 +22,7 @@ class BoardController:
             print("已经连接到主板")
             return True
         try:
-            self.comm = RS485Communication(port=port, baudrate=baudrate, timeout=2.0, boardtype=self.board_type)
+            self.comm = RS485Communication(port=port, baudrate=baudrate, timeout=1.0, boardtype=self.board_type)
             self.connected = self.comm.connect()
             if self.connected:
                 print(f"成功连接到主板，端口: {port}, 波特率: {baudrate}")

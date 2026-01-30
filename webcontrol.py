@@ -81,6 +81,27 @@ def runlong():
     else:
         print("电机长运转失败!")
         return jsonify({"status": "fail","message": "长运转失败!"})
+    
+
+@app.route('/pause', methods=['POST'])
+def pause():
+    print("暂停电机运转")
+    data = request.get_json()
+    motorid = data.get('motorid')  # 获取 'port' 参数
+    boardtype = data.get('boardtype')  # 获取 'boardtype' 参数
+    success = False
+    print("收到参数 :", motorid)
+    if boardtype == '1':
+        if not boardercontrollers.get("boardcontroller1"):
+           print("找不到主板控制器，无法操作")
+           return jsonify({"status": "fail","message": "找不到主板控制器，无法操作"})
+        success =  boardercontrollers["boardcontroller1"].motors[motorid].pause()
+    if success :
+        print("电机暂停成功!")
+        return jsonify({"status": "success","message": "电机暂停成功!"})
+    else:
+        print("电机暂停失败!")
+        return jsonify({"status": "fail","message": "电机暂停失败!"})    
 
 if __name__ == '__main__':
     # 绑定到所有网络接口，允许局域网访问
