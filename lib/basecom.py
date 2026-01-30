@@ -147,7 +147,7 @@ class RS485Communication:
             cmd_str += f"*{crc}"
             print(f"将构建命令串(带上CRC):{cmd_str}")    
         # 添加<CR><LF>结尾
-        cmd_str += "\r\n"
+        cmd_str += "\r\n" 
         
         return cmd_str
     
@@ -170,6 +170,7 @@ class RS485Communication:
         try:
             with self.lock:
                 cmd_str = self.build_command(command, params)
+                print("发送指令中....")
                 self.serial_conn.write(cmd_str.encode('utf-8'))
                 self.serial_conn.flush()
                 return True
@@ -241,7 +242,7 @@ class RS485Communication:
                 if timeout is not None:
                     self.serial_conn.timeout = timeout
 
-                # 读取响应
+                # 读取响应，假设是以回车换行符结束的
                 response = self.serial_conn.readline().decode('utf-8').strip()
 
                 # 恢复原始超时设置
@@ -269,35 +270,26 @@ class RS485Communication:
                 - 参数列表
         """
         # 检查是否是错误响应
-        if response.startswith("+ERROR:"):
-            # 解析错误响应: +ERROR: <板子ID>,<错误信息>*<CRC16>
-            content = response[7:]  # 去掉"+ERROR:"
-            if '*' in content:
-                content = content.split('*')[0]  # 去掉CRC校验值
-            parts = content.split(',', 1)  # 最多分成两部分
-            board_id = parts[0] if parts else ""
+        if response.endswith("NG"):
+            # 失败响应：指令+失败信息+NG+回车换行
+            content = response[:-2]  # 去掉 "NG"
+            parts = content.split(' ', 1)  # 分割指令和失败信息
+            cmd = parts[0] if parts else ""
             error_msg = parts[1] if len(parts) > 1 else ""
-            return False, "ERROR", [board_id, error_msg]
+            return False, cmd, [error_msg]
 
-        # 解析正确响应: +<指令名>:<板子ID>,<参数1>,<参数2>...*<CRC16>
-        if not response.startswith('+'):
-            return False, "INVALID", []
+        # 检查是否是成功响应
+        if response.endswith("OK"):
+            # 成功响应：指令+OK+回车换行
+            content = response[:-2]  # 去掉 "OK"
+            parts = content.split(' ', 1)  # 分割指令和其他信息
+            cmd = parts[0] if parts else ""
+            params = parts[1].split(',') if len(parts) > 1 else []
+            return True, cmd, params
 
-        # 提取命令名和参数部分
-        if ':' not in response:
-            return False, "INVALID", []
+        # 如果不是 OK 或 NG，返回 INVALID
+        return False, "INVALID", []
 
-        cmd_part, param_part = response[1:].split(':', 1)  # 去掉开头的'+'
-
-        # 去掉CRC校验值（如果存在）
-        if '*' in param_part:
-            param_part = param_part.split('*')[0]
-
-        # 解析参数
-        params = param_part.split(',') if param_part else []
-
-        return True, cmd_part, params        
-    
 
 # 示例用法
 if __name__ == "__main__":
