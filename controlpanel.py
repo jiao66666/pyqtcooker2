@@ -6,18 +6,16 @@ import tkinter.messagebox as msgbox
 from lib.basecom import RS485Communication,BoardType
 from lib.motordriver import MotorDriver
 from lib.tools import circles_to_pulses
+from lib.boardcontroller import BoardController
 
 
 class MainWindow:
     def __init__(self, root):
         # 创建通信对象  root为tkinter的根窗口
         
-        self.comm1 = None
-        self.connected1 = False
-        self.motors1 = []
-        self.comm2 = None
-        self.connected2 = False
-        self.motors2 = []
+        #此窗口默认持有两个主板控制对象
+        self.boardcontroller1 = None
+        self.boardcontroller2 = None
 
         self.root = root
         self.root.title("极傲炒菜机-电机板控制系统")
@@ -247,16 +245,18 @@ class MainWindow:
 
     def on_closing(self):
         """窗口关闭时的处理函数"""
-        if self.comm1 and self.connected1:
+        if self.boardcontroller1 and self.boardcontroller1.connected:
             try:
-                self.comm1.disconnect()
+                self.boardcontroller1.disconnect()
+                self.boardcontroller1 = None
                 print("窗口关闭时断开串口连接1")
             except Exception as e:
                 print(f"断开连接时出错: {e}")
 
-        if self.comm2 and self.connected2:
+        if self.boardcontroller2 and self.boardcontroller2.connected:
             try:
-                self.comm2.disconnect()
+                self.boardcontroller2.disconnect()
+                self.boardcontroller2 = None
                 print("窗口关闭时断开串口连接2")
             except Exception as e:
                 print(f"断开连接时出错: {e}")    
@@ -264,60 +264,47 @@ class MainWindow:
         self.root.destroy()  # 关闭窗口
 
     def on_button_connect_clicked(self,boardtype:BoardType):
-        print("串口连接按钮被点击")
+        print("主板串口连接按钮被点击")
         print(f"初始化>>>创建通信对象, 主板类型:{boardtype.value}")
         
         if boardtype == BoardType.FIVE_AXIS:
             port = self.port_var.get()
             baudrate = int(self.baudrate_var.get())
-            self.comm1 = RS485Communication(port=port, baudrate=baudrate, timeout=1.0)
-            print(f"   串口: {self.comm1.port}, 波特率: {self.comm1.baudrate}, 超时: {self.comm1.timeout}秒")
-            self.connected1 =  self.comm1.connect()
-            if self.connected1:
+            print(f"   串口: {port}, 波特率: {baudrate}")
+            if not self.boardcontroller1:
+               self.boardcontroller1 = BoardController(board_type=BoardType.FIVE_AXIS,board_name="五轴控制板")
+            if self.boardcontroller1.connected:
+                print("已经连接到主板，无需重复连接")
+                return   
+            self.boardcontroller1.connect(port=port,baudrate=baudrate)
+            if self.boardcontroller1.connected:
                 self.status_text.set("已连接")
-                print("   串口连接成功")
-                self.init_motors(BoardType.FIVE_AXIS)
             else:
                 self.status_text.set("连接失败")
-                print("   串口连接失败")  
         elif boardtype == BoardType.FEEDER:
             port = self.port_var2.get()
             baudrate = int(self.baudrate_var2.get())
-            self.comm2 = RS485Communication(port=port, baudrate=baudrate, timeout=1.0)
-            print(f"   串口: {self.comm2.port}, 波特率: {self.comm2.baudrate}, 超时: {self.comm2.timeout}秒")
-            self.connected2 =  self.comm2.connect()
-            if self.connected2:
+            print(f"   串口: {port}, 波特率: {baudrate}")
+            if not self.boardcontroller2:
+               self.boardcontroller2 = BoardController(board_type=BoardType.FEEDER,board_name="加料控制板")
+            if self.boardcontroller2.connected:
+                print("已经连接到主板，无需重复连接")
+                return    
+            self.boardcontroller2.connect(port=port,baudrate=baudrate)
+            if self.boardcontroller2.connected:
                 self.status_text2.set("已连接")
-                print("   串口连接成功")
-                self.init_motors(BoardType.FEEDER)
-              
             else:
                 self.status_text2.set("连接失败")
-                print("   串口连接失败")
 
-    def init_motors(self,boardtype:BoardType):
-
-        if boardtype == BoardType.FIVE_AXIS:
-            print("初始化>>>创建五轴电机对象...")
-            for i in range(5):
-                motor = MotorDriver(rs485_instance=self.comm1, motor_id=i, board_type=BoardType.FIVE_AXIS, name=f"{i}号电机")
-                self.motors1.append(motor)   
-        elif boardtype == BoardType.FEEDER:
-            print("初始化>>>创建加料电机对象...")
-            for i in range(24):
-                motor = MotorDriver(rs485_instance=self.comm2, motor_id=i, board_type=BoardType.FEEDER, name=f"{i}号加料电机")
-                self.motors2.append(motor)                                   
-
+                                
     def on_button_disconnect_clicked(self,boardtype:BoardType):
         print("断开串口连接按钮被点击")
         print(f"断开主板类型:{boardtype.value}")
         
         if boardtype == BoardType.FIVE_AXIS:
-            if self.comm1 and self.connected1:
-                success = self.comm1.disconnect()
+            if self.boardcontroller1 and self.boardcontroller1.connected:
+                success = self.boardcontroller1.disconnect()
                 if success:
-                  self.comm1 = None
-                  self.connected1 = False
                   self.status_text.set("未连接")
                   print(" 断开连接成功")
             else:
@@ -325,11 +312,9 @@ class MainWindow:
                 print("   断开连接失败")                 
 
         elif boardtype == BoardType.FEEDER:   
-            if self.comm2 and self.connected2:
-                success = self.comm2.disconnect()
+            if self.boardcontroller2 and self.boardcontroller2.connected:
+                success = self.boardcontroller2.disconnect()
                 if success:
-                  self.comm2 = None
-                  self.connected2 = False
                   self.status_text2.set("未连接")
                   print(" 断开连接成功")
             else:
@@ -339,7 +324,7 @@ class MainWindow:
 
     def on_button_run_clicked(self,direction:int):
         print(f"电机运行按钮被点击, 方向: {direction}")               
-        if not self.connected1:
+        if not self.boardcontroller1 or not self.boardcontroller1.connected:
             print("   串口未连接，无法运行电机")    
             return
         
@@ -359,69 +344,77 @@ class MainWindow:
         circle = int(distance)
 
         print(f"   电机号: {motor_id}, 转动速度: {speed}度/秒, 转动距离: {distance}圈")
-        if self.motors1 and self.motors1[motor_id]:
+        if self.boardcontroller1:
             print("找到电机对象，开始运行电机>>>>>>>>")
-            self.motors1[motor_id].run(circle, int(speed),direction)
+            self.boardcontroller1.motors[motor_id].run(circle, int(speed),direction)
         else:
             print(f" 未找到电机对象，无法运行电机号: {motor_id}")
 
 
     def on_button_runlong_clicked(self,direction:int):
-        print(f"电机长运行按钮被点击, 方向: {direction}")               
+        print(f"电机长运行按钮被点击, 方向: {direction}")  
+        if not self.boardcontroller1 or not self.boardcontroller1.connected:
+            print("   串口未连接，无法运行电机")    
+            return
 
         motor_id = int(self.motor_id_var.get())
         speed = str(self.speed_var.get())
+        if speed == "" or speed == 0:
+            print("   请输入有效的速度值")
+            return            
         print(f"   长运行电机号: {motor_id}, 转动速度: {speed}转/秒")
-        if self.motors1 and self.motors1[motor_id]:
+        if self.boardcontroller1:
             print("找到电机对象，开始运行电机>>>>>>>>")
-            self.motors1[motor_id].runlong(int(speed),direction)
+            self.boardcontroller1.motors[motor_id].runlong(int(speed),direction)
         else:
             print(f" 未找到电机对象，无法运行电机号: {motor_id}")
 
     def on_button_enable_clicked(self):
         print("电机使能按钮被点击")               
-        if not self.connected1:
+        if not self.boardcontroller1 or not self.boardcontroller1.connected:
             print("   串口未连接，无法运行电机")    
             return
+        
         
         motor_id = int(self.motor_id_var.get())
 
         print(f" 使能电机号: {motor_id}")
-        if self.motors1 and self.motors1[motor_id]:
+        if self.boardcontroller1:
             print("找到电机对象，开始使能电机>>>>>>>>")
-            self.motors1[motor_id].enable()
+            self.boardcontroller1.motors[motor_id].enable()
         else:
             print(f" 未找到电机对象，无法运行电机号: {motor_id}")
     
             
     def on_button_pause_clicked(self):
         print("电机暂停按钮被点击")               
-        if not self.connected1:
+        if not self.boardcontroller1 or not self.boardcontroller1.connected:
             print("   串口未连接，无法运行电机")    
             return
+        
         
         motor_id = int(self.motor_id_var.get())
 
         print(f" 暂停电机号: {motor_id}")
-        if self.motors1 and self.motors1[motor_id]:
+        if self.boardcontroller1:
             print("找到电机对象，暂停电机>>>>>>>>")
-            self.motors1[motor_id].pause()
+            self.boardcontroller1.motors[motor_id].pause()
         else:
             print(f" 未找到电机对象，无法运行电机号: {motor_id}")
 
 
     def on_button_stop_clicked(self):
         print("电机急停按钮被点击")               
-        if not self.connected1:
+        if not self.boardcontroller1 or not self.boardcontroller1.connected:
             print("   串口未连接，无法运行电机")    
             return
         
         motor_id = int(self.motor_id_var.get())
 
         print(f" 急停电机号: {motor_id}")
-        if self.motors1 and self.motors1[motor_id]:
+        if self.boardcontroller1:
             print("找到电机对象，暂停电机>>>>>>>>")
-            self.motors1[motor_id].stop()
+            self.boardcontroller1.motors[motor_id].stop()
         else:
             print(f" 未找到电机对象，无法运行电机号: {motor_id}")
 
