@@ -35,6 +35,11 @@ function addMessage(message) {
     displayMessageHistory();  // 更新页面上显示的消息
 }
 
+
+function updateConnectStatus(msg) {
+    var statusDiv = document.querySelector('.connect_status');
+    statusDiv.textContent = msg;  // 更新内容为“已连接”
+}
 // 启动电机
 function connect() {
        // 获取 select 元素
@@ -49,13 +54,19 @@ function connect() {
                 'Content-Type': 'application/json'  
             },
             body: JSON.stringify({
+                boardtype: '1',  // 五轴板
                 port: portSelect.value,  
                 baudrate: baudrateSelect.value 
             })
         })
         .then(response => response.json())
         .then(data => {
-            addMessage(`连接参数 : ${data.message},${data.port},${data.baudrate}`);  // 将收到的消息保存并显示
+            if(data.status === "success"){
+                updateConnectStatus("已连接");
+            } else{
+                updateConnectStatus("连接失败");
+            }
+            addMessage(`返回信息 : ${data.message}`);  // 将收到的消息保存并显示
         })
         .catch(error => {
             console.error('Error:', error);

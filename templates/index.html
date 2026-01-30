@@ -8,21 +8,21 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-    <h1>极傲炒菜机-网页控制端系统</h1>
+    <h3>极傲炒菜机-网页控制端系统</h1>
     <div class="connect_container">
         <div class="port_row">
             <label for="port">端口:</label>
             <select id="port_select" name="port_select">
-                <option value="1">COM1</option>
-                <option value="2">COM2</option>
-                <option value="3">COM3</option>
-                <option value="4">COM4</option>
-                <option value="5">COM5</option>
-                <option value="6" selected>COM6</option>
-                <option value="7">COM7</option>
-                <option value="8">COM8</option>
-                <option value="9">COM9</option>
-                <option value="10">COM10</option>
+                <option value="COM1">COM1</option>
+                <option value="COM2">COM2</option>
+                <option value="COM3">COM3</option>
+                <option value="COM4">COM4</option>
+                <option value="COM5">COM5</option>
+                <option value="COM6" selected>COM6</option>
+                <option value="COM7">COM7</option>
+                <option value="COM8">COM8</option>
+                <option value="COM9">COM9</option>
+                <option value="COM10">COM10</option>
             </select>
         </div>
         <div class="baud_row">
@@ -34,6 +34,9 @@
                 <option value="57600">57600</option>
                 <option value="115200" selected>115200</option>
             </select>
+            <div class="connect_status">
+                未连接
+            </div>
         </div>
         <div class="connectbtn_row nomb">
             <button onclick="connect()" class="mr5">连接串口</button>

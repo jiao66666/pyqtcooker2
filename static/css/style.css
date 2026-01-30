@@ -106,3 +106,8 @@ body {
 .motor_tag{
     margin:5px 10px;
 }
+.connect_status{
+    font-size:14px;
+    font-weight: bold;
+    color:green;
+}
