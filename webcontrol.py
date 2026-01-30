@@ -60,10 +60,27 @@ def disconnect():
         print("断开连接失败!")
         return jsonify({"status": "fail","message": "断开连接失败!"})    
 
-@app.route('/run', methods=['POST'])
-def run():
-    print("web run starting.....")  # 调用 machinecontrol.py 中的 stop_motor 函数
-    return jsonify({"message": "Motor stopped!"})
+@app.route('/runlong', methods=['POST'])
+def runlong():
+    print("运行电机长运转")
+    data = request.get_json()
+    motorid = data.get('motorid')  # 获取 'port' 参数
+    direction = data.get('direction')  # 获取 'baudrate' 参数
+    speed = data.get('speed')  # 获取 'boardtype' 参数
+    boardtype = data.get('boardtype')  # 获取 'boardtype' 参数
+    success = False
+    print("收到参数 :", motorid, direction,speed)
+    if boardtype == '1':
+        if not boardercontrollers.get("boardcontroller1"):
+           print("找不到主板控制器，无法操作")
+           return jsonify({"status": "fail","message": "找不到主板控制器，无法操作"})
+        success =  boardercontrollers["boardcontroller1"].motors[motorid].runlong(int(int(speed)*360),int(direction))
+    if success :
+        print("电机长运转成功!")
+        return jsonify({"status": "success","message": f"长运行成功!电机：{motorid}，方向：{direction}，速度：{speed}"})
+    else:
+        print("电机长运转失败!")
+        return jsonify({"status": "fail","message": "长运转失败!"})
 
 if __name__ == '__main__':
     # 绑定到所有网络接口，允许局域网访问

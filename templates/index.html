@@ -9,6 +9,7 @@
 </head>
 <body>
     <h3>极傲炒菜机-网页控制端系统</h1>
+
     <div class="connect_container">
         <div class="port_row">
             <label for="port">端口:</label>
@@ -46,32 +47,54 @@
 
     <hr style="border: 1px solid #ccc; width: 100%; margin: 10px auto;">
 
+    <div class="speed_container">
+        <label>电机速度选择:</label>
+        <label>
+            <input type="radio" name="speed" value="1"> 1档
+        </label><br>
+        
+        <label>
+            <input type="radio" name="speed" value="2"> 2档
+        </label><br>
+        
+        <label>
+            <input type="radio" name="speed" value="3" checked> 3档
+        </label>
+
+        <label>
+            <input type="radio" name="speed" value="4"> 4档
+        </label>
+
+        <label>
+            <input type="radio" name="speed" value="5"> 5档
+        </label>
+    </div>
 
     <div class="motor_container">
         <div class="motor">
             <div class="motor_row fcenter">
-                <button onclick="startMotor(0)">向内翻转</button>
+                <button onclick="startMotor(1,'up')">向内翻转</button>
             </div>
             <div class="motor_row">
-                <button onclick="stopMotor(0)">向左移动</button>
+                <button onclick="startMotor(1,'left')">向左移动</button>
                 <div class="motor_tag">1号锅</div>
-                <button onclick="stopMotor(0)">向右移动</button>
+                <button onclick="startMotor(1,'right')">向右移动</button>
             </div>
             <div class="motor_row fcenter">
-                <button onclick="startMotor(0)">向内翻转</button>
+                <button onclick="startMotor(1,'down')">向内翻转</button>
             </div>
         </div>
         <div class="motor ">
             <div class="motor_row fcenter">
-                <button onclick="startMotor(0)">向内翻转</button>
+                <button onclick="startMotor(2,'up')">向内翻转</button>
             </div>
             <div class="motor_row">
-                <button onclick="stopMotor(0)">向左移动</button>
+                <button onclick="startMotor(2,'left')">向左移动</button>
                 <div class="motor_tag">2号锅</div>
-                <button onclick="stopMotor(0)">向右移动</button>
+                <button onclick="startMotor(2,'right')">向右移动</button>
             </div>
             <div class="motor_row fcenter">
-                <button onclick="startMotor(0)">向内翻转</button>
+                <button onclick="startMotor(2,'down')">向内翻转</button>
             </div>
         </div>
     </div>

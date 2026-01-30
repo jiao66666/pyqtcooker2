@@ -101,6 +101,42 @@ function disconnect() {
             addMessage("Error starting motor.");
         });
 }
+
+
+function startMotor(potnum,directionstr) {
+       // 获取 select 元素
+        var speed = getSelectedValue("speed");
+        console.log("选中速度值是:", speed);
+        var motorObj = getMotorInfo(potnum,directionstr);
+        if(motorObj == null){
+            console.log("获取电机信息失败");
+            return;
+        }
+        fetch('/runlong', {
+            method: 'POST', 
+            headers: {
+                'Content-Type': 'application/json'  
+            },
+            body: JSON.stringify({
+                boardtype: '1',  // 五轴板
+                motorid: motorObj.motor,
+                direction: motorObj.direction,
+                speed: speed
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if(data.status === "success"){
+                updateConnectStatus("未连接");
+                addMessage(`返回信息 : ${data.message}`);  // 将收到的消息保存并显示
+            }
+            
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            addMessage("Error starting motor.");
+        });
+}
 // 停止电机
 function stopMotor() {
     fetch('/stop_motor')
@@ -112,4 +148,43 @@ function stopMotor() {
             console.error('Error:', error);
             addMessage("Error stopping motor.");
         });
+}
+
+
+function getSelectedValue(name) {
+    const radios = document.getElementsByName(name);
+    for (let i = 0; i < radios.length; i++) {
+        if (radios[i].checked) {
+            console.log("选择的速度档位是:"+radios[i].value);
+            return radios[i].value;
+        }
+    }
+    alert("没有选择速度！");
+    return null;
+}
+
+//转换为具体电机和方向
+function getMotorInfo(potnum, directionstr){
+     if(potnum == 1){
+        if(directionstr == "up"){
+            return { motor: 1, direction: 1 };
+        }else if(directionstr == "down"){
+            return { motor: 1, direction: -1 };
+        }else if(directionstr == "left"){
+            return { motor: 2, direction: 1 };
+        }else if(directionstr == "right"){
+            return { motor: 2, direction: -1 };
+        }
+    }else if(potnum == 2){
+        if(directionstr == "up"){
+            return { motor: 3, direction: -1 };
+        }else if(directionstr == "down"){
+            return { motor: 3, direction: 1 };
+        }else if(directionstr == "left"){
+            return { motor: 4, direction: 1 };
+        }else if(directionstr == "right"){
+            return { motor: 4, direction: -1 };
+        }
+    }
+    return null
 }
