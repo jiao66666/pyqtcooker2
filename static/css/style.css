@@ -79,6 +79,11 @@ body {
     margin-bottom: 10px;
 }
 
+.motor_row button{
+    width:60px;
+    height:60px;
+    font-size:10px;
+}
 .prompt{
     text-align: left;
     font-size: 14px;

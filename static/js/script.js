@@ -129,6 +129,8 @@ function startMotor(potnum,directionstr) {
             if(data.status === "success"){
                 updateConnectStatus("未连接");
                 addMessage(`返回信息 : ${data.message}`);  // 将收到的消息保存并显示
+            }else if(data.status === "error"){
+                addMessage(`返回信息 : ${data.message}`);  // 将收到的消息保存并显示
             }
             
         })

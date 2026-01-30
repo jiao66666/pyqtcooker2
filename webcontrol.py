@@ -73,7 +73,7 @@ def runlong():
     if boardtype == '1':
         if not boardercontrollers.get("boardcontroller1"):
            print("找不到主板控制器，无法操作")
-           return jsonify({"status": "fail","message": "找不到主板控制器，无法操作"})
+           return jsonify({"status": "error","message": "找不到主板控制器，无法操作,请先连接串口"})
         success =  boardercontrollers["boardcontroller1"].motors[motorid].runlong(int(int(speed)*360),int(direction))
     if success :
         print("电机长运转成功!")
@@ -94,7 +94,7 @@ def pause():
     if boardtype == '1':
         if not boardercontrollers.get("boardcontroller1"):
            print("找不到主板控制器，无法操作")
-           return jsonify({"status": "fail","message": "找不到主板控制器，无法操作"})
+           return jsonify({"status": "error","message": "找不到主板控制器，无法操作,请先连接串口"})
         success =  boardercontrollers["boardcontroller1"].motors[motorid].pause()
     if success :
         print("电机暂停成功!")
