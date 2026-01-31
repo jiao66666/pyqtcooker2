@@ -202,6 +202,11 @@ class RS485Communication:
                 # 解析响应
                 print("解析消息>>>>>>>")
                 success, resp_type, resp_params = self.parse_response(res)
+
+                print(f"Success: {success}")
+                print(f"Response Type: {resp_type}")
+                print(f"Response Parameters: {resp_params}")
+
                 if not success:
                     if resp_type == "ERROR":
                         print(False, resp_params)  # 控制台输出 False 和 resp_params
@@ -231,26 +236,31 @@ class RS485Communication:
                 - 响应类型（命令名称或"ERROR"）
                 - 参数列表
         """
-        # 检查是否是错误响应
-        if response.endswith("NG"):
-            # 失败响应：指令+失败信息+NG+回车换行
-            content = response[:-2]  # 去掉 "NG"
-            parts = content.split(' ', 1)  # 分割指令和失败信息
-            cmd = parts[0] if parts else ""
-            error_msg = parts[1] if len(parts) > 1 else ""
-            return False, cmd, [error_msg]
-
         # 检查是否是成功响应
         if response.endswith("OK"):
-            # 成功响应：指令+OK+回车换行
-            content = response[:-2]  # 去掉 "OK"
-            parts = content.split(' ', 1)  # 分割指令和其他信息
-            cmd = parts[0] if parts else ""
-            params = parts[1].split(',') if len(parts) > 1 else []
+            # 提取命令和参数（去掉 # 和 *OK）
+            content = response[1:-3]  # 去掉 # 和 *OK
+            parts = content.split(',')  # 分割命令和参数
+            cmd = parts[0]  # 命令部分
+            params = parts[1:]  # 剩下的是参数
             return True, cmd, params
+
+        # 检查是否是失败响应
+        if response.endswith("NG"):
+            # 提取命令和参数（去掉 # 和 *NG）
+            content = response[1:-3]  # 去掉 # 和 *NG
+            parts = content.split(',')  # 分割命令和参数
+            cmd = parts[0]  # 命令部分
+            params = parts[1:]  # 剩下的是参数
+            return False, cmd, params
 
         # 如果不是 OK 或 NG，返回 INVALID
         return False, "INVALID", []
+
+
+
+
+
 
 
 # 示例用法
