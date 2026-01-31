@@ -2,8 +2,7 @@
 from flask import Flask, render_template, jsonify,request
 from lib.boardcontroller import BoardController
 from lib.boardtype import BoardType
-from lib.tools import list_ports
-from lib.tools import testSendDirectly
+
 
 app = Flask(__name__)
 
@@ -105,6 +104,7 @@ def pause():
         print("电机暂停失败!")
         return jsonify({"status": "fail","message": "电机暂停失败!"})    
     
+   
 @app.route('/test', methods=['POST'])
 def test():
     """
