@@ -1,6 +1,7 @@
 import serial
 import serial.tools.list_ports
 
+
 def circles_to_pulses(circles, step_angle = 1.8, microsteps = 32):
     # 每圈的步数 = 360 / 步距角
     steps_per_revolution = 360 / step_angle

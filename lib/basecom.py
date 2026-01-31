@@ -104,7 +104,7 @@ class RS485Communication:
         return f"{crc_value:04X}"
 
 
-
+    
     def build_command(self, command: str, params: List[str] = None) -> str:
         """
         构建命令字符串
@@ -120,7 +120,7 @@ class RS485Communication:
             params = []
 
         # 构建基本命令: #<指令名>,<板子ID>,<参数1>,<参数2>...
-
+       
         if self.boardtype == BoardType.FIVE_AXIS:
            cmd_str = f"#{command}"
         elif self.boardtype == BoardType.FEEDER:
@@ -151,33 +151,6 @@ class RS485Communication:
         
         return cmd_str
     
-
-    def send_command(self,  command: str,  params: List[str] = None) -> bool:
-        """
-        发送命令
-
-        参数:
-            command: 命令名称，如 'OPENLOCK'
-            params: 参数列表，默认为空
-        
-        返回:
-            bool: 发送是否成功
-        """
-        if not self.serial_conn or not self.serial_conn.is_open:
-            print("串口未连接")
-            return False
-
-        try:
-            with self.lock:
-                cmd_str = self.build_command(command, params)
-                print("发送指令中....")
-                self.serial_conn.write(cmd_str.encode('utf-8'))
-                self.serial_conn.flush()
-                return True
-        except Exception as e:
-            print(f"发送命令失败: {e}")
-            return False
-        
     def execute_command(self, command: str, params: List[str] = None, 
                        ) -> Tuple[bool, List[str]]:
         """
@@ -218,8 +191,62 @@ class RS485Communication:
             return False, [f"响应类型不匹配，期望: {command}，实际: {resp_type}"]
         
         return True, resp_params
+    
+    def send_command(self, command: str, params: List[str] = None, 
+                       ) -> Tuple[bool, List[str]]:
+        
+        if params is None:
+            params = []
+
+        # 构建基本命令: #<指令名>,<板子ID>,<参数1>,<参数2>...
+
+        if self.boardtype == BoardType.FIVE_AXIS:
+           cmd_str = f"#{command}"
+        elif self.boardtype == BoardType.FEEDER:
+           cmd_str = f"YT+{command}="
+
+        if params:
+            if self.boardtype == BoardType.FIVE_AXIS:
+              cmd_str += f",{','.join(params)}"
+            elif self.boardtype == BoardType.FEEDER:
+              cmd_str += f"{','.join(params)}"    
+        
+        # 打印命令字符串（调试用）
+        print(f"将构建命令串(不带LRC): {cmd_str}")
+
+        # 计算并添加校验码
+        if self.boardtype == BoardType.FIVE_AXIS:
+            # 计算LRC校验码，这里要计算从 # 到 * 之间的字符的累加和
+            lrc = self.calculate_lrc(cmd_str + "*")  # 包含 * 进行校验
+            cmd_str += f"*{lrc}"
+            print(f"将构建命令串(带上LRC): {cmd_str}")
+        elif self.boardtype == BoardType.FEEDER:
+            # 添加CRC校验（如果需要）
+            crc = self.calculate_crc16(cmd_str)
+            cmd_str += f"*{crc}"
+            print(f"将构建命令串(带上CRC):{cmd_str}")  
 
 
+        if not self.serial_conn or not self.serial_conn.is_open:
+                print("串口未连接")
+                return False
+
+        try:
+            with self.lock:
+                cmd_str = self.build_command(command, params)
+                print("发送指令中....")
+                self.serial_conn.write(cmd_str.encode('utf-8'))
+                self.serial_conn.flush()
+                print("主板返回消息>>>>>>")
+                res = self.serial_conn.readall().decode()
+                print(res)
+                return True
+        except Exception as e:
+            print(f"发送命令失败: {e}")
+            return False            
+
+    
+     
         
     def receive_response(self, timeout: float = None) -> Optional[str]:
         """
@@ -297,36 +324,23 @@ if __name__ == "__main__":
 
     # 创建通信对象
     print("1. 创建通信对象")
-    comm1 = RS485Communication(port="COM2", baudrate=9600, timeout=2.0, boardtype=BoardType.FIVE_AXIS)
-    comm2 = RS485Communication(port="COM3", baudrate=115200, timeout=2.0, boardtype=BoardType.FEEDER)
+    comm1 = RS485Communication(port="COM2", baudrate=115200, timeout=1.0, boardtype=BoardType.FIVE_AXIS)
+   
     print(f"   串口: {comm1.port}, 波特率: {comm1.baudrate}, 超时: {comm1.timeout}秒, 主板类型: {comm1.boardtype}")
-    print(f"   串口: {comm2.port}, 波特率: {comm2.baudrate}, 超时: {comm2.timeout}秒, 主板类型: {comm2.boardtype}")
-
-
-    print("boardtype val1:")
-    print(BoardType.FIVE_AXIS)
-    print("boardtype val2:")
-    print(BoardType.FEEDER) 
+    
     # 连接串口
     print("\n2. 连接串口")
-    if comm1.connect() and comm2.connect():
+    if comm1.connect() :
         print("   串口连接成功")
 
         try:
-           print("\n3. 发送步进电机测试命令: RUN 1 0 2560000 360")
-           comm1.execute_command("RUN", ["1", "0","2560000","360"])
-
-           print("\n4. 发送DC电机测试命令: YT+CHECKSUM")
-           comm2.execute_command("CHECKSUM", ["1", "0"])
-
-           print("test lrc")
-           comm1.build_command("RUN",["1","0","2560000","360"])
+           print("\n3. 发送步进电机测试命令: ENABLE ALL .")
+           comm1.execute_command("ENABLE", ["1", "0","11111"])
 
         finally:
             # 断开连接
             print("\n断开连接")
             comm1.disconnect()
-            comm2.disconnect()
             print("   串口连接已断开")
     else: 
         print("   无法连接到串口")
