@@ -130,6 +130,30 @@ def test():
         print("测试失败!")
         return jsonify({"status": "fail","message": "测试失败!"})
 
+
+@app.route('/fixmotor', methods=['POST'])
+def fixmotor():
+    print("电机归零")
+    data = request.get_json()
+    boardtype = data.get('boardtype')  # 获取 'boardtype' 参数
+    success = False
+    if boardtype == '1':
+        #list_ports()
+        if not boardercontrollers.get("boardcontroller1"):
+           print("找不到主板控制器，无法操作")
+           return jsonify({"status": "error","message": "找不到主板控制器，无法操作,请先连接串口"})
+        success =  boardercontrollers["boardcontroller1"].motors[1].fix_all_motors()
+
+    if success :
+        print("测试成功!")
+        return jsonify({"status": "success","message": "测试成功!"})
+    else:
+        print("测试失败!")
+        return jsonify({"status": "fail","message": "测试失败!"})
+
+
+
+
            
 if __name__ == '__main__':
     # 绑定到所有网络接口，允许局域网访问
