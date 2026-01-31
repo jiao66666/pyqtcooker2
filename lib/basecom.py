@@ -171,19 +171,19 @@ class RS485Communication:
               cmd_str += f"{','.join(params)}"    
         
         # 打印命令字符串（调试用）
-        print(f"将构建命令串(不带LRC): {cmd_str}")
+        #print(f"将构建命令串(不带LRC): {cmd_str}")
 
         # 计算并添加校验码
         if self.boardtype == BoardType.FIVE_AXIS:
             # 计算LRC校验码，这里要计算从 # 到 * 之间的字符的累加和
             lrc = self.calculate_lrc(cmd_str + "*")  # 包含 * 进行校验
             cmd_str += f"*{lrc}"
-            print(f"将构建命令串(带上LRC): {cmd_str}")
+            #print(f"将构建命令串(带上LRC): {cmd_str}")
         elif self.boardtype == BoardType.FEEDER:
             # 添加CRC校验（如果需要）
             crc = self.calculate_crc16(cmd_str)
             cmd_str += f"*{crc}"
-            print(f"将构建命令串(带上CRC):{cmd_str}")  
+            #print(f"将构建命令串(带上CRC):{cmd_str}")  
 
 
         if not self.serial_conn or not self.serial_conn.is_open:
@@ -217,7 +217,7 @@ class RS485Communication:
                 if resp_type != command:
                     print(False, [f"响应类型不匹配，期望: {command}，实际: {resp_type}"])  # 控制台输出错误信息
 
-                return True
+                return True,["命令执行成功",f"实际执行命令为{cmd_str}"]
         except Exception as e:
             print(f"发送命令失败: {e}")
             return False            
