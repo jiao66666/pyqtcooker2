@@ -9,7 +9,7 @@ from lib.boardtype import BoardType
 
 class RS485Communication:
     """RS485通信类，实现主板通信协议"""
-    def __init__(self, port: str, baudrate: int = 9600, timeout: float = 1.0, boardtype: BoardType = BoardType.FIVE_AXIS):
+    def __init__(self, port: str, baudrate: int = 115200, timeout: float = 1.0, boardtype: BoardType = BoardType.FIVE_AXIS):
         """
         初始化RS485通信
 

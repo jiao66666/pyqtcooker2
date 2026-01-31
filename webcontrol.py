@@ -2,6 +2,8 @@
 from flask import Flask, render_template, jsonify,request
 from lib.boardcontroller import BoardController
 from lib.boardtype import BoardType
+from lib.tools import list_ports
+from lib.tools import testSendDirectly
 
 app = Flask(__name__)
 
@@ -105,22 +107,30 @@ def pause():
     
 @app.route('/test', methods=['POST'])
 def test():
-    print("测试")
+    """
+    print("测试开始")
+    testSendDirectly()
+    print("测试完成!")
+    return jsonify({"status": "success","message": "测试成功!"})
+    """
     data = request.get_json()
     boardtype = data.get('boardtype')  # 获取 'boardtype' 参数
     success = False
     if boardtype == '1':
+        #list_ports()
         if not boardercontrollers.get("boardcontroller1"):
            print("找不到主板控制器，无法操作")
            return jsonify({"status": "error","message": "找不到主板控制器，无法操作,请先连接串口"})
         success =  boardercontrollers["boardcontroller1"].motors[1].enable_all_motors()
+
     if success :
         print("测试成功!")
         return jsonify({"status": "success","message": "测试成功!"})
     else:
         print("测试失败!")
-        return jsonify({"status": "fail","message": "测试失败!"})       
+        return jsonify({"status": "fail","message": "测试失败!"})
 
+           
 if __name__ == '__main__':
     # 绑定到所有网络接口，允许局域网访问
     app.run(debug=True, host='0.0.0.0', port=5000)
