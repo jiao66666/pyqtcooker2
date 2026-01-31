@@ -151,53 +151,12 @@ class RS485Communication:
         
         return cmd_str
     
+   
     def execute_command(self, command: str, params: List[str] = None, 
                        ) -> Tuple[bool, List[str]]:
-        """
-        执行命令并接收响应
 
-        参数:
-            command: 命令名称，如 'OPENLOCK'
-            params: 参数列表，默认为空
-            checksum_method: 使用何种校验方法，默认为lrc
-            cmdtype: 命令类型，默认为1,五轴电机板 2，加料电机板
-            timeout: 接收响应的超时时间，单位秒
-
-        返回:
-            Tuple[bool, List[str]]: 
-                - 命令是否执行成功
-                - 响应参数列表（如果是错误响应，则包含错误信息）
-        """
-        # 发送命令
-        if not self.send_command(command, params):
-            return False, ["发送命令失败"]
-
-        # 接收响应
-        response = self.receive_response(self.timeout)
-        if response is None:
-            return False, ["接收响应超时"]
-
-        # 解析响应
-        success, resp_type, resp_params = self.parse_response(response)
-
-        if not success:
-            if resp_type == "ERROR":
-                return False, resp_params
-            else:
-                return False, ["无效响应"]
-
-        # 检查响应类型是否匹配命令
-        if resp_type != command:
-            return False, [f"响应类型不匹配，期望: {command}，实际: {resp_type}"]
-        
-        return True, resp_params
-    
-    def send_command(self, command: str, params: List[str] = None, 
-                       ) -> Tuple[bool, List[str]]:
-        
         if params is None:
             params = []
-
         # 构建基本命令: #<指令名>,<板子ID>,<参数1>,<参数2>...
 
         if self.boardtype == BoardType.FIVE_AXIS:
@@ -238,50 +197,26 @@ class RS485Communication:
                 self.serial_conn.write(cmd_str.encode('utf-8'))
                 self.serial_conn.flush()
                 print("主板返回消息>>>>>>")
-                res = self.serial_conn.readall().decode()
+                res = self.serial_conn.readline().decode('utf-8').strip()
                 print(res)
+                # 解析响应
+                print("解析消息>>>>>>>")
+                success, resp_type, resp_params = self.parse_response(res)
+                if not success:
+                    if resp_type == "ERROR":
+                        print(False, resp_params)  # 控制台输出 False 和 resp_params
+                    else:
+                        print(False, ["无效响应"])  # 控制台输出 False 和无效响应
+
+                # 检查响应类型是否匹配命令
+                if resp_type != command:
+                    print(False, [f"响应类型不匹配，期望: {command}，实际: {resp_type}"])  # 控制台输出错误信息
+
                 return True
         except Exception as e:
             print(f"发送命令失败: {e}")
             return False            
 
-    
-     
-        
-    def receive_response(self, timeout: float = None) -> Optional[str]:
-        """
-        接收响应
-
-        参数:
-            timeout: 接收超时时间，单位秒，如果为None则使用初始化时设置的timeout
-
-        返回:
-            Optional[str]: 接收到的响应字符串，不包含<CR><LF>，如果超时或出错则返回None
-        """
-        if not self.serial_conn or not self.serial_conn.is_open:
-            print("串口未连接")
-            return None
-
-        try:
-            with self.lock:
-                # 设置超时
-                original_timeout = self.serial_conn.timeout
-                if timeout is not None:
-                    self.serial_conn.timeout = timeout
-
-                # 读取响应，假设是以回车换行符结束的
-                response = self.serial_conn.readline().decode('utf-8').strip()
-
-                # 恢复原始超时设置
-                self.serial_conn.timeout = original_timeout
-
-                if not response:
-                    return None
-
-                return response
-        except Exception as e:
-            print(f"接收响应失败: {e}")
-            return None
 
     def parse_response(self, response: str) -> Tuple[bool, str, List[str]]:
         """

@@ -33,7 +33,7 @@ def testSystemSend2():
 
         try:
            print("\n3. 发送步进电机测试命令: ENABLE ALL .")
-           comm1.send_command("ENABLE", ["1", "0","11111"])
+           comm1.execute_command("ENABLE", ["1", "0","11111"])
           
         finally:
             # 断开连接
