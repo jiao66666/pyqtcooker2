@@ -21,6 +21,33 @@ class MotorDriver:
         self.current_position = 0 
 
     
+
+    def reset_one_motor(self, direction: int):
+        """复位单个电机"""
+        print("####复位电机####")
+        if not self.com or not self.com.connected:
+            print("错误: 串口未连接，无法运行电机")
+            return False
+        print(f"[{self.name}] ID:{self.motor_id} 运行 复位电机【{self.name}】, 主板类型:{self.board_id}")
+        # 复位脉冲数
+        pulses = 3200000
+        if direction >=0:
+            pulses = abs(pulses)
+        else:
+            pulses = -abs(pulses)   
+
+        #复位速度
+        anglespeed = 360      
+         # 发送运行命令
+        success, resp = self.com.execute_command(
+            "ORGRST", 
+            [str(self.board_id), str(self.motor_id), str(pulses), "0",str(anglespeed)]
+        )
+        if not success:
+            print(f"错误: {resp}")
+            return False
+        return True
+        
     def enable_all_motors(self):
         print("使能所有电机....")
         success, resp = self.com.execute_command(

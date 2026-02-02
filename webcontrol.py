@@ -167,13 +167,13 @@ def resetmotor():
         if not boardercontrollers.get("boardcontroller1"):
            print("找不到主板控制器，无法操作")
            return jsonify({"status": "error","message": "找不到主板控制器，无法操作,请先连接串口"})
-        #success =  boardercontrollers["boardcontroller1"].motors[motorid].runlong(int(int(speed)*360),int(direction))
+        success =  boardercontrollers["boardcontroller1"].motors[motorid].reset_one_motor(int(direction))
     if success :
         print("测试复位成功!")
-        return jsonify({"status": "success","message": f"长运行成功!电机：{motorid}，方向：{direction}，速度：{speed}"})
+        return jsonify({"status": "success","message": f"复位电机成功!电机：{motorid}，方向：{direction}"})
     else:
         print("测试复位失败!")
-        return jsonify({"status": "fail","message": "长运转失败!"})
+        return jsonify({"status": "fail","message": "复位电机失败!"})
 
 
 

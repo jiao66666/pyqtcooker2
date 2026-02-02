@@ -38,6 +38,10 @@
 - 串口通信功能为预留接口，尚未实现具体功能
 ## bakup1
 
-## package command
+## build package command
 pyinstaller --onefile --add-data "templates;templates" --add-data "static;static" webcontrol.py
+
+
+## for test only
+python webcontrol.py --port 3000
 
