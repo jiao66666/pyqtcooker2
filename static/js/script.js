@@ -149,7 +149,7 @@ function resetMotor(potnum,directionstr) {
             console.log("获取电机信息失败");
             return;
         }
-        fetch('/resetMotor', {
+        fetch('/resetmotor', {
             method: 'POST', 
             headers: {
                 'Content-Type': 'application/json'  

@@ -153,6 +153,31 @@ def fixmotor():
         return jsonify({"status": "fail","message": "测试失败!"})
 
 
+@app.route('/resetmotor', methods=['POST'])
+def resetmotor():
+    print("运行电机长运转")
+    data = request.get_json()
+    motorid = data.get('motorid')  # 获取 'port' 参数
+    direction = data.get('direction')  # 获取 'baudrate' 参数
+    speed = data.get('speed')  # 获取 'boardtype' 参数
+    boardtype = data.get('boardtype')  # 获取 'boardtype' 参数
+    success = False
+    print("收到参数 :", motorid, direction,speed)
+    if boardtype == '1':
+        if not boardercontrollers.get("boardcontroller1"):
+           print("找不到主板控制器，无法操作")
+           return jsonify({"status": "error","message": "找不到主板控制器，无法操作,请先连接串口"})
+        #success =  boardercontrollers["boardcontroller1"].motors[motorid].runlong(int(int(speed)*360),int(direction))
+    if success :
+        print("测试复位成功!")
+        return jsonify({"status": "success","message": f"长运行成功!电机：{motorid}，方向：{direction}，速度：{speed}"})
+    else:
+        print("测试复位失败!")
+        return jsonify({"status": "fail","message": "长运转失败!"})
+
+
+
+
 # 设置命令行参数解析器
 parser = argparse.ArgumentParser()
 parser.add_argument('--port', type=int, default=5000, help='Set the port for the server (default is 3000)')
