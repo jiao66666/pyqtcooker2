@@ -2,7 +2,8 @@
 from flask import Flask, render_template, jsonify,request
 from lib.boardcontroller import BoardController
 from lib.boardtype import BoardType
-
+import argparse
+import sys
 
 app = Flask(__name__)
 
@@ -152,9 +153,14 @@ def fixmotor():
         return jsonify({"status": "fail","message": "测试失败!"})
 
 
+# 设置命令行参数解析器
+parser = argparse.ArgumentParser()
+parser.add_argument('--port', type=int, default=5000, help='Set the port for the server (default is 3000)')
+args = parser.parse_args()
 
-
+# 根据传入的命令行参数设置端口
+port = args.port
            
 if __name__ == '__main__':
     # 绑定到所有网络接口，允许局域网访问,测试使用3000端口，实际生产使用5000端口
-    app.run(debug=True, host='0.0.0.0', port=3000)
+    app.run(debug=True, host='0.0.0.0', port=port)
