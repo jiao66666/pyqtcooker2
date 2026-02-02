@@ -37,3 +37,11 @@
 - 当前版本为基本功能实现，保存功能仅打印到控制台，可根据需求扩展
 - 串口通信功能为预留接口，尚未实现具体功能
 ## bakup1
+
+
+pyinstaller --onefile webcontrol.py
+pyinstaller --onefile --console webcontrol.py
+
+pip freeze > requirements.txt
+
+pyinstaller --onefile --hidden-import werkzeug webcontrol.py
