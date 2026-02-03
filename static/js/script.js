@@ -127,7 +127,6 @@ function startMotor(potnum,directionstr) {
         .then(response => response.json())
         .then(data => {
             if(data.status === "success"){
-                updateConnectStatus("未连接");
                 addMessage(`返回信息 : ${data.message}`);  // 将收到的消息保存并显示
             }else if(data.status === "error"){
                 addMessage(`返回信息 : ${data.message}`);  // 将收到的消息保存并显示
@@ -170,7 +169,6 @@ function runMotor(potnum,directionstr) {
         .then(response => response.json())
         .then(data => {
             if(data.status === "success"){
-                updateConnectStatus("未连接");
                 addMessage(`返回信息 : ${data.message}`);  // 将收到的消息保存并显示
             }else if(data.status === "error"){
                 addMessage(`返回信息 : ${data.message}`);  // 将收到的消息保存并显示
@@ -205,7 +203,6 @@ function resetMotor(potnum,directionstr) {
         .then(response => response.json())
         .then(data => {
             if(data.status === "success"){
-                updateConnectStatus("未连接");
                 addMessage(`返回信息 : ${data.message}`);  // 将收到的消息保存并显示
             }else if(data.status === "error"){
                 addMessage(`返回信息 : ${data.message}`);  // 将收到的消息保存并显示
@@ -239,7 +236,6 @@ function pauseMotor(potnum,directionstr) {
         .then(response => response.json())
         .then(data => {
             if(data.status === "success"){
-                updateConnectStatus("未连接");
                 addMessage(`返回信息 : ${data.message}`);  // 将收到的消息保存并显示
             }
             
@@ -271,7 +267,6 @@ function stopMotor(potnum,directionstr) {
         .then(response => response.json())
         .then(data => {
             if(data.status === "success"){
-                updateConnectStatus("未连接");
                 addMessage(`返回信息 : ${data.message}`);  // 将收到的消息保存并显示
             }
             
@@ -304,7 +299,6 @@ function readMotor(potnum,directionstr) {
         .then(response => response.json())
         .then(data => {
             if(data.status === "success"){
-                updateConnectStatus("未连接");
                 addMessage(`返回信息 : ${data.message}`);  // 将收到的消息保存并显示
             }
             
@@ -337,7 +331,6 @@ function testTask(potnum,directionstr) {
         .then(response => response.json())
         .then(data => {
             if(data.status === "success"){
-                updateConnectStatus("未连接");
                 addMessage(`返回信息 : ${data.message}`);  // 将收到的消息保存并显示
             }
             
@@ -369,7 +362,6 @@ function removeLimit(potnum,directionstr) {
         .then(response => response.json())
         .then(data => {
             if(data.status === "success"){
-                updateConnectStatus("未连接");
                 addMessage(`返回信息 : ${data.message}`);  // 将收到的消息保存并显示
             }
             
@@ -402,7 +394,6 @@ function recoveryLimit(potnum,directionstr) {
         .then(response => response.json())
         .then(data => {
             if(data.status === "success"){
-                updateConnectStatus("未连接");
                 addMessage(`返回信息 : ${data.message}`);  // 将收到的消息保存并显示
             }
             
