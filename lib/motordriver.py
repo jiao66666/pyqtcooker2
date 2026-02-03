@@ -165,7 +165,53 @@ class MotorDriver:
         if not success:
             print(f"错误: {resp}")
             return False
-        return True      
+        return True     
+
+    def removelimit(self):
+        """急停电机"""
+        print("####急停电机####")
+        if not self.com or not self.com.connected:
+            print("错误: 串口未连接，无法运行电机")
+            return False
+        print(f"[{self.name}] ID:{self.motor_id} 急停中... 主板类型:{self.board_id}")
+      
+        cmdstr="11111"
+        if self.motor_id == 1:
+            cmdstr = "12121"
+        elif self.motor_id == 3:
+            cmdstr = "12121"
+         # 发送运行命令
+        success, resp = self.com.execute_command(
+            "SETSwitchMode", 
+            [str(self.board_id), '0',cmdstr]
+        )
+        if not success:
+            print(f"错误: {resp}")
+            return False
+        return True    
+
+    def recoverylimit(self):
+        """急停电机"""
+        print("####急停电机####")
+        if not self.com or not self.com.connected:
+            print("错误: 串口未连接，无法运行电机")
+            return False
+        print(f"[{self.name}] ID:{self.motor_id} 急停中... 主板类型:{self.board_id}")
+      
+        cmdstr="11111"
+        if self.motor_id == 1:
+            cmdstr = "11111"
+        elif self.motor_id == 3:
+            cmdstr = "11111"
+         # 发送运行命令
+        success, resp = self.com.execute_command(
+            "SETSwitchMode", 
+            [str(self.board_id), '0',cmdstr]
+        )
+        if not success:
+            print(f"错误: {resp}")
+            return False
+        return True            
 
 
 if __name__ == "__main__":
