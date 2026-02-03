@@ -49,6 +49,10 @@
             <button onclick="resetMotor(1,'up')">1号锅翻转复位</button>
             <button onclick="resetMotor(2,'right')">2号锅水平复位</button>
             <button onclick="resetMotor(2,'up')">2号锅翻转复位</button>
+            <button onclick="stopMotor(1,'left')">1号锅水平急停</button>
+            <button onclick="stopMotor(1,'up')">1号锅翻转急停</button>
+            <button onclick="stopMotor(2,'right')">2号锅水平急停</button>
+            <button onclick="stopMotor(2,'up')">2号锅翻转急停</button>
         </div>
     </div>
 
@@ -80,28 +84,28 @@
     <div class="motor_container">
         <div class="motor">
             <div class="motor_row fcenter">
-                <button ontouchstart="startMotor(1, 'up')" ontouchend="stopMotor(1,'up')">向内翻转</button>
+                <button ontouchstart="startMotor(1, 'up')" ontouchend="pauseMotor(1,'up')">向内翻转</button>
             </div>
             <div class="motor_row">
-                <button ontouchstart="startMotor(1, 'left')" ontouchend="stopMotor(1,'left')">向左移动</button>
+                <button ontouchstart="startMotor(1, 'left')" ontouchend="pauseMotor(1,'left')">向左移动</button>
                 <div class="motor_tag">1号锅</div>
-                <button ontouchstart="startMotor(1, 'right')" ontouchend="stopMotor(1,'right')">向右移动</button>
+                <button ontouchstart="startMotor(1, 'right')" ontouchend="pauseMotor(1,'right')">向右移动</button>
             </div>
             <div class="motor_row fcenter">
-                <button ontouchstart="startMotor(1, 'down')" ontouchend="stopMotor(1,'down')">向外翻转</button>
+                <button ontouchstart="startMotor(1, 'down')" ontouchend="pauseMotor(1,'down')">向外翻转</button>
             </div>
         </div>
         <div class="motor ">
             <div class="motor_row fcenter">
-                <button ontouchstart="startMotor(2, 'up')" ontouchend="stopMotor(2,'up')">向内翻转</button>
+                <button ontouchstart="startMotor(2, 'up')" ontouchend="pauseMotor(2,'up')">向内翻转</button>
             </div>
             <div class="motor_row">
-                <button ontouchstart="startMotor(2, 'left')" ontouchend="stopMotor(2,'left')">向左移动</button>
+                <button ontouchstart="startMotor(2, 'left')" ontouchend="pauseMotor(2,'left')">向左移动</button>
                 <div class="motor_tag">2号锅</div>
-                <button ontouchstart="startMotor(2, 'right')" ontouchend="stopMotor(2,'right')">向右移动</button>
+                <button ontouchstart="startMotor(2, 'right')" ontouchend="pauseMotor(2,'right')">向右移动</button>
             </div>
             <div class="motor_row fcenter">
-                <button ontouchstart="startMotor(2, 'down')" ontouchend="stopMotor(2,'down')">向外翻转</button>
+                <button ontouchstart="startMotor(2, 'down')" ontouchend="pauseMotor(2,'down')">向外翻转</button>
             </div>
         </div>
     </div>

@@ -71,6 +71,7 @@ body {
 .motor_container .motor{
     display:flex;
     flex-flow: column nowrap;
+    border:2px dashed #ccc;
 }
 
 .motor_container .motor .motor_row{
@@ -141,6 +142,7 @@ body {
 .function_container button{
     margin-right:5px;
     margin-top:5px;
+    flex:1 1 40%;
 }
 
 .connectbtn_row button{

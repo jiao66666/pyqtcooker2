@@ -104,7 +104,27 @@ def pause():
     else:
         print("电机暂停失败!")
         return jsonify({"status": "fail","message": "电机暂停失败!"})    
-    
+
+
+@app.route('/stop', methods=['POST'])
+def stop():
+    print("暂停电机运转")
+    data = request.get_json()
+    motorid = data.get('motorid')  # 获取 'port' 参数
+    boardtype = data.get('boardtype')  # 获取 'boardtype' 参数
+    success = False
+    print("收到参数 :", motorid)
+    if boardtype == '1':
+        if not boardercontrollers.get("boardcontroller1"):
+           print("找不到主板控制器，无法操作")
+           return jsonify({"status": "error","message": "找不到主板控制器，无法操作,请先连接串口"})
+        success =  boardercontrollers["boardcontroller1"].motors[motorid].stop()
+    if success :
+        print("电机暂停成功!")
+        return jsonify({"status": "success","message": "电机暂停成功!"})
+    else:
+        print("电机暂停失败!")
+        return jsonify({"status": "fail","message": "电机暂停失败!"})    
    
 @app.route('/test', methods=['POST'])
 def test():
