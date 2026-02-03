@@ -214,6 +214,24 @@ class MotorDriver:
         return True            
 
 
+    def readmotor(self):
+        """读取电机"""
+        print("####读取电机####")
+        if not self.com or not self.com.connected:
+            print("错误: 串口未连接，无法运行电机")
+            return False
+        print(f"[{self.name}] ID:{self.motor_id} 读取中... 主板类型:{self.board_id}")
+      
+         # 发送运行命令
+        success, resp = self.com.read_command(
+            "RunStatus", 
+            [str(self.board_id), str(self.motor_id)]
+        )
+        if not success:
+            print(f"错误: {resp}")
+            return False
+        return True
+
 if __name__ == "__main__":
     print("=== RS485通信类接口测试 ===")
 

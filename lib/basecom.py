@@ -222,6 +222,78 @@ class RS485Communication:
             print(f"发送命令失败: {e}")
             return False            
 
+    def read_command(self, command: str, params: List[str] = None, 
+                       ) -> Tuple[bool, List[str]]:
+
+        if params is None:
+            params = []
+        # 构建基本命令: #<指令名>,<板子ID>,<参数1>,<参数2>...
+
+        if self.boardtype == BoardType.FIVE_AXIS:
+           cmd_str = f"#{command}"
+        elif self.boardtype == BoardType.FEEDER:
+           cmd_str = f"YT+{command}="
+
+        if params:
+            if self.boardtype == BoardType.FIVE_AXIS:
+              cmd_str += f",{','.join(params)}"
+            elif self.boardtype == BoardType.FEEDER:
+              cmd_str += f"{','.join(params)}"    
+        
+        # 打印命令字符串（调试用）
+        #print(f"将构建命令串(不带LRC): {cmd_str}")
+
+        # 计算并添加校验码
+     
+        if self.boardtype == BoardType.FIVE_AXIS:
+            # 计算LRC校验码，这里要计算从 # 到 * 之间的字符的累加和
+            lrc = self.calculate_lrc(cmd_str + "*")  # 包含 * 进行校验
+            cmd_str += f"*{lrc}"
+            #print(f"将构建命令串(带上LRC): {cmd_str}")
+        elif self.boardtype == BoardType.FEEDER:
+            # 添加CRC校验（如果需要）
+            crc = self.calculate_crc16(cmd_str)
+            cmd_str += f"*{crc}"
+            #print(f"将构建命令串(带上CRC):{cmd_str}")  
+
+
+        if not self.serial_conn or not self.serial_conn.is_open:
+                print("串口未连接")
+                return False
+
+        try:
+            with self.lock:
+                cmd_str = self.build_command(command, params)
+                print("发送指令中....")
+                self.serial_conn.write(cmd_str.encode('utf-8'))
+                self.serial_conn.flush()
+                print("主板返回消息>>>>>>")
+                res = self.serial_conn.readline().decode('utf-8').strip()
+                print(res)
+                status = self.parse_motor_status(res)
+
+                if status is None:
+                    print("电机状态解析失败")
+                    return False, ["电机状态解析失败"]
+                else:
+                    print(f"电机状态解析成功,返回状态:{status}")
+                # 解析响应
+                return True,["命令执行成功",f"实际执行命令为{cmd_str},返回状态为{status}"]
+        except Exception as e:
+            print(f"发送命令失败: {e}")
+            return False            
+
+    
+
+    def parse_motor_status(self,status_str: str):
+        """从电机状态字符串中提取状态信息"""
+        # 按 * 分隔字符串
+        parts = status_str.split('*')
+        if len(parts) > 1:
+            return parts[1]  # 返回第二个元素
+        else:
+            return None  # 如果没有 *，返回 None
+
 
     def parse_response(self, response: str) -> Tuple[bool, str, List[str]]:
         """
