@@ -142,6 +142,48 @@ function startMotor(potnum,directionstr) {
 
 
 
+function runMotor(potnum,directionstr) {
+
+       var speed = getSelectedValue("speed");
+        console.log("选中速度值是:", speed);
+       // 获取 select 元素
+        var circle = document.getElementById("circleval");
+        console.log("选中圈数值是:", circle);
+        var motorObj = getMotorInfo(potnum,directionstr);
+        if(motorObj == null){
+            console.log("获取电机信息失败");
+            return;
+        }
+        fetch('/run', {
+            method: 'POST', 
+            headers: {
+                'Content-Type': 'application/json'  
+            },
+            body: JSON.stringify({
+                boardtype: '1',  // 五轴板
+                motorid: motorObj.motor,
+                direction: motorObj.direction,
+                circle: circle.value,
+                speed: speed
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if(data.status === "success"){
+                updateConnectStatus("未连接");
+                addMessage(`返回信息 : ${data.message}`);  // 将收到的消息保存并显示
+            }else if(data.status === "error"){
+                addMessage(`返回信息 : ${data.message}`);  // 将收到的消息保存并显示
+            }
+            
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            addMessage("Error starting motor.");
+        });
+}
+
+
 function resetMotor(potnum,directionstr) {
        // 获取 select 元素
         var motorObj = getMotorInfo(potnum,directionstr);
