@@ -493,3 +493,15 @@ function getMotorInfo(potnum, directionstr){
     }
     return null
 }
+
+
+function showTab(tabNumber, buttonElement) {
+  // 隐藏所有内容
+  document.querySelectorAll('.tab-content').forEach(c => c.style.display = 'none');
+  // 移除所有按钮 active 样式
+  document.querySelectorAll('.tab-buttons button').forEach(b => b.classList.remove('active'));
+  // 显示选中内容
+  document.getElementById('tab' + tabNumber).style.display = 'block';
+  // 高亮选中按钮
+  buttonElement.classList.add('active');
+}
