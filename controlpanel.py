@@ -339,7 +339,7 @@ class MainWindow:
         
         motor_id = int(self.motor_id_var.get())
         speed = str(speed)
-        circle = int(distance)
+        circle = float(distance)
 
         print(f"   电机号: {motor_id}, 转动速度: {speed}度/秒, 转动距离: {distance}圈")
         if self.boardcontroller1:
