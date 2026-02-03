@@ -231,6 +231,31 @@ class MotorDriver:
             print(f"错误: {resp}")
             return False
         return True
+    
+
+    def runtask(self, circles: float, anglespeed: int, direction: int):
+        """运行动作任务"""
+        print("####运行电机####")
+        if not self.com or not self.com.connected:
+            print("错误: 串口未连接，无法运行电机")
+            return False
+        print(f"电机任务[{self.name}] ID:{self.motor_id} 运行 {circles} 圈, 角速度 {anglespeed}, 主板类型:{self.board_id}")
+        # 计算脉冲数
+        pulses = circles_to_pulses(circles, step_angle=1.8, microsteps=128)
+        if direction >=0:
+            pulses = abs(pulses)
+        else:
+            pulses = -abs(pulses)    
+         # 发送运行命令
+        success, resp = self.com.run_task(
+            "RUN", 
+            [str(self.board_id), str(self.motor_id), str(pulses), str(anglespeed)]
+        )
+        if not success:
+            print(f"错误: {resp[0]}")
+            return False
+        return True
+
 
 if __name__ == "__main__":
     print("=== RS485通信类接口测试 ===")

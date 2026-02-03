@@ -274,15 +274,62 @@ class RS485Communication:
 
                 if status is None:
                     print("电机状态解析失败")
-                    return False, ["电机状态解析失败"]
-                else:
-                    print(f"电机状态解析成功,返回状态:{status}")
+                    return False, ["电机状态解析失败","Fail"]
                 # 解析响应
-                return True,["命令执行成功",f"实际执行命令为{cmd_str},返回状态为{status}"]
+                return True,[f"命令执行成功,实际执行命令为{cmd_str},返回状态为{status}",status]
         except Exception as e:
             print(f"发送命令失败: {e}")
             return False            
 
+
+    def wait_for_motor_to_pause(self, command: str, params: List[str], check_interval: int = 0.2) -> bool:
+        """轮询电机状态，直到电机进入 PAUSING 状态"""
+        while True:
+            success, response = self.read_command("RunStatus", params)
+            if not success:
+                print("读取电机状态失败")
+                return False
+
+            status = response[1]  # 获取电机状态
+            print(f"当前电机状态: {status}")
+
+            if status == "PAUSEING":
+                print("电机暂停，任务结束")
+                return True
+            elif status == "RUNING":
+                print("电机正在运行，等待中...")
+                time.sleep(check_interval)  # 每隔 check_interval 检查一次
+            elif status == "ERROR":
+                print("电机发生错误，停止轮询")
+                return False
+            else:
+                print(f"未知状态: {status}")
+                return False
+
+    def run_task(self, command: str, params: List[str] = None) -> Tuple[bool, List[str]]:
+        """执行任务，发送指令并轮询电机状态"""
+        if params is None:
+            params = []
+
+        # 1. 执行命令
+        print("执行指令...")
+        success, response = self.execute_command(command, params)
+        if not success:
+            print("命令执行失败")
+            return False,["任务失败"]
+
+        readparams = list(map(str, params[:2]))
+
+        # 2. 创建一个线程来轮询电机状态
+        print("启动电机状态轮询...")
+        state_thread = threading.Thread(target=self.wait_for_motor_to_pause,args=(command, readparams))
+        state_thread.start()
+
+        # 3. 等待轮询线程完成
+        state_thread.join()  # 等待线程完成后继续执行
+        print("任务完成，执行下一步")
+
+        return True,["执行任务成功"]
     
 
     def parse_motor_status(self,status_str: str):
