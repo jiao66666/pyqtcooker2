@@ -449,22 +449,22 @@ def testmultitaskabs():
         #runtask参数：[圈数，速度，方向]
         print("**************************************测试水平翻转任务开始******************************")
         success = boardercontrollers["boardcontroller1"].motors[1].gotask(4.5,360)  
-        success = boardercontrollers["boardcontroller1"].motors[2].gotask(4.15,360)
+        success = boardercontrollers["boardcontroller1"].motors[2].gotask(4.15,720)
         time.sleep(1)    
-        success = boardercontrollers["boardcontroller1"].motors[2].reset_one_motor(1)
-        success = boardercontrollers["boardcontroller1"].motors[1].reset_one_motor(1)
+        success = boardercontrollers["boardcontroller1"].motors[2].gotask(0,720)
+        success = boardercontrollers["boardcontroller1"].motors[1].gotask(0,360)
         time.sleep(1)
 
         success = boardercontrollers["boardcontroller1"].motors[1].gotask(4.5,360)
-        success = boardercontrollers["boardcontroller1"].motors[2].gotask(4.15,360)
+        success = boardercontrollers["boardcontroller1"].motors[2].gotask(4.15,720)
         success = boardercontrollers["boardcontroller1"].motors[1].gotask(20.2,360)
         time.sleep(1)
         success = boardercontrollers["boardcontroller1"].motors[1].gotask(-12.1,360)
         time.sleep(1)
         success = boardercontrollers["boardcontroller1"].motors[1].gotask(4.5,360)
 
-        success = boardercontrollers["boardcontroller1"].motors[2].reset_one_motor(1)
-        success = boardercontrollers["boardcontroller1"].motors[1].reset_one_motor(1)
+        success = boardercontrollers["boardcontroller1"].motors[2].gotask(0,720)
+        success = boardercontrollers["boardcontroller1"].motors[1].gotask(0,360)
 
         print("**************************************测试水平翻转任务结束******************************")
 
