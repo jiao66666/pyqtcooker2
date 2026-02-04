@@ -144,18 +144,16 @@
                 <input type="text" id="circleval" placeholder="请输入相对运行圈数" />
             </div>
             <div class="input_circle">
-                <label for="circles">绝对运行圈数:</label>
-                <input type="text" id="circleval" placeholder="请输入绝对圈数值" />
+                <label for="circles">绝对运行位置:</label>
+                <input type="text" id="circlevalabs" placeholder="请输入绝对圈数值" />
             </div>
             <div class="function_container">
                 <button onclick="runMotor(1,'left')">1号锅水平相对左移</button>
                 <button onclick="runMotor(1,'right')">1号锅水平相对右移</button>
                 <button onclick="runMotor(1,'up')">1号锅相对内翻转</button>
                 <button onclick="runMotor(1,'down')">1号相对行外翻转</button>
-                <button onclick="runMotorabs(1,'left')">1号锅水平绝对左移</button>
-                <button onclick="runMotorabs(1,'right')">1号锅水平绝对右移</button>
-                <button onclick="runMotorabs(1,'up')">1号锅绝对内翻转</button>
-                <button onclick="runMotorabs(1,'down')">1号锅绝对外翻转</button>
+                <button onclick="runMotorabs(1,'left')">1号锅水平绝对移动</button>
+                <button onclick="runMotorabs(1,'up')">1号锅绝对翻转移动</button>
             </div>
         </div>
     </div>

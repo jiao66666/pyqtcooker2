@@ -126,10 +126,11 @@ def runabs():
         if not boardercontrollers.get("boardcontroller1"):
            print("找不到主板控制器，无法操作")
            return jsonify({"status": "error","message": "找不到主板控制器，无法操作,请先连接串口"})
-        success =  boardercontrollers["boardcontroller1"].motors[motorid].goto(float(circles),int(int(speed)*360))
+        success =  boardercontrollers["boardcontroller1"].motors[motorid].go(float(circles),int(int(speed)*360))
+        currentpos = boardercontrollers["boardcontroller1"].motors[motorid].current_position
     if success :
         print("电机单次运转成功!")
-        return jsonify({"status": "success","message": f"单运行成功!电机：{motorid}，方向：{direction}，速度：{speed}"})
+        return jsonify({"status": "success","message": f"单运行成功!电机：{motorid}，速度：{speed}，当前位置：{currentpos}"})
     else:
         print("电机单次运转失败!")
         return jsonify({"status": "fail","message": "单运转失败!"})

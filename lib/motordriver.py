@@ -127,38 +127,38 @@ class MotorDriver:
             print("错误: 水平电机不能运动到负值位置")
             return False
         
+       
         deltaDistance = target - self.current_position 
+        if deltaDistance == 0:
+            print("目标位置与当前位置相同，无需运动")
+            return True
+         # 计算需要运动的圈数
+
         circles = abs(deltaDistance)
 
         if deltaDistance >=0:  ## 确定 目标位在当前位置 的左还是右侧
             if self.motor_id in [1,2]:
                 direction = -1
-                self.current_position = self.current_position - target
             else:
                 direction = 1
-                self.current_position = self.current_position + target
         else:
             if self.motor_id in [1,2]:
                 direction = 1
-                if target > 0:
-                   self.current_position = self.current_position - target
-                else:
-                   self.current_position = target
             else:
                 direction = -1
-                self.current_position = target
 
-        
+        self.current_position = target       
          # 发送运行命令
-        success, resp = self.run(
+        success = self.run(
             circles,
             anglespeed,
             direction
         )
         if not success:
-            print(f"错误: {resp}")
+            print(f"错误: 运行命令失败")
             return False
         
+        print("执行成功")
         print(f"执行完后当前位置:{self.current_position}")
         return True    
 

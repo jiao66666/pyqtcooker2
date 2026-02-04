@@ -148,6 +148,10 @@ function runMotor(potnum,directionstr) {
        // 获取 select 元素
         var circle = document.getElementById("circleval");
         console.log("选中圈数值是:", circle);
+        if(circle.value == "" || isNaN(circle.value)){
+            alert("请输入有效的绝对位置值！");
+            return;
+        }
         var motorObj = getMotorInfo(potnum,directionstr);
         if(motorObj == null){
             console.log("获取电机信息失败");
@@ -187,8 +191,13 @@ function runMotorabs(potnum,directionstr) {
        var speed = getSelectedValue("speed");
         console.log("选中速度值是:", speed);
        // 获取 select 元素
-        var circle = document.getElementById("circleval");
+        var circle = document.getElementById("circlevalabs");
         console.log("选中圈数值是:", circle);
+
+        if(circle.value == "" || isNaN(circle.value)){
+            alert("请输入有效的绝对位置值！");
+            return;
+        }
         var motorObj = getMotorInfo(potnum,directionstr);
         if(motorObj == null){
             console.log("获取电机信息失败");
