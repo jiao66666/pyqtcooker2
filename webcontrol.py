@@ -4,6 +4,7 @@ from lib.boardcontroller import BoardController
 from lib.boardtype import BoardType
 import argparse
 import sys
+import time
 
 app = Flask(__name__)
 
@@ -405,6 +406,48 @@ def testmultitask():
         print("测试失败!")
         return jsonify({"status": "fail","message": "测试失败!"})    
 
+
+@app.route('/testmultitaskabs', methods=['POST'])   #绝对位置任务测试
+def testmultitaskabs():
+    print("电机状态读取")
+    data = request.get_json()
+    boardtype = data.get('boardtype')  # 获取 'boardtype' 参数
+    motorid = data.get('motorid')  # 获取 'port' 参数
+    success = False
+    if boardtype == '1':
+        #list_ports()
+        if not boardercontrollers.get("boardcontroller1"):
+           print("找不到主板控制器，无法操作")
+           return jsonify({"status": "error","message": "找不到主板控制器，无法操作,请先连接串口"})
+        
+        #runtask参数：[圈数，速度，方向]
+        print("**************************************测试水平翻转任务开始******************************")
+        success = boardercontrollers["boardcontroller1"].motors[1].gotask(4.5,360)  
+        success = boardercontrollers["boardcontroller1"].motors[2].gotask(4.15,360)
+        time.sleep(1)    
+        success = boardercontrollers["boardcontroller1"].motors[2].reset_one_motor(1)
+        success = boardercontrollers["boardcontroller1"].motors[1].reset_one_motor(1)
+        time.sleep(1)
+
+        success = boardercontrollers["boardcontroller1"].motors[1].gotask(4.5,360)
+        success = boardercontrollers["boardcontroller1"].motors[2].gotask(4.15,360)
+        success = boardercontrollers["boardcontroller1"].motors[1].gotask(20.2,360)
+        time.sleep(1)
+        success = boardercontrollers["boardcontroller1"].motors[1].gotask(-12.1,360)
+        time.sleep(1)
+        success = boardercontrollers["boardcontroller1"].motors[1].gotask(4.5,360)
+
+        success = boardercontrollers["boardcontroller1"].motors[2].reset_one_motor(1)
+        success = boardercontrollers["boardcontroller1"].motors[1].reset_one_motor(1)
+
+        print("**************************************测试水平翻转任务结束******************************")
+
+    if success :
+        print("测试成功!")
+        return jsonify({"status": "success","message": "测试成功!"})
+    else:
+        print("测试失败!")
+        return jsonify({"status": "fail","message": "测试失败!"})  
 
 
 

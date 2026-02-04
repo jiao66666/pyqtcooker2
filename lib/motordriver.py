@@ -323,6 +323,60 @@ class MotorDriver:
             print(f"错误: {resp[0]}")
             return False
         return True
+    
+
+    def gotask(self, target: float, anglespeed: int):
+        """单次运转电机"""  ##绝对运动
+        print("####运行电机####")
+        if not self.com or not self.com.connected:
+            print("错误: 串口未连接，无法运行电机")
+            return False
+        print(f"[{self.name}] ID:{self.motor_id} 运行到位置{target}, 角速度 {anglespeed}, 主板类型:{self.board_id}")
+
+        if not self.homed:
+           print("错误: 电机未回零，无法进行绝对运动")
+           return False
+        # 计算脉冲数
+        if self.motor_id in [2,4] and target < 0:
+            print("错误: 水平电机不能运动到负值位置")
+            return False
+        
+       
+        deltaDistance = target - self.current_position 
+        if deltaDistance == 0:
+            print("目标位置与当前位置相同，无需运动")
+            return True
+         # 计算需要运动的圈数
+
+        circles = abs(deltaDistance)
+
+        if deltaDistance >=0:  ## 确定 目标位在当前位置 的左还是右侧
+            if self.motor_id in [1,2]:
+                direction = -1
+            else:
+                direction = 1
+        else:
+            if self.motor_id in [1,2]:
+                direction = 1
+            else:
+                direction = -1
+
+        self.current_position = target  
+        # 计算脉冲数
+        pulses = circles_to_pulses(circles)
+        if direction >=0:
+            pulses = abs(pulses)
+        else:
+            pulses = -abs(pulses)    
+         # 发送运行命令
+        success, resp = self.com.run_task(
+            "RUN", 
+            [str(self.board_id), str(self.motor_id), str(pulses), str(anglespeed)]
+        )
+        if not success:
+            print(f"错误: {resp[0]}")
+            return False
+        return True    
 
 
 if __name__ == "__main__":
