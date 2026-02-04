@@ -70,6 +70,19 @@ class MotorDriver:
             print(f"错误: {resp}")
             return False
         return True      
+    
+
+    def stop_all_motors(self):
+        print("急停所有电机....")
+        success, resp = self.com.execute_command(
+            "STOP", 
+            [str(self.board_id),"0",str("11111")]
+        )
+        if not success:
+            print(f"错误: {resp}")
+            return False
+        return True  
+             
 
     def run(self, circles: float, anglespeed: int, direction: int):
         """单次运转电机"""

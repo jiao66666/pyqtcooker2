@@ -175,5 +175,31 @@ body {
     margin-right:5px;
 }
 
+.connect_outframe{
+    display:flex;
+    flex-flow: row nowrap;
+}
 
+.top_container{
+    display:flex;
+    flex-flow: column nowrap;
+    margin-left:auto;
+}
+.stopallbtn button{
+    background-color:#ee0a24;
+    color:#fff;
+    border:none;
+    border-radius:5px;
+    height:35px;
+    width:100px;
+    margin-bottom:10px;
+}
 
+.enableallbtn button{
+    background-color:#07c160;
+    color:#fff;
+    border:none;
+    border-radius:5px;
+    height:25px;
+    width:100px;
+}
