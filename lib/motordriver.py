@@ -92,7 +92,7 @@ class MotorDriver:
             return False
         print(f"[{self.name}] ID:{self.motor_id} 运行 {circles} 圈, 角速度 {anglespeed}, 主板类型:{self.board_id}")
         # 计算脉冲数
-        pulses = circles_to_pulses(circles, step_angle=1.8, microsteps=32)
+        pulses = circles_to_pulses(circles)
         if direction >=0:
             pulses = abs(pulses)
         else:
@@ -254,7 +254,7 @@ class MotorDriver:
             return False
         print(f"电机任务[{self.name}] ID:{self.motor_id} 运行 {circles} 圈, 角速度 {anglespeed}, 主板类型:{self.board_id}")
         # 计算脉冲数
-        pulses = circles_to_pulses(circles, step_angle=1.8, microsteps=32)
+        pulses = circles_to_pulses(circles)
         if direction >=0:
             pulses = abs(pulses)
         else:
