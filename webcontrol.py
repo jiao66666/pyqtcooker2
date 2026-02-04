@@ -110,6 +110,30 @@ def run():
 
 
 
+
+@app.route('/runabs', methods=['POST'])
+def runabs():
+    print("运行电机单次运转绝对值坐标")
+    data = request.get_json()
+    motorid = data.get('motorid')  # 获取 'port' 参数
+    direction = data.get('direction')  # 获取 'baudrate' 参数
+    speed = data.get('speed')  # 获取 'boardtype' 参数
+    boardtype = data.get('boardtype')  # 获取 'boardtype' 参数
+    circles = data.get('circle')  # 获取 'boardtype' 参数
+    success = False
+    print("收到参数 :", motorid, direction,speed)
+    if boardtype == '1':
+        if not boardercontrollers.get("boardcontroller1"):
+           print("找不到主板控制器，无法操作")
+           return jsonify({"status": "error","message": "找不到主板控制器，无法操作,请先连接串口"})
+        success =  boardercontrollers["boardcontroller1"].motors[motorid].goto(float(circles),int(int(speed)*360))
+    if success :
+        print("电机单次运转成功!")
+        return jsonify({"status": "success","message": f"单运行成功!电机：{motorid}，方向：{direction}，速度：{speed}"})
+    else:
+        print("电机单次运转失败!")
+        return jsonify({"status": "fail","message": "单运转失败!"})
+
 @app.route('/pause', methods=['POST'])
 def pause():
     print("暂停电机运转")

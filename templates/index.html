@@ -70,14 +70,7 @@
             <button onclick="resetMotor(1,'up')">1号锅翻转复位</button>
             <button onclick="resetMotor(2,'right')">2号锅水平复位</button>
             <button onclick="resetMotor(2,'up')">2号锅翻转复位</button>
-            <!--<button onclick="stopMotor(1,'left')" class="urgentcolor">1号锅水平急停</button>
-            <button onclick="stopMotor(1,'up')" class="urgentcolor">1号锅翻转急停</button>
-            <button onclick="stopMotor(2,'right')" class="urgentcolor">2号锅水平急停</button>
-            <button onclick="stopMotor(2,'up')" class="urgentcolor">2号锅翻转急停</button>
-            <button onclick="removeLimit(1,'up')">1号撤去限位</button>
-            <button onclick="recoveryLimit(1,'up')">1号锅恢复限位</button>
-            <button onclick="removeLimit(2,'up')">2号撤去限位</button>
-            <button onclick="recoveryLimit(2,'up')">2号锅恢复限位</button>-->
+
         </div>
         
 
@@ -147,14 +140,22 @@
         </div>
         <div class="input_container">
             <div class="input_circle">
-                <label for="circles">运行圈数:</label>
-                <input type="text" id="circleval" placeholder="请输入运行圈数" />
+                <label for="circles">相对运行圈数:</label>
+                <input type="text" id="circleval" placeholder="请输入相对运行圈数" />
+            </div>
+            <div class="input_circle">
+                <label for="circles">绝对运行圈数:</label>
+                <input type="text" id="circleval" placeholder="请输入绝对圈数值" />
             </div>
             <div class="function_container">
-                <button onclick="runMotor(1,'left')">1号锅执行水平左移</button>
-                <button onclick="runMotor(1,'right')">1号锅执行水平右移</button>
-                <button onclick="runMotor(1,'up')">1号锅执行内翻转</button>
-                <button onclick="runMotor(1,'down')">1号锅执行外翻转</button>
+                <button onclick="runMotor(1,'left')">1号锅水平相对左移</button>
+                <button onclick="runMotor(1,'right')">1号锅水平相对右移</button>
+                <button onclick="runMotor(1,'up')">1号锅相对内翻转</button>
+                <button onclick="runMotor(1,'down')">1号相对行外翻转</button>
+                <button onclick="runMotorabs(1,'left')">1号锅水平绝对左移</button>
+                <button onclick="runMotorabs(1,'right')">1号锅水平绝对右移</button>
+                <button onclick="runMotorabs(1,'up')">1号锅绝对内翻转</button>
+                <button onclick="runMotorabs(1,'down')">1号锅绝对外翻转</button>
             </div>
         </div>
     </div>

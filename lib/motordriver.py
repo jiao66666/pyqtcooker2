@@ -18,7 +18,8 @@ class MotorDriver:
 
         
         # 如果需要，可以在这里缓存电机状态
-        self.current_position = 0 
+        self.current_position = 0.0
+        self.homed = False  # 是否已回零位
 
     
 
@@ -46,6 +47,9 @@ class MotorDriver:
         if not success:
             print(f"错误: {resp}")
             return False
+        
+        self.current_position = 0
+        self.homed = True
         return True
         
     def enable_all_motors(self):
@@ -85,7 +89,7 @@ class MotorDriver:
              
 
     def run(self, circles: float, anglespeed: int, direction: int):
-        """单次运转电机"""
+        """单次运转电机"""  ##相对运动
         print("####运行电机####")
         if not self.com or not self.com.connected:
             print("错误: 串口未连接，无法运行电机")
@@ -106,6 +110,57 @@ class MotorDriver:
             print(f"错误: {resp}")
             return False
         return True
+    
+    def go(self, target: float, anglespeed: int):  # 回零后进行绝对运动，水平离开0点位置 为正值，翻转离开0点 逆时针为正值 ，顺时值为负值
+        """单次运转电机"""  ##绝对运动
+        print("####运行电机####")
+        if not self.com or not self.com.connected:
+            print("错误: 串口未连接，无法运行电机")
+            return False
+        print(f"[{self.name}] ID:{self.motor_id} 运行到位置{target}, 角速度 {anglespeed}, 主板类型:{self.board_id}")
+
+        if not self.homed:
+           print("错误: 电机未回零，无法进行绝对运动")
+           return False
+        # 计算脉冲数
+        if self.motor_id in [2,4] and target < 0:
+            print("错误: 水平电机不能运动到负值位置")
+            return False
+        
+        deltaDistance = target - self.current_position 
+        circles = abs(deltaDistance)
+
+        if deltaDistance >=0:  ## 确定 目标位在当前位置 的左还是右侧
+            if self.motor_id in [1,2]:
+                direction = -1
+                self.current_position = self.current_position - target
+            else:
+                direction = 1
+                self.current_position = self.current_position + target
+        else:
+            if self.motor_id in [1,2]:
+                direction = 1
+                if target > 0:
+                   self.current_position = self.current_position - target
+                else:
+                   self.current_position = target
+            else:
+                direction = -1
+                self.current_position = target
+
+        
+         # 发送运行命令
+        success, resp = self.run(
+            circles,
+            anglespeed,
+            direction
+        )
+        if not success:
+            print(f"错误: {resp}")
+            return False
+        
+        print(f"执行完后当前位置:{self.current_position}")
+        return True    
 
 
     def runlong(self, anglespeed: int, direction: int):
