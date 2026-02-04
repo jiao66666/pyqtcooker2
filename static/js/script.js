@@ -588,7 +588,7 @@ function testMultiTaskabs() {
         })
         .then(response => response.json())
         .then(data => {
-              addMessage(`返回信息 : 已发送串口指令`);  // 将收到的消息保存并显示
+              addMessage(`返回信息 : `+data.message);  // 将收到的消息保存并显示
         })
         .catch(error => {
             console.error('Error:', error);
@@ -596,6 +596,27 @@ function testMultiTaskabs() {
         });
 }
 
+
+function testMultiTaskabs2() {
+     // 获取 select 元素
+        fetch('/testmultitaskabs2', {
+            method: 'POST', 
+            headers: {
+                'Content-Type': 'application/json'  
+            },
+            body: JSON.stringify({
+                boardtype: '1',  // 五轴板
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+              addMessage(`返回信息 : `+data.message);  // 将收到的消息保存并显示
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            addMessage("Error starting motor.");
+        });
+}
 
 function enableall() {
      // 获取 select 元素

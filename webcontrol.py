@@ -446,27 +446,34 @@ def testmultitaskabs():
            print("找不到主板控制器，无法操作")
            return jsonify({"status": "error","message": "找不到主板控制器，无法操作,请先连接串口"})
         
+        if not boardercontrollers["boardcontroller1"].motors[1].homed or not boardercontrollers["boardcontroller1"].motors[2].homed:
+           print("电机未归位，无法操作")
+           return jsonify({"status": "error","message": "电机未归位，无法操作,请先复位"})
+
         #runtask参数：[圈数，速度，方向]
-        print("**************************************测试水平翻转任务开始******************************")
-        success = boardercontrollers["boardcontroller1"].motors[1].gotask(4.5,360)  
-        success = boardercontrollers["boardcontroller1"].motors[2].gotask(4.15,720)
+        print("**************************************1号锅测试水平翻转任务开始******************************")
+        move_speed = 720
+        flip_speed = 540
+
+        success = boardercontrollers["boardcontroller1"].motors[1].gotask(4.5,flip_speed)  
+        success = boardercontrollers["boardcontroller1"].motors[2].gotask(4.15,move_speed)
         time.sleep(1)    
-        success = boardercontrollers["boardcontroller1"].motors[2].gotask(0,720)
-        success = boardercontrollers["boardcontroller1"].motors[1].gotask(0,360)
+        success = boardercontrollers["boardcontroller1"].motors[2].gotask(0,move_speed)
+        success = boardercontrollers["boardcontroller1"].motors[1].gotask(0,flip_speed)
         time.sleep(1)
 
-        success = boardercontrollers["boardcontroller1"].motors[1].gotask(4.5,360)
-        success = boardercontrollers["boardcontroller1"].motors[2].gotask(4.15,720)
-        success = boardercontrollers["boardcontroller1"].motors[1].gotask(20.2,360)
+        success = boardercontrollers["boardcontroller1"].motors[1].gotask(4.5,flip_speed)
+        success = boardercontrollers["boardcontroller1"].motors[2].gotask(4.15,move_speed)
+        success = boardercontrollers["boardcontroller1"].motors[1].gotask(20.2,flip_speed)
         time.sleep(1)
-        success = boardercontrollers["boardcontroller1"].motors[1].gotask(-12.1,360)
+        success = boardercontrollers["boardcontroller1"].motors[1].gotask(-12.1,flip_speed)
         time.sleep(1)
-        success = boardercontrollers["boardcontroller1"].motors[1].gotask(4.5,360)
+        success = boardercontrollers["boardcontroller1"].motors[1].gotask(4.5,flip_speed)
 
-        success = boardercontrollers["boardcontroller1"].motors[2].gotask(0,720)
-        success = boardercontrollers["boardcontroller1"].motors[1].gotask(0,360)
+        success = boardercontrollers["boardcontroller1"].motors[2].gotask(0,move_speed)
+        success = boardercontrollers["boardcontroller1"].motors[1].gotask(0,flip_speed)
 
-        print("**************************************测试水平翻转任务结束******************************")
+        print("**************************************1号锅测试水平翻转任务结束******************************")
 
     if success :
         print("测试成功!")
@@ -475,6 +482,57 @@ def testmultitaskabs():
         print("测试失败!")
         return jsonify({"status": "fail","message": "测试失败!"})  
 
+
+
+@app.route('/testmultitaskabs2', methods=['POST'])   #绝对位置任务测试
+def testmultitaskabs2():
+    print("电机状态读取")
+    data = request.get_json()
+    boardtype = data.get('boardtype')  # 获取 'boardtype' 参数
+    motorid = data.get('motorid')  # 获取 'port' 参数
+    success = False
+    if boardtype == '1':
+        #list_ports()
+        if not boardercontrollers.get("boardcontroller1"):
+           print("找不到主板控制器，无法操作")
+           return jsonify({"status": "error","message": "找不到主板控制器，无法操作,请先连接串口"})
+        
+        if not boardercontrollers["boardcontroller1"].motors[3].homed or not boardercontrollers["boardcontroller1"].motors[4].homed:
+           print("电机未归位，无法操作")
+           return jsonify({"status": "error","message": "电机未归位，无法操作,请先复位"})
+
+        #runtask参数：[圈数，速度，方向]
+        print("**************************************2号锅测试水平翻转任务开始******************************")
+        move_speed = 720
+        flip_speed = 360 
+
+
+        success = boardercontrollers["boardcontroller1"].motors[3].gotask(4.5,flip_speed)  
+        success = boardercontrollers["boardcontroller1"].motors[4].gotask(4.15,move_speed)
+        time.sleep(1)    
+        success = boardercontrollers["boardcontroller1"].motors[4].gotask(0,move_speed)
+        success = boardercontrollers["boardcontroller1"].motors[3].gotask(0,flip_speed)
+        time.sleep(1)
+
+        success = boardercontrollers["boardcontroller1"].motors[3].gotask(4.5,flip_speed)
+        success = boardercontrollers["boardcontroller1"].motors[4].gotask(4.15,move_speed)
+        success = boardercontrollers["boardcontroller1"].motors[3].gotask(20.2,flip_speed)
+        time.sleep(1)
+        success = boardercontrollers["boardcontroller1"].motors[3].gotask(-12.1,flip_speed)
+        time.sleep(1)
+        success = boardercontrollers["boardcontroller1"].motors[3].gotask(4.5,flip_speed)
+
+        success = boardercontrollers["boardcontroller1"].motors[4].gotask(0,move_speed)
+        success = boardercontrollers["boardcontroller1"].motors[3].gotask(0,flip_speed)
+
+        print("**************************************2号锅测试水平翻转任务结束******************************")
+
+    if success :
+        print("测试成功!")
+        return jsonify({"status": "success","message": "测试成功!"})
+    else:
+        print("测试失败!")
+        return jsonify({"status": "fail","message": "测试失败!"})  
 
 
 # 设置命令行参数解析器
