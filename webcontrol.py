@@ -380,6 +380,32 @@ def testtask():
 
 
 
+
+@app.route('/testtaskabs', methods=['POST'])
+def testtaskabs():
+    print("电机状态读取")
+    data = request.get_json()
+    boardtype = data.get('boardtype')  # 获取 'boardtype' 参数
+    motorid = data.get('motorid')  # 获取 'port' 参数
+    success = False
+    if boardtype == '1':
+        #list_ports()
+        if not boardercontrollers.get("boardcontroller1"):
+           print("找不到主板控制器，无法操作")
+           return jsonify({"status": "error","message": "找不到主板控制器，无法操作,请先连接串口"})
+        
+        #runtask参数：[圈数，速度，方向]
+        success = boardercontrollers["boardcontroller1"].motors[motorid].gotask(1,360)   
+        success = boardercontrollers["boardcontroller1"].motors[motorid].gotask(0,360)
+
+    if success :
+        print("测试成功!")
+        return jsonify({"status": "success","message": "测试成功!"})
+    else:
+        print("测试失败!")
+        return jsonify({"status": "fail","message": "测试失败!"})    
+
+
 @app.route('/testmultitask', methods=['POST'])
 def testmultitask():
     print("电机状态读取")
