@@ -1,7 +1,10 @@
 /* 固定高度和滚动条样式 */
-body {
+html, body {
+    overflow: hidden;
+    height: 100%;
     user-select: none;
-    -webkit-user-select: none; /* 适配 Safari 和 iOS */
+    -webkit-user-select: none;
+    touch-action: none;
 }
 #status-history {
     height: 500px;  /* 固定高度 */
@@ -178,6 +181,7 @@ body {
 .connect_outframe{
     display:flex;
     flex-flow: row nowrap;
+    margin-top:20px;
 }
 
 .top_container{
