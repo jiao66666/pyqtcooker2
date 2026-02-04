@@ -4,7 +4,7 @@ from tkinter import ttk
 from tkinter import StringVar
 import tkinter.messagebox as msgbox
 from lib.boardcontroller import BoardController
-from lib.boardtype import BoardType
+from lib.boardtype import *
 
 
 class MainWindow:
@@ -65,10 +65,10 @@ class MainWindow:
         style.configure("Connected.TLabel", foreground="green")  # 设置为绿色
         ttk.Label(select_frame_baud, textvariable=self.status_text, style="Connected.TLabel").pack(side=tk.LEFT, padx=5)
 
-        self.button_connect = ttk.Button(connection_section_frame, text="连接串口", command=lambda:self.on_button_connect_clicked(BoardType.FIVE_AXIS))
+        self.button_connect = ttk.Button(connection_section_frame, text="连接串口", command=lambda:self.on_button_connect_clicked(BOARDTYPE_FIVE_AXIS))
         self.button_connect.pack(side=tk.LEFT, padx=5)
 
-        self.button_disconnect = ttk.Button(connection_section_frame, text="断开连接", command=lambda:self.on_button_disconnect_clicked(BoardType.FIVE_AXIS))
+        self.button_disconnect = ttk.Button(connection_section_frame, text="断开连接", command=lambda:self.on_button_disconnect_clicked(BOARDTYPE_FIVE_AXIS))
         self.button_disconnect.pack(side=tk.LEFT, padx=5)
 
         separator = ttk.Separator(main_frame, orient='horizontal')
@@ -186,10 +186,10 @@ class MainWindow:
         style.configure("Connected.TLabel", foreground="green")  # 设置为绿色
         ttk.Label(select_frame_baud2, textvariable=self.status_text2, style="Connected.TLabel").pack(side=tk.LEFT, padx=5)
 
-        self.button_connect2 = ttk.Button(connection_section_frame2, text="连接串口", command=lambda:self.on_button_connect_clicked(BoardType.FEEDER))
+        self.button_connect2 = ttk.Button(connection_section_frame2, text="连接串口", command=lambda:self.on_button_connect_clicked(BOARDTYPE_FEEDER))
         self.button_connect2.pack(side=tk.LEFT, padx=5)
 
-        self.button_disconnect2 = ttk.Button(connection_section_frame2, text="断开连接", command=lambda:self.on_button_disconnect_clicked(BoardType.FEEDER))
+        self.button_disconnect2 = ttk.Button(connection_section_frame2, text="断开连接", command=lambda:self.on_button_disconnect_clicked(BOARDTYPE_FEEDER))
         self.button_disconnect2.pack(side=tk.LEFT, padx=5)
 
 
@@ -261,16 +261,16 @@ class MainWindow:
 
         self.root.destroy()  # 关闭窗口
 
-    def on_button_connect_clicked(self,boardtype:BoardType):
+    def on_button_connect_clicked(self,boardtype:int):
         print("主板串口连接按钮被点击")
-        print(f"初始化>>>创建通信对象, 主板类型:{boardtype.value}")
+        print(f"初始化>>>创建通信对象, 主板类型:{boardtype}")
         
-        if boardtype == BoardType.FIVE_AXIS:
+        if boardtype == BOARDTYPE_FIVE_AXIS:
             port = self.port_var.get()
             baudrate = int(self.baudrate_var.get())
             print(f"   串口: {port}, 波特率: {baudrate}")
             if not self.boardcontroller1:
-               self.boardcontroller1 = BoardController(board_type=BoardType.FIVE_AXIS,board_name="五轴控制板")
+               self.boardcontroller1 = BoardController(board_type=BOARDTYPE_FIVE_AXIS,board_name="五轴控制板")
             if self.boardcontroller1.connected:
                 print("已经连接到主板，无需重复连接")
                 return   
@@ -279,12 +279,12 @@ class MainWindow:
                 self.status_text.set("已连接")
             else:
                 self.status_text.set("连接失败")
-        elif boardtype == BoardType.FEEDER:
+        elif boardtype == BOARDTYPE_FEEDER:
             port = self.port_var2.get()
             baudrate = int(self.baudrate_var2.get())
             print(f"   串口: {port}, 波特率: {baudrate}")
             if not self.boardcontroller2:
-               self.boardcontroller2 = BoardController(board_type=BoardType.FEEDER,board_name="加料控制板")
+               self.boardcontroller2 = BoardController(board_type=BOARDTYPE_FEEDER,board_name="加料控制板")
             if self.boardcontroller2.connected:
                 print("已经连接到主板，无需重复连接")
                 return    
@@ -295,11 +295,11 @@ class MainWindow:
                 self.status_text2.set("连接失败")
 
                                 
-    def on_button_disconnect_clicked(self,boardtype:BoardType):
+    def on_button_disconnect_clicked(self,boardtype:int):
         print("断开串口连接按钮被点击")
-        print(f"断开主板类型:{boardtype.value}")
+        print(f"断开主板类型:{boardtype}")
         
-        if boardtype == BoardType.FIVE_AXIS:
+        if boardtype == BOARDTYPE_FIVE_AXIS:
             if self.boardcontroller1 and self.boardcontroller1.connected:
                 success = self.boardcontroller1.disconnect()
                 if success:
@@ -309,7 +309,7 @@ class MainWindow:
                 self.status_text.set("断开连接失败")
                 print("   断开连接失败")                 
 
-        elif boardtype == BoardType.FEEDER:   
+        elif boardtype == BOARDTYPE_FEEDER:   
             if self.boardcontroller2 and self.boardcontroller2.connected:
                 success = self.boardcontroller2.disconnect()
                 if success:

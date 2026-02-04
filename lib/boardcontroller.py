@@ -1,12 +1,12 @@
 from lib.basecom import RS485Communication
 from lib.motordriver import MotorDriver
-from lib.boardtype import BoardType
+from lib.boardtype import *
 
 
 class BoardController:
-    def __init__(self, board_type: BoardType,board_name: str = ""):
+    def __init__(self, board_type: int,board_name: str = ""):
         """
-        :param board_type: 主板类型 (BoardType.FIVE_AXIS, BoardType.SIX_AXIS, BoardType.EIGHT_AXIS) 决定电机发送指令
+        :param board_type: 主板类型 (BOARDTYPE_FIVE_AXIS, BoardType.SIX_AXIS, BoardType.EIGHT_AXIS) 决定电机发送指令
         :param name: 主板名称 (如 "五轴控制板")
         """
         self.board_type = board_type
@@ -51,9 +51,9 @@ class BoardController:
     def init_motors(self):
        """初始化电机"""
        motor_nums = 1
-       if self.board_type == BoardType.FIVE_AXIS:
+       if self.board_type == BOARDTYPE_FIVE_AXIS:
            motor_nums = 5
-       elif self.board_type == BoardType.FEEDER:
+       elif self.board_type == BOARDTYPE_FEEDER:
            motor_nums = 24
 
        for i in range(motor_nums):

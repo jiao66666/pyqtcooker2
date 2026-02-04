@@ -1,7 +1,7 @@
 # flaskcontrol.py
 from flask import Flask, render_template, jsonify,request
 from lib.boardcontroller import BoardController
-from lib.boardtype import BoardType
+from lib.boardtype import *
 import argparse
 import sys
 import time
@@ -26,7 +26,7 @@ def connect():
     print("收到参数 :", port, baudrate,boardtype)
     if boardtype == '1':
         if not boardercontrollers.get("boardcontroller1"):
-           boardercontrollers["boardcontroller1"] = BoardController(BoardType.FIVE_AXIS, board_name="五轴控制板")
+           boardercontrollers["boardcontroller1"] = BoardController(BOARDTYPE_FIVE_AXIS, board_name="五轴控制板")
 
         if  boardercontrollers["boardcontroller1"].connected:
            print("已经连接到主板，无需重复连接")
@@ -455,23 +455,23 @@ def testmultitaskabs():
         move_speed = 720
         flip_speed = 1080
 
-        success = boardercontrollers["boardcontroller1"].motors[1].gotask(4.5,flip_speed)  
-        success = boardercontrollers["boardcontroller1"].motors[2].gotask(4.15,move_speed)
+        success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask(4.5,flip_speed)  
+        success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask(4.15,move_speed)
         time.sleep(1)    
-        success = boardercontrollers["boardcontroller1"].motors[2].gotask(0,move_speed)
-        success = boardercontrollers["boardcontroller1"].motors[1].gotask(0,flip_speed)
+        success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask(0,move_speed)
+        success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask(0,flip_speed)
         time.sleep(1)
 
-        success = boardercontrollers["boardcontroller1"].motors[1].gotask(4.5,flip_speed)
-        success = boardercontrollers["boardcontroller1"].motors[2].gotask(4.15,move_speed)
-        success = boardercontrollers["boardcontroller1"].motors[1].gotask(20.2,flip_speed)
+        success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask(4.5,flip_speed)
+        success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask(4.15,move_speed)
+        success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask(20.2,flip_speed)
         time.sleep(1)
-        success = boardercontrollers["boardcontroller1"].motors[1].gotask(-12.1,flip_speed)
+        success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask(-12.1,flip_speed)
         time.sleep(1)
-        success = boardercontrollers["boardcontroller1"].motors[1].gotask(4.5,flip_speed)
+        success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask(4.5,flip_speed)
 
-        success = boardercontrollers["boardcontroller1"].motors[2].gotask(0,move_speed)
-        success = boardercontrollers["boardcontroller1"].motors[1].gotask(0,flip_speed)
+        success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask(0,move_speed)
+        success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask(0,flip_speed)
 
         print("**************************************1号锅测试水平翻转任务结束******************************")
 
@@ -507,23 +507,23 @@ def testmultitaskabs2():
         flip_speed = 180 
 
 
-        success = boardercontrollers["boardcontroller1"].motors[3].gotask(4.5,flip_speed)  
-        success = boardercontrollers["boardcontroller1"].motors[4].gotask(4.15,move_speed)
+        success = boardercontrollers["boardcontroller1"].motors[POT2_FLIP_MOTOR].gotask(4.5,flip_speed)  
+        success = boardercontrollers["boardcontroller1"].motors[POT2_MOVE_MOTOR].gotask(4.15,move_speed)
         time.sleep(1)    
-        success = boardercontrollers["boardcontroller1"].motors[4].gotask(0,move_speed)
-        success = boardercontrollers["boardcontroller1"].motors[3].gotask(0,flip_speed)
+        success = boardercontrollers["boardcontroller1"].motors[POT2_MOVE_MOTOR].gotask(0,move_speed)
+        success = boardercontrollers["boardcontroller1"].motors[POT2_FLIP_MOTOR].gotask(0,flip_speed)
         time.sleep(1)
 
-        success = boardercontrollers["boardcontroller1"].motors[3].gotask(4.5,flip_speed)
-        success = boardercontrollers["boardcontroller1"].motors[4].gotask(4.15,move_speed)
-        success = boardercontrollers["boardcontroller1"].motors[3].gotask(20.2,flip_speed)
+        success = boardercontrollers["boardcontroller1"].motors[POT2_FLIP_MOTOR].gotask(4.5,flip_speed)
+        success = boardercontrollers["boardcontroller1"].motors[POT2_MOVE_MOTOR].gotask(4.15,move_speed)
+        success = boardercontrollers["boardcontroller1"].motors[POT2_FLIP_MOTOR].gotask(20.2,flip_speed)
         time.sleep(1)
-        success = boardercontrollers["boardcontroller1"].motors[3].gotask(-12.1,flip_speed)
+        success = boardercontrollers["boardcontroller1"].motors[POT2_FLIP_MOTOR].gotask(-12.1,flip_speed)
         time.sleep(1)
-        success = boardercontrollers["boardcontroller1"].motors[3].gotask(4.5,flip_speed)
+        success = boardercontrollers["boardcontroller1"].motors[POT2_FLIP_MOTOR].gotask(4.5,flip_speed)
 
-        success = boardercontrollers["boardcontroller1"].motors[4].gotask(0,move_speed)
-        success = boardercontrollers["boardcontroller1"].motors[3].gotask(0,flip_speed)
+        success = boardercontrollers["boardcontroller1"].motors[POT2_MOVE_MOTOR].gotask(0,move_speed)
+        success = boardercontrollers["boardcontroller1"].motors[POT2_FLIP_MOTOR].gotask(0,flip_speed)
 
         print("**************************************2号锅测试水平翻转任务结束******************************")
 

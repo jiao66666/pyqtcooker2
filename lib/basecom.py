@@ -3,13 +3,13 @@ import time
 import crcmod
 import threading
 from typing import Optional, List, Tuple, Union
-from lib.boardtype import BoardType
+from lib.boardtype import *
 
 
 
 class RS485Communication:
     """RS485通信类，实现主板通信协议"""
-    def __init__(self, port: str, baudrate: int = 115200, timeout: float = 1.0, boardtype: BoardType = BoardType.FIVE_AXIS):
+    def __init__(self, port: str, baudrate: int = 115200, timeout: float = 1.0, boardtype: int = BOARDTYPE_FIVE_AXIS):
         """
         初始化RS485通信
 
@@ -121,27 +121,27 @@ class RS485Communication:
 
         # 构建基本命令: #<指令名>,<板子ID>,<参数1>,<参数2>...
        
-        if self.boardtype == BoardType.FIVE_AXIS:
+        if self.boardtype == BOARDTYPE_FIVE_AXIS:
            cmd_str = f"#{command}"
-        elif self.boardtype == BoardType.FEEDER:
+        elif self.boardtype == BOARDTYPE_FEEDER:
            cmd_str = f"YT+{command}="
 
         if params:
-            if self.boardtype == BoardType.FIVE_AXIS:
+            if self.boardtype == BOARDTYPE_FIVE_AXIS:
               cmd_str += f",{','.join(params)}"
-            elif self.boardtype == BoardType.FEEDER:
+            elif self.boardtype == BOARDTYPE_FEEDER:
               cmd_str += f"{','.join(params)}"    
         
         # 打印命令字符串（调试用）
         print(f"将构建命令串(不带LRC): {cmd_str}")
 
         # 计算并添加校验码
-        if self.boardtype == BoardType.FIVE_AXIS:
+        if self.boardtype == BOARDTYPE_FIVE_AXIS:
             # 计算LRC校验码，这里要计算从 # 到 * 之间的字符的累加和
             lrc = self.calculate_lrc(cmd_str + "*")  # 包含 * 进行校验
             cmd_str += f"*{lrc}"
             print(f"将构建命令串(带上LRC): {cmd_str}")
-        elif self.boardtype == BoardType.FEEDER:
+        elif self.boardtype == BOARDTYPE_FEEDER:
             # 添加CRC校验（如果需要）
             crc = self.calculate_crc16(cmd_str)
             cmd_str += f"*{crc}"
@@ -159,27 +159,27 @@ class RS485Communication:
             params = []
         # 构建基本命令: #<指令名>,<板子ID>,<参数1>,<参数2>...
 
-        if self.boardtype == BoardType.FIVE_AXIS:
+        if self.boardtype == BOARDTYPE_FIVE_AXIS:
            cmd_str = f"#{command}"
-        elif self.boardtype == BoardType.FEEDER:
+        elif self.boardtype == BOARDTYPE_FEEDER:
            cmd_str = f"YT+{command}="
 
         if params:
-            if self.boardtype == BoardType.FIVE_AXIS:
+            if self.boardtype == BOARDTYPE_FIVE_AXIS:
               cmd_str += f",{','.join(params)}"
-            elif self.boardtype == BoardType.FEEDER:
+            elif self.boardtype == BOARDTYPE_FEEDER:
               cmd_str += f"{','.join(params)}"    
         
         # 打印命令字符串（调试用）
         #print(f"将构建命令串(不带LRC): {cmd_str}")
 
         # 计算并添加校验码
-        if self.boardtype == BoardType.FIVE_AXIS:
+        if self.boardtype == BOARDTYPE_FIVE_AXIS:
             # 计算LRC校验码，这里要计算从 # 到 * 之间的字符的累加和
             lrc = self.calculate_lrc(cmd_str + "*")  # 包含 * 进行校验
             cmd_str += f"*{lrc}"
             #print(f"将构建命令串(带上LRC): {cmd_str}")
-        elif self.boardtype == BoardType.FEEDER:
+        elif self.boardtype == BOARDTYPE_FEEDER:
             # 添加CRC校验（如果需要）
             crc = self.calculate_crc16(cmd_str)
             cmd_str += f"*{crc}"
@@ -229,15 +229,15 @@ class RS485Communication:
             params = []
         # 构建基本命令: #<指令名>,<板子ID>,<参数1>,<参数2>...
 
-        if self.boardtype == BoardType.FIVE_AXIS:
+        if self.boardtype == BOARDTYPE_FIVE_AXIS:
            cmd_str = f"#{command}"
-        elif self.boardtype == BoardType.FEEDER:
+        elif self.boardtype == BOARDTYPE_FEEDER:
            cmd_str = f"YT+{command}="
 
         if params:
-            if self.boardtype == BoardType.FIVE_AXIS:
+            if self.boardtype == BOARDTYPE_FIVE_AXIS:
               cmd_str += f",{','.join(params)}"
-            elif self.boardtype == BoardType.FEEDER:
+            elif self.boardtype == BOARDTYPE_FEEDER:
               cmd_str += f"{','.join(params)}"    
         
         # 打印命令字符串（调试用）
@@ -245,12 +245,12 @@ class RS485Communication:
 
         # 计算并添加校验码
      
-        if self.boardtype == BoardType.FIVE_AXIS:
+        if self.boardtype == BOARDTYPE_FIVE_AXIS:
             # 计算LRC校验码，这里要计算从 # 到 * 之间的字符的累加和
             lrc = self.calculate_lrc(cmd_str + "*")  # 包含 * 进行校验
             cmd_str += f"*{lrc}"
             #print(f"将构建命令串(带上LRC): {cmd_str}")
-        elif self.boardtype == BoardType.FEEDER:
+        elif self.boardtype == BOARDTYPE_FEEDER:
             # 添加CRC校验（如果需要）
             crc = self.calculate_crc16(cmd_str)
             cmd_str += f"*{crc}"
@@ -388,7 +388,7 @@ if __name__ == "__main__":
 
     # 创建通信对象
     print("1. 创建通信对象")
-    comm1 = RS485Communication(port="COM2", baudrate=115200, timeout=1.0, boardtype=BoardType.FIVE_AXIS)
+    comm1 = RS485Communication(port="COM2", baudrate=115200, timeout=1.0, boardtype=BOARDTYPE_FIVE_AXIS)
    
     print(f"   串口: {comm1.port}, 波特率: {comm1.baudrate}, 超时: {comm1.timeout}秒, 主板类型: {comm1.boardtype}")
     

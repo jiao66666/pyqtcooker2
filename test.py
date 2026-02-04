@@ -1,18 +1,18 @@
 from lib.basecom import RS485Communication
 from lib.motordriver import MotorDriver
-from lib.boardtype import BoardType
+from lib.boardtype import *
 from lib.boardcontroller import BoardController
 import time
 
 
 
 def testSystemSend():
-    #comm1 = RS485Communication(port="COM6", baudrate=115200, timeout=1.0, boardtype=BoardType.FIVE_AXIS)
-    board = BoardController(BoardType.FIVE_AXIS, board_name="五轴控制板")
+    #comm1 = RS485Communication(port="COM6", baudrate=115200, timeout=1.0, boardtype=BOARDTYPE_FIVE_AXIS)
+    board = BoardController(BOARDTYPE_FIVE_AXIS, board_name="五轴控制板")
     #time.sleep(3)
     board.connect(port="COM6", baudrate=115200)
     board.motors[1].enable_all_motors()
-    #motor1 = MotorDriver(rs485_instance=comm1, motor_id=1, board_type=BoardType.FIVE_AXIS,name="1号锅旋转电机")
+    #motor1 = MotorDriver(rs485_instance=comm1, motor_id=1, board_type=BOARDTYPE_FIVE_AXIS,name="1号锅旋转电机")
     #motor1.enable_all_motors()
 
 
@@ -22,7 +22,7 @@ def testSystemSend2():
 
     # 创建通信对象
     print("1. 创建通信对象")
-    comm1 = RS485Communication(port="COM6", baudrate=115200, timeout=1.0, boardtype=BoardType.FIVE_AXIS)
+    comm1 = RS485Communication(port="COM6", baudrate=115200, timeout=1.0, boardtype=BOARDTYPE_FIVE_AXIS)
    
     print(f"   串口: {comm1.port}, 波特率: {comm1.baudrate}, 超时: {comm1.timeout}秒, 主板类型: {comm1.boardtype}")
     

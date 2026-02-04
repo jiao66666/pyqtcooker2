@@ -1,11 +1,11 @@
 # motor_driver.py
 from lib.basecom import RS485Communication
-from lib.boardtype import BoardType
+from lib.boardtype import *
 from lib.tools import circles_to_pulses
 
 # 定义电机驱动类
 class MotorDriver:
-    def __init__(self, rs485_instance: RS485Communication, motor_id: int, board_type: BoardType = BoardType.FIVE_AXIS,name: str = ""):
+    def __init__(self, rs485_instance: RS485Communication, motor_id: int, board_type: int = BOARDTYPE_FIVE_AXIS,name: str = ""):
         """
         :param rs485_instance: 已经初始化并连接好的串口对象
         :param motor_id: 板子上的电机ID (1-10)
@@ -14,7 +14,7 @@ class MotorDriver:
         self.com = rs485_instance # 持有串口引用
         self.motor_id = motor_id
         self.name = name
-        self.board_id = board_type.value
+        self.board_id = board_type
 
         
         # 如果需要，可以在这里缓存电机状态
@@ -384,9 +384,9 @@ if __name__ == "__main__":
 
     # 创建通信对象
     print("1. 创建通信对象")
-    comm1 = RS485Communication(port="COM2", baudrate=9600, timeout=2.0, boardtype=BoardType.FIVE_AXIS)
+    comm1 = RS485Communication(port="COM2", baudrate=9600, timeout=2.0, boardtype=BOARDTYPE_FIVE_AXIS)
     print(f"   串口: {comm1.port}, 波特率: {comm1.baudrate}, 超时: {comm1.timeout}秒, 主板类型: {comm1.boardtype}")
-    motor0 = MotorDriver(rs485_instance=comm1, motor_id=0, board_type=BoardType.FIVE_AXIS,name="1号锅旋转电机")
+    motor0 = MotorDriver(rs485_instance=comm1, motor_id=0, board_type=BOARDTYPE_FIVE_AXIS,name="1号锅旋转电机")
     # 连接串口
     print("\n2. 连接串口")
     if comm1.connect():
