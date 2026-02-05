@@ -124,9 +124,10 @@ html, body {
     font-weight: bold;
 }
 .connect_status{
-    font-size:14px;
+    font-size:12px;
     font-weight: bold;
     color:green;
+    margin-left:5px;
 }
 
 .speed_container{
@@ -141,9 +142,8 @@ html, body {
     display:flex;
     flex-flow:row wrap;
     align-items: center;
-    margin-top:10px;
-    border:1px dashed gray;
     padding:5px;
+    border-top:none;
 }
 
 .function_container button{
@@ -155,9 +155,10 @@ html, body {
 
 .connectbtn_row button{
     margin-right: 10px;
-    height: 25px;
+    height: 35px;
     border: none;
     border-radius: 5px;
+    font-size:12px;
 }
 
 .urgentcolor{
@@ -181,20 +182,24 @@ html, body {
 .connect_outframe{
     display:flex;
     flex-flow: row nowrap;
-    margin-top:20px;
+    margin-top:10px;
+    border: 1px dotted #ccc;
+    padding: 10px 5px;
+    border-radius: 10px;
 }
 
 .top_container{
     display:flex;
     flex-flow: column nowrap;
     margin-left:auto;
+    justify-content: space-between;
 }
 .stopallbtn button{
     background-color:#ee0a24;
     color:#fff;
     border:none;
     border-radius:5px;
-    height:35px;
+    height:45px;
     width:80px;
     margin-bottom:10px;
 }
@@ -204,6 +209,6 @@ html, body {
     color:#fff;
     border:none;
     border-radius:5px;
-    height:25px;
+    height:35px;
     width:80px;
 }

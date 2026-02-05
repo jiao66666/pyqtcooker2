@@ -1,7 +1,7 @@
 /* Tab 按钮容器 */
 .tab-buttons {
   display: flex;
-  border-bottom: 2px solid #ccc;
+  /*border-bottom: 2px solid #ccc;*/
   margin-bottom: 0;
   margin-top:10px;
 }
@@ -38,4 +38,5 @@
   display: none; /* 默认隐藏 */
   border-radius: 0 5px 5px 5px;
   background: #fff;
+  border-top:none;
 }
