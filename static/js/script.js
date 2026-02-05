@@ -539,7 +539,7 @@ function stopall() {
         })
         .then(response => response.json())
         .then(data => {
-              addMessage(`返回信息 : 已发送串口指令`);  // 将收到的消息保存并显示
+              addMessage(`返回信息 : ${data.message}`);  // 将收到的消息保存并显示
         })
         .catch(error => {
             console.error('Error:', error);

@@ -135,10 +135,10 @@ def runabs():
         currentpos = boardercontrollers["boardcontroller1"].motors[motorid].current_position
     if success :
         print("电机单次运转成功!")
-        return jsonify({"status": "success","message": f"单运行成功!电机：{motorid}，速度：{speed}，当前位置：{currentpos}"})
+        return jsonify({"status": "success","message": f"运行电机成功!电机号：{motorid}，速度：{speed}，当前位置：{currentpos}"})
     else:
         print("电机单次运转失败!")
-        return jsonify({"status": "fail","message": "单运转失败!"})
+        return jsonify({"status": "fail","message": "运转失败!"})
 
 @app.route('/pause', methods=['POST'])
 def pause():
@@ -282,12 +282,17 @@ def stopall():
            return jsonify({"status": "error","message": "找不到主板控制器，无法操作,请先连接串口"})
         success =  boardercontrollers["boardcontroller1"].motors[1].stop_all_motors()
 
+        for motor_id in range(5):  # 由于是异常终止 ，需要手动将所有电机的归位状态设为 False
+            motor = boardercontrollers["boardcontroller1"].motors[motor_id]
+            if motor.homed:
+                motor.homed = False
+
     if success :
         print("测试成功!")
-        return jsonify({"status": "success","message": "测试成功!"})
+        return jsonify({"status": "success","message": "急停所有电机成功!"})
     else:
         print("测试失败!")
-        return jsonify({"status": "fail","message": "测试失败!"})
+        return jsonify({"status": "fail","message": "急停所有电机失败!"})
     
 
 @app.route('/enableall', methods=['POST'])

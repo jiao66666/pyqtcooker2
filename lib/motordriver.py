@@ -86,9 +86,6 @@ class MotorDriver:
             print(f"错误: {resp}")
             return False
         
-        if self.homed :
-            self.homed = False  # 非正常中断运行，位置可能有变化 ，需要重新回零
-
         return True  
              
 
