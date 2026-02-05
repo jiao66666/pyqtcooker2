@@ -85,6 +85,10 @@ class MotorDriver:
         if not success:
             print(f"错误: {resp}")
             return False
+        
+        if self.homed :
+            self.homed = False  # 非正常中断运行，位置可能有变化 ，需要重新回零
+
         return True  
              
 
@@ -179,6 +183,10 @@ class MotorDriver:
         if not success:
             print(f"错误: {resp}")
             return False
+        
+        if self.homed :
+            self.homed = False  # 长运转后位置未知，需要重新回零
+
         return True
     
     def enable(self):
