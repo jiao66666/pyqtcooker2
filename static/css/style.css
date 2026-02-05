@@ -172,7 +172,7 @@ html, body {
     display: flex;
     flex-flow: row nowrap;
     align-items: center;
-    margin-top:10px;
+    padding-top:15px;
 }
 .input_circle label{
     font-size:12px;

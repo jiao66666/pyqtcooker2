@@ -130,30 +130,32 @@
 
     </div>
     <div id="tab2" class="tab-content">
-        <div class="function_container">
+        <!--<div class="function_container">
             <button onclick="readMotor(1,'left')">读取电机状态测试</button>
             <button onclick="testTask(1,'left')">测试水平任务执行</button>
             <button onclick="testTask(1,'up')">测试翻转任务执行</button>
             <button onclick="testMultiTask()">测试水平翻转任务</button>
             <button onclick="testTaskabs(1,'left')">测试水平绝对执行</button>
             <button onclick="testTaskabs(1,'up')">测试翻转绝对执行</button>
-        </div>
+        </div>-->
         <div class="input_container">
-            <div class="input_circle">
+            <!--<div class="input_circle">
                 <label for="circles">相对运行圈数:</label>
                 <input type="text" id="circleval" placeholder="请输入相对运行圈数" />
-            </div>
+            </div>-->
             <div class="input_circle">
                 <label for="circles">绝对运行位置:</label>
-                <input type="text" id="circlevalabs" placeholder="请输入绝对圈数值" />
+                <input type="text" id="circlevalabs" placeholder="请输入绝对位置数值" />
             </div>
             <div class="function_container">
-                <button onclick="runMotor(1,'left')">1号锅水平相对左移</button>
+                <!--<button onclick="runMotor(1,'left')">1号锅水平相对左移</button>
                 <button onclick="runMotor(1,'right')">1号锅水平相对右移</button>
                 <button onclick="runMotor(1,'up')">1号锅相对内翻转</button>
-                <button onclick="runMotor(1,'down')">1号相对行外翻转</button>
+                <button onclick="runMotor(1,'down')">1号相对行外翻转</button>-->
                 <button onclick="runMotorabs(1,'left')">1号锅水平绝对移动</button>
                 <button onclick="runMotorabs(1,'up')">1号锅绝对翻转移动</button>
+                <button onclick="runMotorabs(2,'left')">2号锅水平绝对移动</button>
+                <button onclick="runMotorabs(2,'up')">2号锅绝对翻转移动</button>
             </div>
         </div>
     </div>
