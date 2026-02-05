@@ -127,6 +127,10 @@ def runabs():
         if not boardercontrollers.get("boardcontroller1"):
            print("找不到主板控制器，无法操作")
            return jsonify({"status": "error","message": "找不到主板控制器，无法操作,请先连接串口"})
+        ishomed = boardercontrollers["boardcontroller1"].motors[motorid].homed
+        if not ishomed:
+           return jsonify({"status": "error","message": "电机未归零，无法运行绝对位置，请先复位电机!"})
+        
         success =  boardercontrollers["boardcontroller1"].motors[motorid].go(float(circles),int(int(speed)*360))
         currentpos = boardercontrollers["boardcontroller1"].motors[motorid].current_position
     if success :

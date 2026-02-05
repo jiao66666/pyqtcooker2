@@ -218,12 +218,7 @@ function runMotorabs(potnum,directionstr) {
         })
         .then(response => response.json())
         .then(data => {
-            if(data.status === "success"){
-                addMessage(`返回信息 : ${data.message}`);  // 将收到的消息保存并显示
-            }else if(data.status === "error"){
-                addMessage(`返回信息 : ${data.message}`);  // 将收到的消息保存并显示
-            }
-            
+             addMessage(`返回信息 : ${data.message}`);  // 将收到的消息保存并显示
         })
         .catch(error => {
             console.error('Error:', error);

@@ -4,11 +4,21 @@
   /*border-bottom: 2px solid #ccc;*/
   margin-bottom: 0;
   margin-top:10px;
+  overflow-x: auto;
+   /* Firefox */
+  scrollbar-width: none;
+
+    /* IE 10+ / Edge Legacy */
+  -ms-overflow-style: none;
+}
+
+.tab-buttons::-webkit-scrollbar {
+  display: none; /* Chrome, Safari 和 Opera */
 }
 
 /* 单个 Tab 样式 */
 .tab-buttons button {
-  background: #eee;
+  background: #E9ECEF;
   border: 1px solid #ccc;
   border-bottom: none; /* 与内容相接 */
   padding: 10px 20px;
@@ -16,8 +26,9 @@
   outline: none;
   font-size: 16px;
   border-radius: 5px 5px 0 0;
-  margin-right: 2px;
+  margin-right: 5px;
   transition: background 0.2s;
+  flex-shrink: 0;
 }
 
 /* 鼠标悬停效果 */

@@ -88,7 +88,7 @@ html, body {
     width:60px;
     height:60px;
     font-size: 11px;
-    background-color: #555;
+    background-color: #4B4F56;
     border: none;
     border-radius: 10px;
     color: #fff;
@@ -150,7 +150,9 @@ html, body {
     margin-right:5px;
     margin-top:10px;
     flex:1 1 40%;
-    height:25px;
+    height: 35px;
+    border: none;
+    border-radius: 5px;
 }
 
 .connectbtn_row button{
@@ -162,10 +164,11 @@ html, body {
 }
 
 .urgentcolor{
-    background-color:#ee0a24;
+    background-color:#D9363E;
     color:#fff;
     border:none;
     border-radius:5px;
+    font-weight:bold;
 }
 
 .input_circle{
@@ -195,20 +198,66 @@ html, body {
     justify-content: space-between;
 }
 .stopallbtn button{
-    background-color:#ee0a24;
+    background-color:#D9363E;
     color:#fff;
     border:none;
     border-radius:5px;
     height:45px;
     width:80px;
     margin-bottom:10px;
+    font-weight:bold;
+    font-size:14px;
 }
 
 .enableallbtn button{
-    background-color:#07c160;
+    background-color:#2F9E44;
     color:#fff;
     border:none;
     border-radius:5px;
     height:35px;
     width:80px;
+    font-weight:bold;
+    font-size:14px;
+}
+
+.input_tag{
+    font-size:12px;
+    margin-left:10px;
+}
+.input-classic {
+
+    height: 36px;
+
+    padding: 0 10px;
+    font-size: 14px;
+    color: #222;
+
+    background-color: #f5f6f8;
+    border: 1px solid #c9ccd1;
+    border-radius: 6px;
+
+    outline: none;
+    box-sizing: border-box;
+
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+/* 聚焦状态 */
+.input-classic:focus {
+    background-color: #fff;
+    border-color: #4b4f56;
+    box-shadow: 0 0 0 1px rgba(75, 79, 86, 0.25);
+}
+
+/* 占位符 */
+.input-classic::placeholder {
+    color: #9aa0a6;
+}
+
+/* 禁用状态 */
+.input-classic:disabled {
+    background-color: #e9ecef;
+    color: #9aa0a6;
+    border-color: #d0d4d9;
+    cursor: not-allowed;
 }
