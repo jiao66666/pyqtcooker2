@@ -70,6 +70,7 @@ html, body {
     flex-flow: row nowrap;
     align-items: center;
     justify-content: space-between;
+    margin-top:15px;
 }
 
 .motor_container .motor{
@@ -136,7 +137,7 @@ html, body {
     flex-flow:row nowrap;
     align-items: center;
     justify-content: center;
-    margin-bottom:20px;
+    padding-top:15px;
 }
 
 .function_container{

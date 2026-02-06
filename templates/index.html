@@ -72,19 +72,10 @@
     </div>
 
 
+
     <div id="tab1" class="tab-content" style="display:block;">
-       <div class="function_container">
-            <button onclick="resetMotor(1,'left')">1号锅水平复位</button>
-            <button onclick="resetMotor(1,'up')">1号锅翻转复位</button>
-            <button onclick="resetMotor(2,'right')">2号锅水平复位</button>
-            <button onclick="resetMotor(2,'up')">2号锅翻转复位</button>
 
-        </div>
-        
-
-       <hr style="border: 1px solid #ccc; width: 100%; margin: 10px auto;">
-
-        <div class="speed_container">
+    <div class="speed_container">
         <label>电机速度:</label>
         <label>
             <input type="radio" name="speed" value="1" checked> 1
@@ -106,6 +97,15 @@
             <input type="radio" name="speed" value="5"> 5
         </label>
     </div>
+
+
+    <div class="function_container">
+        <button onclick="resetMotor(1,'left')">1号锅水平复位</button>
+        <button onclick="resetMotor(2,'right')">2号锅水平复位</button>
+        <button onclick="resetMotor(1,'up')">1号锅翻转复位</button>
+        <button onclick="resetMotor(2,'up')">2号锅翻转复位</button>
+    </div>
+    
 
     <div class="motor_container">
         <div class="motor">
@@ -163,8 +163,8 @@
                 <button onclick="runMotor(1,'up')">1号锅相对内翻转</button>
                 <button onclick="runMotor(1,'down')">1号相对行外翻转</button>-->
                 <button onclick="runMotorabs(1,'left')">1号锅水平绝对移动</button>
-                <button onclick="runMotorabs(1,'up')">1号锅绝对翻转移动</button>
                 <button onclick="runMotorabs(2,'left')">2号锅水平绝对移动</button>
+                <button onclick="runMotorabs(1,'up')">1号锅绝对翻转移动</button>
                 <button onclick="runMotorabs(2,'up')">2号锅绝对翻转移动</button>
             </div>
         </div>
