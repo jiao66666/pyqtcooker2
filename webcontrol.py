@@ -510,14 +510,14 @@ def testmultitaskabs():
         flip_speed = 1080
 
         success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask(4.5,flip_speed)  
-        success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask(4.15,move_speed)
+        success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask(4.20,move_speed)
         time.sleep(1)    
         success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask(0,move_speed)
         success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask(0,flip_speed)
         time.sleep(1)
 
         success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask(4.5,flip_speed)
-        success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask(4.15,move_speed)
+        success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask(4.20,move_speed)
         success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask(20.2,flip_speed)
         time.sleep(1)
         success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask(-12.1,flip_speed)
