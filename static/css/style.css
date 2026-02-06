@@ -287,3 +287,57 @@ html, body {
     justify-content: space-between;
     margin-bottom:10px;
 }
+
+
+
+
+    .tastmotorid_select_row {
+        margin: 5px 10px;
+        font-family: Arial, sans-serif;
+    }
+
+    .tastmotorid_select_row label {
+        font-size: 14px;
+        color: #333;
+        margin-right: 10px;
+    }
+
+    .tastmotorid_select_row select {
+        width: 150px;
+        padding: 8px 12px;
+        font-size: 14px;
+        border-radius: 4px;
+        background-color: #f9f9f9;
+        color: #333;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .tastmotorid_select_row select:focus {
+        border-color: #4CAF50; /* Focused state */
+        outline: none;
+        box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
+    }
+
+    .tastmotorid_select_row select option {
+        padding: 10px;
+    }
+
+    /* Optional: Custom dropdown arrow */
+    .tastmotorid_select_row select::-ms-expand {
+        display: none; /* Hide default dropdown arrow in IE */
+    }
+
+    .tastmotorid_select_row select {
+        -webkit-appearance: none; /* Remove default dropdown arrow in Chrome/Safari */
+        -moz-appearance: none; /* Remove default dropdown arrow in Firefox */
+        appearance: none;
+        background-image: url('data:image/svg+xml;charset=UTF-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 10 6%22%3E%3Cpath fill=%22%234CAF50%22 d=%22M0 0h10L5 6z%22/%3E%3C/svg%3E');
+        background-repeat: no-repeat;
+        background-position: right 10px center;
+        background-size: 12px;
+    }
+
+    .tastmotorid_select_row select:hover {
+        border-color: #45a049; /* Slightly darker border on hover */
+    }
