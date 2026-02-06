@@ -43,5 +43,5 @@ pyinstaller --onefile --add-data "templates;templates" --add-data "static;static
 
 
 ## for test only
-python webcontrol.py --port 3000
+python webcontrol.py --port 3000 --stepmotor_port COM2 --feedermotor_port COM3
 

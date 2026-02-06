@@ -10,6 +10,19 @@ app = Flask(__name__)
 
 boardercontrollers = {}
 
+
+# 设置命令行参数解析器
+parser = argparse.ArgumentParser()
+parser.add_argument('--port', type=int, default=5000, help='Set the port for the server (default is 3000)')
+parser.add_argument('--stepmotor_port', type=str, default='COM6', help='Step motor port (default is COM6)')
+parser.add_argument('--feedermotor_port', type=str, default='COM7', help='Feeder motor port (default is COM7)')
+args = parser.parse_args()
+
+# 根据传入的命令行参数设置端口,方便测试和生产环境使用不同的端口
+port = args.port
+stepmotor_port = args.stepmotor_port
+feedermotor_port = args.feedermotor_port
+
 # 渲染前端的 HTML 页面
 @app.route('/')
 def index():
@@ -33,12 +46,8 @@ def connect():
         return jsonify({"status": "fail","message": "已经连接到加料主板，无需重复连接"}) 
     
     # 真实环境连接
-    success1 =  boardercontrollers["boardcontroller1"].connect(port="COM6",baudrate="115200")
-    success2 =  boardercontrollers["boardcontroller2"].connect(port="COM7",baudrate="9600")
-
-    # 模拟环境连接
-    #success1 =  boardercontrollers["boardcontroller1"].connect(port="COM2",baudrate="115200")
-    #success2 =  boardercontrollers["boardcontroller2"].connect(port="COM4",baudrate="9600")
+    success1 =  boardercontrollers["boardcontroller1"].connect(port=stepmotor_port,baudrate="115200")
+    success2 =  boardercontrollers["boardcontroller2"].connect(port=feedermotor_port,baudrate="9600")
 
     if success1 and success2 :
         print("连接成功!")
@@ -594,13 +603,6 @@ def testmultitaskabs2():
         return jsonify({"status": "fail","message": "测试失败!"})  
 
 
-# 设置命令行参数解析器
-parser = argparse.ArgumentParser()
-parser.add_argument('--port', type=int, default=5000, help='Set the port for the server (default is 3000)')
-args = parser.parse_args()
-
-# 根据传入的命令行参数设置端口
-port = args.port
            
 if __name__ == '__main__':
     # 绑定到所有网络接口，允许局域网访问,测试使用3000端口，实际生产使用5000端口
