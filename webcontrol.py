@@ -32,8 +32,8 @@ def connect():
         print("已经连接到加料主板，无需重复连接")
         return jsonify({"status": "fail","message": "已经连接到加料主板，无需重复连接"}) 
     
-    success1 =  boardercontrollers["boardcontroller1"].connect(port="COM2",baudrate="115200")
-    success2 =  boardercontrollers["boardcontroller2"].connect(port="COM3",baudrate="9600")
+    success1 =  boardercontrollers["boardcontroller1"].connect(port="COM6",baudrate="115200")
+    success2 =  boardercontrollers["boardcontroller2"].connect(port="COM7",baudrate="9600")
 
     if success1 and success2 :
         print("连接成功!")
