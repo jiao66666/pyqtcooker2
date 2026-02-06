@@ -11,6 +11,7 @@
 <body>
     <div class="connect_outframe">  
       <div class="connect_container">
+        <!---
         <div class="port_row">
             <label for="port">端口:</label>
             <select id="port_select" name="port_select">
@@ -39,8 +40,17 @@
                 未连接
             </div>
         </div>
+        -->
+        <div class="connectstatus_row">
+             <div class="connect_word">
+                连接状态:
+             </div>
+             <div class="connect_status">
+                未连接
+            </div>
+        </div>
         <div class="connectbtn_row nomb">
-            <button onclick="connect()">连接炒菜机</button>
+            <button onclick="connect_machine()" class="mainconnectbtn">连接炒菜机</button>
             <button onclick="disconnect()">断开连接</button>
             <!--<button onclick="fixmotor()">电机异常修复</button>-->
         </div>
@@ -158,6 +168,50 @@
                 <button onclick="runMotorabs(2,'up')">2号锅绝对翻转移动</button>
             </div>
         </div>
+
+        <hr style="border: 1px solid #ccc; width: 100%; margin: 10px auto;">
+
+        <div class="input_container">
+
+            <div class="port_row">
+                <label for="tastmotorid">电机号:</label>
+                <select id="tastmotorid" name="tastmotorid">
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                    <option value="11">11</option>
+                    <option value="12">12</option>
+                    <option value="13">13</option>
+                    <option value="14">14</option>
+                    <option value="15">15</option>
+                    <option value="16">16</option>
+                    <option value="17">17</option>
+                    <option value="18">18</option>
+                    <option value="19">19</option>
+                    <option value="20">20</option>
+                    <option value="21">21</option>
+                    <option value="22">22</option>
+                    <option value="23">23</option>
+                </select>
+            </div>
+            <div class="input_circle">
+                <label for="tastmotorovertime" class="input_tag">持续时间:</label>
+                <input class="input-classic" type="number" id="tastmotorovertime" placeholder="请输入电机打开时间" />
+            </div>
+            <div class="function_container">
+                <button onclick="testTastBoardPing()">测试板连通性</button>
+                <button onclick="runTastMotor()">打开电机</button>
+            </div>
+        </div>
+
     </div>
 
     <div id="tab3" class="tab-content" >

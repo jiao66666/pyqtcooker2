@@ -18,50 +18,95 @@ def index():
 # API 路由
 @app.route('/connect', methods=['POST'])
 def connect():
-    data = request.get_json()
-    port = data.get('port')  # 获取 'port' 参数
-    baudrate = data.get('baudrate')  # 获取 'baudrate' 参数
-    boardtype = data.get('boardtype')  # 获取 'boardtype' 参数
-    success = False
-    print("收到参数 :", port, baudrate,boardtype)
-    if boardtype == '1':
-        if not boardercontrollers.get("boardcontroller1"):
-           boardercontrollers["boardcontroller1"] = BoardController(BOARDTYPE_FIVE_AXIS, board_name="五轴控制板")
+    if not boardercontrollers.get("boardcontroller1"):
+        boardercontrollers["boardcontroller1"] = BoardController(BOARDTYPE_FIVE_AXIS, board_name="五轴控制板")
 
-        if  boardercontrollers["boardcontroller1"].connected:
-           print("已经连接到主板，无需重复连接")
-           return jsonify({"status": "fail","message": "已经连接到主板，无需重复连接"}) 
-        success =  boardercontrollers["boardcontroller1"].connect(port=port,baudrate=baudrate)
+    if not boardercontrollers.get("boardcontroller2"):
+        boardercontrollers["boardcontroller2"] = BoardController(BOARDTYPE_FEEDER, board_name="加料控制板")           
 
-    if success :
+    if  boardercontrollers["boardcontroller1"].connected:
+        print("已经连接到五轴步进主板，无需重复连接")
+        return jsonify({"status": "fail","message": "已经连接到五轴步进主板，无需重复连接"}) 
+    
+    if  boardercontrollers["boardcontroller2"].connected:
+        print("已经连接到加料主板，无需重复连接")
+        return jsonify({"status": "fail","message": "已经连接到加料主板，无需重复连接"}) 
+    
+    success1 =  boardercontrollers["boardcontroller1"].connect(port="COM6",baudrate="115200")
+    success2 =  boardercontrollers["boardcontroller2"].connect(port="COM7",baudrate="9600")
+
+    if success1 and success2 :
         print("连接成功!")
         return jsonify({"status": "success","message": "连接成功!"})
     else:
         print("连接失败!")
-        return jsonify({"status": "fail","message": "连接失败!"})
+        return jsonify({"status": "fail","message": f"连接失败!,连接状态：五轴板：{success1}，加料板：{success2}"})
     
 
 @app.route('/disconnect', methods=['POST'])
 def disconnect():
-    data = request.get_json()
-    boardtype = data.get('boardtype')  # 获取 'boardtype' 参数
-    success = False
-    print("收到参数 :", boardtype)
-    if boardtype == '1':
-        if not boardercontrollers.get("boardcontroller1"):
-           print("找不到主板控制器，无法操作")
-           return jsonify({"status": "fail","message": "找不到主板控制器，无法操作"})    
+    if not boardercontrollers.get("boardcontroller1"):
+        print("找不到步进主板控制器，无法操作")
+        return jsonify({"status": "fail","message": "找不到步进主板控制器，无法操作"})   
 
-        if not  boardercontrollers["boardcontroller1"].connected:
-           print("已经断开，无需重复操作")
-           return jsonify({"status": "fail","message": "已经断开，无需重复操作"})       
-        success =  boardercontrollers["boardcontroller1"].disconnect()
-    if success :
+    if not boardercontrollers.get("boardcontroller2"):
+        print("找不到加料主板控制器，无法操作")
+        return jsonify({"status": "fail","message": "找不到加料主板控制器，无法操作"})    
+
+    if not  boardercontrollers["boardcontroller1"].connected:
+        print("步进主板已经断开，无需重复操作")
+        return jsonify({"status": "fail","message": "步进板已经断开，无需重复操作"})      
+
+    if not  boardercontrollers["boardcontroller2"].connected:
+        print("加料主板已经断开，无需重复操作")
+        return jsonify({"status": "fail","message": "加料板已经断开，无需重复操作"})  
+             
+    success1 =  boardercontrollers["boardcontroller1"].disconnect()
+    success2 =  boardercontrollers["boardcontroller2"].disconnect()
+
+    if success1 and success2 :
         print("断开连接成功!")
         return jsonify({"status": "success","message": "断开连接成功!"})
     else:
         print("断开连接失败!")
-        return jsonify({"status": "fail","message": "断开连接失败!"})    
+        return jsonify({"status": "fail","message": f"断开连接失败!,断开状态：五轴板：{success1}，加料板：{success2}"})    
+
+
+@app.route('/testtastboardping', methods=['POST'])
+def testtastboardping():
+    print("测试加料板连通性")
+    if not boardercontrollers.get("boardcontroller2"):
+        print("找不到加料主板控制器，无法操作")
+        return jsonify({"status": "error","message": "找不到加料主板控制器，无法操作,请先连接串口"})
+    success =  boardercontrollers["boardcontroller2"].motors[0].ping()
+    if success :
+        print("测试加料板连通性成功!")
+        return jsonify({"status": "success","message": f"运行成功"})
+    else:
+        print("测试加料板连通性失败!")
+        return jsonify({"status": "fail","message": "运转失败!"})
+
+
+@app.route('/runtastmotor', methods=['POST'])
+def runtastmotor():
+    print("测试加料板运行")
+    data = request.get_json()
+    motorid = data.get('motorid')
+    overtime = data.get('overtime')
+    success = False
+    print("收到参数 :", motorid)
+    if not boardercontrollers.get("boardcontroller2"):
+        print("找不到加料主板控制器，无法操作")
+        return jsonify({"status": "error","message": "找不到加料主板控制器，无法操作,请先连接串口"})
+    success =  boardercontrollers["boardcontroller2"].motors[motorid].run(overtime)
+    if success :
+        print("测试加料板打开成功!")
+        return jsonify({"status": "success","message": f"运行成功"})
+    else:
+        print("测试加料板打开失败!")
+        return jsonify({"status": "fail","message": "运转失败!"})
+
+
 
 @app.route('/runlong', methods=['POST'])
 def runlong():

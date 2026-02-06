@@ -1,5 +1,6 @@
-BOARDTYPE_FIVE_AXIS = 1  # 五轴板
-BOARDTYPE_FEEDER = 2     # 加料板
+BOARDTYPE_FEEDER = 1     # 加料板
+BOARDTYPE_FIVE_AXIS = 2  # 五轴板
+
 
 POT1_MOVE_MOTOR = 2  # 1号锅移动电机编号
 POT1_FLIP_MOTOR = 1  # 1号锅翻转电机编号

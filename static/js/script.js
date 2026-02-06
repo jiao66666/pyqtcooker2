@@ -41,7 +41,7 @@ function updateConnectStatus(msg) {
     statusDiv.textContent = msg;  // 更新内容为“已连接”
 }
 // 启动电机
-function connect() {
+/*function connect() {
        // 获取 select 元素
         var portSelect = document.getElementById("port_select");
         console.log("选中的端口是:", portSelect.value);
@@ -70,10 +70,33 @@ function connect() {
             console.error('Error:', error);
             addMessage("抛出异常");
         });
+}*/
+
+
+
+function connect() {
+        fetch('/connect', {
+            method: 'POST', 
+            headers: {
+                'Content-Type': 'application/json'  
+            },
+            body: JSON.stringify({
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if(data.status === "success"){
+                updateConnectStatus("已连接");
+            }
+            addMessage(`返回信息 : ${data.message}`);  // 将收到的消息保存并显示
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            addMessage("抛出异常");
+        });
 }
 
-
-function disconnect() {
+/*function disconnect() {
        // 获取 select 元素
         var portSelect = document.getElementById("port_select");
         console.log("选中的端口是:", portSelect.value);
@@ -100,8 +123,86 @@ function disconnect() {
             console.error('Error:', error);
             addMessage("Error starting motor.");
         });
+}*/
+
+
+function disconnect() {
+        fetch('/disconnect', {
+            method: 'POST', 
+            headers: {
+                'Content-Type': 'application/json'  
+            },
+            body: JSON.stringify({
+              
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if(data.status === "success"){
+                updateConnectStatus("未连接");
+            }
+            addMessage(`返回信息 : ${data.message}`);  // 将收到的消息保存并显示
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            addMessage("Error starting motor.");
+        });
 }
 
+
+function testTastBoardPing() {
+        fetch('/testtastboardping', {
+            method: 'POST', 
+            headers: {
+                'Content-Type': 'application/json'  
+            },
+            body: JSON.stringify({
+              
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            addMessage(`返回信息 : ${data.message}`);  // 将收到的消息保存并显示
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            addMessage("Error starting motor.");
+        });
+}
+
+
+function runTastMotor() {
+        var tastMotorIDSelect = document.getElementById("tastmotorid");
+        if(tastMotorIDSelect.value == "" || isNaN(tastMotorIDSelect.value)){
+            addMessage("请选择电机ID");
+            return;
+        }
+
+        var tastMotorOvertime = document.getElementById("tastmotorovertime");
+        if(tastMotorOvertime.value == "" || isNaN(tastMotorOvertime.value)){
+            addMessage("请输入超时时间");
+            return;
+        }
+
+        fetch('/runtastmotor', {
+            method: 'POST', 
+            headers: {
+                'Content-Type': 'application/json'  
+            },
+            body: JSON.stringify({
+                 motorid: tastMotorIDSelect.value,
+                 overtime: tastMotorOvertime.value
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            addMessage(`返回信息 : ${data.message}`);  // 将收到的消息保存并显示
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            addMessage("Error starting motor.");
+        });
+}
 
 function startMotor(potnum,directionstr) {
        // 获取 select 元素
