@@ -32,8 +32,8 @@ def connect():
         print("已经连接到加料主板，无需重复连接")
         return jsonify({"status": "fail","message": "已经连接到加料主板，无需重复连接"}) 
     
-    success1 =  boardercontrollers["boardcontroller1"].connect(port="COM6",baudrate="115200")
-    success2 =  boardercontrollers["boardcontroller2"].connect(port="COM7",baudrate="9600")
+    success1 =  boardercontrollers["boardcontroller1"].connect(port="COM2",baudrate="115200")
+    success2 =  boardercontrollers["boardcontroller2"].connect(port="COM3",baudrate="9600")
 
     if success1 and success2 :
         print("连接成功!")
@@ -98,7 +98,7 @@ def runtastmotor():
     if not boardercontrollers.get("boardcontroller2"):
         print("找不到加料主板控制器，无法操作")
         return jsonify({"status": "error","message": "找不到加料主板控制器，无法操作,请先连接串口"})
-    success =  boardercontrollers["boardcontroller2"].motors[motorid].run(overtime)
+    success =  boardercontrollers["boardcontroller2"].motors[int(motorid)].run(int(overtime))
     if success :
         print("测试加料板打开成功!")
         return jsonify({"status": "success","message": f"运行成功"})
