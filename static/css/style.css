@@ -64,6 +64,9 @@ html, body {
 .mr5{
     margin-right:5px;
 }
+.nomt10{
+    margin-bottom:0px!important;
+}
 
 .motor_container{
     display:flex;
