@@ -40,40 +40,9 @@ function updateConnectStatus(msg) {
     var statusDiv = document.querySelector('.connect_status');
     statusDiv.textContent = msg;  // 更新内容为“已连接”
 }
-// 启动电机
-/*function connect() {
-       // 获取 select 元素
-        var portSelect = document.getElementById("port_select");
-        console.log("选中的端口是:", portSelect.value);
-        var baudrateSelect = document.getElementById("baud_select");
-        console.log("选中的波特率是:", baudrateSelect.value);
-
-        fetch('/connect', {
-            method: 'POST', 
-            headers: {
-                'Content-Type': 'application/json'  
-            },
-            body: JSON.stringify({
-                boardtype: '1',  // 五轴板
-                port: portSelect.value,  
-                baudrate: baudrateSelect.value 
-            })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if(data.status === "success"){
-                updateConnectStatus("已连接");
-            }
-            addMessage(`返回信息 : ${data.message}`);  // 将收到的消息保存并显示
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            addMessage("抛出异常");
-        });
-}*/
 
 
-
+//连接炒菜机串口
 function connect() {
         fetch('/connect', {
             method: 'POST', 
@@ -96,36 +65,7 @@ function connect() {
         });
 }
 
-/*function disconnect() {
-       // 获取 select 元素
-        var portSelect = document.getElementById("port_select");
-        console.log("选中的端口是:", portSelect.value);
-        var baudrateSelect = document.getElementById("baud_select");
-        console.log("选中的波特率是:", baudrateSelect.value);
-
-        fetch('/disconnect', {
-            method: 'POST', 
-            headers: {
-                'Content-Type': 'application/json'  
-            },
-            body: JSON.stringify({
-                boardtype: '1',  // 五轴板
-            })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if(data.status === "success"){
-                updateConnectStatus("未连接");
-            }
-            addMessage(`返回信息 : ${data.message}`);  // 将收到的消息保存并显示
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            addMessage("Error starting motor.");
-        });
-}*/
-
-
+//断开连接炒菜机串口
 function disconnect() {
         fetch('/disconnect', {
             method: 'POST', 
@@ -520,68 +460,7 @@ function testTaskabs(potnum,directionstr) {
 }
 
 
-function removeLimit(potnum,directionstr) {
-     // 获取 select 元素
 
-        var motorObj = getMotorInfo(potnum,directionstr);
-        if(motorObj == null){
-            console.log("获取电机信息失败");
-            return;
-        }
-        fetch('/removelimit', {
-            method: 'POST', 
-            headers: {
-                'Content-Type': 'application/json'  
-            },
-            body: JSON.stringify({
-                boardtype: '1',  // 五轴板
-                motorid: motorObj.motor
-            })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if(data.status === "success"){
-                addMessage(`返回信息 : ${data.message}`);  // 将收到的消息保存并显示
-            }
-            
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            addMessage("Error starting motor.");
-        });
-}
-
-
-function recoveryLimit(potnum,directionstr) {
-     // 获取 select 元素
-
-        var motorObj = getMotorInfo(potnum,directionstr);
-        if(motorObj == null){
-            console.log("获取电机信息失败");
-            return;
-        }
-        fetch('/recoverylimit', {
-            method: 'POST', 
-            headers: {
-                'Content-Type': 'application/json'  
-            },
-            body: JSON.stringify({
-                boardtype: '1',  // 五轴板
-                motorid: motorObj.motor
-            })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if(data.status === "success"){
-                addMessage(`返回信息 : ${data.message}`);  // 将收到的消息保存并显示
-            }
-            
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            addMessage("Error starting motor.");
-        });
-}
 
 function test() {
      // 获取 select 元素
