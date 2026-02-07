@@ -72,7 +72,7 @@ class DCMotorDriver:
         )
         if not success:
             print(f"错误: {resp}")
-            return False
+            return False,[f"错误: {resp}"]
         return True,resp
     
 if __name__ == "__main__":
