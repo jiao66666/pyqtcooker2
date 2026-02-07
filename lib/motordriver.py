@@ -2,6 +2,7 @@
 from lib.basecom import RS485Communication
 from lib.boardtype import *
 from lib.tools import circles_to_pulses
+from typing import Optional, List, Tuple, Union
 
 # 定义步进电机驱动类-5轴电机板
 class MotorDriver:
@@ -23,7 +24,7 @@ class MotorDriver:
 
     
 
-    def reset_one_motor(self, direction: int):
+    def reset_one_motor(self, direction: int)-> Tuple[bool, List[str]]:
         """复位单个电机"""
         print("####复位电机####")
         if not self.com or not self.com.connected:
@@ -44,13 +45,15 @@ class MotorDriver:
             "ORGRST", 
             [str(self.board_id), str(self.motor_id), str(pulses), "0",str(anglespeed)]
         )
+
         if not success:
             print(f"错误: {resp}")
-            return False
-        
+            return False,[f"错误: {resp}"]
+
         self.current_position = 0
         self.homed = True
-        return True
+        
+        return True,[f"电机{self.name}复位成功"]
         
     def enable_all_motors(self):
         print("使能所有电机....")

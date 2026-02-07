@@ -317,12 +317,7 @@ function resetMotor(potnum,directionstr) {
         })
         .then(response => response.json())
         .then(data => {
-            if(data.status === "success"){
-                addMessage(`返回信息 : ${data.message}`);  // 将收到的消息保存并显示
-            }else if(data.status === "error"){
-                addMessage(`返回信息 : ${data.message}`);  // 将收到的消息保存并显示
-            }
-            
+             addMessage(`返回信息 : ${data.message}`);  // 将收到的消息保存并显示
         })
         .catch(error => {
             console.error('Error:', error);
@@ -587,7 +582,7 @@ function testMultiTaskabs() {
                 'Content-Type': 'application/json'  
             },
             body: JSON.stringify({
-                boardtype: '1',  // 五轴板
+                
             })
         })
         .then(response => response.json())
@@ -609,7 +604,7 @@ function testMultiTaskabs2() {
                 'Content-Type': 'application/json'  
             },
             body: JSON.stringify({
-                boardtype: '1',  // 五轴板
+               
             })
         })
         .then(response => response.json())
