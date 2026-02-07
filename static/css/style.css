@@ -158,6 +158,21 @@ html, body {
     height: 35px;
     border: none;
     border-radius: 5px;
+    display:flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    justify-content: center;
+}
+
+.function_container button svg{
+    width:15px;
+    height:15px;
+    margin-right:5px;
+}
+
+.function_container button span{
+    font-size:12px;
+    color:#333;
 }
 
 .connectbtn_row button{
@@ -279,9 +294,16 @@ html, body {
     font-weight: bold;
 }
 .mainconnectbtn{
-    background-color: #E6F4FF;
-    color:#1677FF;
     font-weight:bold;
+    display:flex;
+    flex-flow: row nowrap;
+    align-items: center;  
+    justify-content: center;
+}
+.mainconnectbtn svg{
+    width: 15px;
+    height: 15px;
+    margin-right:5px;
 }
 
 .tast_container{
