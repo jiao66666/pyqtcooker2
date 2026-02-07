@@ -11,36 +11,6 @@
 <body>
     <div class="connect_outframe">  
       <div class="connect_container">
-        <!---
-        <div class="port_row">
-            <label for="port">端口:</label>
-            <select id="port_select" name="port_select">
-                <option value="COM1">COM1</option>
-                <option value="COM2">COM2</option>
-                <option value="COM3">COM3</option>
-                <option value="COM4">COM4</option>
-                <option value="COM5">COM5</option>
-                <option value="COM6" selected>COM6</option>
-                <option value="COM7">COM7</option>
-                <option value="COM8">COM8</option>
-                <option value="COM9">COM9</option>
-                <option value="COM10">COM10</option>
-            </select>
-        </div>
-        <div class="baud_row">
-            <label for="baud">波特率:</label>
-            <select id="baud_select" name="baud_select">
-                <option value="9600">9600</option>
-                <option value="19200">19200</option>
-                <option value="38400">38400</option>
-                <option value="57600">57600</option>
-                <option value="115200" selected>115200</option>
-            </select>
-            <div class="connect_status">
-                未连接
-            </div>
-        </div>
-        -->
         <div class="connectstatus_row">
              <div class="connect_word">
                 连接状态:
@@ -52,7 +22,6 @@
         <div class="connectbtn_row nomb">
             <button onclick="connect()" class="mainconnectbtn">连接炒菜机</button>
             <button onclick="disconnect()">断开连接</button>
-            <!--<button onclick="fixmotor()">电机异常修复</button>-->
         </div>
       </div>
       <div class="top_container">
@@ -71,10 +40,7 @@
         <button onclick="showTab(3, this)">自动程序区</button>
     </div>
 
-
-
     <div id="tab1" class="tab-content" style="display:block;">
-
     <div class="speed_container">
         <label>电机速度:</label>
         <label>
@@ -97,7 +63,6 @@
             <input type="radio" name="speed" value="5"> 5
         </label>
     </div>
-
 
     <div class="function_container">
         <button onclick="resetMotor(1,'left')">1号锅水平复位</button>
@@ -136,32 +101,14 @@
         </div>
     </div>
 
-
-
     </div>
     <div id="tab2" class="tab-content">
-        <!--<div class="function_container">
-            <button onclick="readMotor(1,'left')">读取电机状态测试</button>
-            <button onclick="testTask(1,'left')">测试水平任务执行</button>
-            <button onclick="testTask(1,'up')">测试翻转任务执行</button>
-            <button onclick="testMultiTask()">测试水平翻转任务</button>
-            <button onclick="testTaskabs(1,'left')">测试水平绝对执行</button>
-            <button onclick="testTaskabs(1,'up')">测试翻转绝对执行</button>
-        </div>-->
         <div class="input_container">
-            <!--<div class="input_circle">
-                <label for="circles">相对运行圈数:</label>
-                <input type="text" id="circleval" placeholder="请输入相对运行圈数" />
-            </div>-->
             <div class="input_circle">
                 <label for="circles" class="input_tag">目标运行位置:</label>
                 <input class="input-classic" type="number" id="circlevalabs" placeholder="请输入目标的绝对位置数值" />
             </div>
             <div class="function_container">
-                <!--<button onclick="runMotor(1,'left')">1号锅水平相对左移</button>
-                <button onclick="runMotor(1,'right')">1号锅水平相对右移</button>
-                <button onclick="runMotor(1,'up')">1号锅相对内翻转</button>
-                <button onclick="runMotor(1,'down')">1号相对行外翻转</button>-->
                 <button onclick="runMotorabs(1,'left')">1号锅水平绝对移动</button>
                 <button onclick="runMotorabs(2,'left')">2号锅水平绝对移动</button>
                 <button onclick="runMotorabs(1,'up')">1号锅绝对翻转移动</button>
