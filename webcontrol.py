@@ -2,26 +2,24 @@
 from flask import Flask, render_template, jsonify,request
 from lib.boardcontroller import BoardController
 from lib.boardtype import *
-import argparse
-import sys
 import time
+from lib.tools import is_dev_mode
 
 app = Flask(__name__)
 
 boardercontrollers = {}
 
-
-# 设置命令行参数解析器
-parser = argparse.ArgumentParser()
-parser.add_argument('--port', type=int, default=5000, help='Set the port for the server (default is 3000)')
-parser.add_argument('--stepmotor_port', type=str, default='COM6', help='Step motor port (default is COM6)')
-parser.add_argument('--feedermotor_port', type=str, default='COM7', help='Feeder motor port (default is COM7)')
-args = parser.parse_args()
-
 # 根据传入的命令行参数设置端口,方便测试和生产环境使用不同的端口
-port = args.port
-stepmotor_port = args.stepmotor_port
-feedermotor_port = args.feedermotor_port
+if is_dev_mode():
+    print("当前环境: 开发环境，使用测试端口")
+    port = 3000
+    stepmotor_port = "COM2"
+    feedermotor_port = "COM3"
+else:
+    print("当前环境: 生产环境，使用生产端口")
+    port = 5000
+    stepmotor_port = 'COM6'
+    feedermotor_port = 'COM7'
 
 # 渲染前端的 HTML 页面
 @app.route('/')

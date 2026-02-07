@@ -1,6 +1,10 @@
 import serial
 import serial.tools.list_ports
+import sys
 
+def is_dev_mode():
+    """判断是否是测试环境"""
+    return not getattr(sys, 'frozen', False)
 
 def circles_to_pulses(circles, step_angle = 1.8, microsteps = 128):
     # 每圈的步数 = 360 / 步距角
