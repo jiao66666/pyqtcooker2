@@ -122,7 +122,6 @@
             <div class="tastmotorid_select_row">
                 <label for="tastmotorid">电机号:</label>
                 <select id="tastmotorid" name="tastmotorid">
-                    <option value="0">0</option>
                     <option value="1">1</option>
                     <option value="2">2</option>
                     <option value="3">3</option>
@@ -146,6 +145,7 @@
                     <option value="21">21</option>
                     <option value="22">22</option>
                     <option value="23">23</option>
+                    <option value="24">24</option>
                 </select>
             </div>
             <div class="input_circle">
@@ -155,6 +155,8 @@
             <div class="function_container">
                 <button onclick="testTastBoardPing()">测试板连通性</button>
                 <button onclick="runTastMotor()">打开电机</button>
+                <button onclick="getTastMotorFb(1)">获取单电机反馈</button>
+                <button onclick="getTastMotorFb(0)">获取所有电机反馈</button>
             </div>
         </div>
 

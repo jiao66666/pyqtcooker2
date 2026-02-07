@@ -69,7 +69,7 @@ class BoardController:
     def init_dcmotors(self):
        """初始化电机"""
        motor_nums = 24
-       for i in range(motor_nums):
+       for i in range(1,motor_nums):
             motor = DCMotorDriver(rs485_instance=self.comm, motor_id=i, board_type=self.board_type, name=f"{i}号电机")
             self.motors.append(motor)   
 

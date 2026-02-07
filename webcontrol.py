@@ -121,6 +121,26 @@ def runtastmotor():
         return jsonify({"status": "fail","message": "运转失败!"})
 
 
+@app.route('/gettastmotorfb', methods=['POST'])
+def gettastmotorfb():
+    print("测试加料板获取结果运行")
+    data = request.get_json()
+    motorid = data.get('motorid')
+    mode = data.get('mode')
+    success = False
+    print("收到参数 :", motorid)
+    if not boardercontrollers.get("boardcontroller2"):
+        print("找不到加料主板控制器，无法操作")
+        return jsonify({"status": "error","message": "找不到加料主板控制器，无法操作,请先连接串口"})
+    success,resp =  boardercontrollers["boardcontroller2"].motors[int(motorid)].getfb(int(mode))
+    if success :
+        print("测试加料板打开成功!")
+        return jsonify({"status": "success","message": f"运行获取反馈成功，反馈结果：{resp}"})
+    else:
+        print("测试加料板打开失败!")
+        return jsonify({"status": "fail","message": "运转失败!"})
+    
+
 
 @app.route('/runlong', methods=['POST'])
 def runlong():

@@ -1,6 +1,7 @@
 # motor_driver.py
 from lib.basecom import RS485Communication
 from lib.boardtype import *
+from typing import Optional, List, Tuple, Union
 
 # 定义DC电机驱动类-加料电机板
 class DCMotorDriver:
@@ -39,16 +40,41 @@ class DCMotorDriver:
             return False
          
         self.overtime = overtime  # 更新持续运行时间
-         # 发送运行命令
+         # 发送运行命令,默认使用模式0（按持续时间开锁），锁开启后反馈为高电平(1)
         success, resp = self.com.execute_command(
             "OPENLOCK", 
-            [str(self.board_id), str(self.motor_id),str(overtime)]
+            [str(self.board_id), str(self.motor_id),str(overtime),"0","1"]
         )
         if not success:
             print(f"错误: {resp}")
             return False
         return True
 
+    def getfb(self,mode:int)-> Tuple[bool, List[str]]:
+        """获取加料电机反馈""" 
+        print("####获取加料电机反馈####")
+        if not self.com or not self.com.connected:
+            print("错误: 串口未连接，无法运行电机")
+            return False
+         
+         # 发送运行命令,默认使用模式0（按持续时间开锁），锁开启后反馈为高电平(1)
+
+        if mode == 0:
+            print("获取所有加料电机反馈")
+            motors = "1-24"
+        else:
+            print("获取指定加料电机反馈")
+            motors = str(self.motor_id)
+
+        success, resp = self.com.execute_command(
+            "GETFB", 
+            [str(self.board_id), motors,"1","1"]
+        )
+        if not success:
+            print(f"错误: {resp}")
+            return False
+        return True,resp
+    
 if __name__ == "__main__":
     
 
