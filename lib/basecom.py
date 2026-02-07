@@ -210,17 +210,17 @@ class RS485Communication:
                 if not success:
                     if resp_type == "ERROR":
                         print(False, resp_params)  # 控制台输出 False 和 resp_params
-                        return False,["命令解析失败",f"实际执行命令为{cmd_str}，返回错误信息: {resp_params}"]
+                        #return False,["命令解析失败",f"实际执行命令为{cmd_str}，返回错误信息: {resp_params}"]
                     else:
                         print(False, ["无效响应"])  # 控制台输出 False 和无效响应
-                        return False,["命令解析失败",f"实际执行命令为{cmd_str}，返回错误信息: {resp_params}"]
+                        #return False,["命令解析失败",f"实际执行命令为{cmd_str}，返回错误信息: {resp_params}"]
 
                 # 检查响应类型是否匹配命令
                 if resp_type != command:
                     print(False, [f"响应类型不匹配，期望: {command}，实际: {resp_type}"])  # 控制台输出错误信息
-                    return False,["命令解析失败",f"实际执行命令为{cmd_str}，响应类型不匹配，期望: {command}，实际: {resp_type}"]
+                    #return False,["命令解析失败",f"实际执行命令为{cmd_str}，响应类型不匹配，期望: {command}，实际: {resp_type}"]
 
-                return True,["命令执行成功",f"实际执行命令为{cmd_str}"]
+                return True,["命令执行成功",f"实际执行命令为{cmd_str},返回信息: {resp_params},期望: {command}，实际: {resp_type}"]
         except Exception as e:
             print(f"发送命令失败: {e}")
             return False            

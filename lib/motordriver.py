@@ -3,7 +3,6 @@ from lib.basecom import RS485Communication
 from lib.boardtype import *
 from lib.tools import circles_to_pulses
 from typing import Optional, List, Tuple, Union
-from lib.tools import is_dev_mode
 
 # 定义步进电机驱动类-5轴电机板
 class MotorDriver:
@@ -48,7 +47,7 @@ class MotorDriver:
         )
  
         # 复位命令失败时，如果是开发环境则打印错误但继续执行，生产环境则直接返回错误
-        if not success and not is_dev_mode():
+        if not success:
             print(f"错误: {resp}")
             return False,[f"错误: {resp}"]
 
