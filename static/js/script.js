@@ -507,6 +507,28 @@ function test() {
         });
 }
 
+function resetMotorPot(potnum) {
+     // 获取 select 元素
+        fetch('/resetmotorpot', {
+            method: 'POST', 
+            headers: {
+                'Content-Type': 'application/json'  
+            },
+            body: JSON.stringify({
+                potnum: potnum,      
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+             addMessage(`返回信息 : ${data.message}`);  // 将收到的消息保存并显示
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            addMessage("Error starting motor.");
+        });
+}
+
+
 function fixmotor() {
      // 获取 select 元素
         fetch('/fixmotor', {

@@ -24,7 +24,7 @@ class MotorDriver:
 
     
 
-    def reset_one_motor(self, direction: int)-> Tuple[bool, List[str]]:
+    def reset_one_motor(self)-> Tuple[bool, List[str]]:
         """复位单个电机"""
         print("####复位电机####")
         if not self.com or not self.com.connected:
@@ -33,6 +33,13 @@ class MotorDriver:
         print(f"[{self.name}] ID:{self.motor_id} 运行 复位电机【{self.name}】, 主板类型:{self.board_id}")
         # 复位脉冲数
         pulses = 3200000
+
+        # 复位方向
+        if self.motor_id in [1,2]:  # 1号锅
+            direction = 1
+        else:
+            direction = -1     
+
         if direction >=0:
             pulses = abs(pulses)
         else:
@@ -46,7 +53,46 @@ class MotorDriver:
             [str(self.board_id), str(self.motor_id), str(pulses), "0",str(anglespeed)]
         )
  
-        # 复位命令失败时，如果是开发环境则打印错误但继续执行，生产环境则直接返回错误
+        if not success:
+            print(f"错误: {resp}")
+            return False,[f"错误: {resp}"]
+
+        self.current_position = 0
+        self.homed = True
+        
+        return True,[f"电机{self.name}复位成功"]
+    
+
+    def resettask(self)-> Tuple[bool, List[str]]:
+        """运行动作任务"""
+        print("####运行电机复位任务####")
+        if not self.com or not self.com.connected:
+            print("错误: 串口未连接，无法运行电机")
+            return False
+        
+        print(f"[{self.name}] ID:{self.motor_id} 运行 复位电机【{self.name}】, 主板类型:{self.board_id}")
+        # 复位脉冲数
+        pulses = 3200000
+
+        # 复位方向
+        if self.motor_id in [1,2]:  # 1号锅
+            direction = 1
+        else:
+            direction = -1     
+
+        if direction >=0:
+            pulses = abs(pulses)
+        else:
+            pulses = -abs(pulses)   
+
+        #复位速度
+        anglespeed = 360      
+         # 发送运行命令
+        success, resp = self.com.run_task(
+            "ORGRST", 
+            [str(self.board_id), str(self.motor_id), str(pulses), "0",str(anglespeed)]
+        )
+
         if not success:
             print(f"错误: {resp}")
             return False,[f"错误: {resp}"]

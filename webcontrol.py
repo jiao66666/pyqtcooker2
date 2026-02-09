@@ -370,7 +370,7 @@ def resetmotor():
         if not boardercontrollers.get("boardcontroller1"):
            print("找不到主板控制器，无法操作")
            return jsonify({"status": "error","message": "找不到主板控制器，无法操作,请先连接串口"})
-        success,resp =  boardercontrollers["boardcontroller1"].motors[motorid].reset_one_motor(int(direction))
+        success,resp =  boardercontrollers["boardcontroller1"].motors[motorid].reset_one_motor()
     if success :
         print("测试复位成功!")
         return jsonify({"status": "success","message": f"复位电机成功!电机：{motorid}，方向：{direction}"})
@@ -378,6 +378,33 @@ def resetmotor():
         print("测试复位失败!")
         return jsonify({"status": "fail","message": f"复位电机失败!,电机：{motorid}，错误信息：{resp}"})
 
+
+
+@app.route('/resetmotorpot', methods=['POST'])
+def resetmotorpot():
+    print("运行整体复位任务")
+    data = request.get_json()
+    potnum = int(data.get('potnum'))  # 获取 'boardtype' 参数
+    success = False
+    print("收到参数 :", potnum)
+
+    if not boardercontrollers.get("boardcontroller1"):
+        print("找不到主板控制器，无法操作")
+        return jsonify({"status": "error","message": "找不到主板控制器，无法操作,请先连接串口"})
+
+    if potnum ==1:   
+        success,resp =  boardercontrollers["boardcontroller1"].motors[2].resettask()
+        success,resp =  boardercontrollers["boardcontroller1"].motors[1].resettask()
+    else:
+        success,resp =  boardercontrollers["boardcontroller1"].motors[4].resettask()        
+        success,resp =  boardercontrollers["boardcontroller1"].motors[3].resettask()        
+        
+    if success :
+        print("测试复位成功!")
+        return jsonify({"status": "success","message": f"复位电机成功!锅号：{potnum}"})
+    else:
+        print("测试复位失败!")
+        return jsonify({"status": "fail","message": f"复位电机失败!,锅号：{potnum}，错误信息：{resp}"})
 
 @app.route('/readmotor', methods=['POST'])
 def readmotor():

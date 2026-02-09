@@ -299,7 +299,7 @@ class RS485Communication:
             if status == "PAUSEING":
                 print("电机暂停，任务结束")
                 return True
-            elif status == "RUNING":
+            elif status == "RUNING" or status == "ORGING":
                 print("电机正在运行，等待中...")
                 time.sleep(check_interval)  # 每隔 check_interval 检查一次
             elif status == "ERROR":
