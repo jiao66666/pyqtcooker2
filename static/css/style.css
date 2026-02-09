@@ -131,8 +131,21 @@ html, body {
 .connect_status{
     font-size:12px;
     font-weight: bold;
-    color:green;
+    color:#909399;
     margin-left:5px;
+    background-color: rgba(144,147,153,.1);
+    padding:5px;
+    border-radius:5px;
+}
+
+.connect_status_connected{
+    font-size:12px;
+    font-weight: bold;
+    color:#67c23a;
+    margin-left:5px;
+    background-color: rgba(103,194,58,.1);
+    padding:5px;
+    border-radius:5px;
 }
 
 .speed_container{
@@ -286,15 +299,13 @@ html, body {
     display: flex;
     flex-flow:row nowrap;
     align-items: center;
-    padding:10px 5px;
+    padding:5px 5px;
 }
 
 .connect_word{
     font-size:12px;
-    font-weight: bold;
 }
 .mainconnectbtn{
-    font-weight:bold;
     display:flex;
     flex-flow: row nowrap;
     align-items: center;  
