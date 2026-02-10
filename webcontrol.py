@@ -574,6 +574,10 @@ def testmultitaskabs():
 @app.route('/testmultitaskabs2', methods=['POST'])   #绝对位置任务测试
 def testmultitaskabs2():
     print("2号锅测试水平翻转任务开始")
+    data = request.get_json()
+    speed_level = data.get('speed_level') 
+    speed_flip = data.get('speed_flip') 
+
     success = False
     if not boardercontrollers.get("boardcontroller1"):
         print("找不到主板控制器，无法操作")
@@ -585,8 +589,18 @@ def testmultitaskabs2():
 
     #runtask参数：[圈数，速度，方向]
     print("**************************************2号锅测试水平翻转任务开始******************************")
-    move_speed = 360
-    flip_speed = 180 
+    move_speed = int(speed_level)   #2160  tested
+    flip_speed = int(speed_flip)   #2520  tested 
+
+    if move_speed > 3600:   #  10圈/秒  已经非常快了，超过这个速度可能会有安全隐患，限制最高速度为3600
+        move_speed = 3600
+    elif move_speed < 360:
+        move_speed = 360
+
+    if flip_speed > 3600:   
+        flip_speed = 3600
+    elif flip_speed < 360:
+        flip_speed = 360    
 
 
     success = boardercontrollers["boardcontroller1"].motors[POT2_FLIP_MOTOR].gotask(4.5,flip_speed)  
