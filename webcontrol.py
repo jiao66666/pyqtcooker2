@@ -521,8 +521,8 @@ def testmultitaskabs():
 
     #runtask参数：[圈数，速度，方向]
     print("**************************************1号锅测试水平翻转任务开始******************************")
-    move_speed = 2160
-    flip_speed = 2520
+    move_speed = 1080   #2160  tested
+    flip_speed = 1080   #2520  tested 
 
     success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask(5.05,flip_speed)  
     success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask(4.20,move_speed)
@@ -532,7 +532,10 @@ def testmultitaskabs():
     time.sleep(1)
 
     success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask(5.05,flip_speed)
-    success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask(4.20,move_speed)
+
+    success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask(3.70,move_speed)
+    success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].go(4.20,move_speed)
+    
     success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask(20.2,flip_speed)
     time.sleep(1)
     success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask(-11.8,flip_speed)
