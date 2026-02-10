@@ -598,6 +598,21 @@ function testMultiTask() {
 }
 
 function testMultiTaskabs() {
+      var speed_level = document.getElementById("speed_level");
+        if(speed_level.value == "" || isNaN(speed_level.value) || parseInt(speed_level.value) <= 0){
+            alert("请输入有效的水平移动速度值！");
+            return;
+        }
+
+       var speed_flip = document.getElementById("speed_flip");
+        if(speed_flip.value == "" || isNaN(speed_flip.value) || parseInt(speed_flip.value) <= 0){
+            alert("请输入有效的翻转移动速度值！");
+            return;
+        }
+
+      console.log("选中水平移动速度值是:", speed_level.value);
+      console.log("选中翻转移动速度值是:", speed_flip.value);
+
      // 获取 select 元素
         fetch('/testmultitaskabs', {
             method: 'POST', 
@@ -605,7 +620,8 @@ function testMultiTaskabs() {
                 'Content-Type': 'application/json'  
             },
             body: JSON.stringify({
-                
+                 speed_level: speed_level.value,  
+                 speed_flip: speed_flip.value,  
             })
         })
         .then(response => response.json())
