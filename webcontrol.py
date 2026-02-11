@@ -507,6 +507,32 @@ def testmultitask():
         return jsonify({"status": "fail","message": "测试失败!"})    
 
 
+
+@app.route('/readpulse', methods=['POST'])
+def readpulse():
+    print("已转脉冲读取")
+    data = request.get_json()
+    mode = int(data.get('mode') ) # 获取 'boardtype' 参数
+    motorid =int(data.get('motorid'))  # 获取 'port' 参数
+    success = False
+    if not boardercontrollers.get("boardcontroller1"):
+        print("找不到主板控制器，无法操作")
+        return jsonify({"status": "error","message": "找不到主板控制器，无法操作,请先连接串口"})
+    
+    if not boardercontrollers["boardcontroller1"].motors[1].homed or not boardercontrollers["boardcontroller1"].motors[2].homed:
+        print("电机未归位，无法操作")
+        return jsonify({"status": "error","message": "电机未归位，无法操作,请先复位"})    
+    
+    #runtask参数：[圈数，速度，方向]
+    success,resp = boardercontrollers["boardcontroller1"].motors[motorid].readpulse(mode) 
+
+    if success :
+        print("测试成功!")
+        return jsonify({"status": "success","message": f"测试成功!,返回结果:{resp}"})
+    else:
+        print("测试失败!")
+        return jsonify({"status": "fail","message": "测试失败!"})  
+
 @app.route('/testmultitaskabs', methods=['POST'])   #绝对位置任务测试
 def testmultitaskabs():
     print("1号锅测试水平翻转任务开始")

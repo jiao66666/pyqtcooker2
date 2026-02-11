@@ -681,6 +681,33 @@ function goPos(potnum,postype) {
         });
 }
 
+
+function readPulse(mode) {
+        var motorid = document.getElementById("tastmotorid");
+
+     // 获取 select 元素
+        fetch('/readpulse', {
+            method: 'POST', 
+            headers: {
+                'Content-Type': 'application/json'  
+            },
+            body: JSON.stringify({
+               mode: mode,
+               motorid: motorid.value
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+              addMessage(`返回信息 : `+data.message);  // 将收到的消息保存并显示
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            addMessage("Error starting motor.");
+        });
+}
+
+
+
 function enableall() {
      // 获取 select 元素
         fetch('/enableall', {
