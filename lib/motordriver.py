@@ -290,6 +290,7 @@ class MotorDriver:
             return False
         return True     
     
+    # mode 0 获取所有电机反馈，mode 1 获取单个电机反馈
     def readpulse(self,mode)-> Tuple[bool, List[str]]:
         """读取电机已转动的脉冲数"""
         print("####读取电机已转脉冲数####")
