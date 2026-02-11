@@ -674,11 +674,11 @@ def gopos():
         return jsonify({"status": "error","message": "电机未归位，无法操作,请先复位"})    
     
     if potnum == 1:
-        success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask(POT_POS_MOVE_SAFE_FLIP,speed)  
+        success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask(POT_POS_SAFE_FLIP,speed)  
         success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask(level_pos,speed)  
         success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask(flip_pos,speed)  
     elif potnum == 2:
-        success = boardercontrollers["boardcontroller1"].motors[POT2_FLIP_MOTOR].gotask(POT_POS_MOVE_SAFE_FLIP,speed)  
+        success = boardercontrollers["boardcontroller1"].motors[POT2_FLIP_MOTOR].gotask(POT_POS_SAFE_FLIP,speed)  
         success = boardercontrollers["boardcontroller1"].motors[POT2_MOVE_MOTOR].gotask(level_pos,speed)  
         success = boardercontrollers["boardcontroller1"].motors[POT2_FLIP_MOTOR].gotask(flip_pos,speed)    
     
