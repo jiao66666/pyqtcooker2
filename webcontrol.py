@@ -548,7 +548,7 @@ def testmultitaskabs():
 
     success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask(5.05,flip_speed)
 
-    success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask(3.70,move_speed)
+    success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask(3.20,move_speed)
     success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].go(4.20,move_speed)
 
     success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask(20.2,flip_speed)

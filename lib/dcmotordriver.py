@@ -68,7 +68,7 @@ class DCMotorDriver:
 
         success, resp = self.com.execute_command(
             "GETFB", 
-            [str(self.board_id), motors,"1","1"]
+            [str(self.board_id), motors,"0","1"]
         )
         if not success:
             print(f"错误: {resp}")
