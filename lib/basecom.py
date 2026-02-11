@@ -358,6 +358,7 @@ class RS485Communication:
                 - 响应类型（命令名称或"ERROR"）
                 - 参数列表
         """
+        ##ALLPulse,2,0*+108109,-256000,-107520,+100050,+183601*86
 
         if self.boardtype == BOARDTYPE_FIVE_AXIS:
             # 检查是否是成功响应
@@ -377,7 +378,18 @@ class RS485Communication:
                 cmd = parts[0]  # 命令部分
                 params = parts[1:]  # 剩下的是参数
                 return False, cmd, params
-
+            
+            if response.count('*') == 2:
+                # 提取两个 * 之间的部分作为参数
+                start_index = response.index('*') + 1  # 第一个 * 后的开始位置
+                end_index = response.rindex('*')  # 最后一个 * 的位置
+                content = response[start_index:end_index]  # 获取 * 之间的内容
+                
+                # 分割命令和参数
+                parts = content.split(',')  # 以逗号分割
+                cmd = parts[0]  # 命令部分
+                params = parts[1:]  # 剩下的是参数部分
+                return True, cmd, params
             # 如果不是 OK 或 NG，返回 INVALID
             return False, "INVALID", []
         
@@ -408,7 +420,7 @@ class RS485Communication:
                 return False, "ERROR", [error_code, error_message]
 
             # 如果既不是正确响应也不是错误响应，返回 INVALID
-            return False, "INVALID", []
+        return False, "INVALID", []
 
 
 
