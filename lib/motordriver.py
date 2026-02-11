@@ -19,8 +19,9 @@ class MotorDriver:
 
         
         # 如果需要，可以在这里缓存电机状态
-        self.current_position = 0.0
+        self.current_position = 0.0  # 当前记忆位置 
         self.homed = False  # 是否已回零位
+        self.fb_position = 0.0  # 来自电机实时反馈位置
 
     
 
