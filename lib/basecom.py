@@ -273,11 +273,17 @@ class RS485Communication:
                 print("主板返回消息>>>>>>")
                 res = self.serial_conn.readline().decode('utf-8').strip()
                 print(res)
-                status = self.parse_motor_status(res)
 
-                if status is None:
-                    print("电机状态解析失败")
-                    return False, ["电机状态解析失败","Fail"]
+                if command == "RunStatus":
+                    status = self.parse_motor_status(res)
+                    if status is None:
+                        print("电机状态解析失败")
+                        return False, ["电机状态解析失败","Fail"]
+                elif command == "ALLPulse" or command == "Pulse":   
+                    status = self.parse_motor_pulses(res)
+                    if status is None:
+                        print("电机脉冲数解析失败")
+                        return False, ["电机状态解析失败","Fail"] 
                 # 解析响应
                 return True,[f"命令执行成功,实际执行命令为{cmd_str},返回状态为{status}",status]
         except Exception as e:
@@ -344,6 +350,18 @@ class RS485Communication:
         else:
             return None  # 如果没有 *，返回 None
 
+    def parse_motor_pulses(self,response: str):
+        """从电机状态字符串中提取状态信息"""
+        # 按 * 分隔字符串
+        if response.count('*') == 2:
+            # 提取两个 * 之间的部分作为参数
+            start_index = response.index('*') + 1  # 第一个 * 后的开始位置
+            end_index = response.rindex('*')  # 最后一个 * 的位置
+            content = response[start_index:end_index]  # 获取 * 之间的内容
+
+            return content
+        else:
+            return None
 
     def parse_response(self, response: str) -> Tuple[bool, str, List[str]]:
         """
@@ -379,17 +397,6 @@ class RS485Communication:
                 params = parts[1:]  # 剩下的是参数
                 return False, cmd, params
             
-            if response.count('*') == 2:
-                # 提取两个 * 之间的部分作为参数
-                start_index = response.index('*') + 1  # 第一个 * 后的开始位置
-                end_index = response.rindex('*')  # 最后一个 * 的位置
-                content = response[start_index:end_index]  # 获取 * 之间的内容
-                
-                # 分割命令和参数
-                parts = content.split(',')  # 以逗号分割
-                cmd = parts[0]  # 命令部分
-                params = parts[1:]  # 剩下的是参数部分
-                return True, cmd, params
             # 如果不是 OK 或 NG，返回 INVALID
             return False, "INVALID", []
         

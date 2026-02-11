@@ -306,7 +306,7 @@ class MotorDriver:
             command = "Pulse"
             motorid = str(self.motor_id)
          # 发送运行命令
-        success, resp = self.com.execute_command(
+        success, resp = self.com.read_command(
             command, 
             [str(self.board_id), motorid]
         )
