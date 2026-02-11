@@ -547,10 +547,8 @@ def testmultitaskabs():
     time.sleep(1)
 
     success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask(5.05,flip_speed)
-
-    success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask(3.20,move_speed)
-    success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].go(4.20,move_speed)
-
+    success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask(4.20,move_speed)
+   
     success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask(20.2,flip_speed)
     time.sleep(1)
     success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask(-11.8,flip_speed)
@@ -629,6 +627,68 @@ def testmultitaskabs2():
     else:
         print("测试失败!")
         return jsonify({"status": "fail","message": "测试失败!"})  
+
+
+@app.route('/gopos', methods=['POST'])
+def gopos():
+    print("锅位移动")
+    data = request.get_json()
+    potnum = int(data.get('potnum')) 
+    postype = str(data.get('postype')) 
+    speed= int(data.get('speed')) 
+
+    if postype == 'pos_outfood':
+        print("移动到外倒料口")
+        flip_pos = POT1_POS_OUTFOOD_FLIP
+        level_pos = POT1_POS_OUTFOOD_LEVEL
+    elif postype == 'pos_infood':
+        print("移动到内倒料口口")
+        flip_pos = POT1_POS_INFOOD_FLIP
+        level_pos = POT1_POS_INFOOD_LEVEL
+    elif postype == 'pos_washpot':
+        print("移动到洗锅位置")
+        flip_pos = POT1_POS_WASHPOT_FLIP
+        level_pos = POT1_POS_WASHPOT_LEVEL
+    elif postype == 'pos_firepot':
+        flip_pos = POT1_POS_FIREPOT_FLIP
+        level_pos = POT1_POS_FIREPOT_LEVEL
+        print("移动到灶位")        
+    else:
+        print("未知位置")
+        return jsonify({"status": "fail","message": "未知位置"})
+
+    speed = speed * 360  # 转换为电机实际速度值
+    if speed > 3600:   
+        speed = 3600
+    elif speed < 360:
+        speed = 360
+
+    success = False
+
+    if not boardercontrollers.get("boardcontroller1"):
+        print("找不到主板控制器，无法操作")
+        return jsonify({"status": "error","message": "找不到主板控制器，无法操作,请先连接串口"})
+    
+    if not boardercontrollers["boardcontroller1"].motors[1].homed or not boardercontrollers["boardcontroller1"].motors[2].homed:
+        print("电机未归位，无法操作")
+        return jsonify({"status": "error","message": "电机未归位，无法操作,请先复位"})    
+    
+    if potnum == 1:
+        success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask(POT_POS_MOVE_SAFE_FLIP,speed)  
+        success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask(level_pos,speed)  
+        success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask(flip_pos,speed)  
+    elif potnum == 2:
+        success = boardercontrollers["boardcontroller1"].motors[POT2_FLIP_MOTOR].gotask(POT_POS_MOVE_SAFE_FLIP,speed)  
+        success = boardercontrollers["boardcontroller1"].motors[POT2_MOVE_MOTOR].gotask(level_pos,speed)  
+        success = boardercontrollers["boardcontroller1"].motors[POT2_FLIP_MOTOR].gotask(flip_pos,speed)    
+    
+    if success :
+        print("测试成功!")
+        return jsonify({"status": "success","message": "测试成功!"})
+    else:
+        print("测试失败!")
+        return jsonify({"status": "fail","message": "测试失败!"})    
+
 
 
            
