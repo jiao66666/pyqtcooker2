@@ -289,6 +289,30 @@ class MotorDriver:
             print(f"错误: {resp}")
             return False
         return True     
+    
+    def readpulse(self,mode)-> Tuple[bool, List[str]]:
+        """读取电机已转动的脉冲数"""
+        print("####读取电机已转脉冲数####")
+        if not self.com or not self.com.connected:
+            print("错误: 串口未连接，无法运行电机")
+            return False,[f"错误: 串口未连接，无法运行电机"]
+        print(f"[{self.name}] ID:{self.motor_id} 读取已转脉冲数... 主板类型:{self.board_id}")
+      
+        if mode == 0:
+            command = "ALLPulse"
+            motorid = "0"
+        else:
+            command = "Pulse"
+            motorid = str(self.motor_id)
+         # 发送运行命令
+        success, resp = self.com.execute_command(
+            command, 
+            [str(self.board_id), motorid]
+        )
+        if not success:
+            print(f"错误: {resp}")
+            return False,[f"错误: {resp}"]
+        return True,resp        
 
  
     def readmotor(self):
