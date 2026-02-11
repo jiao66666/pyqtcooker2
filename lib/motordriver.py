@@ -3,6 +3,8 @@ from lib.basecom import RS485Communication
 from lib.boardtype import *
 from lib.tools import circles_to_pulses
 from typing import Optional, List, Tuple, Union
+import threading
+import time
 
 # 定义步进电机驱动类-5轴电机板
 class MotorDriver:
@@ -22,7 +24,106 @@ class MotorDriver:
         self.current_position = 0.0  # 当前记忆位置 
         self.homed = False  # 是否已回零位
         self.fb_position = 0.0  # 来自电机实时反馈位置
+        self.is_loop_feedback = False  # 是否开启循环反馈
 
+    def start_loop_feedback(self):
+        """开启循环反馈"""
+        print("####开启循环反馈####")
+        if not self.com or not self.com.connected:
+            print("错误: 串口未连接，无法运行电机")
+            return False
+        self.update_fb_position()
+        self.is_loop_feedback = True
+
+
+    def update_fb_position(self):
+        """更新反馈位置"""
+        time_interval = 0.1
+        state_thread = threading.Thread(target=self.loop_read_pulses,args=(time_interval))
+        state_thread.start()
+        
+        
+    def loop_read_pulses(self, interval: float = 1.0):
+        """循环读取电机反馈位置"""
+        print("####循环读取电机反馈位置####")
+        while True:
+            if not self.is_loop_feedback:
+                return True
+            success, res = self.readpulse(1)
+            if success:
+                print(f"电机{self.name} 反馈位置更新成功，当前反馈位置: {res}")
+                self.fb_position =  self.convert_pulses_to_position(int(res))
+            else:
+                print("错误: 无法获取电机反馈位置")
+            time.sleep(interval)  # 等待指定时间后再次读取    
+        
+    def stop_loop_feedback(self):
+        """停止循环反馈"""
+        self.is_loop_feedback = False
+
+
+    def convert_pulses_to_position(self, pulses: int) -> float:       
+        """将脉冲数转换为实际位置"""
+        if self.motor_id in [1,2]:
+            circles = abs( pulses / (128*200) ) 
+        else:
+            circles = pulses / (128*200) 
+
+        return circles    
+
+    #任务执行高级模式，可提前跳出当前电机任务，同步执行后面的电机任务，适用于多个电机需要同时运动的情况,如果wait_for_completion = false ,必须指定提前退出位置 。 exit_pos需要<target
+    def gotask_advanced(self, target: float, anglespeed: int, wait_for_completion: bool = True,exit_pos:int = 0):
+        """单次运转电机"""  ##绝对运动
+        print("####运行电机高级任务####")
+        if not self.com or not self.com.connected:
+            print("错误: 串口未连接，无法运行电机")
+            return False
+        print(f"[{self.name}] ID:{self.motor_id} 运行到位置{target}, 角速度 {anglespeed}, 主板类型:{self.board_id}")
+
+        if not self.homed:
+           print("错误: 电机未回零，无法进行绝对运动")
+           return False
+        # 计算脉冲数
+        if self.motor_id in [2,4] and target < 0:
+            print("错误: 水平电机不能运动到负值位置")
+            return False
+        
+       
+        deltaDistance = target - self.current_position 
+        if deltaDistance == 0:
+            print("目标位置与当前位置相同，无需运动")
+            return True
+         # 计算需要运动的圈数
+
+        circles = abs(deltaDistance)
+
+        if deltaDistance >=0:  ## 确定 目标位在当前位置 的左还是右侧
+            if self.motor_id in [1,2]:
+                direction = -1
+            else:
+                direction = 1
+        else:
+            if self.motor_id in [1,2]:
+                direction = 1
+            else:
+                direction = -1
+
+        self.current_position = target  
+        # 计算脉冲数
+        pulses = circles_to_pulses(circles)
+        if direction >=0:
+            pulses = abs(pulses)
+        else:
+            pulses = -abs(pulses)    
+         # 发送运行命令
+        success, resp = self.com.run_task(
+            "RUN", 
+            [str(self.board_id), str(self.motor_id), str(pulses), str(anglespeed)]
+        )
+        if not success:
+            print(f"错误: {resp[0]}")
+            return False
+        return True        
     
 
     def reset_one_motor(self)-> Tuple[bool, List[str]]:
