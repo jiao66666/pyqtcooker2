@@ -1,17 +1,32 @@
 import websockets
 import json
-# WebSocketServer 类中不再需要 async 方法，而是直接用同步方式启动
+
 class WebSocketServer:
+    _instance = None  # 存储唯一的实例
+
+    def __new__(cls, *args, **kwargs):
+        """确保 WebSocketServer 只有一个实例"""
+        if cls._instance is None:
+            cls._instance = super().__new__(cls, *args, **kwargs)
+        return cls._instance
+
     def __init__(self):
-        self.server = None
-        self.clients = set()
+        # 如果已经有实例，则不再初始化
+        if not hasattr(self, 'initialized'):  # 防止重复初始化
+            self.server = None
+            self.clients = set()  # 用于存储连接的客户端
+            self.initialized = True
 
     async def register(self, websocket):
         """注册新的 WebSocket 客户端"""
+        print("###################新的 WebSocket 客户端连接###################################")
         self.clients.add(websocket)
+        print(f"当前客户数量: {len(self.clients)}")
+        print(f"当前客户列表: {self.clients}")
 
     async def unregister(self, websocket):
         """注销 WebSocket 客户端"""
+        print("*************************WebSocket 客户端断开连接*****************")
         self.clients.remove(websocket)
 
     async def send_coordinates(self, coordinates):
