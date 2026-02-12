@@ -40,7 +40,7 @@ class MotorDriver:
         """启动模拟数据反馈"""
         print("#### 开启循环反馈 ####")
         # 启动新的线程来运行 moni_data
-        state_thread = threading.Thread(target=self.run_moni_data, args=(0.5,))
+        state_thread = threading.Thread(target=self.run_moni_data, args=(1,))
         state_thread.daemon = True  # 设置为守护线程，主线程退出时自动结束
         state_thread.start()
 
