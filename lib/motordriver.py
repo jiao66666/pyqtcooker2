@@ -5,12 +5,13 @@ from lib.tools import circles_to_pulses
 from typing import Optional, List, Tuple, Union
 import threading
 import time
+from lib.websocket_server import WebSocketServer
 
 
 
 # 定义步进电机驱动类-5轴电机板
 class MotorDriver:
-    def __init__(self, rs485_instance: RS485Communication, motor_id: int, board_type: int = BOARDTYPE_FIVE_AXIS,name: str = ""):
+    def __init__(self, rs485_instance: RS485Communication, motor_id: int, board_type: int = BOARDTYPE_FIVE_AXIS,name: str = "", websocket_server: WebSocketServer = None):
         """
         :param rs485_instance: 已经初始化并连接好的串口对象
         :param motor_id: 板子上的电机ID (1-10)
@@ -27,6 +28,8 @@ class MotorDriver:
         self.homed = False  # 是否已回零位
         self.fb_position = 0.0  # 来自电机实时反馈位置
         self.is_loop_feedback = False  # 是否开启循环反馈
+        self.websocket_server = websocket_server  # 使用全局 WebSocket 服务器实例
+
 
     def start_loop_feedback(self):
         """开启循环反馈"""

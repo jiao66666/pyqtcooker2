@@ -2,6 +2,7 @@ from lib.basecom import RS485Communication
 from lib.motordriver import MotorDriver
 from lib.dcmotordriver import DCMotorDriver
 from lib.boardtype import *
+from lib.websocket_server import WebSocketServer
 
 
 class BoardController:
@@ -15,6 +16,8 @@ class BoardController:
         self.comm = None
         self.connected = False
         self.motors= []
+        self.websocket_server = WebSocketServer()
+
     
     def connect(self, port: str, baudrate: int) -> bool:
         """连接主板"""
