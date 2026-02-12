@@ -5,7 +5,9 @@ from lib.boardtype import *
 import time
 from lib.tools import is_dev_mode
 from lib.websocket_server import WebSocketServer
+
 import asyncio
+from threading import Thread
 app = Flask(__name__)
 
 boardercontrollers = {}
@@ -26,11 +28,13 @@ else:
 # 保持 WebSocket 服务器的全局实例
 websocket_server = None
 
-# 启动 WebSocket 服务器并返回实例
+# 启动 WebSocket 服务器的异步函数
 async def start_websocket_server():
-    websocket_server = WebSocketServer()
+    global websocket_server
+    websocket_server = WebSocketServer()  # 创建 WebSocket 实例
     await websocket_server.start()  # 启动 WebSocket 服务器
-    return websocket_server
+
+
 # 渲染前端的 HTML 页面
 @app.route('/')
 def index():
@@ -41,10 +45,13 @@ def index():
 def connect():
     """Flask 后端接口的 connect 方法"""
     global websocket_server
-    
+
     # 如果 WebSocket 服务器还没有启动，则启动它
     if websocket_server is None:
+        print("WebSocket 服务器未启动，正在启动...")
         websocket_server = asyncio.run(start_websocket_server())
+    else:
+        print("WebSocket 服务器已经启动，无需重复启动")    
 
 
     if not boardercontrollers.get("boardcontroller1"):

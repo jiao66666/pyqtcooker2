@@ -41,6 +41,7 @@
         <button class="active" onclick="showTab(1, this)">手动操控区</button>
         <button onclick="showTab(2, this)">测试区</button>
         <button onclick="showTab(3, this)">自动程序区</button>
+        <button onclick="showTab(4, this)">加料板</button>
     </div>
 
     <div id="tab1" class="tab-content" style="display:block;">
@@ -139,22 +140,57 @@
                 <button onclick="runMotorabs(1,'up')">1号锅绝对翻转移动</button>
                 <button onclick="runMotorabs(2,'up')">2号锅绝对翻转移动</button>
             </div>
-            <hr style="border: 1px solid #ccc; width: 100%; margin: 10px auto;">
+            <hr style="border: 1px solid #ccc; width: 100%; margin: 2px auto;">
             <div class="function_container">
                 <button onclick="goPos(1,'pos_outfood')">1号锅外倒菜位</button>
                 <button onclick="goPos(1,'pos_infood')">1号锅内倒菜位</button>
                 <button onclick="goPos(1,'pos_washpot')">1号锅洗锅位</button>
                 <button onclick="goPos(1,'pos_firepot')">1号锅烧菜位</button>
             </div>
-             <hr style="border: 1px solid #ccc; width: 100%; margin: 10px auto;">
+             <hr style="border: 1px solid #ccc; width: 100%; margin: 2px auto;">
              <div class="function_container">
                 <button onclick="readPulse(0)">读取全部已转脉冲</button>
                 <button onclick="readPulse(1)">读取单电机已转脉冲</button>
              </div>
+             <hr style="border: 1px solid #ccc; width: 100%; margin: 2px auto;">
+             <div class="fb_display">
+                <span class="fb_realtime">实时反馈位置：</span>
+                <div class="fb_display_row">
+                    <label>1号锅翻转电机:</label>
+                    <div id="motor1_flip">4.0</div>
+                </div>
+                <div class="fb_display_row">
+                    <label>1号锅水平电机:</label>
+                    <div id="motor1_level">4.0</div>
+                </div>
+                <div class="fb_display_row">
+                    <label>2号锅翻转电机:</label>
+                    <div id="motor2_flip">4.0</div>
+                </div>
+                <div class="fb_display_row">
+                    <label>2号锅水平电机:</label>
+                    <div id="motor2_level">4.0</div>
+                </div>
+             </div>
         </div>
 
-        <hr style="border: 1px solid #ccc; width: 100%; margin: 10px auto;">
+    </div>
 
+    <div id="tab3" class="tab-content" >
+        <div class="input_circle">
+            <label for="circles" class="input_tag">水平速度(角度/秒):</label>
+            <input class="input-classic" type="number" id="speed_level" placeholder="请输入水平移动速度" value="2160"/>
+        </div>
+        <div class="input_circle">
+            <label for="circles" class="input_tag">翻转速度(角度/秒):</label>
+            <input class="input-classic" type="number" id="speed_flip" placeholder="请输入翻转速度" value="2520"/>
+        </div>
+        <div class="function_container">
+            <button onclick="testMultiTaskabs()">1号锅洗锅倒菜程序</button>
+            <button onclick="testMultiTaskabs2()">2号锅洗锅倒菜程序</button>
+        </div>
+    </div>
+    <div id="tab4" class="tab-content" >
         <div class="input_container">
             <div class="tastmotorid_select_row">
                 <label for="tastmotorid">电机号:</label>
@@ -195,22 +231,6 @@
                 <button onclick="getTastMotorFb(1)">获取单电机反馈</button>
                 <button onclick="getTastMotorFb(0)">获取所有电机反馈</button>
             </div>
-        </div>
-
-    </div>
-
-    <div id="tab3" class="tab-content" >
-        <div class="input_circle">
-            <label for="circles" class="input_tag">水平速度(角度/秒):</label>
-            <input class="input-classic" type="number" id="speed_level" placeholder="请输入水平移动速度" value="2160"/>
-        </div>
-        <div class="input_circle">
-            <label for="circles" class="input_tag">翻转速度(角度/秒):</label>
-            <input class="input-classic" type="number" id="speed_flip" placeholder="请输入翻转速度" value="2520"/>
-        </div>
-        <div class="function_container">
-            <button onclick="testMultiTaskabs()">1号锅洗锅倒菜程序</button>
-            <button onclick="testMultiTaskabs2()">2号锅洗锅倒菜程序</button>
         </div>
     </div>
 

@@ -6,6 +6,8 @@ from typing import Optional, List, Tuple, Union
 import threading
 import time
 from lib.websocket_server import WebSocketServer
+import random
+import asyncio
 
 
 
@@ -30,6 +32,48 @@ class MotorDriver:
         self.is_loop_feedback = False  # 是否开启循环反馈
         self.websocket_server = websocket_server  # 使用全局 WebSocket 服务器实例
 
+        # 启动模拟数据反馈（会在实例创建时自动调用）
+        self.start_moni_fb()
+
+
+    def start_moni_fb(self):
+        """启动模拟数据反馈"""
+        print("#### 开启循环反馈 ####")
+        # 启动新的线程来运行 moni_data
+        state_thread = threading.Thread(target=self.run_moni_data, args=(0.5,))
+        state_thread.daemon = True  # 设置为守护线程，主线程退出时自动结束
+        state_thread.start()
+
+    def run_moni_data(self, interval: float):
+        """这个方法将在新线程中运行"""
+        loop = asyncio.new_event_loop()  # 创建新的事件循环
+        asyncio.set_event_loop(loop)  # 将事件循环设置为当前线程的事件循环
+        loop.run_until_complete(self.moni_data(interval))  # 在新的事件循环中运行异步任务
+
+    async def moni_data(self, interval: float = 1.0):
+        """模拟电机数据反馈，并定期发送到 WebSocket 客户端"""
+        while True:
+            # 生成模拟数据
+            cur_pos = random.randint(0, 100)  # 模拟随机 y 坐标
+
+            # 构建数据包
+            data = {
+                "motor_id": self.motor_id,
+                "position": cur_pos
+            }
+
+            # 通过 WebSocket 发送数据
+            if self.websocket_server:
+                try:
+                    # 发送数据到 WebSocket 客户端
+                    await self.websocket_server.send_coordinates(data)
+                except Exception as e:
+                    print(f"Error sending data: {e}")
+            else:
+                print("WebSocket 服务器未初始化，无法发送数据")
+
+            # 每隔 `interval` 秒生成一次数据
+            await asyncio.sleep(interval)  # 使用异步 sleep，避免阻塞事件循环
 
     def start_loop_feedback(self):
         """开启循环反馈"""

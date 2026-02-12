@@ -387,3 +387,24 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
     .tastmotorid_select_row select:hover {
         border-color: #45a049; /* Slightly darker border on hover */
     }
+
+    .fb_display{
+        display:flex;
+        flex-flow: column nowrap;
+        padding:5px;
+    }
+
+    .fb_display_row{
+        display:flex;
+        flex-flow:row nowrap;
+        align-items: center;
+        font-size:12px;
+    }
+
+    .fb_display_row label{
+        font-size:12px;
+    }
+    .fb_realtime{
+        font-size:12px;
+        font-weight:bold;
+    }

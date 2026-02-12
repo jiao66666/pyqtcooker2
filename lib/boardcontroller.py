@@ -63,8 +63,8 @@ class BoardController:
        """初始化电机"""
        motor_nums = 5
        for i in range(motor_nums):
-            motor = MotorDriver(rs485_instance=self.comm, motor_id=i, board_type=self.board_type, name=f"{i}号电机")
-            self.motors.append(motor)   
+            motor = MotorDriver(rs485_instance=self.comm, motor_id=i, board_type=self.board_type, name=f"{i}号电机",websocket_server=self.websocket_server)
+            self.motors.append(motor) 
 
        self.motors[1].enable_all_motors()    
 
