@@ -63,7 +63,7 @@ class MotorDriver:
 
 
     def convert_pulses_to_position(self, pulses: int) -> float:       
-        """将脉冲数转换为实际位置"""
+        """将脉冲数转换为实际位置 128 细分，步距角1.8，每转200脉冲"""
         if self.motor_id in [1,2]:
             circles = abs( pulses / (128*200) ) 
         else:
@@ -116,15 +116,66 @@ class MotorDriver:
         else:
             pulses = -abs(pulses)    
          # 发送运行命令
+
+
+
         success, resp = self.com.run_task(
             "RUN", 
             [str(self.board_id), str(self.motor_id), str(pulses), str(anglespeed)]
         )
+
+
+        # 1. 执行命令
+        print("执行指令...")
+        command = "RUN"
+        params = [str(self.board_id), str(self.motor_id), str(pulses), str(anglespeed)]
+        success, response = self.com.execute_command(command, params)
+        
         if not success:
-            print(f"错误: {resp[0]}")
+            print(f"命令执行失败,{response}")
             return False
+
+        readparams = list(map(str, params[:2]))
+        timeout = 0.2
+
+        # 2. 创建一个线程来轮询电机状态
+        print("启动电机状态轮询...")
+        state_thread = threading.Thread(target=self.wait_for_motor_to_pause_advanced,args=(command, readparams,timeout,wait_for_completion,exit_pos))
+        state_thread.start()
+
+        # 3. 等待轮询线程完成
+        state_thread.join()  # 等待线程完成后继续执行
+        print("任务完成，执行下一步")
         return True        
     
+    #因为要用到电机的位置值 ，所以只能将方法放到电机类中。
+    def wait_for_motor_to_pause_advanced(self, command: str, params: List[str], check_interval: int = 0.2,wait_for_completion: bool = True,exit_pos:int = 0) -> bool:
+        """轮询电机状态，直到电机进入 PAUSING 状态"""
+        while True:
+            success, response = self.com.read_command("RunStatus", params)
+            if not success:
+                print("读取电机状态失败")
+                return False
+
+            status = response[1]  # 获取电机状态
+            print(f"当前电机状态: {status}")
+
+            if status == "PAUSEING":
+                print("电机暂停，任务结束")
+                return True
+            elif status == "RUNING" or status == "ORGING":
+                print("电机正在运行，等待中...")
+                if not wait_for_completion:
+                    if self.fb_position >= exit_pos:
+                        print(f"电机已达到提前退出位置{exit_pos}，任务结束")
+                        return True
+                time.sleep(check_interval)  # 每隔 check_interval 检查一次
+            elif status == "ERROR":
+                print("电机发生错误，停止轮询")
+                return False
+            else:
+                print(f"未知状态: {status}")
+                return False     
 
     def reset_one_motor(self)-> Tuple[bool, List[str]]:
         """复位单个电机"""

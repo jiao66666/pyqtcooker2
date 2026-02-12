@@ -314,6 +314,8 @@ class RS485Communication:
             else:
                 print(f"未知状态: {status}")
                 return False
+            
+           
 
     def run_task(self, command: str, params: List[str] = None) -> Tuple[bool, List[str]]:
         """执行任务，发送指令并轮询电机状态"""
