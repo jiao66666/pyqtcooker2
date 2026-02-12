@@ -784,52 +784,67 @@ function showTab(tabNumber, buttonElement) {
 
 
 
-    // 将 WebSocket 实例提升到全局作用域
-    let ws;
+// 将 WebSocket 实例提升到全局作用域
+let ws;
 
-    // WebSocket 初始化方法
-    function setupWebSocket(url) {
-        ws = new WebSocket(url);  // 创建 WebSocket 连接
+// WebSocket 初始化方法
+function setupWebSocket(url) {
+    ws = new WebSocket(url);  // 创建 WebSocket 连接
 
-        // 连接打开时的回调
-        ws.onopen = () => {
-            console.log('Connected to WebSocket server');
-        };
+    // 连接打开时的回调
+    ws.onopen = () => {
+        console.log('Connected to WebSocket server');
+    };
 
-        // 接收到消息时的回调, 显示消息
-        ws.onmessage = (event) => {
-            console.log("Received WebSocket message: ", event.data);
-            const data = JSON.parse(event.data);  // 解析收到的 JSON 数据
-            if (data.motor_id == 1){
+    // 接收到消息时的回调, 显示消息
+    ws.onmessage = async (event) => {
+        console.log("Received WebSocket message: ", event.data);
+        const data = JSON.parse(event.data);  // 解析收到的 JSON 数据
+
+        // 使用异步方式处理数据
+        await handleMotorData(data);
+    };
+
+    // 处理错误的回调
+    ws.onerror = (error) => {
+        console.error('WebSocket Error: ', error);
+    };
+
+    // 连接关闭时的回调
+    ws.onclose = () => {
+        console.log('WebSocket connection closed');
+    };
+}
+
+// 异步处理电机数据
+async function handleMotorData(data) {
+    return new Promise((resolve) => {
+        // 模拟耗时操作（例如数据库查询或数据处理）
+        setTimeout(() => {
+            if (data.motor_id == 1) {
                 document.getElementById('motor1_flip').textContent = `${data.position}`;  // 更新显示的随机数
-            }else if (data.motor_id == 2){
+            } else if (data.motor_id == 2) {
                 document.getElementById('motor1_level').textContent = `${data.position}`;  // 更新显示的随机数
-            }else if (data.motor_id == 3){
+            } else if (data.motor_id == 3) {
                 document.getElementById('motor2_flip').textContent = `${data.position}`;  // 更新显示的随机数
-            }else if (data.motor_id == 4){
+            } else if (data.motor_id == 4) {
                 document.getElementById('motor2_level').textContent = `${data.position}`;  // 更新显示的随机数
-            }else{
+            } else {
                 console.log("未知电机数据");
             }
-        };
 
-        // 处理错误的回调
-        ws.onerror = (error) => {
-            console.error('WebSocket Error: ', error);
-        };
+            // 确保更新完后再调用 resolve，避免 UI 阻塞
+            resolve();
+        }, 0);  // 0 毫秒延迟，确保 UI 更新在主线程排队
+    });
+}
 
-        // 连接关闭时的回调
-        ws.onclose = () => {
-            console.log('WebSocket connection closed');
-        };
+// 点击按钮启动 WebSocket 连接
+function startWebSocket() {
+    if (!ws || ws.readyState === WebSocket.CLOSED) {
+        setupWebSocket('ws://localhost:8765');  // 如果 WebSocket 没有连接，才启动连接
+        console.log('WebSocket connection established');
+    } else {
+        console.log('WebSocket is already connected.');
     }
-
-    // 点击按钮启动 WebSocket 连接
-    function startWebSocket() {
-        if (!ws || ws.readyState === WebSocket.CLOSED) {
-            setupWebSocket('ws://localhost:8765');  // 如果 WebSocket 没有连接，才启动连接
-            console.log('WebSocket connection established');
-        } else {
-            console.log('WebSocket is already connected.');
-        }
-    }
+}

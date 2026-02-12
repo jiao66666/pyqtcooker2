@@ -31,6 +31,7 @@ class WebSocketServer:
 
     async def send_coordinates(self, coordinates):
         """向所有客户端发送数据"""
+        print(f"准备发送数据到 WebSocket 客户端: {coordinates}")
         message = json.dumps(coordinates)
         for client in self.clients:
             await client.send(message)
