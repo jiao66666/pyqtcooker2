@@ -34,6 +34,15 @@ async def start_websocket_server():
     websocket_server = WebSocketServer()  # 创建 WebSocket 实例
     await websocket_server.start()  # 启动 WebSocket 服务器
 
+# 启动 WebSocket 服务器的线程
+def run_websocket_server():
+    # 创建新的事件循环，并设置为当前线程的事件循环
+    loop = asyncio.new_event_loop()
+    asyncio.set_event_loop(loop)
+
+    # 启动 WebSocket 服务器
+    loop.run_until_complete(start_websocket_server())
+
 
 # 渲染前端的 HTML 页面
 @app.route('/')
@@ -49,7 +58,10 @@ def connect():
     # 如果 WebSocket 服务器还没有启动，则启动它
     if websocket_server is None:
         print("WebSocket 服务器未启动，正在启动...")
-        websocket_server = asyncio.run(start_websocket_server())
+        # 使用 threading 启动 WebSocket 服务器
+        from threading import Thread
+        thread = Thread(target=run_websocket_server)
+        thread.start()
     else:
         print("WebSocket 服务器已经启动，无需重复启动")    
 
