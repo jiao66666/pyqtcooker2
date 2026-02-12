@@ -6,6 +6,8 @@ from typing import Optional, List, Tuple, Union
 import threading
 import time
 
+
+
 # 定义步进电机驱动类-5轴电机板
 class MotorDriver:
     def __init__(self, rs485_instance: RS485Communication, motor_id: int, board_type: int = BOARDTYPE_FIVE_AXIS,name: str = ""):
@@ -591,6 +593,4 @@ if __name__ == "__main__":
         print("   无法连接到串口")
 
     print("\n=== 测试完成 ===")    
-
-
 

@@ -4,7 +4,8 @@ from lib.boardcontroller import BoardController
 from lib.boardtype import *
 import time
 from lib.tools import is_dev_mode
-
+from lib.websocket_server import WebSocketServer
+import asyncio
 app = Flask(__name__)
 
 boardercontrollers = {}
@@ -21,6 +22,15 @@ else:
     stepmotor_port = 'COM6'
     feedermotor_port = 'COM7'
 
+
+# 保持 WebSocket 服务器的全局实例
+websocket_server = None
+
+# 启动 WebSocket 服务器并返回实例
+async def start_websocket_server():
+    websocket_server = WebSocketServer()
+    await websocket_server.start()  # 启动 WebSocket 服务器
+    return websocket_server
 # 渲染前端的 HTML 页面
 @app.route('/')
 def index():
@@ -29,6 +39,14 @@ def index():
 # API 路由
 @app.route('/connect', methods=['POST'])
 def connect():
+    """Flask 后端接口的 connect 方法"""
+    global websocket_server
+    
+    # 如果 WebSocket 服务器还没有启动，则启动它
+    if websocket_server is None:
+        websocket_server = asyncio.run(start_websocket_server())
+
+
     if not boardercontrollers.get("boardcontroller1"):
         boardercontrollers["boardcontroller1"] = BoardController(BOARDTYPE_FIVE_AXIS, board_name="五轴控制板")
 
