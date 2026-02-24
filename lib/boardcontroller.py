@@ -109,7 +109,7 @@ class BoardController:
             self.motors.append(motor) 
 
        self.motors[1].enable_all_motors()    
-       self.start_feedback_loop(0.5)
+       self.start_feedback_loop(0.2)
 
 
     def init_dcmotors(self):

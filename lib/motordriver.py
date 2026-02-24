@@ -29,96 +29,15 @@ class MotorDriver:
         self.current_position = 0.0  # 当前记忆位置 
         self.homed = False  # 是否已回零位
         self.fb_position = 0.0  # 来自电机实时反馈位置
-        self.is_loop_feedback = False  # 是否开启循环反馈
+       
         self.websocket_server = websocket_server  # 使用全局 WebSocket 服务器实例
-        self._moni_thread_started = False  # 防止重复启动线程
-
-        # 启动模拟数据反馈（会在实例创建时自动调用）
-        #self.start_moni_fb()
-
-    def start_moni_fb(self, interval: float = 5.0):
-        """启动单电机模拟数据反馈"""
-        if not self._moni_thread_started:
-            thread = threading.Thread(target=self._run_thread, args=(interval,))
-            thread.daemon = True
-            thread.start()
-            self._moni_thread_started = True
-            print(f"#### 启动循环反馈 motor_id={self.motor_id}")
-        else:
-            print("线程已启动，跳过")
-
-    def _run_thread(self, interval: float):
-        """线程中运行 asyncio 协程"""
-        loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(loop)
-        loop.run_until_complete(self._moni_loop(interval))
-
-    async def _moni_loop(self, interval: float):
-        """严格控制每条数据间隔 interval 秒"""
-        while True:
-            start_time = time.time()
-
-            # 生成一条数据
-            cur_pos = random.randint(0, 100)
-            data = {"motor_id": self.motor_id, "position": cur_pos}
-
-            # 发送
-            if self.websocket_server:
-                try:
-                    await self.websocket_server.send_coordinates(data)
-                except Exception as e:
-                    print(f"Error sending data: {e}")
-            else:
-                print("WebSocket 未初始化，无法发送数据")
-
-            # 计算 sleep 时间，保证严格按 interval
-            elapsed = time.time() - start_time
-            sleep_time = max(0, interval - elapsed)
-            await asyncio.sleep(sleep_time)
-
-            # debug 可选
-            print(f"motor_id={self.motor_id} 发出一条数据，sleep {sleep_time:.3f}s")
-
-    def start_loop_feedback(self):
-        """开启循环反馈"""
-        print("####开启循环反馈####")
-        if not self.com or not self.com.connected:
-            print("错误: 串口未连接，无法运行电机")
-            return False
-        self.update_fb_position()
-        self.is_loop_feedback = True
 
 
-    def update_fb_position(self):
-        """更新反馈位置"""
-        time_interval = 0.1
-        state_thread = threading.Thread(target=self.loop_read_pulses,args=(time_interval))
-        state_thread.start()
         
-        
-    def loop_read_pulses(self, interval: float = 1.0):
-        """循环读取电机反馈位置"""
-        print("####循环读取电机反馈位置####")
-        while True:
-            if not self.is_loop_feedback:
-                return True
-            success, res = self.readpulse(1)
-            if success:
-                print(f"电机{self.name} 反馈位置更新成功，当前反馈位置: {res}")
-                self.fb_position =  self.convert_pulses_to_position(int(res))
-            else:
-                print("错误: 无法获取电机反馈位置")
-            time.sleep(interval)  # 等待指定时间后再次读取    
-        
-    def stop_loop_feedback(self):
-        """停止循环反馈"""
-        self.is_loop_feedback = False
-
-
-    # 获取电机反馈值
-    def get_feedback(self):
+    # 获取电机反馈值 ,暂用于测试，实际 使用read_pulses方法获取脉冲数并转化 
+    def get_feedback(self):  
         cur_pos = random.randint(0, 100)
-        data = {"motor_id": self.motor_id, "position": cur_pos}
+        self.fb_position = cur_pos
         return cur_pos
 
     def convert_pulses_to_position(self, pulses: int) -> float:       
