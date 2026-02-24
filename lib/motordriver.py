@@ -36,9 +36,10 @@ class MotorDriver:
         
     # 获取电机反馈值 ,暂用于测试，实际 使用read_pulses方法获取脉冲数并转化 
     def get_feedback(self):  
+        #return random.randint(0, 100)
         success,cur_pos =self.readpulse(1)  
         if not success:
-            return None                                #random.randint(0, 100)
+            return None                              
         self.fb_position = cur_pos
         return self.fb_position
 
