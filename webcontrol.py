@@ -32,7 +32,7 @@ websocket_server = None
 async def start_websocket_server():
     global websocket_server
     websocket_server = WebSocketServer()  # 创建 WebSocket 实例
-    await websocket_server.start()  # 启动 WebSocket 服务器
+    await websocket_server.start_in_thread()  # 启动 WebSocket 服务器
 
 # 启动 WebSocket 服务器的线程
 def run_websocket_server():

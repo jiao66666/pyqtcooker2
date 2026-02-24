@@ -820,13 +820,12 @@ function setupWebSocket(url) {
         console.log('Connected to WebSocket server');
     };
 
-    // 接收到消息时的回调, 显示消息
-    ws.onmessage = async (event) => {
-        //console.log("Received WebSocket message: ", event.data);
-        const data = JSON.parse(event.data);  // 解析收到的 JSON 数据
 
-        // 使用异步方式处理数据
-        app.updateMotorData(data.motor_id, data.position);
+    ws.onmessage = (event) => {
+        const arr = JSON.parse(event.data); // [{motor_id, position}, ...]
+        for (const item of arr) {
+            app.updateMotorData(item.motor_id, item.position);
+        }
     };
 
     // 处理错误的回调

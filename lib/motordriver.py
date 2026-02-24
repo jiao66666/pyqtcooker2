@@ -31,53 +31,53 @@ class MotorDriver:
         self.fb_position = 0.0  # 来自电机实时反馈位置
         self.is_loop_feedback = False  # 是否开启循环反馈
         self.websocket_server = websocket_server  # 使用全局 WebSocket 服务器实例
+        self._moni_thread_started = False  # 防止重复启动线程
 
         # 启动模拟数据反馈（会在实例创建时自动调用）
-        self.start_moni_fb()
+        #self.start_moni_fb()
 
+    def start_moni_fb(self, interval: float = 5.0):
+        """启动单电机模拟数据反馈"""
+        if not self._moni_thread_started:
+            thread = threading.Thread(target=self._run_thread, args=(interval,))
+            thread.daemon = True
+            thread.start()
+            self._moni_thread_started = True
+            print(f"#### 启动循环反馈 motor_id={self.motor_id}")
+        else:
+            print("线程已启动，跳过")
 
-    def start_moni_fb(self):
-        """启动模拟数据反馈"""
-        print("#### 开启循环反馈 ####")
-        # 启动新的线程来运行 moni_data
-        state_thread = threading.Thread(target=self.run_moni_data, args=(1,))
-        state_thread.daemon = True  # 设置为守护线程，主线程退出时自动结束
-        state_thread.start()
+    def _run_thread(self, interval: float):
+        """线程中运行 asyncio 协程"""
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        loop.run_until_complete(self._moni_loop(interval))
 
-    def run_moni_data(self, interval: float):
-        """这个方法将在新线程中运行"""
-        loop = asyncio.new_event_loop()  # 创建新的事件循环
-        asyncio.set_event_loop(loop)  # 将事件循环设置为当前线程的事件循环
-        loop.run_until_complete(self.moni_data(interval))  # 在新的事件循环中运行异步任务
-
-    async def moni_data(self, interval: float = 3.0):
-        """模拟电机数据反馈，并定期发送到 WebSocket 客户端"""
+    async def _moni_loop(self, interval: float):
+        """严格控制每条数据间隔 interval 秒"""
         while True:
-            # 生成模拟数据
-            cur_pos = random.randint(0, 100)  # 模拟随机 y 坐标
+            start_time = time.time()
 
-            # 构建数据包
-            data = {
-                "motor_id": self.motor_id,
-                "position": cur_pos
-            }
+            # 生成一条数据
+            cur_pos = random.randint(0, 100)
+            data = {"motor_id": self.motor_id, "position": cur_pos}
 
-            # 通过 WebSocket 发送数据
+            # 发送
             if self.websocket_server:
                 try:
-                    # 发送数据到 WebSocket 客户端
-                    await asyncio.wait_for(
-                        self.websocket_server.send_coordinates(data),
-                        timeout=interval
-                    )
+                    await self.websocket_server.send_coordinates(data)
                 except Exception as e:
                     print(f"Error sending data: {e}")
             else:
-                print("WebSocket 服务器未初始化，无法发送数据")
+                print("WebSocket 未初始化，无法发送数据")
 
-            # 每隔 `interval` 秒生成一次数据
-            await asyncio.sleep(interval)
-            #print("exectute done!>>>>")
+            # 计算 sleep 时间，保证严格按 interval
+            elapsed = time.time() - start_time
+            sleep_time = max(0, interval - elapsed)
+            await asyncio.sleep(sleep_time)
+
+            # debug 可选
+            print(f"motor_id={self.motor_id} 发出一条数据，sleep {sleep_time:.3f}s")
 
     def start_loop_feedback(self):
         """开启循环反馈"""
@@ -114,6 +114,12 @@ class MotorDriver:
         """停止循环反馈"""
         self.is_loop_feedback = False
 
+
+    # 获取电机反馈值
+    def get_feedback(self):
+        cur_pos = random.randint(0, 100)
+        data = {"motor_id": self.motor_id, "position": cur_pos}
+        return cur_pos
 
     def convert_pulses_to_position(self, pulses: int) -> float:       
         """将脉冲数转换为实际位置 128 细分，步距角1.8，每转200脉冲"""

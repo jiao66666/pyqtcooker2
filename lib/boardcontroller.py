@@ -3,6 +3,10 @@ from lib.motordriver import MotorDriver
 from lib.dcmotordriver import DCMotorDriver
 from lib.boardtype import *
 from lib.websocket_server import WebSocketServer
+import threading
+import asyncio
+import time
+
 
 
 class BoardController:
@@ -17,8 +21,46 @@ class BoardController:
         self.connected = False
         self.motors= []
         self.websocket_server = WebSocketServer()
+        self._feedback_thread_started = False
 
-    
+    def start_feedback_loop(self, interval: float = 1.0):
+        """统一启动多电机反馈调度"""
+        if self._feedback_thread_started:
+            print("反馈调度线程已启动")
+            return
+        t = threading.Thread(target=self._run_feedback_loop, args=(interval,))
+        t.daemon = True
+        t.start()
+        self._feedback_thread_started = True
+
+    def _run_feedback_loop(self, interval: float):
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        loop.run_until_complete(self._feedback_loop(interval))
+
+    async def _feedback_loop(self, interval: float):
+        while True:
+            start_time = time.time()
+
+            payload = []
+            for motor in self.motors:
+                pos = motor.get_feedback()
+                payload.append({
+                    "motor_id": motor.motor_id,
+                    "position": pos
+                })
+
+            if self.websocket_server:
+                try:
+                    # 一次性发送所有电机状态
+                    self.websocket_server.send_coordinates_threadsafe(payload)
+                except Exception as e:
+                    print(f"发送数据异常: {e}")
+
+            # 控制“网络发送节奏”
+            elapsed = time.time() - start_time
+            sleep_time = max(0, interval - elapsed)
+            await asyncio.sleep(sleep_time)
     def connect(self, port: str, baudrate: int) -> bool:
         """连接主板"""
         print("####连接主板####")
@@ -67,6 +109,7 @@ class BoardController:
             self.motors.append(motor) 
 
        self.motors[1].enable_all_motors()    
+       self.start_feedback_loop(0.5)
 
 
     def init_dcmotors(self):
