@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>极傲炒菜机-网页控制端系统</title>
     <!-- 引入外部 CSS 文件 -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>  <!-- 引入 Vue -->
+
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/tab.css') }}">
 </head>
@@ -153,23 +155,23 @@
                 <button onclick="readPulse(1)">读取单电机已转脉冲</button>
              </div>
              <hr style="border: 1px solid #ccc; width: 100%; margin: 2px auto;">
-             <div class="fb_display">
+             <div class="fb_display" id="motor_status">
                 <span class="fb_realtime">实时反馈位置：</span>
                 <div class="fb_display_row">
                     <label>1号锅翻转电机:</label>
-                    <div id="motor1_flip">4.0</div>
+                    <div>${ motor1_flip }</div>
                 </div>
                 <div class="fb_display_row">
                     <label>1号锅水平电机:</label>
-                    <div id="motor1_level">4.0</div>
+                    <div>${ motor1_level }</div>
                 </div>
                 <div class="fb_display_row">
                     <label>2号锅翻转电机:</label>
-                    <div id="motor2_flip">4.0</div>
+                    <div>${ motor2_flip }</div>
                 </div>
                 <div class="fb_display_row">
                     <label>2号锅水平电机:</label>
-                    <div id="motor2_level">4.0</div>
+                    <div>${ motor2_level }</div>
                 </div>
              </div>
         </div>

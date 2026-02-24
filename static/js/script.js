@@ -782,7 +782,31 @@ function showTab(tabNumber, buttonElement) {
   buttonElement.classList.add('active');
 }
 
-
+const app = new Vue({
+    el: '#motor_status',
+    delimiters: ['${', '}'],
+    data: {
+        motor1_flip: 0.0,
+        motor1_level: 0.0,
+        motor2_flip: 0.0,
+        motor2_level: 0.0
+    },
+    methods: {
+        updateMotorData(motor_id, position) {
+            // 根据 motor_id 更新对应电机的数据
+            //console.log("更新电机数据, motor_id: ", motor_id, " position: ", position);
+            if (motor_id == 1) {
+                this.motor1_flip = position;
+            } else if (motor_id == 2) {
+                this.motor1_level = position;
+            } else if (motor_id == 3) {
+                this.motor2_flip = position;
+            } else if (motor_id == 4) {
+                this.motor2_level = position;
+            }
+        }
+    }
+});
 
 // 将 WebSocket 实例提升到全局作用域
 let ws;
@@ -798,11 +822,11 @@ function setupWebSocket(url) {
 
     // 接收到消息时的回调, 显示消息
     ws.onmessage = async (event) => {
-        console.log("Received WebSocket message: ", event.data);
+        //console.log("Received WebSocket message: ", event.data);
         const data = JSON.parse(event.data);  // 解析收到的 JSON 数据
 
         // 使用异步方式处理数据
-        await handleMotorData(data);
+        app.updateMotorData(data.motor_id, data.position);
     };
 
     // 处理错误的回调
@@ -816,28 +840,7 @@ function setupWebSocket(url) {
     };
 }
 
-// 异步处理电机数据
-async function handleMotorData(data) {
-    return new Promise((resolve) => {
-        // 模拟耗时操作（例如数据库查询或数据处理）
-        setTimeout(() => {
-            if (data.motor_id == 1) {
-                document.getElementById('motor1_flip').textContent = `${data.position}`;  // 更新显示的随机数
-            } else if (data.motor_id == 2) {
-                document.getElementById('motor1_level').textContent = `${data.position}`;  // 更新显示的随机数
-            } else if (data.motor_id == 3) {
-                document.getElementById('motor2_flip').textContent = `${data.position}`;  // 更新显示的随机数
-            } else if (data.motor_id == 4) {
-                document.getElementById('motor2_level').textContent = `${data.position}`;  // 更新显示的随机数
-            } else {
-                console.log("未知电机数据");
-            }
 
-            // 确保更新完后再调用 resolve，避免 UI 阻塞
-            resolve();
-        }, 0);  // 0 毫秒延迟，确保 UI 更新在主线程排队
-    });
-}
 
 // 点击按钮启动 WebSocket 连接
 function startWebSocket() {

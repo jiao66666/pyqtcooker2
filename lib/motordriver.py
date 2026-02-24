@@ -50,7 +50,7 @@ class MotorDriver:
         asyncio.set_event_loop(loop)  # 将事件循环设置为当前线程的事件循环
         loop.run_until_complete(self.moni_data(interval))  # 在新的事件循环中运行异步任务
 
-    async def moni_data(self, interval: float = 1.0):
+    async def moni_data(self, interval: float = 3.0):
         """模拟电机数据反馈，并定期发送到 WebSocket 客户端"""
         while True:
             # 生成模拟数据
@@ -66,14 +66,18 @@ class MotorDriver:
             if self.websocket_server:
                 try:
                     # 发送数据到 WebSocket 客户端
-                    await self.websocket_server.send_coordinates(data)
+                    await asyncio.wait_for(
+                        self.websocket_server.send_coordinates(data),
+                        timeout=interval
+                    )
                 except Exception as e:
                     print(f"Error sending data: {e}")
             else:
                 print("WebSocket 服务器未初始化，无法发送数据")
 
             # 每隔 `interval` 秒生成一次数据
-            await asyncio.sleep(interval)  # 使用异步 sleep，避免阻塞事件循环
+            await asyncio.sleep(interval)
+            #print("exectute done!>>>>")
 
     def start_loop_feedback(self):
         """开启循环反馈"""
