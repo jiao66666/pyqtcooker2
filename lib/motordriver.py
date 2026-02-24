@@ -444,7 +444,9 @@ class MotorDriver:
         if not success:
             print(f"错误: {resp}")
             return False,[f"错误: {resp}"]
-        return True,[f"反馈成功，返回数据为:{resp[1]}",resp[1]]        
+        
+        circles = round(self.convert_pulses_to_position(int(resp[1])),2)
+        return True,[f"反馈成功，返回数据脉冲数为:{resp[1]}，圈数值为:{circles}",circles]        
 
  
     def readmotor(self):
