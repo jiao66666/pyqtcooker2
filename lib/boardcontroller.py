@@ -45,10 +45,11 @@ class BoardController:
             payload = []
             for motor in self.motors:
                 pos = motor.get_feedback()
-                payload.append({
-                    "motor_id": motor.motor_id,
-                    "position": pos
-                })
+                if pos is not None:
+                    payload.append({
+                        "motor_id": motor.motor_id,
+                        "position": pos
+                    })
 
             if self.websocket_server:
                 try:
@@ -109,7 +110,7 @@ class BoardController:
             self.motors.append(motor) 
 
        self.motors[1].enable_all_motors()    
-      #self.start_feedback_loop(0.2)
+       self.start_feedback_loop(0.2)
 
 
     def init_dcmotors(self):

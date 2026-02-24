@@ -36,9 +36,11 @@ class MotorDriver:
         
     # 获取电机反馈值 ,暂用于测试，实际 使用read_pulses方法获取脉冲数并转化 
     def get_feedback(self):  
-        cur_pos = random.randint(0, 100)
+        success,cur_pos =self.readpulse(1)  
+        if not success:
+            return None                                #random.randint(0, 100)
         self.fb_position = cur_pos
-        return cur_pos
+        return self.fb_position
 
     def convert_pulses_to_position(self, pulses: int) -> float:       
         """将脉冲数转换为实际位置 128 细分，步距角1.8，每转200脉冲"""
