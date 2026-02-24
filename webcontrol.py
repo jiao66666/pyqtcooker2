@@ -561,6 +561,7 @@ def readpulse():
         return jsonify({"status": "error","message": "电机未归位，无法操作,请先复位"})    
     
     #runtask参数：[圈数，速度，方向]
+    print(f"正在读取已转脉冲数，当前motorid:{motorid}，mode:{mode}")
     success,resp = boardercontrollers["boardcontroller1"].motors[motorid].readpulse(mode) 
 
     if success :

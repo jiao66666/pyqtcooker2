@@ -444,7 +444,7 @@ class MotorDriver:
         if not success:
             print(f"错误: {resp}")
             return False,[f"错误: {resp}"]
-        return True,resp        
+        return True,[f"反馈成功，返回数据为:{resp[1]}",resp[1]]        
 
  
     def readmotor(self):
