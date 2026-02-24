@@ -43,13 +43,17 @@ class BoardController:
             start_time = time.time()
 
             payload = []
-            for motor in self.motors:
-                pos = motor.get_feedback()
-                if pos is not None:
-                    payload.append({
-                        "motor_id": motor.motor_id,
-                        "position": pos
-                    })
+            pos_all = self.motors[0].get_feedback_all()
+            print(f"pos_all value is {pos_all}")
+            if pos_all is None:
+                print("获取反馈失败")
+                return True
+            for idx,pos in enumerate(pos_all):
+                print(f"电机{idx}反馈值:{pos}")
+                payload.append({
+                    "motor_id": self.motors[idx].motor_id,
+                    "position": pos
+                })
 
             if self.websocket_server:
                 try:

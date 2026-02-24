@@ -7,7 +7,6 @@ import threading
 import time
 from lib.websocket_server import WebSocketServer
 import random
-import asyncio
 
 
 
@@ -34,15 +33,50 @@ class MotorDriver:
 
 
         
-    # 获取电机反馈值 ,暂用于测试，实际 使用read_pulses方法获取脉冲数并转化 
+    # 获取单电机反馈值 
     def get_feedback(self):  
         #return random.randint(0, 100)
-        success,cur_pos =self.readpulse(1)  
+        success,resp =self.readpulse(1)  
         if not success:
-            return None                              
+            return None              
+        cur_pos = round(self.convert_pulses_to_position(int(resp)),2)                
         self.fb_position = cur_pos
         return self.fb_position
+    
+    # 获取所有电机反馈值
+    def get_feedback_all(self):
+        all_pos =  self.generate_signed_numbers()
+        items = all_pos.split(",")
+        if len(items) != 5:
+            return None
+        # 转成整数
+        return [self.convert_pulses_to_position(int(x)) for x in items]       
+        success,all_pos =self.readpulse(0)  
+        if not success:
+            return None      
 
+            # 按逗号拆分
+        items = all_pos.split(",")
+        if len(items) != 5:
+            return None
+        # 转成整数
+        return [self.convert_pulses_to_position(x) for x in items]                        
+
+    def generate_signed_numbers(self,count=5, min_val=10000, max_val=200000):
+        """
+        随机生成指定数量的带符号整数字符串，逗号分隔
+        :param count: 元素数量
+        :param min_val: 数值最小值（绝对值）
+        :param max_val: 数值最大值（绝对值）
+        :return: 字符串，如 "+14280,-15803,+8000,+12000,-5000"
+        """
+        numbers = []
+        for _ in range(count):
+            val = random.randint(min_val, max_val)
+            sign = "+" if random.random() < 0.5 else "-"
+            numbers.append(f"{sign}{val}")
+        return ", ".join(numbers)
+    
     def convert_pulses_to_position(self, pulses: int) -> float:       
         """将脉冲数转换为实际位置 128 细分，步距角1.8，每转200脉冲"""
         if self.motor_id in [1,2]:
@@ -448,8 +482,7 @@ class MotorDriver:
             print(f"错误: {resp}")
             return False,[f"错误: {resp}"]
         
-        circles = round(self.convert_pulses_to_position(int(resp[1])),2)
-        return True,[f"反馈成功，返回数据脉冲数为:{resp[1]}，圈数值为:{circles}",circles]        
+        return True,[f"反馈成功，返回数据为:{resp[1]}",resp[1]]        
 
  
     def readmotor(self):
