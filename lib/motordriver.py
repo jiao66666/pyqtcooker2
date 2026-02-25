@@ -88,7 +88,7 @@ class MotorDriver:
         return round(circles,2)    
 
     #任务执行高级模式，可提前跳出当前电机任务，同步执行后面的电机任务，适用于多个电机需要同时运动的情况,如果wait_for_completion = false ,必须指定提前退出位置 。 exit_pos需要<target
-    def gotask_advanced(self, target: float, anglespeed: int, wait_for_completion: bool = True,exit_pos:int = 0):
+    def gotask_advanced(self, target: float, anglespeed: int, wait_for_completion: bool = True,exit_pos:float = 0.0):
         """单次运转电机"""  ##绝对运动
         print("####运行电机高级任务####")
         if not self.com or not self.com.connected:
@@ -165,7 +165,7 @@ class MotorDriver:
         return True        
     
     #因为要用到电机的位置值 ，所以只能将方法放到电机类中。
-    def wait_for_motor_to_pause_advanced(self, command: str, params: List[str], check_interval: int = 0.2,wait_for_completion: bool = True,exit_pos:int = 0) -> bool:
+    def wait_for_motor_to_pause_advanced(self, command: str, params: List[str], check_interval: int = 0.2,wait_for_completion: bool = True,exit_pos:float = 0.0) -> bool:
         """轮询电机状态，直到电机进入 PAUSING 状态"""
         while True:
             success, response = self.com.read_command("RunStatus", params)
@@ -181,8 +181,7 @@ class MotorDriver:
                 return True
             elif status == "RUNING" or status == "ORGING":
                 print("电机正在运行，等待中...")
-                if not wait_for_completion:
-                    if self.fb_position >= exit_pos:
+                if not wait_for_completion and self.fb_position >= exit_pos:
                         print(f"电机已达到提前退出位置{exit_pos}，任务结束")
                         return True
                 time.sleep(check_interval)  # 每隔 check_interval 检查一次
