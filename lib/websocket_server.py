@@ -40,13 +40,13 @@ class WebSocketServer:
 
     # ================= 启动 WebSocket 服务器 =================
 
-    async def _start_async(self, host="localhost", port=8765):
+    async def _start_async(self, host="0.0.0.0", port=8765):
         self.loop = asyncio.get_running_loop()
         self.server = await websockets.serve(self.handler, host, port)
         print(f"WebSocket server started at ws://{host}:{port}")
         await self.server.wait_closed()
 
-    def start_in_thread(self, host="localhost", port=8765):
+    def start_in_thread(self, host="0.0.0.0", port=8765):
         """
         在独立线程启动 WebSocket 事件循环
         """

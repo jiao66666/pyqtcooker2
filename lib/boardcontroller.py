@@ -64,6 +64,7 @@ class BoardController:
             if self.websocket_server:
                 try:
                     # 一次性发送所有电机状态
+                    #print("发送数据给前端>>>>>>>>>>>")
                     self.websocket_server.send_coordinates_threadsafe(payload)
                 except Exception as e:
                     print(f"发送数据异常: {e}")

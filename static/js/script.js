@@ -844,7 +844,7 @@ function setupWebSocket(url) {
 // 点击按钮启动 WebSocket 连接
 function startWebSocket() {
     if (!ws || ws.readyState === WebSocket.CLOSED) {
-        setupWebSocket('ws://localhost:8765');  // 如果 WebSocket 没有连接，才启动连接
+        setupWebSocket('ws://192.168.31.188:8765');  // 如果 WebSocket 没有连接，才启动连接
         console.log('WebSocket connection established');
     } else {
         console.log('WebSocket is already connected.');
