@@ -133,14 +133,6 @@ class MotorDriver:
             pulses = -abs(pulses)    
          # 发送运行命令
 
-
-
-        success, resp = self.com.run_task(
-            "RUN", 
-            [str(self.board_id), str(self.motor_id), str(pulses), str(anglespeed)]
-        )
-
-
         # 1. 执行命令
         print("执行指令...")
         command = "RUN"
