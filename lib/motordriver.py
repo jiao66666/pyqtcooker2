@@ -45,22 +45,23 @@ class MotorDriver:
     
     # 获取所有电机反馈值
     def get_feedback_all(self):
+        """
         all_pos =  self.generate_signed_numbers()
         items = all_pos.split(",")
         if len(items) != 5:
             return None
         # 转成整数
         return [self.convert_pulses_to_position(int(x)) for x in items]       
+        """
         success,all_pos =self.readpulse(0)  
         if not success:
             return None      
-
             # 按逗号拆分
         items = all_pos.split(",")
         if len(items) != 5:
             return None
         # 转成整数
-        return [self.convert_pulses_to_position(x) for x in items]                        
+        return [self.convert_pulses_to_position(int(x)) for x in items]                        
 
     def generate_signed_numbers(self,count=5, min_val=10000, max_val=200000):
         """
@@ -84,7 +85,7 @@ class MotorDriver:
         else:
             circles = pulses / (128*200) 
 
-        return circles    
+        return round(circles,2)    
 
     #任务执行高级模式，可提前跳出当前电机任务，同步执行后面的电机任务，适用于多个电机需要同时运动的情况,如果wait_for_completion = false ,必须指定提前退出位置 。 exit_pos需要<target
     def gotask_advanced(self, target: float, anglespeed: int, wait_for_completion: bool = True,exit_pos:int = 0):
