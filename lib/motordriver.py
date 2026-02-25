@@ -64,8 +64,7 @@ class MotorDriver:
         if len(items) != 5:
             return None
         # 转成整数
-        return [self.convert_pulses_to_position(int(x)) for x in items]   
-
+        return [self.convert_pulses_to_position(int(x), int(idx)) for idx, x in enumerate(items)]
     def updateFb_position(self, pos: float):
         self.fb_position = pos
 
@@ -85,9 +84,9 @@ class MotorDriver:
             numbers.append(f"{sign}{val}")
         return ", ".join(numbers)
     
-    def convert_pulses_to_position(self, pulses: int) -> float:       
+    def convert_pulses_to_position(self, pulses: int, motor_id: int) -> float:       
         """将脉冲数转换为实际位置 128 细分，步距角1.8，每转200脉冲"""
-        if self.motor_id in [1,2]:
+        if motor_id in [1,2]:
             circles = abs( pulses / (128*200) ) 
         else:
             circles = pulses / (128*200) 
