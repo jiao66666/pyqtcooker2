@@ -57,7 +57,8 @@ class MotorDriver:
         if not success:
             return None      
             # 按逗号拆分
-        items = all_pos.split(",")
+        #print(f"all_pos string is : {all_pos[1]}")    
+        items = all_pos[1].split(",")
         if len(items) != 5:
             return None
         # 转成整数
