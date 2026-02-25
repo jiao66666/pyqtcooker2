@@ -32,17 +32,8 @@ class MotorDriver:
         self.websocket_server = websocket_server  # 使用全局 WebSocket 服务器实例
 
 
-        
-    # 获取单电机反馈值 
-    def get_feedback(self):  
-        #return random.randint(0, 100)
-        success,resp =self.readpulse(1)  
-        if not success:
-            return None              
-        cur_pos = round(self.convert_pulses_to_position(int(resp)),2)                
-        self.fb_position = cur_pos
-        return self.fb_position
-    
+
+
     # 获取所有电机反馈值
     def get_feedback_all(self):
         """
