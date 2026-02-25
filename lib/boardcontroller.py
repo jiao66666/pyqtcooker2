@@ -22,9 +22,14 @@ class BoardController:
         self.motors= []
         self.websocket_server = WebSocketServer()
         self._feedback_thread_started = False
+        self._stop_feedback_loop = False  # 停止标志
+
 
     def start_feedback_loop(self, interval: float = 1.0):
         """统一启动多电机反馈调度"""
+        if self._stop_feedback_loop :
+            self._stop_feedback_loop = False
+
         if self._feedback_thread_started:
             print("反馈调度线程已启动")
             return
@@ -39,17 +44,17 @@ class BoardController:
         loop.run_until_complete(self._feedback_loop(interval))
 
     async def _feedback_loop(self, interval: float):
-        while True:
+        while not self._stop_feedback_loop:  # 检查停止标志:
             start_time = time.time()
 
             payload = []
             pos_all = self.motors[0].get_feedback_all()
-            print(f"pos_all value is {pos_all}")
+            #print(f"pos_all value is {pos_all}")
             if pos_all is None:
                 print("获取反馈失败")
                 return True
             for idx,pos in enumerate(pos_all):
-                print(f"电机{idx}反馈值:{pos}")
+                #print(f"电机{idx}反馈值:{pos}")
                 payload.append({
                     "motor_id": self.motors[idx].motor_id,
                     "position": pos
@@ -101,6 +106,9 @@ class BoardController:
             self.comm = None
             self.connected = False
             self.motors = []
+            self._stop_feedback_loop = True
+            self._feedback_thread_started = False
+
             print("断开连接成功")
             return True
         else:
