@@ -61,7 +61,11 @@ class MotorDriver:
         if len(items) != 5:
             return None
         # 转成整数
-        return [self.convert_pulses_to_position(int(x)) for x in items]                        
+        return [self.convert_pulses_to_position(int(x)) for x in items]   
+
+    def updateFb_position(self, pos: float):
+        self.fb_position = pos
+
 
     def generate_signed_numbers(self,count=5, min_val=10000, max_val=200000):
         """

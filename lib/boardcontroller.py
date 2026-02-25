@@ -52,13 +52,14 @@ class BoardController:
             #print(f"pos_all value is {pos_all}")
             if pos_all is None:
                 print("获取反馈失败")
-                return True
+                continue
             for idx,pos in enumerate(pos_all):
                 #print(f"电机{idx}反馈值:{pos}")
                 payload.append({
                     "motor_id": self.motors[idx].motor_id,
                     "position": pos
                 })
+                self.motors[idx].updateFb_position(pos)
 
             if self.websocket_server:
                 try:
