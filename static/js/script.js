@@ -808,6 +808,32 @@ const app = new Vue({
     }
 });
 
+
+// 第二个 Vue 实例
+const app2 = new Vue({
+    el: '#motor_status2',
+    delimiters: ['${', '}'],
+    data: {
+        motor1_flip: 0.0,
+        motor1_level: 0.0,
+        motor2_flip: 0.0,
+        motor2_level: 0.0
+    },
+    methods: {
+        updateMotorData(motor_id, position) {
+            if (motor_id == 1) {
+                this.motor1_flip = position;
+            } else if (motor_id == 2) {
+                this.motor1_level = position;
+            } else if (motor_id == 3) {
+                this.motor2_flip = position;
+            } else if (motor_id == 4) {
+                this.motor2_level = position;
+            }
+        }
+    }
+});
+
 // 将 WebSocket 实例提升到全局作用域
 let ws;
 
@@ -825,6 +851,7 @@ function setupWebSocket(url) {
         const arr = JSON.parse(event.data); // [{motor_id, position}, ...]
         for (const item of arr) {
             app.updateMotorData(item.motor_id, item.position);
+            app2.updateMotorData(item.motor_id, item.position);
         }
     };
 

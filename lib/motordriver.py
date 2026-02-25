@@ -45,14 +45,14 @@ class MotorDriver:
     
     # 获取所有电机反馈值
     def get_feedback_all(self):
-        """ 
+        """
         all_pos =  self.generate_signed_numbers()
         print(f"all_pos string is : {all_pos}")
         items = all_pos.split(",")
         if len(items) != 5:
             return None
         # 转成整数
-        return [self.convert_pulses_to_position(int(x)) for x in items]       
+        return [self.convert_pulses_to_position(int(x), int(idx)) for idx, x in enumerate(items)]
         """
         
         success,all_pos =self.readpulse(0)  
