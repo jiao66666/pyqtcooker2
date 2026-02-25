@@ -670,7 +670,7 @@ def testmultiaxis():
         flip_speed = 360    
 
 
-    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced(5.05,flip_speed,False,5.0)  
+    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced(5.05,flip_speed,False,4.4)  
     success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask(4.20,move_speed)
     
 
