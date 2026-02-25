@@ -6,6 +6,8 @@ from lib.websocket_server import WebSocketServer
 import threading
 import asyncio
 import time
+from lib.tools import is_dev_mode
+
 
 
 
@@ -124,7 +126,8 @@ class BoardController:
             self.motors.append(motor) 
 
        self.motors[1].enable_all_motors()    
-       self.start_feedback_loop(0.2)
+       if not is_dev_mode():
+           self.start_feedback_loop(0.2)
 
 
     def init_dcmotors(self):
