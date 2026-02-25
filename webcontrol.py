@@ -640,6 +640,7 @@ def testmultiaxis():
     data = request.get_json()
     speed_level = data.get('speed_level') 
     speed_flip = data.get('speed_flip') 
+    exit_pos = data.get('exit_pos')
     success = False
     if not boardercontrollers.get("boardcontroller1"):
         print("找不到主板控制器，无法操作")
@@ -670,7 +671,7 @@ def testmultiaxis():
         flip_speed = 360    
 
 
-    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced(5.05,flip_speed,False,4.4)  
+    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced(5.05,flip_speed,False,float(exit_pos))  
     success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask(4.20,move_speed)
     
 
@@ -690,6 +691,8 @@ def testmultiaxis2():
     data = request.get_json()
     speed_level = data.get('speed_level') 
     speed_flip = data.get('speed_flip') 
+    exit_pos = data.get('exit_pos')
+
     success = False
     if not boardercontrollers.get("boardcontroller1"):
         print("找不到主板控制器，无法操作")
@@ -719,7 +722,7 @@ def testmultiaxis2():
     elif flip_speed < 360:
         flip_speed = 360    
 
-    success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask_advanced(0,move_speed,False,1)
+    success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask_advanced(0,move_speed,False,float(exit_pos))
     success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask(0,flip_speed)  
     
     

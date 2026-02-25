@@ -136,6 +136,10 @@
                 <label for="circles" class="input_tag">目标运行位置:</label>
                 <input class="input-classic" type="number" id="circlevalabs" placeholder="请输入目标的绝对位置数值" />
             </div>
+            <div class="input_circle">
+                <label for="exitposabs" class="input_tag">提前退出位置:</label>
+                <input class="input-classic" type="number" id="exitposabs" placeholder="请输入提前退出位置数值" />
+            </div>
             <div class="function_container">
                 <button onclick="runMotorabs(1,'left')">1号锅水平绝对移动</button>
                 <button onclick="runMotorabs(2,'left')">2号锅水平绝对移动</button>
@@ -151,8 +155,8 @@
             </div>
              <hr style="border: 1px solid #ccc; width: 100%; margin: 2px auto;">
              <div class="function_container">
-                <button onclick="readPulse(0)">读取全部已转脉冲</button>
-                <button onclick="readPulse(1)">读取单电机已转脉冲</button>
+                <!--<button onclick="readPulse(0)">读取全部已转脉冲</button>
+                <button onclick="readPulse(1)">读取单电机已转脉冲</button>-->
                 <button onclick="testMultiAxis()">测试多轴同步运动1</button>
                 <button onclick="testMultiAxis2()">测试多轴同步运动2</button>
              </div>

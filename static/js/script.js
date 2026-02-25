@@ -746,6 +746,17 @@ function testMultiAxis() {
 
       console.log("选中水平移动速度值是:", speed_level.value);
       console.log("选中翻转移动速度值是:", speed_flip.value);
+
+
+        var exitpos = document.getElementById("exitposabs");
+        console.log("退出数值是:", exitpos.value);
+
+        if(exitpos.value == "" || isNaN(exitpos.value)){
+            alert("请输入有效的退出位置值！");
+            return;
+        }
+
+
      // 获取 select 元素
         fetch('/testmultiaxis', {
             method: 'POST', 
@@ -755,6 +766,7 @@ function testMultiAxis() {
             body: JSON.stringify({
                 speed_level: speed_level.value,  
                 speed_flip: speed_flip.value,  
+                exit_pos:exitpos.value
             })
         })
         .then(response => response.json())
@@ -783,6 +795,17 @@ function testMultiAxis2() {
 
       console.log("选中水平移动速度值是:", speed_level.value);
       console.log("选中翻转移动速度值是:", speed_flip.value);
+
+        var exitpos = document.getElementById("exitposabs");
+        console.log("退出值是:", exitpos.value);
+
+        if(exitpos.value == "" || isNaN(exitpos.value)){
+            alert("请输入有效的退出位置值！");
+            return;
+        }
+
+
+
      // 获取 select 元素
         fetch('/testmultiaxis2', {
             method: 'POST', 
@@ -792,6 +815,7 @@ function testMultiAxis2() {
             body: JSON.stringify({
                 speed_level: speed_level.value,  
                 speed_flip: speed_flip.value,  
+                exit_pos:exitpos.value
             })
         })
         .then(response => response.json())
