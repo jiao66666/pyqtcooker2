@@ -602,15 +602,15 @@ def testmultitaskabs():
     elif flip_speed < 360:
         flip_speed = 360    
 
-
-    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask(5.05,flip_speed)  
+    # exit_pos flip 2.5 move 3 
+    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced(5.05,flip_speed,False,2.5)  
     success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask(4.20,move_speed)
     time.sleep(1)    
-    success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask(0,move_speed)
+    success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask_advanced(0,move_speed,False,3)
     success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask(0,flip_speed)
     time.sleep(1)
 
-    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask(5.05,flip_speed)
+    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced(5.05,flip_speed,False,2.5)
     success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask(4.20,move_speed)
    
     success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask(20.2,flip_speed)
@@ -619,7 +619,7 @@ def testmultitaskabs():
     time.sleep(1)
     success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask(5.05,flip_speed)
 
-    success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask(0,move_speed)
+    success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask_advanced(0,move_speed,False,3)
     success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask(0,flip_speed)
 
     print("**************************************1号锅测试水平翻转任务结束******************************")
