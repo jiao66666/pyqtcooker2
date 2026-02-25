@@ -684,6 +684,58 @@ def testmultiaxis():
         return jsonify({"status": "fail","message": "测试失败!"})  
 
 
+@app.route('/testmultiaxis2', methods=['POST'])   #绝对位置任务测试
+def testmultiaxis2():
+    print("1号多轴同步运动任务开始")
+    data = request.get_json()
+    speed_level = data.get('speed_level') 
+    speed_flip = data.get('speed_flip') 
+    success = False
+    if not boardercontrollers.get("boardcontroller1"):
+        print("找不到主板控制器，无法操作")
+        return jsonify({"status": "error","message": "找不到主板控制器，无法操作,请先连接串口"})
+    success = False
+    if not boardercontrollers.get("boardcontroller1"):
+        print("找不到主板控制器，无法操作")
+        return jsonify({"status": "error","message": "找不到主板控制器，无法操作,请先连接串口"})
+    
+    if not boardercontrollers["boardcontroller1"].motors[1].homed or not boardercontrollers["boardcontroller1"].motors[2].homed:
+        print("电机未归位，无法操作")
+        return jsonify({"status": "error","message": "电机未归位，无法操作,请先复位"})
+
+    #runtask参数：[圈数，速度，方向]
+    print("**************************************1号多轴同步运动任务2开始开始******************************")
+
+    move_speed = int(speed_level)   #2160  tested
+    flip_speed = int(speed_flip)   #2520  tested 
+
+    if move_speed > 3600:   #  10圈/秒  已经非常快了，超过这个速度可能会有安全隐患，限制最高速度为3600
+        move_speed = 3600
+    elif move_speed < 360:
+        move_speed = 360
+
+    if flip_speed > 3600:   
+        flip_speed = 3600
+    elif flip_speed < 360:
+        flip_speed = 360    
+
+    success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask_advanced(0,move_speed,False,1)
+    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask(0,flip_speed)  
+    
+    
+
+    print("**************************************1号多轴同步运动任务2开始任务结束******************************")
+
+    if success :
+        print("测试成功!")
+        return jsonify({"status": "success","message": "测试成功!"})
+    else:
+        print("测试失败!")
+        return jsonify({"status": "fail","message": "测试失败!"})  
+
+
+
+
 
 
 @app.route('/testmultitaskabs2', methods=['POST'])   #绝对位置任务测试
