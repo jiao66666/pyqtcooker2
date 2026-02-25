@@ -87,7 +87,10 @@ class MotorDriver:
     def convert_pulses_to_position(self, pulses: int, motor_id: int) -> float:       
         """将脉冲数转换为实际位置 128 细分，步距角1.8，每转200脉冲"""
         if motor_id in [1,2]:
-            circles = abs( pulses / (128*200) ) 
+            if pulses < 0:
+               circles = abs( pulses / (128*200) )
+            else:
+               circles = -abs( pulses / (128*200))
         else:
             circles = pulses / (128*200) 
 
