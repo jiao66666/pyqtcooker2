@@ -148,7 +148,7 @@ class MotorDriver:
 
         # 2. 创建一个线程来轮询电机状态
         print("启动电机状态轮询...")
-        state_thread = threading.Thread(target=self.wait_for_motor_to_pause_advanced,args=(command, readparams,timeout,wait_for_completion,exit_pos))
+        state_thread = threading.Thread(target=self.wait_for_motor_to_pause_advanced,args=(command, readparams,timeout,wait_for_completion,exit_pos,target))
         state_thread.start()
 
         # 3. 等待轮询线程完成
@@ -157,7 +157,7 @@ class MotorDriver:
         return True        
     
     #因为要用到电机的位置值 ，所以只能将方法放到电机类中。
-    def wait_for_motor_to_pause_advanced(self, command: str, params: List[str], check_interval: int = 0.2,wait_for_completion: bool = True,exit_pos:float = 0.0) -> bool:
+    def wait_for_motor_to_pause_advanced(self, command: str, params: List[str], check_interval: int = 0.2,wait_for_completion: bool = True,exit_pos:float = 0.0,target:float = 0.0) -> bool:
         """轮询电机状态，直到电机进入 PAUSING 状态"""
         while True:
             success, response = self.com.read_command("RunStatus", params)
@@ -173,9 +173,10 @@ class MotorDriver:
                 return True
             elif status == "RUNING" or status == "ORGING":
                 print("电机正在运行，等待中...")
-                if not wait_for_completion and self.fb_position >= exit_pos:
-                        print(f"电机已达到提前退出位置{exit_pos}，任务结束")
-                        return True
+                if not wait_for_completion:
+                        if (target > exit_pos and self.fb_position >= exit_pos) or (target < exit_pos and self.fb_position <= exit_pos):
+                            print(f"电机已达到提前退出位置{exit_pos}，任务结束")
+                            return True
                 time.sleep(check_interval)  # 每隔 check_interval 检查一次
             elif status == "ERROR":
                 print("电机发生错误，停止轮询")
