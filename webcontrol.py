@@ -556,7 +556,7 @@ def readpulse():
         print("找不到主板控制器，无法操作")
         return jsonify({"status": "error","message": "找不到主板控制器，无法操作,请先连接串口"})
     
-    if not boardercontrollers["boardcontroller1"].motors[1].homed or not boardercontrollers["boardcontroller1"].motors[2].homed:
+    if not boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].homed or not boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].homed:
         print("电机未归位，无法操作")
         return jsonify({"status": "error","message": "电机未归位，无法操作,请先复位"})    
     
@@ -702,7 +702,7 @@ def testmultiaxis2():
         print("找不到主板控制器，无法操作")
         return jsonify({"status": "error","message": "找不到主板控制器，无法操作,请先连接串口"})
     
-    if not boardercontrollers["boardcontroller1"].motors[1].homed or not boardercontrollers["boardcontroller1"].motors[2].homed:
+    if not boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].homed or not boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].homed:
         print("电机未归位，无法操作")
         return jsonify({"status": "error","message": "电机未归位，无法操作,请先复位"})
 
@@ -841,7 +841,7 @@ def gopos():
         print("找不到主板控制器，无法操作")
         return jsonify({"status": "error","message": "找不到主板控制器，无法操作,请先连接串口"})
     
-    if not boardercontrollers["boardcontroller1"].motors[1].homed or not boardercontrollers["boardcontroller1"].motors[2].homed:
+    if not boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].homed or not boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].homed:
         print("电机未归位，无法操作")
         return jsonify({"status": "error","message": "电机未归位，无法操作,请先复位"})    
     
