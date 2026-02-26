@@ -1,12 +1,13 @@
 import serial
 import serial.tools.list_ports
 import sys
+from lib.boardtype import MICRO_STEP
 
 def is_dev_mode():
     """判断是否是测试环境"""
     return not getattr(sys, 'frozen', False)
 
-def circles_to_pulses(circles, step_angle = 1.8, microsteps = 128):
+def circles_to_pulses(circles, step_angle = 1.8, microsteps = MICRO_STEP):
     # 每圈的步数 = 360 / 步距角
     steps_per_revolution = 360 / step_angle
     # 每圈的脉冲数 = 步数 * 细分数
