@@ -604,14 +604,14 @@ def testmultitaskabs():
 
     # exit_pos flip 2.5 move 3 
     success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced(5.05,flip_speed,False,2.5)  
-    success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask(4.20,move_speed)
+    success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask(4.18,move_speed)
     time.sleep(1)    
     success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask_advanced(0,move_speed,False,3)
     success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask(0,flip_speed)
     time.sleep(1)
 
     success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced(5.05,flip_speed,False,2.5)
-    success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask(4.20,move_speed)
+    success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask(4.18,move_speed)
    
     success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask(20.2,flip_speed)
     time.sleep(1)
