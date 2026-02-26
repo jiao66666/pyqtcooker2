@@ -127,7 +127,7 @@ class BoardController:
 
        self.motors[1].enable_all_motors()    
        if not is_dev_mode():
-           self.start_feedback_loop(0.2)
+           self.start_feedback_loop(0.1)
 
 
     def init_dcmotors(self):
