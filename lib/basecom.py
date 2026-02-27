@@ -291,7 +291,7 @@ class RS485Communication:
             return False            
 
 
-    def wait_for_motor_to_pause(self, command: str, params: List[str], check_interval: int = 0.2) -> bool:
+    def wait_for_motor_to_pause(self, command: str, params: List[str], check_interval: int = MTSTATUS_CHECK_INTERVAL) -> bool:
         """轮询电机状态，直到电机进入 PAUSING 状态"""
         while True:
             success, response = self.read_command("RunStatus", params)

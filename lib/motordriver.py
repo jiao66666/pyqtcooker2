@@ -144,7 +144,7 @@ class MotorDriver:
             return False
 
         readparams = list(map(str, params[:2]))
-        timeout = 0.2
+        timeout = MTSTATUS_CHECK_INTERVAL
 
         # 2. 创建一个线程来轮询电机状态
         print("启动电机状态轮询...")
