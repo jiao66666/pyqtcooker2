@@ -21,4 +21,4 @@ POT1_POS_FIREPOT_LEVEL = 0  # 1号锅烧菜位，水平位
 POT_POS_SAFE_FLIP = 5.05  # 锅移动安全位,翻转位
 
 
-MICRO_STEP = 32  #当前步进电机细分
+MICRO_STEP = 128  #当前步进电机细分
