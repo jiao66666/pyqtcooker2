@@ -299,6 +299,17 @@ class MotorDriver:
         
         return True  
              
+    def adjust_speed(self,speed):
+        print("动态调整电机速度....")
+        success, resp = self.com.execute_command(
+            "SPEED", 
+            [str(self.board_id),str(self.motor_id),str(speed)]
+        )
+        if not success:
+            print(f"错误: {resp}")
+            return False
+        
+        return True 
 
     def run(self, circles: float, anglespeed: int, direction: int):
         """单次运转电机"""  ##相对运动
