@@ -3,7 +3,7 @@ from flask import Flask, render_template, jsonify,request
 from lib.boardcontroller import BoardController
 from lib.boardtype import *
 import time
-from lib.tools import is_dev_mode
+from lib.tools import is_dev_mode,parse_speed_params
 from lib.websocket_server import WebSocketServer
 
 import asyncio
@@ -707,8 +707,8 @@ def testvarspeedsingle():
     #runtask参数：[圈数，速度，方向]
     print("**************************************1号变速运动测试开始开始******************************")
 
-    
-
+    speed_params_val = parse_speed_params(speed_params)
+    print(speed_params_val)
     #success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced(5.05,flip_speed,False,float(exit_pos))  
     #success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask(4.20,move_speed)
     
