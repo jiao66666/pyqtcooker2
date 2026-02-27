@@ -22,5 +22,5 @@ POT_POS_SAFE_FLIP = 5.05  # 锅移动安全位,翻转位
 
 
 MICRO_STEP = 128  #当前步进电机细分
-FB_CHECK_INTERVAL = 0.1        #坐标反馈检查间隔
-MTSTATUS_CHECK_INTERVAL = 0.2  #电机状态检查间隔
+FB_CHECK_INTERVAL = 0.05        #坐标反馈检查间隔  #0.1 isOK
+MTSTATUS_CHECK_INTERVAL = 0.05  #电机状态检查间隔  #0.2 isOK
