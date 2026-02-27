@@ -685,6 +685,44 @@ def testmultiaxis():
         return jsonify({"status": "fail","message": "测试失败!"})  
 
 
+@app.route('/testvarspeedsingle', methods=['POST'])   #绝对位置任务测试
+def testvarspeedsingle():
+    print("1号变速运动测试开始")
+    data = request.get_json()
+    speed_target = data.get('speed_target') 
+    speed_params = data.get('speed_params') 
+    success = False
+    if not boardercontrollers.get("boardcontroller1"):
+        print("找不到主板控制器，无法操作")
+        return jsonify({"status": "error","message": "找不到主板控制器，无法操作,请先连接串口"})
+    success = False
+    if not boardercontrollers.get("boardcontroller1"):
+        print("找不到主板控制器，无法操作")
+        return jsonify({"status": "error","message": "找不到主板控制器，无法操作,请先连接串口"})
+    
+    if not boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].homed or not boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].homed:
+        print("电机未归位，无法操作")
+        return jsonify({"status": "error","message": "电机未归位，无法操作,请先复位"})
+
+    #runtask参数：[圈数，速度，方向]
+    print("**************************************1号变速运动测试开始开始******************************")
+
+    
+
+    #success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced(5.05,flip_speed,False,float(exit_pos))  
+    #success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask(4.20,move_speed)
+    
+
+    print("**************************************1号变速运动测试结束******************************")
+
+    if success :
+        print("测试成功!")
+        return jsonify({"status": "success","message": "测试成功!"})
+    else:
+        print("测试失败!")
+        return jsonify({"status": "fail","message": "测试失败!"})          
+
+
 @app.route('/testmultiaxis2', methods=['POST'])   #绝对位置任务测试
 def testmultiaxis2():
     print("1号多轴同步运动任务开始")

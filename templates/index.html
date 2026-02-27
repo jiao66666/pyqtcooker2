@@ -44,6 +44,7 @@
         <button onclick="showTab(2, this)">测试区</button>
         <button onclick="showTab(3, this)">自动程序区</button>
         <button onclick="showTab(4, this)">加料板</button>
+        <button onclick="showTab(5, this)">变速运动</button>
     </div>
 
     <div id="tab1" class="tab-content" style="display:block;">
@@ -161,7 +162,7 @@
                 <button onclick="testMultiAxis2()">测试多轴同步运动2</button>
              </div>
              <hr style="border: 1px solid #ccc; width: 100%; margin: 2px auto;">
-             <div class="fb_display" id="motor_status">
+             <div class="fb_display" id="motor_status_1">
                 <span class="fb_realtime">实时反馈位置：</span>
                 <div class="fb_display_row">
                     <label>1号锅翻转电机:</label>
@@ -185,7 +186,7 @@
     </div>
 
     <div id="tab3" class="tab-content" >
-        <div class="fb_display" id="motor_status2">
+        <div class="fb_display" id="motor_status_2">
             <span class="fb_realtime">实时反馈位置：</span>
             <div class="fb_display_row">
                 <label>1号锅翻转电机:</label>
@@ -263,6 +264,44 @@
             </div>
         </div>
     </div>
+
+    <div id="tab5" class="tab-content" >
+        <div class="fb_display" id="motor_status_3">
+            <span class="fb_realtime">实时反馈位置：</span>
+            <div class="fb_display_row">
+                <label>1号锅翻转电机:</label>
+                <div>${ motor1_flip }</div>
+            </div>
+            <div class="fb_display_row">
+                <label>1号锅水平电机:</label>
+                <div>${ motor1_level }</div>
+            </div>
+            <div class="fb_display_row">
+                <label>2号锅翻转电机:</label>
+                <div>${ motor2_flip }</div>
+            </div>
+            <div class="fb_display_row">
+                <label>2号锅水平电机:</label>
+                <div>${ motor2_level }</div>
+            </div>
+        </div>
+
+        <hr style="border: 1px solid #ccc; width: 100%; margin: 2px auto;">
+
+        <div class="input_circle">
+            <label for="circles" class="input_tag">变速运动终点位置:</label>
+            <input class="input-classic" type="number" id="varspeed_target" placeholder="请输入变速运动终点位置" value="4.16"/>
+        </div>
+        <div class="input_circle">
+            <label for="circles" class="input_tag">变速运动参数串:</label>
+            <input class="input-classic" type="text" id="varspeed_params" placeholder="请输入变速运动参数串" value="[(1,360),(2,720),(3,1080)]"/>
+        </div>
+        <div class="function_container">
+            <button onclick="testVarSpeedSingle()">单向变速测试</button>
+        </div>
+    </div>
+
+
 
     <div class="prompt">控制台消息</div>
     <div id="status-history"></div> <!-- 用于显示历史消息 -->

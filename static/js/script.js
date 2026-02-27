@@ -830,6 +830,58 @@ function testMultiAxis2() {
 
 
 
+
+function testVarSpeedSingle() {
+     var speed_target = document.getElementById("varspeed_target");
+        if(speed_target.value == "" || isNaN(speed_target.value) || parseInt(speed_target.value) <= 0){
+            alert("请输入有效的变速运动目标值！");
+            return;
+        }
+
+        var speed_params = document.getElementById("varspeed_params");
+
+        // 检查字符串是否为空
+        if (!speed_params.value.trim()) {
+            console.log("输入不能为空");
+            return;
+        } else {
+            // 正则表达式：匹配 [(数字,数字), (数字,数字), ...]
+            var regex = /^\[\((\d+(\.\d+)?),(\d+)\)(,\((\d+(\.\d+)?),(\d+)\))*\]$/;
+            // 使用正则表达式测试字符串
+            if (regex.test(speed_params.value)) {
+                console.log("参数串格式正确");
+            } else {
+                console.log("格式不正确");
+                return;
+            }
+        }
+
+       
+      console.log("变速运动目标值是:", speed_target.value);
+      console.log("变速运动参数值是:", speed_params.value);
+
+     // 获取 select 元素
+        fetch('/testvarspeedsingle', {
+            method: 'POST', 
+            headers: {
+                'Content-Type': 'application/json'  
+            },
+            body: JSON.stringify({
+                speed_target: speed_target.value,  
+                speed_params: speed_params.value
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+             addMessage(`返回信息 : `+data.message);  // 将收到的消息保存并显示
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            addMessage("Error starting motor.");
+        });
+}
+
+
 function getSelectedValue(name) {
     const radios = document.getElementsByName(name);
     for (let i = 0; i < radios.length; i++) {
@@ -880,57 +932,40 @@ function showTab(tabNumber, buttonElement) {
   buttonElement.classList.add('active');
 }
 
-const app = new Vue({
-    el: '#motor_status',
-    delimiters: ['${', '}'],
-    data: {
-        motor1_flip: 0.0,
-        motor1_level: 0.0,
-        motor2_flip: 0.0,
-        motor2_level: 0.0
-    },
-    methods: {
-        updateMotorData(motor_id, position) {
-            // 根据 motor_id 更新对应电机的数据
-            //console.log("更新电机数据, motor_id: ", motor_id, " position: ", position);
-            if (motor_id == 1) {
-                this.motor1_flip = position;
-            } else if (motor_id == 2) {
-                this.motor1_level = position;
-            } else if (motor_id == 3) {
-                this.motor2_flip = position;
-            } else if (motor_id == 4) {
-                this.motor2_level = position;
-            }
-        }
-    }
-});
 
 
-// 第二个 Vue 实例
-const app2 = new Vue({
-    el: '#motor_status2',
+function createMotorStatusApp(el) {
+  return new Vue({
+    el: el,
     delimiters: ['${', '}'],
+    template: '#motor-status-template',
     data: {
-        motor1_flip: 0.0,
-        motor1_level: 0.0,
-        motor2_flip: 0.0,
-        motor2_level: 0.0
+      motor1_flip: 0.0,
+      motor1_level: 0.0,
+      motor2_flip: 0.0,
+      motor2_level: 0.0
     },
     methods: {
-        updateMotorData(motor_id, position) {
-            if (motor_id == 1) {
-                this.motor1_flip = position;
-            } else if (motor_id == 2) {
-                this.motor1_level = position;
-            } else if (motor_id == 3) {
-                this.motor2_flip = position;
-            } else if (motor_id == 4) {
-                this.motor2_level = position;
-            }
+      updateMotorData(motor_id, position) {
+        if (motor_id == 1) {
+          this.motor1_flip = position;
+        } else if (motor_id == 2) {
+          this.motor1_level = position;
+        } else if (motor_id == 3) {
+          this.motor2_flip = position;
+        } else if (motor_id == 4) {
+          this.motor2_level = position;
         }
+      }
     }
-});
+  });
+}
+
+// 创建两个实例（变量互不影响）
+const app1 = createMotorStatusApp('#motor_status_1');
+const app2 = createMotorStatusApp('#motor_status_2');
+const app3 = createMotorStatusApp('#motor_status_3');
+
 
 // 将 WebSocket 实例提升到全局作用域
 let ws;
@@ -948,8 +983,9 @@ function setupWebSocket(url) {
     ws.onmessage = (event) => {
         const arr = JSON.parse(event.data); // [{motor_id, position}, ...]
         for (const item of arr) {
-            app.updateMotorData(item.motor_id, item.position);
+            app1.updateMotorData(item.motor_id, item.position);
             app2.updateMotorData(item.motor_id, item.position);
+            app3.updateMotorData(item.motor_id, item.position);
         }
     };
 
