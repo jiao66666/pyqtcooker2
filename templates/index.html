@@ -270,23 +270,29 @@
       <!-- Vue 模板 -->
     <script type="text/x-template" id="motor-status-template">
         <div class="fb_display">
-        <span class="fb_realtime">实时反馈位置：</span>
-        <div class="fb_display_row">
-            <label>1号锅翻转电机:</label>
-            <div>${ motor1_flip }</div>
-        </div>
-        <div class="fb_display_row">
-            <label>1号锅水平电机:</label>
-            <div>${ motor1_level }</div>
-        </div>
-        <div class="fb_display_row">
-            <label>2号锅翻转电机:</label>
-            <div>${ motor2_flip }</div>
-        </div>
-        <div class="fb_display_row">
-            <label>2号锅水平电机:</label>
-            <div>${ motor2_level }</div>
-        </div>
+           <span class="fb_realtime">实时反馈位置：</span>
+           <div class= "fb_display_col_container">
+             <div class= "fb_display_col">
+                <div class="fb_display_row">
+                    <label>1号锅翻转电机:</label>
+                    <div>${ motor1_flip }</div>
+                </div>
+                <div class="fb_display_row">
+                    <label>1号锅水平电机:</label>
+                    <div>${ motor1_level }</div>
+                </div>
+             </div>
+            <div class= "fb_display_col">
+                <div class="fb_display_row">
+                    <label>2号锅翻转电机:</label>
+                    <div>${ motor2_flip }</div>
+                </div>
+                <div class="fb_display_row">
+                    <label>2号锅水平电机:</label>
+                    <div>${ motor2_level }</div>
+                </div>
+            </div>    
+           </div>
         </div>
     </script>
     <!-- 引入外部 JS 文件 -->
