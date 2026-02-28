@@ -283,10 +283,12 @@ class MotorDriver:
                     if target > startpos and self.fb_position >= pos_speed_list[lastcheckIndex]["pos"]:
                         self.adjust_speed(pos_speed_list[lastcheckIndex]["speed"])
                         lastcheckIndex += 1  # 更新索引
+                        print("更新速度为>>>：", pos_speed_list[lastcheckIndex]["speed"])
 
                     elif target < startpos and self.fb_position <= pos_speed_list[lastcheckIndex]["pos"]:
                         self.adjust_speed(pos_speed_list[lastcheckIndex]["speed"])
                         lastcheckIndex += 1  # 更新索引
+                        print("更新速度为>>>：", pos_speed_list[lastcheckIndex]["speed"])
                             
 
                 if not wait_for_completion:
