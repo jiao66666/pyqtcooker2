@@ -282,15 +282,14 @@ class MotorDriver:
                 if lastcheckIndex < checkMax:
                     if target > startpos and self.fb_position >= pos_speed_list[lastcheckIndex]["pos"]:
                         self.adjust_speed(pos_speed_list[lastcheckIndex]["speed"])
-                        lastcheckIndex += 1  # 更新索引
                         print("更新速度为>>>：", pos_speed_list[lastcheckIndex]["speed"])
-
+                        lastcheckIndex += 1  # 更新索引
+                        
                     elif target < startpos and self.fb_position <= pos_speed_list[lastcheckIndex]["pos"]:
                         self.adjust_speed(pos_speed_list[lastcheckIndex]["speed"])
-                        lastcheckIndex += 1  # 更新索引
                         print("更新速度为>>>：", pos_speed_list[lastcheckIndex]["speed"])
+                        lastcheckIndex += 1  # 更新索引                       
                             
-
                 if not wait_for_completion:
                         if (target > exit_pos and self.fb_position >= exit_pos) or (target < exit_pos and self.fb_position <= exit_pos):
                             print(f"电机已达到提前退出位置{exit_pos}，任务结束")
