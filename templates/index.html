@@ -162,49 +162,13 @@
                 <button onclick="testMultiAxis2()">测试多轴同步运动2</button>
              </div>
              <hr style="border: 1px solid #ccc; width: 100%; margin: 2px auto;">
-             <div class="fb_display" id="motor_status_1">
-                <span class="fb_realtime">实时反馈位置：</span>
-                <div class="fb_display_row">
-                    <label>1号锅翻转电机:</label>
-                    <div>${ motor1_flip }</div>
-                </div>
-                <div class="fb_display_row">
-                    <label>1号锅水平电机:</label>
-                    <div>${ motor1_level }</div>
-                </div>
-                <div class="fb_display_row">
-                    <label>2号锅翻转电机:</label>
-                    <div>${ motor2_flip }</div>
-                </div>
-                <div class="fb_display_row">
-                    <label>2号锅水平电机:</label>
-                    <div>${ motor2_level }</div>
-                </div>
-             </div>
+             <div class="fb_display" id="motor_status_1"></div>
         </div>
 
     </div>
 
     <div id="tab3" class="tab-content" >
-        <div class="fb_display" id="motor_status_2">
-            <span class="fb_realtime">实时反馈位置：</span>
-            <div class="fb_display_row">
-                <label>1号锅翻转电机:</label>
-                <div>${ motor1_flip }</div>
-            </div>
-            <div class="fb_display_row">
-                <label>1号锅水平电机:</label>
-                <div>${ motor1_level }</div>
-            </div>
-            <div class="fb_display_row">
-                <label>2号锅翻转电机:</label>
-                <div>${ motor2_flip }</div>
-            </div>
-            <div class="fb_display_row">
-                <label>2号锅水平电机:</label>
-                <div>${ motor2_level }</div>
-            </div>
-        </div>
+        <div class="fb_display" id="motor_status_2"></div>
 
         <hr style="border: 1px solid #ccc; width: 100%; margin: 2px auto;">
 
@@ -266,25 +230,7 @@
     </div>
 
     <div id="tab5" class="tab-content" >
-        <div class="fb_display" id="motor_status_3">
-            <span class="fb_realtime">实时反馈位置：</span>
-            <div class="fb_display_row">
-                <label>1号锅翻转电机:</label>
-                <div>${ motor1_flip }</div>
-            </div>
-            <div class="fb_display_row">
-                <label>1号锅水平电机:</label>
-                <div>${ motor1_level }</div>
-            </div>
-            <div class="fb_display_row">
-                <label>2号锅翻转电机:</label>
-                <div>${ motor2_flip }</div>
-            </div>
-            <div class="fb_display_row">
-                <label>2号锅水平电机:</label>
-                <div>${ motor2_level }</div>
-            </div>
-        </div>
+        <div class="fb_display" id="motor_status_3"></div>
 
         <hr style="border: 1px solid #ccc; width: 100%; margin: 2px auto;">
 
@@ -306,6 +252,29 @@
     <div class="prompt">控制台消息</div>
     <div id="status-history"></div> <!-- 用于显示历史消息 -->
 
+
+      <!-- Vue 模板 -->
+    <script type="text/x-template" id="motor-status-template">
+        <div class="fb_display">
+        <span class="fb_realtime">实时反馈位置：</span>
+        <div class="fb_display_row">
+            <label>1号锅翻转电机:</label>
+            <div>${ motor1_flip }</div>
+        </div>
+        <div class="fb_display_row">
+            <label>1号锅水平电机:</label>
+            <div>${ motor1_level }</div>
+        </div>
+        <div class="fb_display_row">
+            <label>2号锅翻转电机:</label>
+            <div>${ motor2_flip }</div>
+        </div>
+        <div class="fb_display_row">
+            <label>2号锅水平电机:</label>
+            <div>${ motor2_level }</div>
+        </div>
+        </div>
+    </script>
     <!-- 引入外部 JS 文件 -->
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>
