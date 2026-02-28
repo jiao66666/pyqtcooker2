@@ -7,6 +7,7 @@ import threading
 import time
 from lib.websocket_server import WebSocketServer
 import random
+from typing import List, Dict
 
 
 
@@ -184,6 +185,124 @@ class MotorDriver:
             else:
                 print(f"未知状态: {status}")
                 return False     
+
+
+    # 动态调整版运动 任务
+    def gotask_advanced_speed(self, target: float, pos_speed_list: List[Dict[str, int]], wait_for_completion: bool = True,exit_pos:float = 0.0):
+        """单次运转电机"""  ##绝对运动
+        print("####运行电机高级任务####")
+        if not self.com or not self.com.connected:
+            print("错误: 串口未连接，无法运行电机")
+            return False
+        print(f"[{self.name}] ID:{self.motor_id} 运行到位置{target}, 变速参数 {pos_speed_list}, 主板类型:{self.board_id}")
+
+        if not self.homed:
+           print("错误: 电机未回零，无法进行绝对运动")
+           return False
+        # 计算脉冲数
+        if self.motor_id in [2,4] and target < 0:
+            print("错误: 水平电机不能运动到负值位置")
+            return False
+        
+       
+        deltaDistance = target - self.current_position 
+        if deltaDistance == 0:
+            print("目标位置与当前位置相同，无需运动")
+            return True
+         # 计算需要运动的圈数
+
+        circles = abs(deltaDistance)
+
+        if deltaDistance >=0:  ## 确定 目标位在当前位置 的左还是右侧
+            if self.motor_id in [1,2]:
+                direction = -1
+            else:
+                direction = 1
+        else:
+            if self.motor_id in [1,2]:
+                direction = 1
+            else:
+                direction = -1
+
+        self.current_position = target  
+        # 计算脉冲数
+        pulses = circles_to_pulses(circles)
+        if direction >=0:
+            pulses = abs(pulses)
+        else:
+            pulses = -abs(pulses)    
+         # 发送运行命令
+
+        first_speed = pos_speed_list[0]["speed"]
+        print(f"变速运动初始速度为:{first_speed}")  # 输出 200
+        startpos = self.fb_position   #记录起始位置
+        # 1. 执行命令
+        print("执行指令...")
+        command = "RUN"
+        params = [str(self.board_id), str(self.motor_id), str(pulses), str(first_speed)]
+        success, response = self.com.execute_command(command, params)
+        
+        if not success:
+            print(f"命令执行失败,{response}")
+            return False
+
+        readparams = list(map(str, params[:2]))
+        timeout = MTSTATUS_CHECK_INTERVAL
+      
+        # 2. 创建一个线程来轮询电机状态
+        print("启动电机状态轮询...")
+        state_thread = threading.Thread(target=self.wait_for_motor_to_pause_advanced_speed,args=(command, readparams,pos_speed_list,timeout,wait_for_completion,exit_pos,target,startpos))
+        state_thread.start()
+
+        # 3. 等待轮询线程完成
+        state_thread.join()  # 等待线程完成后继续执行
+        print("任务完成，执行下一步")
+        return True        
+    
+    #因为要用到电机的位置值 ，所以只能将方法放到电机类中。
+    def wait_for_motor_to_pause_advanced_speed(self, command: str, params: List[str], pos_speed_list: List[Dict[str, int]],check_interval: int = 0.2,wait_for_completion: bool = True,exit_pos:float = 0.0,target:float = 0.0,startpos:float = 0.0) -> bool:
+        """轮询电机状态，直到电机进入 PAUSING 状态"""
+        checkMax = len(pos_speed_list)
+        lastcheckIndex = 0
+        while True:
+            success, response = self.com.read_command("RunStatus", params)
+            if not success:
+                print("读取电机状态失败")
+                return False
+
+            status = response[1]  # 获取电机状态
+            print(f"当前电机状态: {status}")
+
+            if status == "PAUSEING":
+                print("电机暂停，任务结束")
+                return True
+            elif status == "RUNING" or status == "ORGING":
+                print("电机正在运行，等待中...")
+
+                if lastcheckIndex < checkMax:
+                    if target > startpos and self.fb_position >= pos_speed_list[lastcheckIndex]["pos"]:
+                        self.adjust_speed(pos_speed_list[lastcheckIndex]["speed"])
+                        lastcheckIndex += 1  # 更新索引
+
+                    elif target < startpos and self.fb_position <= pos_speed_list[lastcheckIndex]["pos"]:
+                        self.adjust_speed(pos_speed_list[lastcheckIndex]["speed"])
+                        lastcheckIndex += 1  # 更新索引
+                            
+
+                if not wait_for_completion:
+                        if (target > exit_pos and self.fb_position >= exit_pos) or (target < exit_pos and self.fb_position <= exit_pos):
+                            print(f"电机已达到提前退出位置{exit_pos}，任务结束")
+                            return True
+                time.sleep(check_interval)  # 每隔 check_interval 检查一次
+            elif status == "ERROR":
+                print("电机发生错误，停止轮询")
+                return False
+            else:
+                print(f"未知状态: {status}")
+                return False     
+
+
+
 
     def reset_one_motor(self)-> Tuple[bool, List[str]]:
         """复位单个电机"""
