@@ -709,9 +709,7 @@ def testvarspeedsingle():
 
     speed_params_val = parse_speed_params(speed_params)
     print(speed_params_val)
-    #success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced(5.05,flip_speed,False,float(exit_pos))  
-    #success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask(4.20,move_speed)
-    
+    success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask_advanced_speed(5.05,speed_params_val)  
 
     print("**************************************1号变速运动测试结束******************************")
 
