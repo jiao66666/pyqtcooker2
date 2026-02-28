@@ -408,3 +408,26 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
         font-size:12px;
         font-weight:bold;
     }
+
+       /* 设置 textarea 的宽度、高度及其他基本样式 */
+        textarea {
+            width: 100%; /* 使 textarea 占满父容器的宽度 */
+            padding: 5px; /* 内边距，使文字不紧贴边框 */
+            font-family: Arial, sans-serif; /* 设置字体 */
+            font-size: 12px; /* 设置字体大小 */
+            line-height: 1.2; /* 行高，使内容更为清晰 */
+            border: 1px solid #ccc; /* 边框样式 */
+            border-radius: 5px; /* 边角圆润 */
+            background-color: #f9f9f9; /* 背景色 */
+            color: #333; /* 文字颜色 */
+            resize: both; /* 允许用户拖动调整 textarea 大小 */
+            box-sizing: border-box; /* 使内外边距和边框都包含在宽高内 */
+            direction: ltr; text-align: left;
+        }
+
+        /* 设置焦点时的样式 */
+        textarea:focus {
+            outline: none; /* 去除默认的聚焦轮廓 */
+            border-color: #66afe9; /* 聚焦时改变边框颜色 */
+            background-color: #fff; /* 聚焦时改变背景色 */
+        }

@@ -236,11 +236,25 @@
 
         <div class="input_circle">
             <label for="circles" class="input_tag">变速运动终点位置:</label>
-            <input class="input-classic" type="number" id="varspeed_target" placeholder="请输入变速运动终点位置" value="4.16"/>
+            <input class="input-classic" type="number" id="varspeed_target" placeholder="请输入变速运动终点位置" value="4.16" onblur="handleVarSpeedParamChange()"/>
+        </div>
+        <div class="input_circle">
+            <label for="circles" class="input_tag">初始速度 :</label>
+            <input class="input-classic" type="number" id="varspeed_init" placeholder="请输入变速运动初始速度" value="30" onblur="handleVarSpeedParamChange()"/>
+        </div>
+        <div class="input_circle">
+            <label for="circles" class="input_tag">最终速度:</label>
+            <input class="input-classic" type="number" id="varspeed_final" placeholder="请输入变速运动最终速度" value="540" onblur="handleVarSpeedParamChange()"/>
+        </div>
+        <div class="input_circle">
+            <label for="circles" class="input_tag">节点数量:</label>
+            <input class="input-classic" type="number" id="varspeed_nodenums" placeholder="请输入变速运动节点数量" value="10" onblur="handleVarSpeedParamChange()"/>
         </div>
         <div class="input_circle">
             <label for="circles" class="input_tag">变速运动参数串:</label>
-            <input class="input-classic" type="text" id="varspeed_params" placeholder="请输入变速运动参数串" value="[(0,90),(1,180),(2,360),(3,540)]"/>
+            <textarea rows="3" id="varspeed_params" placeholder="请输入变速运动调速参数串">
+  
+            </textarea>    
         </div>
         <div class="function_container">
             <button onclick="testVarSpeedSingle()">单向变速测试</button>

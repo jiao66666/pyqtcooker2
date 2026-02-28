@@ -1011,3 +1011,72 @@ function startWebSocket() {
         console.log('WebSocket is already connected.');
     }
 }
+
+function handleVarSpeedParamChange(){
+       console.log("变速参数变化。。。。。");
+       var speed_target = document.getElementById("varspeed_target");
+        if(speed_target.value == "" || isNaN(speed_target.value) || parseInt(speed_target.value) <= 0){
+            console.log("请输入目标位置 ")
+            return;
+        }
+
+       var speed_init = document.getElementById("varspeed_init");
+        if(speed_init.value == "" || isNaN(speed_init.value) || parseInt(speed_init.value) <= 0){
+            console.log("请输入变速初始值！");
+            return;
+        }
+
+        
+       var speed_final = document.getElementById("varspeed_final");
+        if(speed_final.value == "" || isNaN(speed_final.value) || parseInt(speed_final.value) <= 0){
+            console.log("请输入变速初始值！");
+            return;
+        }
+
+        var speed_nodenums = document.getElementById("varspeed_nodenums");
+        if(speed_nodenums.value == "" || isNaN(speed_nodenums.value) || parseInt(speed_nodenums.value) <= 0){
+            console.log("请输入变速初始值！");
+            return;
+        }
+
+        var speed_profile = generateSpeedProfile(parseInt(speed_target.value), parseInt(speed_nodenums.value), parseInt(speed_final.value), parseInt(speed_init.value));
+        document.getElementById('varspeed_params').value = speed_profile;
+
+}
+
+function generateSpeedProfile(targetPosition, numNodes, targetSpeed, initialSpeed = 90) {
+    /**
+     * 生成速度-位置节点，假设速度线性增长，确保位置保留两位小数
+     * 
+     * @param {number} targetPosition 目标位置（最大位置）
+     * @param {number} numNodes 节点个数
+     * @param {number} targetSpeed 目标速度（最大速度）
+     * @param {number} initialSpeed 初始速度，默认从 90 开始
+     * @returns {Array} 生成的[(position, speed)]节点列表
+     */
+    
+    // 计算每个位置的间隔
+    const positionInterval = targetPosition / (numNodes - 1);
+    
+    // 生成节点列表
+    const speedProfile = [];
+
+    for (let i = 0; i < numNodes; i++) {
+        // 计算当前的位置，并确保保留两位小数
+        const position = (i * positionInterval).toFixed(2);  // 保留两位小数
+        
+        // 计算当前的位置对应的速度（假设速度线性增长）
+        const speed = initialSpeed + (targetSpeed - initialSpeed) * (i * positionInterval / targetPosition);
+        
+        // 将位置和速度组成数组，添加到节点列表中
+        speedProfile.push([parseFloat(position).toFixed(2), parseInt(speed)]);  // 保留两位小数
+    }
+
+    // 去掉最后一个节点，并将节点格式化为字符串（去掉空格）
+    const result = speedProfile.slice(0, -1).map(node => `(${node[0]},${node[1]})`).join(',');
+
+    // 包裹成完整的字符串格式并返回
+    return `[${result}]`;
+}
+
+handleVarSpeedParamChange();
