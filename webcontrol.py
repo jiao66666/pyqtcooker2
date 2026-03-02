@@ -625,10 +625,10 @@ def testmultitaskabs():
     success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask(0,flip_speed)
     """
     #统一使用变速接口，如全程无须变速，pos可设置为0，只使用初始速度 ,此时相当于在使用gotask_advanced接口，变速指令需要一个渐变的速度数组，速度不能直接跳跃太大，否则 主板有保护，加速度超出上限，反而成了限速模式。
-    flipOut =    generate_speed_params(0,5.05,10,2520)                         #[{"pos":0,"speed":2520}]
+    flipOut    = [{"pos":0,"speed":2520}]
     moveToTake = generate_speed_params(0,4.16,10,2160,360)                     #[{"pos":0,"speed":2160}]
     moveToZero = generate_speed_params(4.16,0,10,360,2160)                     #[{"pos":0,"speed":2160}]
-    flipToZero = [{"pos":0,"speed":360}]
+    flipToZero = [{"pos":0,"speed":1080}]
 
     flipToPour = [{"pos":0,"speed":1080}]
     flipToWash = [{"pos":0,"speed":2520}]
@@ -650,7 +650,7 @@ def testmultitaskabs():
     time.sleep(1)
     success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced_speed(5.05,flipOut)
 
-    success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask_advanced_speed(0,moveToZero)
+    success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask_advanced_speed(0,moveToZero,True)
     success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced_speed(0,flipToZero)
 
     print("**************************************1号锅测试水平翻转任务结束******************************")
@@ -945,10 +945,10 @@ if __name__ == '__main__':
     print(parse_speed_params(str(testparams2)))
     print("-------模板测试输出--------")
     """    
-    #moveToTake = generate_speed_params(0,4.16,10,2520,360)                     #[{"pos":0,"speed":2160}]
-    #moveToZero = generate_speed_params(4.16,0,10,360,2520)                     #[{"pos":0,"speed":2160}]
+    moveToTake = generate_speed_params(0,4.16,10,2520,1080)                     #[{"pos":0,"speed":2160}]
+    moveToZero = generate_speed_params(4.16,0,10,360,2520)                     #[{"pos":0,"speed":2160}]
 
-    #print(moveToTake)
-    #print(moveToZero)
+    print(moveToTake)
+    print(moveToZero)
 
     app.run(debug=True, host='0.0.0.0', port=port)
