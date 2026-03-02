@@ -187,8 +187,8 @@ class MotorDriver:
                 return False     
 
 
-    # 动态调整版运动 任务
-    def gotask_advanced_speed(self, target: float, pos_speed_list: List[Dict[str, int]], wait_for_completion: bool = True,exit_pos:float = 0.0):
+    # 动态调整版运动 任务 useVarSpeed,需显式设置为True才使用变速运动 ，默认不使用
+    def gotask_advanced_speed(self, target: float, pos_speed_list: List[Dict[str, int]], wait_for_completion: bool = True,exit_pos:float = 0.0,useVarSpeed:bool = False):
         """单次运转电机"""  ##绝对运动
         print("####运行电机高级任务####")
         if not self.com or not self.com.connected:
@@ -251,7 +251,7 @@ class MotorDriver:
       
         # 2. 创建一个线程来轮询电机状态
         print("启动电机状态轮询...")
-        state_thread = threading.Thread(target=self.wait_for_motor_to_pause_advanced_speed,args=(command, readparams,pos_speed_list,timeout,wait_for_completion,exit_pos,target,startpos))
+        state_thread = threading.Thread(target=self.wait_for_motor_to_pause_advanced_speed,args=(command, readparams,pos_speed_list,timeout,wait_for_completion,exit_pos,target,startpos,useVarSpeed))
         state_thread.start()
 
         # 3. 等待轮询线程完成
@@ -260,7 +260,7 @@ class MotorDriver:
         return True        
     
     #因为要用到电机的位置值 ，所以只能将方法放到电机类中。
-    def wait_for_motor_to_pause_advanced_speed(self, command: str, params: List[str], pos_speed_list: List[Dict[str, int]],check_interval: int = 0.2,wait_for_completion: bool = True,exit_pos:float = 0.0,target:float = 0.0,startpos:float = 0.0) -> bool:
+    def wait_for_motor_to_pause_advanced_speed(self, command: str, params: List[str], pos_speed_list: List[Dict[str, int]],check_interval: int = 0.2,wait_for_completion: bool = True,exit_pos:float = 0.0,target:float = 0.0,startpos:float = 0.0,useVarSpeed:bool = False) -> bool:
         """轮询电机状态，直到电机进入 PAUSING 状态"""
         checkMax = len(pos_speed_list)
         lastcheckIndex = 0
@@ -279,7 +279,7 @@ class MotorDriver:
             elif status == "RUNING" or status == "ORGING":
                 print("电机正在运行，等待中...")
 
-                if lastcheckIndex < checkMax:
+                if useVarSpeed and lastcheckIndex < checkMax:
                     if target > startpos and self.fb_position >= pos_speed_list[lastcheckIndex]["pos"]:
                         self.adjust_speed(pos_speed_list[lastcheckIndex]["speed"])
                         print("更新速度为>>>：", pos_speed_list[lastcheckIndex]["speed"])
