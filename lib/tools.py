@@ -86,33 +86,45 @@ def parse_speed_params(speed_params_str: str) -> List[Dict[str, Union[float, int
 
 
 
-def generate_speed_initparams(target_position, num_nodes, target_speed, initial_speed=90):
+def generate_speed_params(init_position,target_position, num_nodes, target_speed, initial_speed=90):
     """
-    生成速度-位置节点，假设速度线性增长
-
+    生成速度-位置节点，处理速度线性增长 或者 减少的情况 ，生成线性增加（位置，速度）或线性递减速（位置，速度）的节点列表
+    :param init_position: 目标位置（最大位置）
     :param target_position: 目标位置（最大位置）
     :param num_nodes: 节点个数
     :param target_speed: 目标速度（最大速度）
     :param initial_speed: 初始速度，默认从 90 开始
     :return: 生成的[(position, speed)]节点列表
     """
+    if target_position > init_position:
+        direction = 1
+    else:
+        direction = -1
+      
+    start_point = init_position
+    start_speed = initial_speed
+ 
     # 计算每个位置的间隔
-    position_interval = target_position / (num_nodes - 1)
-    
+    # 计算每个位置的间隔
+    distance = abs(target_position - init_position)
+    distance_space = distance / (num_nodes - 1)
+
+    speed_diff = abs(target_speed - initial_speed)
+    speed_space = speed_diff / (num_nodes - 1)
+
     # 生成节点列表
     speed_profile = []
-    
+
     for i in range(num_nodes):
-        # 计算当前的位置
-        position = i * position_interval
         
-        # 计算当前的位置对应的速度（假设速度线性增长）
-        speed = initial_speed + (target_speed - initial_speed) * (position / target_position)
-        
+        position = start_point + i * distance_space * direction
+        speed = start_speed + i * speed_space * direction
+
+        #print("计算过程：",position,speed,direction,start_point,start_speed)
         # 将位置和速度组成元组，添加到节点列表中
         speed_profile.append((round(position,2), int(speed)))
     
-    return speed_profile[:-1] 
+    return speed_profile[:-1]
 
 
 
@@ -120,9 +132,3 @@ def generate_speed_initparams(target_position, num_nodes, target_speed, initial_
 if __name__ == "__main__":
     print("=== RS485通信类接口测试 ===")
 
-    # 示例使用：目标位置 4.16，节点个数 4，目标速度 540
-    profile = generate_speed_initparams(4.16, 4, 540,30)
-    print(profile)
-
-
-    print("\n=== 测试完成 ===")    

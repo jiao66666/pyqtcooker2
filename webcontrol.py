@@ -3,7 +3,7 @@ from flask import Flask, render_template, jsonify,request
 from lib.boardcontroller import BoardController
 from lib.boardtype import *
 import time
-from lib.tools import is_dev_mode,parse_speed_params,generate_speed_initparams
+from lib.tools import is_dev_mode,parse_speed_params,generate_speed_params
 from lib.websocket_server import WebSocketServer
 
 import asyncio
@@ -738,8 +738,6 @@ def testvarspeedsingle():
     #runtask参数：[圈数，速度，方向]
     print("**************************************1号变速运动测试开始开始******************************")
 
-    #testparams = generate_speed_initparams(4.16,10,540,30)
-    #print(testparams)
 
     speed_params_val = parse_speed_params(speed_params)
     print(speed_params_val)
@@ -936,4 +934,11 @@ def gopos():
            
 if __name__ == '__main__':
     # 绑定到所有网络接口，允许局域网访问,测试使用3000端口，实际生产使用5000端口
+    #test part
+    testparams = generate_speed_params(0,5.05,10,2520,360)
+    testparams2 = generate_speed_params(4.16,0,10,360,2520)
+    print("-------模板测试输出--------")
+    print(testparams)
+    print(testparams2)
+    
     app.run(debug=True, host='0.0.0.0', port=port)
