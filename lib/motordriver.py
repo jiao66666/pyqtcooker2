@@ -187,7 +187,7 @@ class MotorDriver:
                 return False     
 
 
-    # 动态调整版运动 任务 useVarSpeed,需显式设置为True才使用变速运动 ，默认不使用
+    # 动态调整版运动 任务 useVarSpeed,需显式设置为True才使用变速运动 ，默认不使用。
     def gotask_advanced_speed(self, target: float, pos_speed_list: List[Dict[str, int]], wait_for_completion: bool = True,exit_pos:float = 0.0,useVarSpeed:bool = False):
         """单次运转电机"""  ##绝对运动
         print("####运行电机高级任务####")

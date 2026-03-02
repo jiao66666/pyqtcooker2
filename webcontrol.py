@@ -624,7 +624,7 @@ def testmultitaskabs():
     success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask_advanced(0,move_speed,False,3.3)
     success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask(0,flip_speed)
     """
-    #统一使用变速接口，如全程无须变速，pos可设置为0，只使用初始速度 ,此时相当于在使用gotask_advanced接口
+    #统一使用变速接口，如全程无须变速，pos可设置为0，只使用初始速度 ,此时相当于在使用gotask_advanced接口，变速指令需要一个渐变的速度数组，速度不能直接跳跃太大，否则 主板有保护，加速度超出上限，反而成了限速模式。
     flipOut = [{"pos":0,"speed":2520}]
     moveToTake = [{"pos":0,"speed":2160}]
     moveToZero = [{"pos":0,"speed":2160}]
