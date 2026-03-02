@@ -587,8 +587,10 @@ def testmultitaskabs():
         print("电机未归位，无法操作")
         return jsonify({"status": "error","message": "电机未归位，无法操作,请先复位"})
 
+
     #runtask参数：[圈数，速度，方向]
     print("**************************************1号锅测试水平翻转任务开始******************************")
+    """
     move_speed = int(speed_level)   #2160  tested
     flip_speed = int(speed_flip)   #2520  tested 
 
@@ -621,9 +623,38 @@ def testmultitaskabs():
 
     success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask_advanced(0,move_speed,False,3.3)
     success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask(0,flip_speed)
+    """
+    #统一使用变速接口，如全程无须变速，pos可设置为0，只使用初始速度 
+    flipOut = [{"pos":0,"speed":2520}]
+    moveToTake = [{"pos":0,"speed":2160}]
+    moveToZero = [{"pos":0,"speed":2160}]
+    flipToZero = [{"pos":0,"speed":360}]
+
+    flipToPour = [{"pos":0,"speed":1080}]
+    flipToWash = [{"pos":0,"speed":2520}]
+
+
+    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced_speed(5.05,flipOut)   #limit 0.4 if speed is 2160 
+    success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask_advanced_speed(4.16,moveToTake)
+    time.sleep(1)    
+    success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask_advanced_speed(0,moveToZero)
+    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced_speed(0,flipToZero)
+    time.sleep(1)
+
+    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced_speed(5.05,flipOut)
+    success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask_advanced_speed(4.16,moveToTake)
+   
+    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced_speed(20.2,flipToPour)
+    time.sleep(1)
+    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced_speed(-11.8,flipToWash)
+    time.sleep(1)
+    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced_speed(5.05,flipOut)
+
+    success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask_advanced_speed(0,moveToZero)
+    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced_speed(0,flipToZero)
 
     print("**************************************1号锅测试水平翻转任务结束******************************")
-
+    
     if success :
         print("测试成功!")
         return jsonify({"status": "success","message": "测试成功!"})
