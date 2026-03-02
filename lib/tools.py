@@ -124,8 +124,7 @@ def generate_speed_params(init_position,target_position, num_nodes, target_speed
         # 将位置和速度组成元组，添加到节点列表中
         speed_profile.append((round(position,2), int(speed)))
     
-    return speed_profile[:-1]
-
+    return parse_speed_params(str(speed_profile[:-1]))
 
 
 
