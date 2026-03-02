@@ -280,12 +280,12 @@ class MotorDriver:
                 print("电机正在运行，等待中...")
 
                 if lastcheckIndex < checkMax:
-                    if target > startpos and self.fb_position > pos_speed_list[lastcheckIndex]["pos"]:
+                    if target > startpos and self.fb_position >= pos_speed_list[lastcheckIndex]["pos"]:
                         self.adjust_speed(pos_speed_list[lastcheckIndex]["speed"])
                         print("更新速度为>>>：", pos_speed_list[lastcheckIndex]["speed"])
                         lastcheckIndex += 1  # 更新索引
                         
-                    elif target < startpos and self.fb_position < pos_speed_list[lastcheckIndex]["pos"]:
+                    elif target < startpos and self.fb_position <= pos_speed_list[lastcheckIndex]["pos"]:
                         self.adjust_speed(pos_speed_list[lastcheckIndex]["speed"])
                         print("更新速度为>>>：", pos_speed_list[lastcheckIndex]["speed"])
                         lastcheckIndex += 1  # 更新索引                       

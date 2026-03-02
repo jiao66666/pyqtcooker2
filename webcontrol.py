@@ -624,14 +624,14 @@ def testmultitaskabs():
     success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask_advanced(0,move_speed,False,3.3)
     success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask(0,flip_speed)
     """
-    #统一使用变速接口，如全程无须变速，pos可设置为0，只使用初始速度 
-    flipOut = [{"pos":0,"speed":2520}]
-    moveToTake = [{"pos":0,"speed":2160}]
-    moveToZero = [{"pos":0,"speed":2160}]
-    flipToZero = [{"pos":0,"speed":360}]
+    #统一使用变速接口，如全程无须变速，pos可设置为无限大99，只使用初始速度 ,此时相当于在使用gotask_advanced接口
+    flipOut = [{"pos":99,"speed":2520}]
+    moveToTake = [{"pos":99,"speed":2160}]
+    moveToZero = [{"pos":99,"speed":2160}]
+    flipToZero = [{"pos":99,"speed":360}]
 
-    flipToPour = [{"pos":0,"speed":1080}]
-    flipToWash = [{"pos":0,"speed":2520}]
+    flipToPour = [{"pos":99,"speed":1080}]
+    flipToWash = [{"pos":99,"speed":2520}]
 
 
     success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced_speed(5.05,flipOut)   #limit 0.4 if speed is 2160 
