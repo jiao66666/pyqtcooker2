@@ -625,33 +625,33 @@ def testmultitaskabs():
     success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask(0,flip_speed)
     """
 
-    flipOut    = [{"pos":0,"speed":2520}]
-    moveToTake = [{"pos":0,"speed":2160}]                   
-    moveToZero = [{"pos":0,"speed":2160}]             
-    flipToZero = [{"pos":0,"speed":1080}]
+    flipOut    = 2520
+    moveToTake = 2160                  
+    moveToZero = 2160            
+    flipToZero = 1080
 
-    flipToPour = [{"pos":0,"speed":1080}]
-    flipToWash = [{"pos":0,"speed":2520}]
+    flipToPour = 1080
+    flipToWash = 2520
 
 
-    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced_speed(5.05,flipOut)   #limit 0.4 if speed is 2160 
-    success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask_advanced_speed(4.16,moveToTake)
+    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced(5.05,flipOut)   #limit 0.4 if speed is 2160 
+    success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask_advanced(4.16,moveToTake)
     time.sleep(1)    
-    success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask_advanced_speed(0,moveToZero)
-    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced_speed(0,flipToZero)
+    success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask_advanced(0,moveToZero)
+    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced(0,flipToZero)
     time.sleep(1)
 
-    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced_speed(5.05,flipOut)
-    success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask_advanced_speed(4.16,moveToTake)
+    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced(5.05,flipOut)
+    success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask_advanced(4.16,moveToTake)
    
-    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced_speed(20.2,flipToPour)
+    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced(20.2,flipToPour)
     time.sleep(1)
-    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced_speed(-11.8,flipToWash)
+    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced(-11.8,flipToWash)
     time.sleep(1)
-    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced_speed(5.05,flipOut)
+    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced(5.05,flipOut)
 
-    success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask_advanced_speed(0,moveToZero)
-    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced_speed(0,flipToZero)
+    success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask_advanced(0,moveToZero)
+    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced(0,flipToZero)
 
     print("**************************************1号锅测试水平翻转任务结束******************************")
     
@@ -751,6 +751,76 @@ def testvarspeedsingle():
     else:
         print("测试失败!")
         return jsonify({"status": "fail","message": "测试失败!"})          
+
+
+@app.route('/testvarspeedsinglemix', methods=['POST'])   #绝对位置任务测试
+def testvarspeedsinglemix():
+    print("1号变速运动测试混合开始")
+    data = request.get_json()
+    flipout_speed = data.get('flipout_speed') 
+    moveout_speed = data.get('moveout_speed') 
+    flipback_speed = data.get('flipback_speed') 
+    moveback_speed = data.get('moveback_speed') 
+    action_type = data.get('action_type')
+    success = False
+    if not boardercontrollers.get("boardcontroller1"):
+        print("找不到主板控制器，无法操作")
+        return jsonify({"status": "error","message": "找不到主板控制器，无法操作,请先连接串口"})
+    success = False
+    if not boardercontrollers.get("boardcontroller1"):
+        print("找不到主板控制器，无法操作")
+        return jsonify({"status": "error","message": "找不到主板控制器，无法操作,请先连接串口"})
+    
+    if not boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].homed or not boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].homed:
+        print("电机未归位，无法操作")
+        return jsonify({"status": "error","message": "电机未归位，无法操作,请先复位"})
+
+    #runtask参数：[圈数，速度，方向]，主控1号锅两个配合运动
+    print("**************************************1号变速运动测试混合开始开始******************************")
+    print("当前参数列表：",action_type,flipout_speed,moveout_speed,flipback_speed,moveback_speed)
+
+
+    if action_type == 1:
+        flipout_speed = int(flipout_speed)
+        exit_pos = 4.8
+        speedup_pos = 1.0
+        init_speed = 360
+        moveout_speed = int(moveout_speed)
+        speedParams = [{"pos": 0, "speed": init_speed},{"pos": speedup_pos, "speed": moveout_speed}]
+
+        success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced(5.05,flipout_speed,False,exit_pos)  
+        success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask_advanced_speed(4.16,speedParams)  
+
+    else:
+        flipback_speed = int(flipback_speed)
+        back_pos = 3.0
+        speeddown_pos = 3.0
+        init_speed = 2520
+        moveback_speed = int(moveback_speed)
+        speedParams = [{"pos": 0, "speed": init_speed},{"pos": speeddown_pos, "speed": moveback_speed}]
+
+        success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask_advanced_speed(0,speedParams,False,back_pos)  
+        success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask(0,flipback_speed)  
+
+    print("**************************************1号变速运动测试混合结束******************************")
+
+    if success :
+        print("测试成功!")
+        return jsonify({"status": "success","message": "测试成功!"})
+    else:
+        print("测试失败!")
+        return jsonify({"status": "fail","message": "测试失败!"})
+
+    print("**************************************1号变速运动测试混合结束******************************")
+
+    if success :
+        print("测试成功!")
+        return jsonify({"status": "success","message": "测试成功!"})
+    else:
+        print("测试失败!")
+        return jsonify({"status": "fail","message": "测试失败!"})   
+
+
 
 
 @app.route('/testmultiaxis2', methods=['POST'])   #绝对位置任务测试

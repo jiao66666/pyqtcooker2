@@ -45,6 +45,7 @@
         <button onclick="showTab(3, this)">自动程序区</button>
         <button onclick="showTab(4, this)">加料板</button>
         <button onclick="showTab(5, this)">变速运动</button>
+        <button onclick="showTab(6, this)">混合测试</button>
     </div>
 
     <div id="tab1" class="tab-content" style="display:block;">
@@ -260,6 +261,34 @@
             <button onclick="testVarSpeedSingle()">单向变速测试</button>
         </div>
     </div>
+
+
+    <div id="tab6" class="tab-content" >
+        <div class="fb_display" id="motor_status_4"></div>
+
+        <hr style="border: 1px solid #ccc; width: 100%; margin: 2px auto;">
+
+        <div class="input_circle">
+            <label for="circles" class="input_tag">出锅翻转速度:</label>
+            <input class="input-classic" type="number" id="flipout_speed" placeholder="出锅翻转速度" value="360"/>
+        </div>
+        <div class="input_circle">
+            <label for="circles" class="input_tag">出锅水平速度 :</label>
+            <input class="input-classic" type="number" id="moveout_speed" placeholder="出锅水平速度" value="360"/>
+        </div>
+        <div class="input_circle">
+            <label for="circles" class="input_tag">回锅水平速度:</label>
+            <input class="input-classic" type="number" id="moveback_speed" placeholder="回锅水平速度" value="360"/>
+        </div>
+        <div class="input_circle">
+            <label for="circles" class="input_tag">回锅翻转速度:</label>
+            <input class="input-classic" type="number" id="flipback_speed" placeholder="回锅翻转速度" value="360"/>
+        </div>
+        <div class="function_container">
+            <button onclick="testVarSpeedSingleMix(1)">出锅测试</button>
+            <button onclick="testVarSpeedSingleMix(2)">回锅测试</button>
+        </div>
+    </div>    
 
 
 

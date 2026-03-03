@@ -882,6 +882,69 @@ function testVarSpeedSingle() {
 }
 
 
+function testVarSpeedSingleMix(type) {
+     var flipout_speed = document.getElementById("flipout_speed");
+     var moveout_speed = document.getElementById("moveout_speed");
+     var flipback_speed = document.getElementById("flipback_speed");
+     var moveback_speed = document.getElementById("moveback_speed");
+
+    if(type == 1){
+       
+        if(flipout_speed.value == "" || isNaN(flipout_speed.value) || parseInt(flipout_speed.value) <= 0){
+            alert("请输入有效的翻转（出锅）运动目标值！");
+            return;
+        }
+
+        
+        if(moveout_speed.value == "" || isNaN(moveout_speed.value) || parseInt(moveout_speed.value) <= 0){
+            alert("请输入有效的水平（出锅）运动目标值！");
+            return;
+        }
+       console.log("翻转出锅运动速度目标值是:", flipout_speed.value);
+       console.log("水平出锅运动速度目标值是:", moveout_speed.value);
+    }else{
+       
+        if(flipback_speed.value == "" || isNaN(flipback_speed.value) || parseInt(flipback_speed.value) <= 0){
+            alert("请输入有效的翻转（回锅）运动目标值！");
+            return;
+        }
+
+       
+        if(moveback_speed.value == "" || isNaN(moveback_speed.value) || parseInt(moveback_speed.value) <= 0){
+            alert("请输入有效的水平（回锅）运动目标值！");
+            return;
+        }
+    }
+   
+
+       
+      
+
+     // 获取 select 元素
+        fetch('/testvarspeedsinglemix', {
+            method: 'POST', 
+            headers: {
+                'Content-Type': 'application/json'  
+            },
+            body: JSON.stringify({
+                flipout_speed : flipout_speed.value,  
+                moveout_speed: moveout_speed.value,
+                flipback_speed: flipback_speed.value,  
+                moveback_speed: moveback_speed.value,
+                action_type:type
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+             addMessage(`返回信息 : `+data.message);  // 将收到的消息保存并显示
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            addMessage("Error starting motor.");
+        });
+}
+
+
 function getSelectedValue(name) {
     const radios = document.getElementsByName(name);
     for (let i = 0; i < radios.length; i++) {
@@ -965,7 +1028,7 @@ function createMotorStatusApp(el) {
 const app1 = createMotorStatusApp('#motor_status_1');
 const app2 = createMotorStatusApp('#motor_status_2');
 const app3 = createMotorStatusApp('#motor_status_3');
-
+const app4 = createMotorStatusApp('#motor_status_4');
 
 // 将 WebSocket 实例提升到全局作用域
 let ws;
@@ -986,6 +1049,7 @@ function setupWebSocket(url) {
             app1.updateMotorData(item.motor_id, item.position);
             app2.updateMotorData(item.motor_id, item.position);
             app3.updateMotorData(item.motor_id, item.position);
+            app4.updateMotorData(item.motor_id, item.position);
         }
     };
 
