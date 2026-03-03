@@ -86,7 +86,7 @@ def parse_speed_params(speed_params_str: str) -> List[Dict[str, Union[float, int
 
 
 
-def generate_speed_params(init_position,target_position, num_nodes, target_speed, initial_speed=90):
+def generate_linear_speed_params(init_position,target_position, num_nodes, target_speed, initial_speed=90):
     """
     生成速度-位置节点，处理速度线性增长 或者 减少的情况 ，生成线性增加（位置，速度）或线性递减速（位置，速度）的节点列表
     :param init_position: 目标位置（最大位置）

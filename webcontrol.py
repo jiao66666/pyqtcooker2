@@ -3,7 +3,7 @@ from flask import Flask, render_template, jsonify,request
 from lib.boardcontroller import BoardController
 from lib.boardtype import *
 import time
-from lib.tools import is_dev_mode,parse_speed_params,generate_speed_params
+from lib.tools import is_dev_mode,parse_speed_params,generate_linear_speed_params
 from lib.websocket_server import WebSocketServer
 
 import asyncio
@@ -626,8 +626,8 @@ def testmultitaskabs():
     """
     #统一使用变速接口，如全程无须变速，pos可设置为0，只使用初始速度 ,此时相当于在使用gotask_advanced接口，变速指令需要一个渐变的速度数组，速度不能直接跳跃太大，否则 主板有保护，加速度超出上限，反而成了限速模式。
     flipOut    = [{"pos":0,"speed":2520}]
-    moveToTake = generate_speed_params(0,4.16,10,2160,360)                     #[{"pos":0,"speed":2160}]
-    moveToZero = generate_speed_params(4.16,0,10,360,2160)                     #[{"pos":0,"speed":2160}]
+    moveToTake = generate_linear_speed_params(0,4.16,10,2160,360)                     #[{"pos":0,"speed":2160}]
+    moveToZero = generate_linear_speed_params(4.16,0,10,360,2160)                     #[{"pos":0,"speed":2160}]
     flipToZero = [{"pos":0,"speed":1080}]
 
     flipToPour = [{"pos":0,"speed":1080}]
@@ -934,21 +934,6 @@ def gopos():
            
 if __name__ == '__main__':
     # 绑定到所有网络接口，允许局域网访问,测试使用3000端口，实际生产使用5000端口
-    #test part
-    """
-    testparams = generate_speed_params(0,5.05,10,2520,360)
-    testparams2 = generate_speed_params(4.16,0,10,360,2520)
-    print("-------模板测试输出--------")
-    print(testparams)
-    print(testparams2)
-    print(parse_speed_params(str(testparams)))
-    print(parse_speed_params(str(testparams2)))
-    print("-------模板测试输出--------")
-    """    
-    moveToTake = generate_speed_params(0,4.16,10,2520,1080)                     #[{"pos":0,"speed":2160}]
-    moveToZero = generate_speed_params(4.16,0,10,360,2520)                     #[{"pos":0,"speed":2160}]
-
-    print(moveToTake)
-    print(moveToZero)
+   
 
     app.run(debug=True, host='0.0.0.0', port=port)
