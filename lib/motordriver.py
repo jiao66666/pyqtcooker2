@@ -120,7 +120,7 @@ class MotorDriver:
         self.adjust_speed(0)  # 停止时速度归零
 
 
-    def gotask_advanced_curve(self, target: float, maxspeed: int,adjust_interval: int = ADJUSTSPEED_INTERVAL,wait_for_completion: bool = True,exit_pos:float = 0.0):
+    def gotask_advanced_curve(self, target: float, maxspeed: int,adjust_interval: float = ADJUSTSPEED_INTERVAL,wait_for_completion: bool = True,exit_pos:float = 0.0):
         """单次运转电机"""  ##绝对运动
         print("####运行电机高级任务####")
        
