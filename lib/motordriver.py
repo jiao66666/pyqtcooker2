@@ -160,9 +160,9 @@ class MotorDriver:
             speed = max(max_speed * speed_ratio, min_speed) * direction
 
             if speed > 0:
-               self.adjust_speed(int(speed * 360))
+               self.adjust_speed(int(speed))
 
-            print(f"当前比例: {ratio:.3f}, 速度比例: {speed_ratio:.3f}, 当前角速度: {speed * 360:.2f}")
+            print(f"当前比例: {ratio:.3f}, 速度比例: {speed_ratio:.3f}, 当前角速度: {speed:.2f}")
             time.sleep(interval)
 
         self.adjust_speed(0)  # 停止时速度归零
