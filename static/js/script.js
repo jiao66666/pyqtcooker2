@@ -739,7 +739,7 @@ function testcurvemove() {
         }
 
        var adjust_interval = document.getElementById("adjust_interval");
-        if(adjust_interval.value == "" || isNaN(adjust_interval.value) || parseInt(adjust_interval.value) <= 0){
+        if(adjust_interval.value == "" || isNaN(adjust_interval.value) || parseFloat(adjust_interval.value) <= 0){
             alert("请输入变速调整间隔(秒)！");
             return;
         }

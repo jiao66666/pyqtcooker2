@@ -128,26 +128,15 @@ def generate_linear_speed_params(init_position,target_position, num_nodes, targe
     return parse_speed_params(str(speed_profile[:-1]))
 
 
-def ease_in_out_move_smooth(start_pos, target_pos, max_speed, send_speed_func, interval=0.02):
-    """
-    平滑 Easy-In-Out 动态调速
-    start_pos: 起始位置（度）
-    target_pos: 目标位置（度）
-    max_speed: 最大速度（度/秒）
-    send_speed_func: 发送速度信号的函数
-    interval: 每次更新速度的时间间隔（秒）
-    """
-    # 总位移和方向
+def ease_in_out_move_smooth_curve(start_pos, target_pos, max_speed, interval=0.1):
+
     distance = abs(target_pos - start_pos)
+    distance_deg = distance * 360
+
+    avg_speed = max_speed * 2/3   # 因为这个曲线平均值是 2/3
+    total_time = distance_deg / avg_speed
+
     direction = 1 if target_pos > start_pos else -1
-
-    # 粗略估算总时间
-    # 假设加速+减速阶段占总位移比例 60%，匀速阶段占 40%
-    # total_time = total_distance / (平均速度)
-    # 平均速度约取 max_speed * 0.7
-    avg_speed = max_speed * 0.7
-    total_time = distance / avg_speed
-
     start_time = time.time()
 
     while True:
@@ -155,19 +144,17 @@ def ease_in_out_move_smooth(start_pos, target_pos, max_speed, send_speed_func, i
         if t >= total_time:
             break
 
-        # 归一化时间 0~1
         p = t / total_time
 
-        # 使用三次平滑函数 cubic ease-in-out
-        if p < 0.5:
-            speed_ratio = 4 * p**3  # 加速阶段
-        else:
-            speed_ratio = 1 - ((-2*p + 2)**3) / 2  # 减速阶段
+        # ⭐ 真正的速度比例函数
+        speed_ratio = 4 * p * (1 - p)
 
         speed = max_speed * speed_ratio * direction
 
-        send_speed_func(speed)
+        print(f"p={p:.3f}, speed_ratio={speed_ratio:.3f}, speed={speed:.1f}")
 
         time.sleep(interval)
+
+    print("finished")
 
 

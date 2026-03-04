@@ -94,11 +94,13 @@ class MotorDriver:
 
     def ease_in_out_move_smooth_curve(self,start_pos, target_pos, max_speed, interval=ADJUSTSPEED_INTERVAL):
         distance = abs(target_pos - start_pos)
-        direction = 1 if target_pos > start_pos else -1
-        avg_speed = max_speed * 0.7
-        total_time = distance / avg_speed
-        start_time = time.time()
+        distance_deg = distance * 360
 
+        avg_speed = max_speed * 2/3   # 因为这个曲线平均值是 2/3
+        total_time = distance_deg / avg_speed
+
+        direction = 1 if target_pos > start_pos else -1
+        start_time = time.time()
         while True:
             if self.stop_curvemove_event.is_set():  # 检查停止事件
                 break
@@ -108,19 +110,14 @@ class MotorDriver:
                 break
 
             p = t / total_time
-            if p < 0.5:
-                speed_ratio = 4 * p**3
-            else:
-                speed_ratio = 1 - ((-2*p + 2)**3) / 2
-
+             # ⭐ 真正的速度比例函数
+            speed_ratio = 4 * p * (1 - p)
             speed = max_speed * speed_ratio * direction
-            self.adjust_speed(speed)
+            if speed > 0:
+               self.adjust_speed(int(speed))
             time.sleep(interval)
 
         self.adjust_speed(0)  # 停止时速度归零
-
-
-
 
 
     def gotask_advanced_curve(self, target: float, maxspeed: int,adjust_interval: int = ADJUSTSPEED_INTERVAL,wait_for_completion: bool = True,exit_pos:float = 0.0):
