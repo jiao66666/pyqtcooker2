@@ -93,6 +93,9 @@ class MotorDriver:
 
 
     def ease_in_out_move_smooth_curve(self,start_pos, target_pos, max_speed, interval=ADJUSTSPEED_INTERVAL):
+        # 复位停止事件，确保可再次执行
+        self.stop_curvemove_event.clear()
+        
         distance = abs(target_pos - start_pos)
         distance_deg = distance * 360
 
