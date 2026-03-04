@@ -817,14 +817,18 @@ def testvarspeedsinglemix():
 @app.route('/testcurvemove', methods=['POST'])
 def testcurvemove():
     print("-------1号曲线运动测试开始------- ")
+    data = request.get_json()
+    maxspeed = data.get('maxspeed') 
+    adjust_interval = data.get('adjust_interval') 
+
     success = False
 
     if not boardercontrollers.get("boardcontroller1"):
         print("找不到主板控制器，无法操作")
         return jsonify({"status": "error","message": "找不到主板控制器，无法操作,请先连接串口"})
     
-
-    success =  boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask(0,3600)
+    print("收到参数:",maxspeed,adjust_interval)
+    success =  boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask_advanced_curve(4.16,int(maxspeed),float(adjust_interval))
 
     if success :
         print("测试成功!")

@@ -92,7 +92,7 @@ class MotorDriver:
         return round(circles,2)    
 
 
-    def ease_in_out_move_smooth_curve(self,start_pos, target_pos, max_speed, interval=0.02):
+    def ease_in_out_move_smooth_curve(self,start_pos, target_pos, max_speed, interval=ADJUSTSPEED_INTERVAL):
         distance = abs(target_pos - start_pos)
         direction = 1 if target_pos > start_pos else -1
         avg_speed = max_speed * 0.7
@@ -123,13 +123,14 @@ class MotorDriver:
 
 
 
-    def gotask_advanced_curve(self, target: float, anglespeed: int,wait_for_completion: bool = True,exit_pos:float = 0.0,maxspeed:int = DEFAULT_CURVE_MAXSPEED):
+    def gotask_advanced_curve(self, target: float, maxspeed: int,adjust_interval: int = ADJUSTSPEED_INTERVAL,wait_for_completion: bool = True,exit_pos:float = 0.0):
         """单次运转电机"""  ##绝对运动
         print("####运行电机高级任务####")
+       
         if not self.com or not self.com.connected:
             print("错误: 串口未连接，无法运行电机")
             return False
-        print(f"[{self.name}] ID:{self.motor_id} 运行到位置{target}, 角速度 {anglespeed}, 主板类型:{self.board_id}")
+        print(f"[{self.name}] ID:{self.motor_id} 运行到位置{target}, 最大角速度 {maxspeed}, 主板类型:{self.board_id}")
 
         if not self.homed:
            print("错误: 电机未回零，无法进行绝对运动")
@@ -170,8 +171,9 @@ class MotorDriver:
 
         # 1. 执行命令
         print("执行指令...")
+        #由于是变速运动 这里设置初始速度为最小为1，主要使用的是最大速度
         command = "RUN"
-        params = [str(self.board_id), str(self.motor_id), str(pulses), str(anglespeed)]
+        params = [str(self.board_id), str(self.motor_id), str(pulses), "1"]
         success, response = self.com.execute_command(command, params)
         
         if not success:
@@ -182,10 +184,9 @@ class MotorDriver:
         # 启动调速线程
         speed_thread = threading.Thread(
             target=self.ease_in_out_move_smooth_curve,
-            args=(start_pos, target, maxspeed,ADJUSTSPEED_INTERVAL)
+            args=(start_pos, target, maxspeed,adjust_interval)
         )
         speed_thread.start()
-
 
 
         readparams = list(map(str, params[:2]))

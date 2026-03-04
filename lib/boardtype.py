@@ -24,5 +24,4 @@ POT_POS_SAFE_FLIP = 5.05  # 锅移动安全位,翻转位
 MICRO_STEP = 128  #当前步进电机细分
 FB_CHECK_INTERVAL = 0.05        #坐标反馈检查间隔  #0.1 isOK
 MTSTATUS_CHECK_INTERVAL = 0.05  #电机状态检查间隔  #0.2 isOK
-ADJUSTSPEED_INTERVAL = 0.1      #动态调速间隔
-DEFAULT_CURVE_MAXSPEED = 2000   #默认曲线最大速度
+ADJUSTSPEED_INTERVAL = 0.05      #动态调速间隔
