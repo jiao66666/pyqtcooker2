@@ -590,41 +590,41 @@ def testmultitaskabs():
 
     #runtask参数：[圈数，速度，方向]
     print("**************************************1号锅测试水平翻转任务开始******************************")
-    """
+    
     move_speed = int(speed_level)   #2160  tested
     flip_speed = int(speed_flip)   #2520  tested 
 
-    if move_speed > 3600:   #  10圈/秒  已经非常快了，超过这个速度可能会有安全隐患，限制最高速度为3600
-        move_speed = 3600
+    if move_speed > 2160:   #  10圈/秒  已经非常快了，超过这个速度可能会有安全隐患，限制最高速度为3600
+        move_speed = 2160
     elif move_speed < 360:
         move_speed = 360
 
-    if flip_speed > 3600:   
-        flip_speed = 3600
+    if flip_speed > 2520:   
+        flip_speed = 2520
     elif flip_speed < 360:
         flip_speed = 360    
 
     # exit_pos flip 2.5 move 3 
-    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced(5.05,flip_speed,False,1.8)   #limit 0.4 if speed is 2160 
-    success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask(4.16,move_speed)
+    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced_curve(5.05,flip_speed)   #limit 0.4 if speed is 2160 
+    success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask_advanced_curve(4.16,move_speed)
     time.sleep(1)    
-    success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask_advanced(0,move_speed,False,3.3)
-    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask(0,flip_speed)
+    success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask_advanced_curve(0,move_speed)
+    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced_curve(0,flip_speed)
     time.sleep(1)
 
-    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced(5.05,flip_speed,False,1.8)
-    success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask(4.16,move_speed)
+    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced_curve(5.05,flip_speed)
+    success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask_advanced_curve(4.16,move_speed)
    
-    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask(20.2,flip_speed)
+    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced_curve(20.2,flip_speed)
     time.sleep(1)
-    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask(-11.8,flip_speed)
+    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced_curve(-11.8,flip_speed)
     time.sleep(1)
-    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask(5.05,flip_speed)
+    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced_curve(5.05,flip_speed)
 
-    success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask_advanced(0,move_speed,False,3.3)
-    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask(0,flip_speed)
+    success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask_advanced_curve(0,move_speed)
+    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced_curve(0,flip_speed)
+    
     """
-
     flipOut    = 2520
     moveToTake = 2160                  
     moveToZero = 2160            
@@ -652,7 +652,7 @@ def testmultitaskabs():
 
     success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask_advanced(0,moveToZero)
     success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced(0,flipToZero)
-
+    """
     print("**************************************1号锅测试水平翻转任务结束******************************")
     
     if success :
@@ -1023,6 +1023,6 @@ def gopos():
 if __name__ == '__main__':
     # 绑定到所有网络接口，允许局域网访问,测试使用3000端口，实际生产使用5000端口
     #print("test curve move")
-    #ease_in_out_move_smooth_curve(0,4.16,360,0.1)
+    #ease_in_out_move_smooth_curve(0,4.16,1080,0.1)
 
     app.run(debug=True, host='0.0.0.0', port=port)
