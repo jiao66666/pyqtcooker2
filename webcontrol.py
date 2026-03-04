@@ -804,14 +804,6 @@ def testvarspeedsinglemix():
 
     print("**************************************1号变速运动测试混合结束******************************")
 
-    if success :
-        print("测试成功!")
-        return jsonify({"status": "success","message": "测试成功!"})
-    else:
-        print("测试失败!")
-        return jsonify({"status": "fail","message": "测试失败!"})
-
-    print("**************************************1号变速运动测试混合结束******************************")
 
     if success :
         print("测试成功!")
@@ -819,6 +811,28 @@ def testvarspeedsinglemix():
     else:
         print("测试失败!")
         return jsonify({"status": "fail","message": "测试失败!"})   
+
+
+
+@app.route('/testcurvemove', methods=['POST'])
+def testcurvemove():
+    print("-------1号曲线运动测试开始------- ")
+    success = False
+
+    if not boardercontrollers.get("boardcontroller1"):
+        print("找不到主板控制器，无法操作")
+        return jsonify({"status": "error","message": "找不到主板控制器，无法操作,请先连接串口"})
+    
+
+    success =  boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask(0,3600)
+
+    if success :
+        print("测试成功!")
+        return jsonify({"status": "success","message": "测试成功!"})
+    else:
+        print("测试失败!")
+        return jsonify({"status": "fail","message": "测试失败!"})    
+
 
 
 

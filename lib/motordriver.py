@@ -32,6 +32,9 @@ class MotorDriver:
        
         self.websocket_server = websocket_server  # 使用全局 WebSocket 服务器实例
 
+        self.stop_curvemove_event = threading.Event()  # 类成员事件,用于停止变速曲线运动
+
+
 
 
 
@@ -87,6 +90,151 @@ class MotorDriver:
             circles = pulses / (MICRO_STEP*200) 
 
         return round(circles,2)    
+
+
+    def ease_in_out_move_smooth_curve(self,start_pos, target_pos, max_speed, interval=0.02):
+        distance = abs(target_pos - start_pos)
+        direction = 1 if target_pos > start_pos else -1
+        avg_speed = max_speed * 0.7
+        total_time = distance / avg_speed
+        start_time = time.time()
+
+        while True:
+            if self.stop_curvemove_event.is_set():  # 检查停止事件
+                break
+
+            t = time.time() - start_time
+            if t >= total_time:
+                break
+
+            p = t / total_time
+            if p < 0.5:
+                speed_ratio = 4 * p**3
+            else:
+                speed_ratio = 1 - ((-2*p + 2)**3) / 2
+
+            speed = max_speed * speed_ratio * direction
+            self.adjust_speed(speed)
+            time.sleep(interval)
+
+        self.adjust_speed(0)  # 停止时速度归零
+
+
+
+
+
+    def gotask_advanced_curve(self, target: float, anglespeed: int,wait_for_completion: bool = True,exit_pos:float = 0.0,maxspeed:int = DEFAULT_CURVE_MAXSPEED):
+        """单次运转电机"""  ##绝对运动
+        print("####运行电机高级任务####")
+        if not self.com or not self.com.connected:
+            print("错误: 串口未连接，无法运行电机")
+            return False
+        print(f"[{self.name}] ID:{self.motor_id} 运行到位置{target}, 角速度 {anglespeed}, 主板类型:{self.board_id}")
+
+        if not self.homed:
+           print("错误: 电机未回零，无法进行绝对运动")
+           return False
+        # 计算脉冲数
+        if self.motor_id in [2,4] and target < 0:
+            print("错误: 水平电机不能运动到负值位置")
+            return False
+        
+       
+        deltaDistance = target - self.current_position 
+        if deltaDistance == 0:
+            print("目标位置与当前位置相同，无需运动")
+            return True
+         # 计算需要运动的圈数
+
+        circles = abs(deltaDistance)
+
+        if deltaDistance >=0:  ## 确定 目标位在当前位置 的左还是右侧
+            if self.motor_id in [1,2]:
+                direction = -1
+            else:
+                direction = 1
+        else:
+            if self.motor_id in [1,2]:
+                direction = 1
+            else:
+                direction = -1
+
+        self.current_position = target  
+        # 计算脉冲数
+        pulses = circles_to_pulses(circles)
+        if direction >=0:
+            pulses = abs(pulses)
+        else:
+            pulses = -abs(pulses)    
+         # 发送运行命令
+
+        # 1. 执行命令
+        print("执行指令...")
+        command = "RUN"
+        params = [str(self.board_id), str(self.motor_id), str(pulses), str(anglespeed)]
+        success, response = self.com.execute_command(command, params)
+        
+        if not success:
+            print(f"命令执行失败,{response}")
+            return False
+
+        start_pos = self.fb_position
+        # 启动调速线程
+        speed_thread = threading.Thread(
+            target=self.ease_in_out_move_smooth_curve,
+            args=(start_pos, target, maxspeed,ADJUSTSPEED_INTERVAL)
+        )
+        speed_thread.start()
+
+
+
+        readparams = list(map(str, params[:2]))
+        timeout = MTSTATUS_CHECK_INTERVAL
+
+        # 2. 创建一个线程来轮询电机状态
+        print("启动电机状态轮询...")
+        state_thread = threading.Thread(target=self.wait_for_motor_to_pause_advanced_curve,args=(command, readparams,timeout,wait_for_completion,exit_pos,target))
+        state_thread.start()
+
+        # 3. 等待轮询线程完成
+        state_thread.join()  # 等待线程完成后继续执行
+        print("任务完成，执行下一步")
+        return True        
+
+
+
+    def wait_for_motor_to_pause_advanced_curve(self, command: str, params: List[str], check_interval: int = 0.2,wait_for_completion: bool = True,exit_pos:float = 0.0,target:float = 0.0) -> bool:
+        """轮询电机状态，直到电机进入 PAUSING 状态"""
+        while True:
+            success, response = self.com.read_command("RunStatus", params)
+            if not success:
+                print("读取电机状态失败")
+                return False
+
+            status = response[1]  # 获取电机状态
+            print(f"当前电机状态: {status}")
+
+            if status == "PAUSEING":
+                print("电机暂停，任务结束")
+                self.stop_curvemove_event.set()  # 通知调速线程停止
+                return True
+            elif status == "RUNING" or status == "ORGING":
+                print("电机正在运行，等待中...")
+                if not wait_for_completion:
+                        if (target > exit_pos and self.fb_position >= exit_pos) or (target < exit_pos and self.fb_position <= exit_pos):
+                            print(f"电机已达到提前退出位置{exit_pos}，任务结束")
+                            return True
+                time.sleep(check_interval)  # 每隔 check_interval 检查一次
+            elif status == "ERROR":
+                print("电机发生错误，停止轮询")
+                return False
+            else:
+                print(f"未知状态: {status}")
+                return False     
+
+
+
+
 
     #任务执行高级模式，可提前跳出当前电机任务，同步执行后面的电机任务，适用于多个电机需要同时运动的情况,如果wait_for_completion = false ,必须指定提前退出位置 。 exit_pos需要<target
     def gotask_advanced(self, target: float, anglespeed: int, wait_for_completion: bool = True,exit_pos:float = 0.0):

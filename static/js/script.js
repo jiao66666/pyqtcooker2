@@ -731,6 +731,28 @@ function enableall() {
 }
 
 
+function testcurvemove() {
+     // 获取 select 元素
+        fetch('/testcurvemove', {
+            method: 'POST', 
+            headers: {
+                'Content-Type': 'application/json'  
+            },
+            body: JSON.stringify({
+            
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+              addMessage(`返回信息 : `+data.message);  // 将收到的消息保存并显示
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            addMessage("Error starting motor.");
+        });
+}
+
+
 function testMultiAxis() {
      var speed_level = document.getElementById("speed_level");
         if(speed_level.value == "" || isNaN(speed_level.value) || parseInt(speed_level.value) <= 0){
