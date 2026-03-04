@@ -162,7 +162,7 @@ class MotorDriver:
             if speed > 0:
                self.adjust_speed(int(speed))
 
-            print(f"当前比例: {ratio:.3f}, 速度比例: {speed_ratio:.3f}, 当前角速度: {speed:.2f}")
+            print(f"当前比例: {ratio:.3f}, 速度比例: {speed_ratio:.3f}, 当前角速度: {speed:.2f},当前位置:{current_pos:.2f}")
             time.sleep(interval)
 
         self.adjust_speed(0)  # 停止时速度归零
