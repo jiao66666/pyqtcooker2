@@ -128,7 +128,7 @@ def generate_linear_speed_params(init_position,target_position, num_nodes, targe
     return parse_speed_params(str(speed_profile[:-1]))
 
 
-def ease_in_out_move_smooth_curve(start_pos, target_pos, max_speed, interval=0.1):
+def test_ease_in_out_move_smooth_curve_bytime(start_pos, target_pos, max_speed, interval=0.1):
 
     distance = abs(target_pos - start_pos)
     distance_deg = distance * 360
@@ -158,3 +158,130 @@ def ease_in_out_move_smooth_curve(start_pos, target_pos, max_speed, interval=0.1
     print("finished")
 
 
+# 初始化位置
+def test_ease_in_out_move_smooth_curve_bypos(start_pos, target_pos, max_speed, interval=0.1): 
+    """
+    基于当前位置的加速-减速平滑运动（带最小速度保护）
+    """
+    total_distance = abs(target_pos - start_pos)  # 直接用圈单位
+    direction = 1 if target_pos > start_pos else -1
+
+    while True:
+        # 获取当前位置（圈单位）
+        current_pos = get_current_position(start_pos, target_pos, max_speed, interval)
+
+        if current_pos is None:
+            continue
+
+        # 判断是否到达目标
+        remaining_distance = target_pos - current_pos  # 保持圈单位
+        if direction * remaining_distance <= 0:
+            print("到达目标位置，速度设0")
+            break
+
+        # 计算当前位置比例
+        ratio = (current_pos - start_pos) / total_distance  # 用圈计算比例
+        ratio = max(0, min(1, ratio))  # 限制在0~1
+
+        # 使用S曲线的速度比例函数
+        speed_ratio = 4 * ratio * (1 - ratio)
+        # 速度保护
+        min_speed = 0.01
+        speed = max(max_speed * speed_ratio, min_speed) * direction
+
+        print(f"当前比例: {ratio:.3f}, 速度比例: {speed_ratio:.3f}, 当前速度: {speed:.2f}")
+
+        time.sleep(interval)
+
+    print("finished")
+
+
+
+_current_pos = None
+
+def get_current_position(start_pos, target_pos, max_speed=1, interval=0.05):
+    """
+    模拟实时位置输出，基于 S 曲线加速-减速规律
+    start_pos, target_pos: 圈数
+    max_speed: 最大速度，圈/秒
+    interval: 时间步长
+    返回当前位置（圈数）
+    """
+    global _current_pos
+
+    # 第一次调用初始化
+    if _current_pos is None:
+        _current_pos = start_pos  # 初始化位置为起点
+
+    direction = 1 if target_pos > start_pos else -1
+    total_distance = target_pos - start_pos  # 计算总的圈数差
+
+    # 剩余距离
+    remaining_distance = target_pos - _current_pos
+    if direction * remaining_distance <= 0:
+        _current_pos = target_pos  # 达到目标位置，退出
+        return _current_pos
+
+    # 当前进度比例
+    ratio = (_current_pos - start_pos) / total_distance
+    
+    # 使用加速和减速的S曲线公式
+    if ratio < 0.5:
+        # 前半段，加速
+        speed_ratio = 4 * ratio * (1 - ratio)  # 加速
+    else:
+        # 后半段，减速
+        speed_ratio = 4 * (1 - ratio) * ratio  # 减速
+
+    # 当前速度（根据S曲线公式）
+    current_speed = max_speed * speed_ratio  # 当前速度（圈/秒）
+
+    # 最大速度限制
+    current_speed = min(current_speed, max_speed)
+
+    # 最小速度保护
+    min_speed = 0.1
+    if current_speed < min_speed:
+        current_speed = min_speed
+
+    # 更新位置
+    _current_pos += current_speed * interval * direction  # 更新位置
+
+    # 避免超出目标
+    if direction > 0 and _current_pos > target_pos:
+        _current_pos = target_pos
+    elif direction < 0 and _current_pos < target_pos:
+        _current_pos = target_pos
+
+    # 输出当前位置信息
+    #print(f"当前位置: {_current_pos:.2f} 圈, 当前速度: {current_speed:.2f} 圈/秒")
+
+    return _current_pos
+
+# 测试代码：调用 get_current_position 方法来模拟位置的变化
+def test_get_current_position(start_pos, target_pos, max_speed=1, interval=0.1):
+    """
+    测试 get_current_position 函数，观察位置如何变化
+    :param start_pos: 起点位置（圈数）
+    :param target_pos: 目标位置（圈数）
+    :param max_speed: 最大速度（圈/秒）
+    :param interval: 循环更新时间（秒）
+    """
+    print("开始测试：")
+    while True:
+        # 获取当前位置
+        current_pos = get_current_position(start_pos, target_pos, max_speed, interval)
+        #print(f"当前位置: {current_pos:.2f} ")
+
+        # 判断是否到达目标
+        # 判断是否到达目标
+        if (target_pos > start_pos and current_pos >= target_pos) or (target_pos < start_pos and current_pos <= target_pos):
+            print("到达目标位置！")
+            break
+
+        time.sleep(interval)
+
+
+# 运行测试
+#test_get_current_position(0, 4.16, 1, 0.1)
+#test_ease_in_out_move_smooth_curve_bypos(0, 4.16, 1, 0.1)

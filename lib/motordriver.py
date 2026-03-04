@@ -92,10 +92,10 @@ class MotorDriver:
         return round(circles,2)    
 
 
-    def ease_in_out_move_smooth_curve(self,start_pos, target_pos, max_speed, interval=ADJUSTSPEED_INTERVAL):
+    def ease_in_out_move_smooth_curve_bytime(self,start_pos, target_pos, max_speed, interval=ADJUSTSPEED_INTERVAL):
         # 复位停止事件，确保可再次执行
         self.stop_curvemove_event.clear()
-        
+
         distance = abs(target_pos - start_pos)
         distance_deg = distance * 360
 
@@ -122,6 +122,51 @@ class MotorDriver:
 
         self.adjust_speed(0)  # 停止时速度归零
 
+
+
+# 初始化位置
+    def ease_in_out_move_smooth_curve_bypos(self,start_pos, target_pos, max_speed, interval=ADJUSTSPEED_INTERVAL): 
+        """
+        基于当前位置的加速-减速平滑运动（带最小速度保护）
+        """
+             # 复位停止事件，确保可再次执行
+        self.stop_curvemove_event.clear()
+
+        total_distance = abs(target_pos - start_pos)  # 直接用圈单位
+        direction = 1 if target_pos > start_pos else -1
+
+        while True:
+            # 获取当前位置（圈单位）
+
+            if self.stop_curvemove_event.is_set():  # 检查停止事件
+                break
+
+            current_pos = self.fb_position
+ 
+            # 判断是否到达目标
+            remaining_distance = target_pos - current_pos  # 保持圈单位
+            if direction * remaining_distance <= 0:
+                print("到达目标位置，速度设0")
+                break
+
+            # 计算当前位置比例
+            ratio = (current_pos - start_pos) / total_distance  # 用圈计算比例
+            ratio = max(0, min(1, ratio))  # 限制在0~1
+
+            # 使用S曲线的速度比例函数
+            speed_ratio = 4 * ratio * (1 - ratio)
+            # 速度保护 为圈/秒
+            min_speed = 0.01
+            speed = max(max_speed * speed_ratio, min_speed) * direction
+
+            if speed > 0:
+               self.adjust_speed(int(speed * 360))
+
+            print(f"当前比例: {ratio:.3f}, 速度比例: {speed_ratio:.3f}, 当前角速度: {speed * 360:.2f}")
+            time.sleep(interval)
+
+        self.adjust_speed(0)  # 停止时速度归零
+        print("finished")
 
     def gotask_advanced_curve(self, target: float, maxspeed: int,adjust_interval: float = ADJUSTSPEED_INTERVAL,wait_for_completion: bool = True,exit_pos:float = 0.0):
         """单次运转电机"""  ##绝对运动
@@ -183,7 +228,7 @@ class MotorDriver:
         start_pos = self.fb_position
         # 启动调速线程
         speed_thread = threading.Thread(
-            target=self.ease_in_out_move_smooth_curve,
+            target=self.ease_in_out_move_smooth_curve_bypos,
             args=(start_pos, target, maxspeed,adjust_interval)
         )
         speed_thread.start()
