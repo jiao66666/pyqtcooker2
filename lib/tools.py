@@ -192,14 +192,19 @@ def get_current_position(start_pos, target_pos, max_speed=1, interval=0.05):
     else:
         # start_pos > target_pos
         ratio = (_current_pos - target_pos) / total_distance  # 目标在后面，反向计算
+
     
-    # 使用加速和减速的S曲线公式
-    if ratio < 0.5:
-        # 前半段，加速
-        speed_ratio = 4 * ratio * (1 - ratio)  # 加速
+    if ratio < 0.4:
+        # 起步快
+        speed_ratio = 0.5 + 0.5 * (ratio / 0.4)  # 线性快速上升到 1
+    elif ratio < 0.8:
+        # 中段保持接近最大速度
+        speed_ratio = 1.0
     else:
-        # 后半段，减速
-        speed_ratio = 4 * (1 - ratio) * ratio  # 减速
+        # 后段缓慢减速
+        speed_ratio = (1.0 - ratio) / 0.2
+        speed_ratio = max(speed_ratio, 0.05)  # 防止减速太慢
+# --------------------------
 
     # 当前速度（根据S曲线公式）
     # max_speed是角度/秒，将其转换为圈/秒 (即 max_speed / 360)
@@ -209,7 +214,7 @@ def get_current_position(start_pos, target_pos, max_speed=1, interval=0.05):
     current_speed = min(current_speed, max_speed / 360)
 
     # 最小速度保护
-    min_speed = 0.1 / 360  # 最小速度也要转换为圈/秒
+    min_speed = 360 / 360  # 最小速度也要转换为圈/秒
     if current_speed < min_speed:
         current_speed = min_speed
 
@@ -223,7 +228,7 @@ def get_current_position(start_pos, target_pos, max_speed=1, interval=0.05):
         _current_pos = target_pos
 
     # 输出当前位置信息（调试用）
-    #print(f"当前位置: {_current_pos:.2f} 圈, 当前速度: {current_speed:.2f} 度/秒")
+    print(f"当前位置: {_current_pos:.2f} 圈, 当前速度: {current_speed*360:.2f} 度/秒")
 
     return _current_pos
 
@@ -308,4 +313,4 @@ def test_ease_in_out_move_smooth_curve_bypos(start_pos, target_pos, max_speed, i
 
 # 运行测试
 #test_ease_in_out_move_smooth_curve_bypos(20, -10, 2520, 0.05)  # 测试大速度情况
-#test_get_current_position(0, 4.16, 360, 0.1)  # 测试低速度情况
+#test_get_current_position(0, 4.16, 1080, 0.05)  # 测试低速度情况

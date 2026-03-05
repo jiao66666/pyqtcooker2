@@ -157,16 +157,29 @@ class MotorDriver:
             else:
                 # start_pos > target_pos
                 ratio = (current_pos - target_pos) / total_distance  # 目标在后面，反向计算
-                
+
             ratio = max(0, min(1, ratio))  # 限制在0~1
 
-             # 使用加速和减速的S曲线公式
+            """  # 使用标准的加速和减速的S曲线公式
             if ratio < 0.5:
                 # 前半段，加速
                 speed_ratio = 4 * ratio * (1 - ratio)  # 加速
             else:
                 # 后半段，减速
                 speed_ratio = 4 * (1 - ratio) * ratio  # 减速
+            """
+            # 改良过的S曲线公式
+            if ratio < 0.4:
+                # 起步快
+                speed_ratio = 0.5 + 0.5 * (ratio / 0.4)  # 线性快速上升到 1
+            elif ratio < 0.8:
+                # 中段保持接近最大速度
+                speed_ratio = 1.0
+            else:
+                # 后段缓慢减速
+                speed_ratio = (1.0 - ratio) / 0.2
+                speed_ratio = max(speed_ratio, 0.05)  # 防止减速太慢
+
 
              # max_speed是角度/秒，将其转换为圈/秒 (即 max_speed / 360)
             current_speed = (max_speed / 360) * speed_ratio  # 当前速度（圈/秒）
