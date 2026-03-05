@@ -594,13 +594,13 @@ def testmultitaskabs():
     move_speed = int(speed_level)   #2160  tested
     flip_speed = int(speed_flip)   #2520  tested 
 
-    if move_speed > 2160:   #  10圈/秒  已经非常快了，超过这个速度可能会有安全隐患，限制最高速度为3600
-        move_speed = 2160
+    if move_speed > 3600:   #  10圈/秒  已经非常快了，超过这个速度可能会有安全隐患，限制最高速度为3600
+        move_speed = 3600
     elif move_speed < 360:
         move_speed = 360
 
-    if flip_speed > 2520:   
-        flip_speed = 2520
+    if flip_speed > 3600:   
+        flip_speed = 3600
     elif flip_speed < 360:
         flip_speed = 360    
 
