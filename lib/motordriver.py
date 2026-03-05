@@ -153,16 +153,29 @@ class MotorDriver:
             ratio = (current_pos - start_pos) / total_distance  # 用圈计算比例
             ratio = max(0, min(1, ratio))  # 限制在0~1
 
-            # 使用S曲线的速度比例函数
-            speed_ratio = 4 * ratio * (1 - ratio)
-            # 速度保护 为圈/秒
-            min_speed = 0.01
-            speed = max(max_speed * speed_ratio, min_speed) * direction
+             # 使用加速和减速的S曲线公式
+            if ratio < 0.5:
+                # 前半段，加速
+                speed_ratio = 4 * ratio * (1 - ratio)  # 加速
+            else:
+                # 后半段，减速
+                speed_ratio = 4 * (1 - ratio) * ratio  # 减速
 
-            if speed > 0:
-               self.adjust_speed(int(speed))
+             # max_speed是角度/秒，将其转换为圈/秒 (即 max_speed / 360)
+            current_speed = (max_speed / 360) * speed_ratio  # 当前速度（圈/秒）
 
-            print(f"当前比例: {ratio:.3f}, 速度比例: {speed_ratio:.3f}, 当前角速度: {speed:.2f},当前位置:{current_pos:.2f}")
+            # 最大速度限制
+            current_speed = min(current_speed, max_speed / 360)
+
+            # 最小速度保护
+            min_speed = 1   
+            if current_speed < min_speed:
+                current_speed = min_speed
+
+            if current_speed > 0:
+               self.adjust_speed(int(current_speed))
+
+            print(f"当前比例: {ratio:.3f}, 速度比例: {speed_ratio:.3f}, 当前角速度: {current_speed:.2f},当前位置:{current_pos:.2f}")
             time.sleep(interval)
 
         self.adjust_speed(0)  # 停止时速度归零
