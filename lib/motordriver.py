@@ -231,7 +231,7 @@ class MotorDriver:
         print("执行指令...")
         #由于是变速运动 这里设置初始速度为最小为1，主要使用的是最大速度
         command = "RUN"
-        params = [str(self.board_id), str(self.motor_id), str(pulses), "1"]
+        params = [str(self.board_id), str(self.motor_id), str(pulses), "360"]
         success, response = self.com.execute_command(command, params)
         
         if not success:
