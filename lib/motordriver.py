@@ -168,14 +168,15 @@ class MotorDriver:
             current_speed = min(current_speed, max_speed / 360)
 
             # 最小速度保护
-            min_speed = 1   
+            min_speed = 1 / 360  # 最小速度也要转换为圈/秒
+
             if current_speed < min_speed:
                 current_speed = min_speed
 
             if current_speed > 0:
-               self.adjust_speed(int(current_speed))
+               self.adjust_speed(int(current_speed * 360))
 
-            print(f"当前比例: {ratio:.3f}, 速度比例: {speed_ratio:.3f}, 当前角速度: {current_speed:.2f},当前位置:{current_pos:.2f}")
+            print(f"当前比例: {ratio:.3f}, 速度比例: {speed_ratio:.3f}, 当前角速度: {current_speed*360:.2f},当前位置:{current_pos:.2f}")
             time.sleep(interval)
 
         self.adjust_speed(0)  # 停止时速度归零

@@ -218,7 +218,7 @@ def get_current_position(start_pos, target_pos, max_speed=1, interval=0.05):
         _current_pos = target_pos
 
     # 输出当前位置信息（调试用）
-    print(f"当前位置: {_current_pos:.2f} 圈, 当前速度: {current_speed * 360:.2f} 度/秒")
+    #print(f"当前位置: {_current_pos:.2f} 圈, 当前速度: {current_speed:.2f} 度/秒")
 
     return _current_pos
 
@@ -283,17 +283,17 @@ def test_ease_in_out_move_smooth_curve_bypos(start_pos, target_pos, max_speed, i
         current_speed = min(current_speed, max_speed / 360)
 
         # 最小速度保护
-        min_speed = 1   
+        min_speed = 1 / 360  # 最小速度也要转换为圈/秒
         if current_speed < min_speed:
             current_speed = min_speed
 
         if current_speed > 0:
            # self.adjust_speed(int(current_speed))
-           print(f"当前比例: {ratio:.3f}, 速度比例: {speed_ratio:.3f}, 当前角速度: {current_speed:.2f},当前位置:{current_pos:.2f}")
+           print(f"当前比例: {ratio:.3f}, 速度比例: {speed_ratio:.3f}, 当前角速度: {current_speed * 360:.2f},当前位置:{current_pos:.2f}")
         time.sleep(interval)
 
     print("finished")
 
 # 运行测试
-test_ease_in_out_move_smooth_curve_bypos(0, 4.16, 360, 0.1)  # 测试大速度情况
-#test_get_current_position(0, 4.16, 1, 0.1)  # 测试低速度情况
+#test_ease_in_out_move_smooth_curve_bypos(0, 4.16, 1080, 0.01)  # 测试大速度情况
+#test_get_current_position(0, 4.16, 360, 0.1)  # 测试低速度情况
