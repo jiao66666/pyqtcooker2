@@ -150,7 +150,14 @@ class MotorDriver:
                 break
 
             # 计算当前位置比例
-            ratio = (current_pos - start_pos) / total_distance  # 用圈计算比例
+
+            if direction > 0:
+                # start_pos < target_pos
+                ratio = (current_pos - start_pos) / total_distance  # 目标在前面，正向计算
+            else:
+                # start_pos > target_pos
+                ratio = (current_pos - target_pos) / total_distance  # 目标在后面，反向计算
+                
             ratio = max(0, min(1, ratio))  # 限制在0~1
 
              # 使用加速和减速的S曲线公式
