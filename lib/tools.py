@@ -177,7 +177,7 @@ def get_current_position(start_pos, target_pos, max_speed=1, interval=0.05):
         _current_pos = start_pos  # 初始化位置为起点
 
     direction = 1 if target_pos > start_pos else -1
-    total_distance = target_pos - start_pos  # 计算总的圈数差
+    total_distance = abs(target_pos - start_pos)  # 计算总的圈数差
 
     # 剩余距离
     remaining_distance = target_pos - _current_pos
@@ -185,8 +185,13 @@ def get_current_position(start_pos, target_pos, max_speed=1, interval=0.05):
         _current_pos = target_pos  # 达到目标位置，退出
         return _current_pos
 
-    # 当前进度比例
-    ratio = (_current_pos - start_pos) / total_distance
+   # 根据起始位置和目标位置计算进度比例
+    if direction > 0:
+        # start_pos < target_pos
+        ratio = (_current_pos - start_pos) / total_distance  # 目标在前面，正向计算
+    else:
+        # start_pos > target_pos
+        ratio = (_current_pos - target_pos) / total_distance  # 目标在后面，反向计算
     
     # 使用加速和减速的S曲线公式
     if ratio < 0.5:
@@ -265,7 +270,14 @@ def test_ease_in_out_move_smooth_curve_bypos(start_pos, target_pos, max_speed, i
             break
 
         # 计算当前位置比例
-        ratio = (current_pos - start_pos) / total_distance  # 用圈计算比例
+        # 根据起始位置和目标位置计算进度比例
+        if direction > 0:
+            # start_pos < target_pos
+            ratio = (_current_pos - start_pos) / total_distance  # 目标在前面，正向计算
+        else:
+            # start_pos > target_pos
+            ratio = (_current_pos - target_pos) / total_distance  # 目标在后面，反向计算
+
         ratio = max(0, min(1, ratio))  # 限制在0~1
 
             # 使用加速和减速的S曲线公式
@@ -295,5 +307,5 @@ def test_ease_in_out_move_smooth_curve_bypos(start_pos, target_pos, max_speed, i
     print("finished")
 
 # 运行测试
-#test_ease_in_out_move_smooth_curve_bypos(0, 4.16, 1080, 0.01)  # 测试大速度情况
+test_ease_in_out_move_smooth_curve_bypos(0, 4.16, 1080, 0.05)  # 测试大速度情况
 #test_get_current_position(0, 4.16, 360, 0.1)  # 测试低速度情况
