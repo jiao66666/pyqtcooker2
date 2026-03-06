@@ -320,4 +320,4 @@ def test_ease_in_out_move_smooth_curve_bypos(start_pos, target_pos, max_speed, i
 
 # 运行测试
 #test_ease_in_out_move_smooth_curve_bypos(20, -10, 2520, 0.05)  # 测试大速度情况
-test_get_current_position(0, 4.16, 2160, 0.05,0.1,0.9)  # 测试低速度情况
+#test_get_current_position(0, 4.16, 2160, 0.05,0.1,0.9)  # 测试低速度情况
