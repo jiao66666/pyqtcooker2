@@ -134,7 +134,7 @@ class MotorDriver:
 
         total_distance = abs(target_pos - start_pos)  # 直接用圈单位
         direction = 1 if target_pos > start_pos else -1
-
+        print(f"current acc bound is :{acc_bound},dec bound is :{dec_bound}")
         while True:
             # 获取当前位置（圈单位）
 
