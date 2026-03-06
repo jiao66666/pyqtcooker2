@@ -162,7 +162,7 @@ def test_ease_in_out_move_smooth_curve_bytime(start_pos, target_pos, max_speed, 
 
 _current_pos = None
 
-def get_current_position(start_pos, target_pos, max_speed=1, interval=0.05):
+def get_current_position(start_pos, target_pos, max_speed=1, interval=0.05,acc_bound=0.4,dec_bound=0.8):
     """
     模拟实时位置输出，基于 S 曲线加速-减速规律
     start_pos, target_pos: 圈数
@@ -196,15 +196,16 @@ def get_current_position(start_pos, target_pos, max_speed=1, interval=0.05):
     ratio = max(0, min(1, ratio))  # 限制在0~1
 
     # 根据比例来控制运动曲线
-    if ratio < 0.4:
+    if ratio < acc_bound:
         # 起步快
         speed_ratio = 0.5 + 0.5 * (ratio / 0.4)  # 线性快速上升到 1
-    elif ratio < 0.8:
+    elif ratio < dec_bound:
         # 中段保持接近最大速度
         speed_ratio = 1.0
     else:
-        # 后段缓慢减速
-        speed_ratio = (1.0 - ratio) / 0.2
+    # 后段缓慢减速
+        deceleration_range = 1.0 - dec_bound  # 调整减速区间的长度
+        speed_ratio = (1.0 - ratio) / deceleration_range
         speed_ratio = max(speed_ratio, 0.05)  # 防止减速太慢
 # --------------------------
 
@@ -230,12 +231,12 @@ def get_current_position(start_pos, target_pos, max_speed=1, interval=0.05):
         _current_pos = target_pos
 
     # 输出当前位置信息（调试用）
-    print(f"当前位置: {_current_pos:.2f} 圈, 当前速度: {current_speed*360:.2f} 度/秒")
+    print(f"当前比例{ratio},当前速度比{speed_ratio}当前位置: {_current_pos:.2f} 圈, 当前速度: {current_speed*360:.2f} 度/秒")
 
     return _current_pos
 
 # 测试代码：调用 get_current_position 方法来模拟位置的变化
-def test_get_current_position(start_pos, target_pos, max_speed=1, interval=0.1):
+def test_get_current_position(start_pos, target_pos, max_speed=1, interval=0.1,acc_bound=0.4,dec_bound=0.8):
     """
     测试 get_current_position 函数，观察位置如何变化
     :param start_pos: 起点位置（圈数）
@@ -246,7 +247,7 @@ def test_get_current_position(start_pos, target_pos, max_speed=1, interval=0.1):
     print("开始测试：")
     while True:
         # 获取当前位置
-        current_pos = get_current_position(start_pos, target_pos, max_speed, interval)
+        current_pos = get_current_position(start_pos, target_pos, max_speed, interval,acc_bound,dec_bound)
         # print(f"当前位置: {current_pos:.2f} ")
 
         # 判断是否到达目标
@@ -319,4 +320,4 @@ def test_ease_in_out_move_smooth_curve_bypos(start_pos, target_pos, max_speed, i
 
 # 运行测试
 #test_ease_in_out_move_smooth_curve_bypos(20, -10, 2520, 0.05)  # 测试大速度情况
-#test_get_current_position(20, -11, 1080, 0.05)  # 测试低速度情况
+test_get_current_position(0, 4.16, 2160, 0.05,0.1,0.9)  # 测试低速度情况

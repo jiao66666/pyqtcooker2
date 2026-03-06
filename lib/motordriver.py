@@ -169,7 +169,8 @@ class MotorDriver:
                 speed_ratio = 1.0
             else:
                 # 后段缓慢减速
-                speed_ratio = (1.0 - ratio) / 0.2
+                deceleration_range = 1.0 - dec_bound  # 调整减速区间的长度
+                speed_ratio = (1.0 - ratio) / deceleration_range
                 speed_ratio = max(speed_ratio, 0.05)  # 防止减速太慢
 
             """  # 使用标准的加速和减速的S曲线公式
