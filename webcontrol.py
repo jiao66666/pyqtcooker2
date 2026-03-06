@@ -578,6 +578,8 @@ def testmultitaskabs():
     data = request.get_json()
     speed_level = data.get('speed_level') 
     speed_flip = data.get('speed_flip') 
+    acc_percent = data.get('acc_percent') 
+    speed_percent = data.get('speed_percent') 
     success = False
     if not boardercontrollers.get("boardcontroller1"):
         print("找不到主板控制器，无法操作")
@@ -593,6 +595,8 @@ def testmultitaskabs():
     
     move_speed = int(speed_level)   #2160  tested
     flip_speed = int(speed_flip)   #2520  tested 
+    acc_percent = int(acc_percent)   # 0-100
+    speed_percent = int(speed_percent)   # 0-100
 
     if move_speed > 3600:   #  10圈/秒  已经非常快了，超过这个速度可能会有安全隐患，限制最高速度为3600
         move_speed = 3600
@@ -604,25 +608,32 @@ def testmultitaskabs():
     elif flip_speed < 360:
         flip_speed = 360    
 
+    if acc_percent>100 or speed_percent>100 or (acc_percent+speed_percent)>100:
+        print("加速度和速度百分比之和不能大于100,设置为默认值")
+        acc_percent = 40
+        speed_percent = 40
+
+    acc_bound = round(acc_percent/100,1)
+    dec_bound = round((acc_percent+speed_percent)/100,1)
     # exit_pos flip 2.5 move 3 
-    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced_curve(5.05,flip_speed)   #limit 0.4 if speed is 2160 
-    success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask_advanced_curve(4.16,move_speed)
+    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced_curve(5.05,flip_speed,acc_bound,dec_bound)   #limit 0.4 if speed is 2160 
+    success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask_advanced_curve(4.16,move_speed,acc_bound,dec_bound)
     time.sleep(1)    
-    success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask_advanced_curve(0,move_speed)
-    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced_curve(0,flip_speed)
+    success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask_advanced_curve(0,move_speed,acc_bound,dec_bound)
+    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced_curve(0,flip_speed,acc_bound,dec_bound)
     time.sleep(1)
 
-    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced_curve(5.05,flip_speed)
-    success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask_advanced_curve(4.16,move_speed)
+    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced_curve(5.05,flip_speed,acc_bound,dec_bound)
+    success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask_advanced_curve(4.16,move_speed,acc_bound,dec_bound)
    
-    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced_curve(20.2,flip_speed)
+    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced_curve(20.2,flip_speed,acc_bound,dec_bound)
     time.sleep(1)
-    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced_curve(-11.8,flip_speed)
+    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced_curve(-11.8,flip_speed,acc_bound,dec_bound)
     time.sleep(1)
-    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced_curve(5.05,flip_speed)
+    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced_curve(5.05,flip_speed,acc_bound,dec_bound)
 
-    success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask_advanced_curve(0,move_speed)
-    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced_curve(0,flip_speed)
+    success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask_advanced_curve(0,move_speed,acc_bound,dec_bound)
+    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced_curve(0,flip_speed,acc_bound,dec_bound)
     
     """
     flipOut    = 2520

@@ -125,7 +125,7 @@ class MotorDriver:
 
 
 # 初始化位置
-    def ease_in_out_move_smooth_curve_bypos(self,start_pos, target_pos, max_speed, interval=ADJUSTSPEED_INTERVAL): 
+    def ease_in_out_move_smooth_curve_bypos(self,start_pos, target_pos, max_speed,interval=ADJUSTSPEED_INTERVAL,acc_bound:float = ACC_BOUND,dec_bound:float = DEC_BOUND): 
         """
         基于当前位置的加速-减速平滑运动（带最小速度保护）
         """
@@ -161,10 +161,10 @@ class MotorDriver:
             ratio = max(0, min(1, ratio))  # 限制在0~1
 
             # 根据比例来控制运动曲线
-            if ratio < 0.4:
+            if ratio < acc_bound:
                 # 起步快
                 speed_ratio = 0.5 + 0.5 * (ratio / 0.4)  # 线性快速上升到 1
-            elif ratio < 0.8:
+            elif ratio < dec_bound:
                 # 中段保持接近最大速度
                 speed_ratio = 1.0
             else:
@@ -201,7 +201,7 @@ class MotorDriver:
 
         print("finished")
 
-    def gotask_advanced_curve(self, target: float, maxspeed: int,adjust_interval: float = ADJUSTSPEED_INTERVAL,wait_for_completion: bool = True,exit_pos:float = 0.0):
+    def gotask_advanced_curve(self, target: float, maxspeed: int,acc_bound:float = ACC_BOUND,dec_bound:float = DEC_BOUND,adjust_interval: float = ADJUSTSPEED_INTERVAL,wait_for_completion: bool = True,exit_pos:float = 0.0):
         """单次运转电机"""  ##绝对运动
         print("####运行电机高级任务####")
        
@@ -262,7 +262,7 @@ class MotorDriver:
         # 启动调速线程
         speed_thread = threading.Thread(
             target=self.ease_in_out_move_smooth_curve_bypos,
-            args=(start_pos, target, maxspeed,adjust_interval)
+            args=(start_pos, target, maxspeed,adjust_interval,acc_bound,dec_bound)
         )
         speed_thread.start()
 

@@ -25,3 +25,5 @@ MICRO_STEP = 128  #当前步进电机细分
 FB_CHECK_INTERVAL = 0.05        #坐标反馈检查间隔  #0.1 isOK
 MTSTATUS_CHECK_INTERVAL = 0.05  #电机状态检查间隔  #0.2 isOK
 ADJUSTSPEED_INTERVAL = 0.05      #动态调速间隔
+ACC_BOUND = 0.4  #曲线运动加速度开始位置百分比
+DEC_BOUND = 0.8  #减速运动减速开始位置百分比
