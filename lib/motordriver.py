@@ -135,6 +135,15 @@ class MotorDriver:
         total_distance = abs(target_pos - start_pos)  # 直接用圈单位
         direction = 1 if target_pos > start_pos else -1
         print(f"current acc bound is :{acc_bound},dec bound is :{dec_bound}")
+
+        #对水平电机减速段进行特殊处理，使之变得更长
+        if self.motor_id == POT1_MOVE_MOTOR or self.motor_id == POT2_MOVE_MOTOR:
+            dec_bound = dec_bound - 0.2  #水平电机统一减速段添加20%距离，使减速更明显
+            if dec_bound < acc_bound:    #设置最小值保护
+                dec_bound = acc_bound + 0.1
+
+        print(f"current acc bound is :{acc_bound},dec bound is :{dec_bound}")
+     
         while True:
             # 获取当前位置（圈单位）
 
