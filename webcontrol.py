@@ -616,14 +616,14 @@ def testmultitaskabs():
     acc_bound = round(acc_percent/100,1)
     dec_bound = round((acc_percent+speed_percent)/100,1)
     # exit_pos flip 2.5 move 3 
-    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced_curve(5.05,flip_speed,acc_bound,dec_bound)   #limit 0.4 if speed is 2160 
+    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced_curve(5.05,flip_speed,acc_bound,dec_bound,False,FLIP_EXITPOS)   #limit 0.4 if speed is 2160 
     success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask_advanced_curve(4.16,move_speed,acc_bound,dec_bound)
     time.sleep(1)    
-    success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask_advanced_curve(0,move_speed,acc_bound,dec_bound)
+    success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask_advanced_curve(0,move_speed,acc_bound,dec_bound,False,MOVE_EXITPOS)
     success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced_curve(0,flip_speed,acc_bound,dec_bound)
     time.sleep(1)
 
-    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced_curve(5.05,flip_speed,acc_bound,dec_bound)
+    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced_curve(5.05,flip_speed,acc_bound,dec_bound,False,FLIP_EXITPOS)
     success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask_advanced_curve(4.16,move_speed,acc_bound,dec_bound)
    
     success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced_curve(20.2,flip_speed,acc_bound,dec_bound)
@@ -632,7 +632,7 @@ def testmultitaskabs():
     time.sleep(1)
     success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced_curve(5.05,flip_speed,acc_bound,dec_bound)
 
-    success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask_advanced_curve(0,move_speed,acc_bound,dec_bound)
+    success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask_advanced_curve(0,move_speed,acc_bound,dec_bound,False,MOVE_EXITPOS)
     success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced_curve(0,flip_speed,acc_bound,dec_bound)
     
     """
