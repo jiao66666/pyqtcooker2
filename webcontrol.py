@@ -593,8 +593,8 @@ def testmultitaskabs():
     #runtask参数：[圈数，速度，方向]
     print("**************************************1号锅测试水平翻转任务开始******************************")
     
-    move_speed = int(speed_level)   #2160  tested
-    flip_speed = int(speed_flip)   #2520  tested 
+    move_speed = int(speed_level)   
+    flip_speed = int(speed_flip)    
     acc_percent = int(acc_percent)   # 0-100
     speed_percent = int(speed_percent)   # 0-100
 
@@ -615,8 +615,8 @@ def testmultitaskabs():
 
     acc_bound = round(acc_percent/100,1)
     dec_bound = round((acc_percent+speed_percent)/100,1)
-    # exit_pos flip 2.5 move 3 
-    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced_curve(5.05,flip_speed,acc_bound,dec_bound,False,FLIP_EXITPOS)   #limit 0.4 if speed is 2160 
+   
+    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced_curve(5.05,flip_speed,acc_bound,dec_bound,False,FLIP_EXITPOS)   
     success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask_advanced_curve(4.16,move_speed,acc_bound,dec_bound)
     time.sleep(1)    
     success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask_advanced_curve(0,move_speed,acc_bound,dec_bound,False,MOVE_EXITPOS)
@@ -635,35 +635,6 @@ def testmultitaskabs():
     success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask_advanced_curve(0,move_speed,acc_bound,dec_bound,False,MOVE_EXITPOS)
     success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced_curve(0,flip_speed,acc_bound,dec_bound)
     
-    """
-    flipOut    = 2520
-    moveToTake = 2160                  
-    moveToZero = 2160            
-    flipToZero = 1080
-
-    flipToPour = 1080
-    flipToWash = 2520
-
-
-    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced(5.05,flipOut)   #limit 0.4 if speed is 2160 
-    success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask_advanced(4.16,moveToTake)
-    time.sleep(1)    
-    success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask_advanced(0,moveToZero)
-    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced(0,flipToZero)
-    time.sleep(1)
-
-    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced(5.05,flipOut)
-    success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask_advanced(4.16,moveToTake)
-   
-    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced(20.2,flipToPour)
-    time.sleep(1)
-    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced(-11.8,flipToWash)
-    time.sleep(1)
-    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced(5.05,flipOut)
-
-    success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask_advanced(0,moveToZero)
-    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced(0,flipToZero)
-    """
     print("**************************************1号锅测试水平翻转任务结束******************************")
     
     if success :
