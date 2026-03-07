@@ -212,7 +212,7 @@ class MotorDriver:
 
         print("finished")
 
-    def gotask_advanced_curve(self, target: float, maxspeed: int,acc_bound:float = ACC_BOUND,dec_bound:float = DEC_BOUND,adjust_interval: float = ADJUSTSPEED_INTERVAL,wait_for_completion: bool = True,exit_pos:float = 0.0):
+    def gotask_advanced_curve(self, target: float, maxspeed: int,acc_bound:float = ACC_BOUND,dec_bound:float = DEC_BOUND,wait_for_completion: bool = True,exit_pos:float = 0.0,adjust_interval: float = ADJUSTSPEED_INTERVAL):
         """单次运转电机"""  ##绝对运动
         print("####运行电机高级任务####")
        

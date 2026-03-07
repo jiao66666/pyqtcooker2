@@ -898,7 +898,7 @@ def testcurvemove():
         return jsonify({"status": "error","message": "找不到主板控制器，无法操作,请先连接串口"})
     
     print("收到参数:",maxspeed,adjust_interval)
-    success =  boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask_advanced_curve(4.16,int(maxspeed),float(adjust_interval))
+    success =  boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask_advanced_curve(4.16,int(maxspeed))
 
     if success :
         print("测试成功!")
