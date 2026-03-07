@@ -141,6 +141,7 @@ class MotorDriver:
             dec_bound = dec_bound - 0.2  #水平电机统一减速段添加20%距离，使减速更明显
             if dec_bound <= acc_bound:    #设置最小值保护
                 dec_bound = acc_bound + 0.1
+            dec_bound = round(dec_bound,1)    
 
         print(f"current acc bound is :{acc_bound},dec bound is :{dec_bound}")
      
