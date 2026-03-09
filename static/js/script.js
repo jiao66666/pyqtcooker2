@@ -1080,10 +1080,8 @@ function createMotorStatusApp(el) {
 }
 
 // 创建两个实例（变量互不影响）
-const app1 = createMotorStatusApp('#motor_status_1');
-const app2 = createMotorStatusApp('#motor_status_2');
-const app3 = createMotorStatusApp('#motor_status_3');
-const app4 = createMotorStatusApp('#motor_status_4');
+const app = createMotorStatusApp('#motor_status_1');
+
 
 // 将 WebSocket 实例提升到全局作用域
 let ws;
@@ -1101,10 +1099,7 @@ function setupWebSocket(url) {
     ws.onmessage = (event) => {
         const arr = JSON.parse(event.data); // [{motor_id, position}, ...]
         for (const item of arr) {
-            app1.updateMotorData(item.motor_id, item.position);
-            app2.updateMotorData(item.motor_id, item.position);
-            app3.updateMotorData(item.motor_id, item.position);
-            app4.updateMotorData(item.motor_id, item.position);
+            app.updateMotorData(item.motor_id, item.position);
         }
     };
 

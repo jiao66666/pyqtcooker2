@@ -12,31 +12,36 @@
 </head>
 <body>
     <div class="connect_outframe">  
-      <div class="connect_container">
-        <div class="connectstatus_row">
-             <div class="connect_word">
-                连接状态:
-             </div>
-             <div class="connect_status" id="connect_status">
-                未连接
+      <div class="row_container">   
+        <div class="connect_container">
+            <div class="connectstatus_row">
+                <div class="connect_word">
+                    连接状态:
+                </div>
+                <div class="connect_status" id="connect_status">
+                    未连接
+                </div>
+            </div>
+            <div class="connectbtn_row nomb">
+                <button onclick="connect()" class="mainconnectbtn">
+                    <svg t="1770446936087" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="17953" width="200" height="200"><path d="M561.312 68.191h-98.624v493.121h98.624V68.192z m238.423 106.76l-69.776 69.777c77.42 63.366 127.226 159.277 127.226 267.271 0 190.59-154.593 345.185-345.185 345.185S166.815 702.59 166.815 512c0-107.994 49.806-203.905 127.226-267.271l-69.776-69.776C129.09 256.317 68.19 376.885 68.19 512c0 245.08 198.728 443.809 443.809 443.809S955.809 757.08 955.809 512c0-135.115-60.901-255.683-156.074-337.048z" p-id="17954" fill="#515151"></path></svg>
+                    <span>连接炒菜机</span>
+                </button>
+                <button onclick="disconnect()">断开连接</button>
             </div>
         </div>
-        <div class="connectbtn_row nomb">
-            <button onclick="connect()" class="mainconnectbtn">
-                <svg t="1770446936087" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="17953" width="200" height="200"><path d="M561.312 68.191h-98.624v493.121h98.624V68.192z m238.423 106.76l-69.776 69.777c77.42 63.366 127.226 159.277 127.226 267.271 0 190.59-154.593 345.185-345.185 345.185S166.815 702.59 166.815 512c0-107.994 49.806-203.905 127.226-267.271l-69.776-69.776C129.09 256.317 68.19 376.885 68.19 512c0 245.08 198.728 443.809 443.809 443.809S955.809 757.08 955.809 512c0-135.115-60.901-255.683-156.074-337.048z" p-id="17954" fill="#515151"></path></svg>
-                <span>连接炒菜机</span>
-            </button>
-            <button onclick="disconnect()">断开连接</button>
+        <div class="top_container">
+            <div class="stopallbtn">
+                <button onclick="stopall()">紧急停止</button>
+            </div>
+            <div class="enableallbtn">
+                <button onclick="enableall()">重新使能</button>
+            </div>   
         </div>
       </div>
-      <div class="top_container">
-         <div class="stopallbtn">
-            <button onclick="stopall()">紧急停止</button>
-         </div>
-         <div class="enableallbtn">
-            <button onclick="enableall()">重新使能</button>
-         </div>   
-      </div>
+      <hr style="border: 1px dashed #ccc; width: 100%; margin: 5px auto;">
+      <div class="fb_display" id="motor_status_1"></div>
+
     </div>  
 
     <div class="tab-buttons">
@@ -44,8 +49,6 @@
         <button onclick="showTab(2, this)">测试区</button>
         <button onclick="showTab(3, this)">自动程序区</button>
         <button onclick="showTab(4, this)">加料板</button>
-        <button onclick="showTab(5, this)">变速运动</button>
-        <button onclick="showTab(6, this)">曲线运动</button> 
     </div>
 
     <div id="tab1" class="tab-content" style="display:block;">
@@ -162,17 +165,13 @@
                 <button onclick="testMultiAxis()">测试多轴同步运动1</button>
                 <button onclick="testMultiAxis2()">测试多轴同步运动2</button>
              </div>
-             <hr style="border: 1px solid #ccc; width: 100%; margin: 2px auto;">
-             <div class="fb_display" id="motor_status_1"></div>
+             
         </div>
 
     </div>
 
     <div id="tab3" class="tab-content" >
-        <div class="fb_display" id="motor_status_2"></div>
-
-        <hr style="border: 1px solid #ccc; width: 100%; margin: 2px auto;">
-
+       
         <div class="input_circle">
             <label for="circles" class="input_tag">水平速度(角度/秒):</label>
             <input class="input-classic" type="number" id="speed_level" placeholder="请输入水平移动速度" value="2160"/>
@@ -238,81 +237,7 @@
         </div>
     </div>
 
-    <div id="tab5" class="tab-content" >
-        <div class="fb_display" id="motor_status_3"></div>
-
-        <hr style="border: 1px solid #ccc; width: 100%; margin: 2px auto;">
-
-        <div class="input_circle">
-            <label for="circles" class="input_tag">变速运动终点位置:</label>
-            <input class="input-classic" type="number" id="varspeed_target" placeholder="请输入变速运动终点位置" value="4.16" onblur="handleVarSpeedParamChange()"/>
-        </div>
-        <div class="input_circle">
-            <label for="circles" class="input_tag">初始速度 :</label>
-            <input class="input-classic" type="number" id="varspeed_init" placeholder="请输入变速运动初始速度" value="30" onblur="handleVarSpeedParamChange()"/>
-        </div>
-        <div class="input_circle">
-            <label for="circles" class="input_tag">最终速度:</label>
-            <input class="input-classic" type="number" id="varspeed_final" placeholder="请输入变速运动最终速度" value="540" onblur="handleVarSpeedParamChange()"/>
-        </div>
-        <div class="input_circle">
-            <label for="circles" class="input_tag">节点数量:</label>
-            <input class="input-classic" type="number" id="varspeed_nodenums" placeholder="请输入变速运动节点数量" value="10" onblur="handleVarSpeedParamChange()"/>
-        </div>
-        <div class="input_circle">
-            <label for="circles" class="input_tag">变速运动参数串:</label>
-            <textarea rows="3" id="varspeed_params" placeholder="请输入变速运动调速参数串">
-  
-            </textarea>    
-        </div>
-        <div class="function_container">
-            <button onclick="testVarSpeedSingle()">单向变速测试</button>
-        </div>
-    </div>
-
-
-    <div id="tab6" class="tab-content" >
-        <div class="fb_display" id="motor_status_4"></div>
-
-        <hr style="border: 1px solid #ccc; width: 100%; margin: 2px auto;">
-        <!--
-        <div class="input_circle">
-            <label for="circles" class="input_tag">出锅翻转速度:</label>
-            <input class="input-classic" type="number" id="flipout_speed" placeholder="出锅翻转速度" value="360"/>
-        </div>
-        <div class="input_circle">
-            <label for="circles" class="input_tag">同步转动点:</label>
-            <input class="input-classic" type="number" id="move_sync_point" placeholder="翻转到此位置水平轴开始动" value="4.0"/>
-        </div>
-        <div class="input_circle">
-            <label for="circles" class="input_tag">出锅水平初速度 :</label>
-            <input class="input-classic" type="number" id="moveout_initspeed" placeholder="出锅水平速度" value="360"/>
-        </div>
-        <div class="input_circle">
-            <label for="circles" class="input_tag">出锅水平运转速度 :</label>
-            <input class="input-classic" type="number" id="moveout_speed" placeholder="出锅水平速度" value="360"/>
-        </div>
-        <div class="input_circle">
-            <label for="circles" class="input_tag">回锅水平初速度:</label>
-            <input class="input-classic" type="number" id="moveback_speed" placeholder="回锅水平速度" value="360"/>
-        </div>
-        <div class="input_circle">
-            <label for="circles" class="input_tag">回锅翻转速度:</label>
-            <input class="input-classic" type="number" id="flipback_speed" placeholder="回锅翻转速度" value="360"/>
-        </div>
-        -->
-        <div class="input_circle">
-            <label for="circles" class="input_tag">最大速度:</label>
-            <input class="input-classic" type="number" id="max_speed" placeholder="运动速度最大值" value="360"/>
-        </div>
-        <div class="input_circle">
-            <label for="circles" class="input_tag">变速频率:</label>
-            <input class="input-classic" type="number" id="adjust_interval" placeholder="变速指令发送频率" value="0.05"/>
-        </div>
-        <div class="function_container">
-            <button onclick="testcurvemove()">测试曲线运动</button>
-        </div>
-    </div>    
+    
 
 
 
