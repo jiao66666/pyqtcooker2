@@ -4,7 +4,7 @@ from lib.boardtype import *
 from typing import Optional, List, Tuple, Union
 
 # 定义DC电机驱动类-加料电机板
-class DCMotorDriver:
+class FeederMotorDriver:
     def __init__(self, rs485_instance: RS485Communication, motor_id: int, board_type: int = BOARDTYPE_FEEDER,name: str = ""):
         """
         :param rs485_instance: 已经初始化并连接好的串口对象
