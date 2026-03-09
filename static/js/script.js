@@ -1193,4 +1193,3 @@ function generateSpeedProfile(targetPosition, numNodes, targetSpeed, initialSpee
     return `[${result}]`;
 }
 
-handleVarSpeedParamChange();
