@@ -121,13 +121,13 @@ class RS485Communication:
 
         # 构建基本命令: #<指令名>,<板子ID>,<参数1>,<参数2>...
        
-        if self.boardtype == BOARDTYPE_FIVE_AXIS:
+        if self.boardtype == BOARDTYPE_FIVE_AXIS or self.boardtype == BOARDTYPE_DC:
            cmd_str = f"#{command}"
         elif self.boardtype == BOARDTYPE_FEEDER:
            cmd_str = f"YT+{command}="
 
         if params:
-            if self.boardtype == BOARDTYPE_FIVE_AXIS:
+            if self.boardtype == BOARDTYPE_FIVE_AXIS or self.boardtype == BOARDTYPE_DC:
               cmd_str += f",{','.join(params)}"
             elif self.boardtype == BOARDTYPE_FEEDER:
               cmd_str += f"{','.join(params)}"    
@@ -136,7 +136,7 @@ class RS485Communication:
         print(f"将构建命令串(不带LRC): {cmd_str}")
 
         # 计算并添加校验码
-        if self.boardtype == BOARDTYPE_FIVE_AXIS:
+        if self.boardtype == BOARDTYPE_FIVE_AXIS or self.boardtype == BOARDTYPE_DC:
             # 计算LRC校验码，这里要计算从 # 到 * 之间的字符的累加和
             lrc = self.calculate_lrc(cmd_str + "*")  # 包含 * 进行校验
             cmd_str += f"*{lrc}"
@@ -159,13 +159,13 @@ class RS485Communication:
             params = []
         # 构建基本命令: #<指令名>,<板子ID>,<参数1>,<参数2>...
 
-        if self.boardtype == BOARDTYPE_FIVE_AXIS:
+        if self.boardtype == BOARDTYPE_FIVE_AXIS or self.boardtype == BOARDTYPE_DC:
            cmd_str = f"#{command}"
         elif self.boardtype == BOARDTYPE_FEEDER:
            cmd_str = f"YT+{command}="
 
         if params:
-            if self.boardtype == BOARDTYPE_FIVE_AXIS:
+            if self.boardtype == BOARDTYPE_FIVE_AXIS or self.boardtype == BOARDTYPE_DC:
               cmd_str += f",{','.join(params)}"
             elif self.boardtype == BOARDTYPE_FEEDER:
               cmd_str += f"{','.join(params)}"    
@@ -174,7 +174,7 @@ class RS485Communication:
         #print(f"将构建命令串(不带LRC): {cmd_str}")
 
         # 计算并添加校验码
-        if self.boardtype == BOARDTYPE_FIVE_AXIS:
+        if self.boardtype == BOARDTYPE_FIVE_AXIS or self.boardtype == BOARDTYPE_DC:
             # 计算LRC校验码，这里要计算从 # 到 * 之间的字符的累加和
             lrc = self.calculate_lrc(cmd_str + "*")  # 包含 * 进行校验
             cmd_str += f"*{lrc}"
@@ -232,13 +232,13 @@ class RS485Communication:
             params = []
         # 构建基本命令: #<指令名>,<板子ID>,<参数1>,<参数2>...
 
-        if self.boardtype == BOARDTYPE_FIVE_AXIS:
+        if self.boardtype == BOARDTYPE_FIVE_AXIS or self.boardtype == BOARDTYPE_DC:
            cmd_str = f"#{command}"
         elif self.boardtype == BOARDTYPE_FEEDER:
            cmd_str = f"YT+{command}="
 
         if params:
-            if self.boardtype == BOARDTYPE_FIVE_AXIS:
+            if self.boardtype == BOARDTYPE_FIVE_AXIS or self.boardtype == BOARDTYPE_DC:
               cmd_str += f",{','.join(params)}"
             elif self.boardtype == BOARDTYPE_FEEDER:
               cmd_str += f"{','.join(params)}"    
@@ -248,7 +248,7 @@ class RS485Communication:
 
         # 计算并添加校验码
      
-        if self.boardtype == BOARDTYPE_FIVE_AXIS:
+        if self.boardtype == BOARDTYPE_FIVE_AXIS or self.boardtype == BOARDTYPE_DC:
             # 计算LRC校验码，这里要计算从 # 到 * 之间的字符的累加和
             lrc = self.calculate_lrc(cmd_str + "*")  # 包含 * 进行校验
             cmd_str += f"*{lrc}"
@@ -380,7 +380,7 @@ class RS485Communication:
         """
         ##ALLPulse,2,0*+108109,-256000,-107520,+100050,+183601*86
 
-        if self.boardtype == BOARDTYPE_FIVE_AXIS:
+        if self.boardtype == BOARDTYPE_FIVE_AXIS or self.boardtype == BOARDTYPE_DC:
             # 检查是否是成功响应
             if response.endswith("OK"):
                 # 提取命令和参数（去掉 # 和 *OK）
@@ -436,32 +436,3 @@ class RS485Communication:
 
 
 
-
-# 示例用法
-if __name__ == "__main__":
-    print("=== RS485通信类接口测试 ===")
-
-    # 创建通信对象
-    print("1. 创建通信对象")
-    comm1 = RS485Communication(port="COM2", baudrate=115200, timeout=1.0, boardtype=BOARDTYPE_FIVE_AXIS)
-   
-    print(f"   串口: {comm1.port}, 波特率: {comm1.baudrate}, 超时: {comm1.timeout}秒, 主板类型: {comm1.boardtype}")
-    
-    # 连接串口
-    print("\n2. 连接串口")
-    if comm1.connect() :
-        print("   串口连接成功")
-
-        try:
-           print("\n3. 发送步进电机测试命令: ENABLE ALL .")
-           comm1.execute_command("ENABLE", ["1", "0","11111"])
-
-        finally:
-            # 断开连接
-            print("\n断开连接")
-            comm1.disconnect()
-            print("   串口连接已断开")
-    else: 
-        print("   无法连接到串口")
-
-    print("\n=== 测试完成 ===")    

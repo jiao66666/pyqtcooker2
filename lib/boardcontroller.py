@@ -1,6 +1,7 @@
 from lib.basecom import RS485Communication
 from lib.motordriver import MotorDriver
 from lib.fdmotordriver import FeederMotorDriver
+from lib.dcmotordriver import DCMotorDriver
 from lib.boardtype import *
 from lib.websocket_server import WebSocketServer
 import threading
@@ -94,6 +95,11 @@ class BoardController:
                     print("加料板连接成功,初始化电机中...")
                     self.init_fdmotors()    
                     print("加料板电机初始化完成")
+                elif self.board_type == BOARDTYPE_DC:
+                    print("DC板连接成功,初始化电机中...")
+                    self.init_dcmotors()    
+                    print("DC板电机初始化完成")
+
             else:
                 print(f"连接主板失败，端口: {port}, 波特率: {baudrate}")
             return self.connected
@@ -137,5 +143,10 @@ class BoardController:
             motor = FeederMotorDriver(rs485_instance=self.comm, motor_id=i, board_type=self.board_type, name=f"{i}号电机")
             self.motors.append(motor)   
 
-       
     
+    def init_dcmotors(self):
+       """初始化DC板电机"""
+       motor_nums = 2
+       for i in range(1,motor_nums):
+            motor = DCMotorDriver(rs485_instance=self.comm, motor_id=i, board_type=self.board_type, name=f"{i}号电机")
+            self.motors.append(motor)   
