@@ -16,7 +16,62 @@ class DCMotorDriver:
         self.name = name
         self.board_id = board_type
 
-
+    def stop(self):
+        """急停电机"""
+        print("####急停电机####")
+        if not self.com or not self.com.connected:
+            print("错误: 串口未连接，无法运行电机")
+            return False
+        print(f"[{self.name}] ID:{self.motor_id} 急停中... 主板类型:{self.board_id}")
+      
+         # 发送运行命令
+        success, resp = self.com.execute_command(
+            "STOP", 
+            [str(self.board_id), str(self.motor_id)]
+        )
+        if not success:
+            print(f"错误: {resp}")
+            return False
+        return True 
 
  
+    def runlong(self,direction,speed):
+        """长运行DC电机"""
+        print("####长运行DC电机####")
+        if not self.com or not self.com.connected:
+            print("错误: 串口未连接，无法运行电机")
+            return False
+        print(f"[{self.name}] ID:{self.motor_id} 长运行DC电机...,方向:{direction}，速度：{speed} 主板类型:{self.board_id}")
+      
+         # 发送运行命令
+        success, resp = self.com.execute_command(
+            "LONG", 
+            [str(self.board_id), str(self.motor_id),str(direction),str(speed)]
+        )
+        if not success:
+            print(f"错误: {resp}")
+            return False
+        return True 
 
+
+    def run(self,direction,time,speed):
+        """运行DC电机"""
+        print("####运行DC电机####")
+        if not self.com or not self.com.connected:
+            print("错误: 串口未连接，无法运行电机")
+            return False
+        print(f"[{self.name}] ID:{self.motor_id} 运行DC电机...方向:{direction},运行时间:{time},速度:{speed} ,主板类型:{self.board_id}")
+      
+        if direction >0 :
+            time = time
+        else:
+            time = time * -1    
+         # 发送运行命令
+        success, resp = self.com.execute_command(
+            "RUN", 
+            [str(self.board_id), str(self.motor_id),str(time),str(speed)]
+        )
+        if not success:
+            print(f"错误: {resp}")
+            return False
+        return True 
