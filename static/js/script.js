@@ -884,7 +884,44 @@ function testMultiAxis2() {
 }
 
 
+function testDC_command(command) {
+     var dc_speed = document.getElementById("dc_speed");
+        if(dc_speed.value == "" || isNaN(dc_speed.value) || parseInt(dc_speed.value) <= 0){
+            alert("请输入有效的速度！");
+            return;
+        }
 
+       var dc_time = document.getElementById("dc_time");
+        if(dc_time.value == "" || isNaN(dc_time.value) || parseInt(dc_time.value) <= 0){
+            alert("请输入有效的持续时间！");
+            return;
+        }
+
+      console.log("选中速度值是:", dc_speed.value);
+      console.log("选中持续时间是:", dc_time.value);
+
+
+     // 获取 select 元素
+        fetch('/testdc_command', {
+            method: 'POST', 
+            headers: {
+                'Content-Type': 'application/json'  
+            },
+            body: JSON.stringify({
+                dc_speed: dc_speed.value,  
+                dc_time: dc_time.value,  
+                command: command
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+             addMessage(`返回信息 : `+data.message);  // 将收到的消息保存并显示
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            addMessage("Error starting motor.");
+        });
+}
 
 function testVarSpeedSingle() {
      var speed_target = document.getElementById("varspeed_target");

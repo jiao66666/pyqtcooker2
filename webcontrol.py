@@ -18,11 +18,13 @@ if is_dev_mode():
     port = 3000
     stepmotor_port = "COM2"
     feedermotor_port = "COM3"
+    dcmotor_port = "COM4"
 else:
     print("当前环境: 生产环境，使用生产端口")
     port = 5000
     stepmotor_port = 'COM6'
     feedermotor_port = 'COM7'
+    dcmotor_port = 'COM7'
 
 
 # 保持 WebSocket 服务器的全局实例
@@ -72,6 +74,9 @@ def connect():
     if not boardercontrollers.get("boardcontroller2"):
         boardercontrollers["boardcontroller2"] = BoardController(BOARDTYPE_FEEDER, board_name="加料控制板")           
 
+    if not boardercontrollers.get("boardcontroller3"):
+        boardercontrollers["boardcontroller3"] = BoardController(BOARDTYPE_DC, board_name="DC旋转控制板")                  
+
     if  boardercontrollers["boardcontroller1"].connected:
         print("已经连接到五轴步进主板，无需重复连接")
         return jsonify({"status": "fail","message": "已经连接到五轴步进主板，无需重复连接"}) 
@@ -80,11 +85,16 @@ def connect():
         print("已经连接到加料主板，无需重复连接")
         return jsonify({"status": "fail","message": "已经连接到加料主板，无需重复连接"}) 
     
+    if  boardercontrollers["boardcontroller3"].connected:
+        print("已经连接到DC旋转主板，无需重复连接")
+        return jsonify({"status": "fail","message": "已经连接到DC旋转主板，无需重复连接"})     
+    
     # 真实环境连接
     success1 =  boardercontrollers["boardcontroller1"].connect(port=stepmotor_port,baudrate="115200")
     success2 =  boardercontrollers["boardcontroller2"].connect(port=feedermotor_port,baudrate="9600")
+    success3 =  boardercontrollers["boardcontroller3"].connect(port=dcmotor_port,baudrate="115200")
 
-    if success1 and success2 :
+    if success1 and success2 and success3:
         print("连接成功!")
         return jsonify({"status": "success","message": "连接成功!"})
     else:
@@ -879,6 +889,34 @@ def testcurvemove():
         return jsonify({"status": "fail","message": "测试失败!"})    
 
 
+@app.route('/testdc_command', methods=['POST'])
+def testdc_command():
+    print("-------测试DC板开始------- ")
+    data = request.get_json()
+    dc_speed = data.get('dc_speed') 
+    dc_time = data.get('dc_time') 
+    command = data.get('command')     
+
+    success = False
+
+    if not boardercontrollers.get("boardcontroller3"):
+        print("找不到主板控制器，无法操作")
+        return jsonify({"status": "error","message": "找不到主板控制器，无法操作,请先连接串口"})
+    
+    print("收到参数:",dc_speed,dc_time,command)
+    if command == "longrun":
+       success =  boardercontrollers["boardcontroller3"].motors[POT1_SPIN_MOTOR].longrun(1,dc_speed) 
+    elif command == "run":
+       success =  boardercontrollers["boardcontroller3"].motors[POT1_SPIN_MOTOR].run(1,dc_time,dc_speed)   
+    elif command == "stop":
+       success =  boardercontrollers["boardcontroller3"].motors[POT1_SPIN_MOTOR].stop()     
+
+    if success :
+        print("测试成功!")
+        return jsonify({"status": "success","message": "测试成功!"})
+    else:
+        print("测试失败!")
+        return jsonify({"status": "fail","message": "测试失败!"})    
 
 
 

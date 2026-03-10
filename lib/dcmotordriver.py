@@ -35,7 +35,7 @@ class DCMotorDriver:
         return True 
 
  
-    def runlong(self,direction,speed):
+    def longrun(self,direction,speed):
         """长运行DC电机"""
         print("####长运行DC电机####")
         if not self.com or not self.com.connected:

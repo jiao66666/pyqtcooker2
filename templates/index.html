@@ -48,7 +48,8 @@
         <button class="active" onclick="showTab(1, this)">手动操控区</button>
         <button onclick="showTab(2, this)">测试区</button>
         <button onclick="showTab(3, this)">自动程序区</button>
-        <button onclick="showTab(4, this)">加料板</button>
+        <button onclick="showTab(4, this)">DC板</button>
+        <button onclick="showTab(5, this)">加料板</button>
     </div>
 
     <div id="tab1" class="tab-content" style="display:block;">
@@ -193,7 +194,23 @@
             <button onclick="testMultiTaskabs2()">2号锅洗锅倒菜程序</button>
         </div>
     </div>
+
     <div id="tab4" class="tab-content" >
+        <div class="input_circle">
+            <label for="circles" class="input_tag">旋转速度(转/分):</label>
+            <input class="input-classic" type="number" id="dc_speed" placeholder="请输入旋转速度" value="15"/>
+        </div>
+        <div class="input_circle">
+            <label for="circles" class="input_tag">旋转持续时长(毫秒):</label>
+            <input class="input-classic" type="number" id="dc_time" placeholder="请输入持续时长" value="5000"/>
+        </div>        
+        <div class="function_container">
+            <button onclick="testDC_command('longrun')">长转测试</button>
+            <button onclick="testDC_command('run')">正常转测试</button>
+            <button onclick="testDC_command('stop')">停止旋转测试</button>
+        </div>
+    </div>    
+    <div id="tab5" class="tab-content" >
         <div class="input_container">
             <div class="tastmotorid_select_row">
                 <label for="tastmotorid">电机号:</label>
