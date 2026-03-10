@@ -406,7 +406,6 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
     }
     .fb_realtime{
         font-size:12px;
-        font-weight:bold;
     }
 
     /* 设置 textarea 的宽度、高度及其他基本样式 */
