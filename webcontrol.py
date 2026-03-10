@@ -895,7 +895,8 @@ def testdc_command():
     data = request.get_json()
     dc_speed = data.get('dc_speed') 
     dc_time = data.get('dc_time') 
-    command = data.get('command')     
+    command = data.get('command')    
+    pot     = data.get('pot') 
 
     success = False
 
@@ -903,13 +904,19 @@ def testdc_command():
         print("找不到主板控制器，无法操作")
         return jsonify({"status": "error","message": "找不到主板控制器，无法操作,请先连接串口"})
     
-    print("收到参数:",dc_speed,dc_time,command)
+    print("收到参数:",dc_speed,dc_time,command,pot)
+    
+    if pot == 1:
+       choosed_motor = POT1_SPIN_MOTOR
+    else:
+       choosed_motor = POT2_SPIN_MOTOR
+       
     if command == "longrun":
-       success =  boardercontrollers["boardcontroller3"].motors[POT1_SPIN_MOTOR].longrun(1,dc_speed) 
+        success =  boardercontrollers["boardcontroller3"].motors[choosed_motor].longrun(1,dc_speed) 
     elif command == "run":
-       success =  boardercontrollers["boardcontroller3"].motors[POT1_SPIN_MOTOR].run(1,dc_time,dc_speed)   
+        success =  boardercontrollers["boardcontroller3"].motors[choosed_motor].run(1,dc_time,dc_speed)   
     elif command == "stop":
-       success =  boardercontrollers["boardcontroller3"].motors[POT1_SPIN_MOTOR].stop()     
+        success =  boardercontrollers["boardcontroller3"].motors[choosed_motor].stop() 
 
     if success :
         print("测试成功!")
