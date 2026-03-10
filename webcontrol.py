@@ -24,7 +24,7 @@ else:
     port = 5000
     stepmotor_port = 'COM6'
     feedermotor_port = 'COM7'
-    dcmotor_port = 'COM7'
+    dcmotor_port = 'COM8'
 
 
 # 保持 WebSocket 服务器的全局实例
