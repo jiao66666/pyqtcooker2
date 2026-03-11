@@ -14,14 +14,14 @@ POT2_SPIN_MOTOR = 1  # 2号锅旋转DC电机编号
 
 POT1_POS_OUTFOOD_FLIP  = 10  # 1号锅外倒菜位,翻转位
 POT1_POS_OUTFOOD_LEVEL = 4.16  # 1号锅外倒菜位，水平位
-POT1_POS_INFOOD_FLIP  = 5.05  # 1号锅内倒菜位,翻转位
+POT1_POS_INFOOD_FLIP  = 4.60  # 1号锅内倒菜位,翻转位
 POT1_POS_INFOOD_LEVEL = 4.16  # 1号锅内倒菜位，水平位
 POT1_POS_WASHPOT_FLIP  = -11.8  # 1号锅洗锅位,翻转位
 POT1_POS_WASHPOT_LEVEL = 4.16  # 1号锅洗锅位，水平位
 POT1_POS_FIREPOT_FLIP  = 0  # 1号锅烧菜位,翻转位
 POT1_POS_FIREPOT_LEVEL = 0  # 1号锅烧菜位，水平位
 POT1_POS_DROPFOOD_FLIP  = 20.2 # 号锅最终倒菜位置
-POT_POS_SAFE_FLIP = 5.05  # 锅移动安全位,翻转位
+POT_POS_SAFE_FLIP = 4.60  # 锅移动安全位,翻转位
 
 
 MICRO_STEP = 128  #当前步进电机细分
