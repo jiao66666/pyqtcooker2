@@ -696,8 +696,8 @@ def testmultiaxis():
     acc_bound = 0.2
     dec_bound = 0.6 
 
-    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced_curve(5.05,flip_speed,acc_bound,dec_bound,False,float(exit_pos))  
-    success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask_advanced_curve(4.20,move_speed)
+    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced_curve(POT_POS_SAFE_FLIP,flip_speed,acc_bound,dec_bound,False,float(exit_pos))  
+    success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask_advanced_curve(POT1_POS_INFOOD_LEVEL,move_speed)
     
 
     print("**************************************1号多轴同步运动任务开始任务结束******************************")
@@ -752,8 +752,8 @@ def testmultiaxis2():
     acc_bound = 0.2
     dec_bound = 0.6 
 
-    success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask_advanced_curve(0,move_speed,acc_bound,dec_bound,False,float(exit_pos))
-    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced_curve(0,flip_speed)  
+    success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask_advanced_curve(POT1_POS_FIREPOT_LEVEL,move_speed,acc_bound,dec_bound,False,float(exit_pos))
+    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced_curve(POT1_POS_FIREPOT_FLIP,flip_speed)  
     
     
 
