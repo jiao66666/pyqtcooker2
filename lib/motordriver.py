@@ -62,6 +62,7 @@ class MotorDriver:
         return [self.convert_pulses_to_position(int(x), int(idx)) for idx, x in enumerate(items)]
     def updateFb_position(self, pos: float):
         self.fb_position = pos
+        print(f"current fb_position >>>>>>>>>>>>>>>>>>>>>>>>>>>: {self.fb_position}")
 
 
     def generate_signed_numbers(self,count=5, min_val=10000, max_val=200000):
