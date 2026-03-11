@@ -20,7 +20,7 @@ POT1_POS_WASHPOT_FLIP  = -11.8  # 1号锅洗锅位,翻转位
 POT1_POS_WASHPOT_LEVEL = 4.16  # 1号锅洗锅位，水平位
 POT1_POS_FIREPOT_FLIP  = 0  # 1号锅烧菜位,翻转位
 POT1_POS_FIREPOT_LEVEL = 0  # 1号锅烧菜位，水平位
-
+POT1_POS_DROPFOOD_FLIP  = 20.2 # 号锅最终倒菜位置
 POT_POS_SAFE_FLIP = 5.05  # 锅移动安全位,翻转位
 
 

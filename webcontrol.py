@@ -626,24 +626,24 @@ def testmultitaskabs():
     acc_bound = round(acc_percent/100,1)
     dec_bound = round((acc_percent+speed_percent)/100,1)
    
-    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced_curve(5.05,flip_speed,acc_bound,dec_bound,False,FLIP_EXITPOS)   
-    success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask_advanced_curve(4.16,move_speed,acc_bound,dec_bound)
+    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced_curve(POT_POS_SAFE_FLIP,flip_speed,acc_bound,dec_bound,False,FLIP_EXITPOS)   
+    success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask_advanced_curve(POT1_POS_INFOOD_LEVEL,move_speed,acc_bound,dec_bound)
     time.sleep(1)    
-    success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask_advanced_curve(0,move_speed,acc_bound,dec_bound,False,MOVE_EXITPOS)
-    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced_curve(0,flip_speed,acc_bound,dec_bound)
+    success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask_advanced_curve(POT1_POS_FIREPOT_LEVEL,move_speed,acc_bound,dec_bound,False,MOVE_EXITPOS)
+    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced_curve(POT1_POS_FIREPOT_FLIP,flip_speed,acc_bound,dec_bound)
     time.sleep(1)
 
-    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced_curve(5.05,flip_speed,acc_bound,dec_bound,False,FLIP_EXITPOS)
-    success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask_advanced_curve(4.16,move_speed,acc_bound,dec_bound)
+    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced_curve(POT_POS_SAFE_FLIP,flip_speed,acc_bound,dec_bound,False,FLIP_EXITPOS)
+    success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask_advanced_curve(POT1_POS_INFOOD_LEVEL,move_speed,acc_bound,dec_bound)
    
-    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced_curve(20.2,flip_speed,acc_bound,dec_bound)
+    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced_curve(POT1_POS_DROPFOOD_FLIP,flip_speed,acc_bound,dec_bound)
     time.sleep(1)
-    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced_curve(-11.8,flip_speed,acc_bound,dec_bound)
+    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced_curve(POT1_POS_WASHPOT_FLIP,flip_speed,acc_bound,dec_bound)
     time.sleep(1)
-    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced_curve(5.05,flip_speed,acc_bound,dec_bound)
+    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced_curve(POT_POS_SAFE_FLIP,flip_speed,acc_bound,dec_bound)
 
-    success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask_advanced_curve(0,move_speed,acc_bound,dec_bound,False,MOVE_EXITPOS)
-    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced_curve(0,flip_speed,acc_bound,dec_bound)
+    success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask_advanced_curve(POT1_POS_FIREPOT_LEVEL,move_speed,acc_bound,dec_bound,False,MOVE_EXITPOS)
+    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced_curve(POT1_POS_FIREPOT_FLIP,flip_speed,acc_bound,dec_bound)
     
     print("**************************************1号锅测试水平翻转任务结束******************************")
     
