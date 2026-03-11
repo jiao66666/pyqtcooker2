@@ -649,7 +649,7 @@ def testmultitaskabs():
     time.sleep(1)
     success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced_curve(POT1_POS_WASHPOT_FLIP,flip_speed,acc_bound,dec_bound)
     time.sleep(1)
-    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced_curve(POT_POS_SAFE_FLIP,flip_speed,acc_bound,dec_bound)
+    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced_curve(POT_POS_SAFE_FLIP,flip_speed,acc_bound,dec_bound,False,FLIP_EXITPOS2)
 
     success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask_advanced_curve(POT1_POS_FIREPOT_LEVEL,move_speed,acc_bound,dec_bound,False,MOVE_EXITPOS)
     success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced_curve(POT1_POS_FIREPOT_FLIP,flip_speed,acc_bound,dec_bound)
