@@ -32,4 +32,5 @@ ACC_BOUND = 0.4  #曲线运动加速度开始位置百分比
 DEC_BOUND = 0.8  #减速运动减速开始位置百分比
 
 FLIP_EXITPOS = 1.0  #翻转同步退出位置
-MOVE_EXITPOS = 2.0  #移动同步退出位置
+MOVE_EXITPOS = 3.0  #移动同步退出位置
+FLIP_EXITPOS2 = 3.8 #洗锅翻转退出位置
