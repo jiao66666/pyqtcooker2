@@ -111,6 +111,10 @@ def disconnect():
     if not boardercontrollers.get("boardcontroller2"):
         print("找不到加料主板控制器，无法操作")
         return jsonify({"status": "fail","message": "找不到加料主板控制器，无法操作"})    
+    
+    if not boardercontrollers.get("boardcontroller3"):
+        print("找不到DC主板控制器，无法操作")
+        return jsonify({"status": "fail","message": "找不到DC主板控制器，无法操作"})    
 
     if not  boardercontrollers["boardcontroller1"].connected:
         print("步进主板已经断开，无需重复操作")
@@ -119,16 +123,21 @@ def disconnect():
     if not  boardercontrollers["boardcontroller2"].connected:
         print("加料主板已经断开，无需重复操作")
         return jsonify({"status": "fail","message": "加料板已经断开，无需重复操作"})  
+    
+    if not  boardercontrollers["boardcontroller3"].connected:
+        print("DC主板已经断开，无需重复操作")
+        return jsonify({"status": "fail","message": "DC板已经断开，无需重复操作"})      
              
     success1 =  boardercontrollers["boardcontroller1"].disconnect()
     success2 =  boardercontrollers["boardcontroller2"].disconnect()
+    success3 =  boardercontrollers["boardcontroller3"].disconnect()
 
-    if success1 and success2 :
+    if success1 and success2 and success3 :
         print("断开连接成功!")
         return jsonify({"status": "success","message": "断开连接成功!"})
     else:
         print("断开连接失败!")
-        return jsonify({"status": "fail","message": f"断开连接失败!,断开状态：五轴板：{success1}，加料板：{success2}"})    
+        return jsonify({"status": "fail","message": f"断开连接失败!,断开状态：五轴板：{success1}，加料板：{success2},DC板:{success3}"})    
 
 
 @app.route('/testtastboardping', methods=['POST'])
