@@ -75,3 +75,50 @@ class DCMotorDriver:
             print(f"错误: {resp}")
             return False
         return True 
+
+
+
+    def setspeed(self,speed):
+        """设置电机速度"""
+        print("####设置电机速度####")
+        if not self.com or not self.com.connected:
+            print("错误: 串口未连接，无法运行电机")
+            return False
+        print(f"[{self.name}] ID:{self.motor_id} 设置DC电机速度... 主板类型:{self.board_id}")
+      
+         # 发送运行命令
+        success, resp = self.com.execute_command(
+            "SPEED", 
+            [str(self.board_id), str(self.motor_id),str(speed)]
+        )
+        if not success:
+            print(f"错误: {resp}")
+            return False
+        return True         
+    
+    def allrun(self,direction1,time1,speed1,direction2,time2,speed2):
+        """设置全部电机旋转"""
+        print("####设置全部电机旋转####")
+        if not self.com or not self.com.connected:
+            print("错误: 串口未连接，无法运行电机")
+            return False
+        print(f"[{self.name}] ID:{self.motor_id} 设置DC电机全部旋转... 主板类型:{self.board_id}")
+      
+        if direction1 >0 :
+            time1 = time1
+        else:
+            time1 = time1 * -1         
+
+        if direction2 >0 :
+            time2 = time2
+        else:
+            time2 = time2 * -1    
+         # 发送运行命令
+        success, resp = self.com.execute_command(
+            "ALLRUN", 
+            [str(self.board_id), "0",str(time1),str(speed1),str(time2),str(speed2)]
+        )
+        if not success:
+            print(f"错误: {resp}")
+            return False
+        return True         
