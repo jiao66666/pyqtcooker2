@@ -122,3 +122,41 @@ class DCMotorDriver:
             print(f"错误: {resp}")
             return False
         return True         
+    
+
+    def getpowerinfo(self):
+        """获取电流电压温度相关信息"""
+        print("####获取电流电压温度关信息####")
+        if not self.com or not self.com.connected:
+            print("错误: 串口未连接，无法运行电机")
+            return False
+        print(f"[{self.name}] ID:{self.motor_id} 获取电流电压温度相关信息... 主板类型:{self.board_id}")
+      
+         # 发送运行命令
+        success, resp = self.com.execute_command(
+            "Power_Value", 
+            [str(self.board_id), "0"]
+        )
+        if not success:
+            print(f"错误: {resp}")
+            return False
+        return True 
+    
+
+    def getmotorinfo(self):
+        """获取电机相关信息"""
+        print("####获取电机相关信息####")
+        if not self.com or not self.com.connected:
+            print("错误: 串口未连接，无法运行电机")
+            return False
+        print(f"[{self.name}] ID:{self.motor_id} 获取电机相关信息... 主板类型:{self.board_id}")
+    
+        # 发送运行命令
+        success, resp = self.com.execute_command(
+            "RunStatus", 
+            [str(self.board_id), "0"]
+        )
+        if not success:
+            print(f"错误: {resp}")
+            return False
+        return True 
