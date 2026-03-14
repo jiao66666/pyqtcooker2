@@ -390,36 +390,7 @@ function stopMotor(potnum,directionstr) {
 }
 
 
-function readMotor(potnum,directionstr) {
-     // 获取 select 元素
 
-        var motorObj = getMotorInfo(potnum,directionstr);
-        if(motorObj == null){
-            console.log("获取电机信息失败");
-            return;
-        }
-        fetch('/readmotor', {
-            method: 'POST', 
-            headers: {
-                'Content-Type': 'application/json'  
-            },
-            body: JSON.stringify({
-                boardtype: '1',  // 五轴板
-                motorid: motorObj.motor
-            })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if(data.status === "success"){
-                addMessage(`返回信息 : ${data.message}`);  // 将收到的消息保存并显示
-            }
-            
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            addMessage("Error starting motor.");
-        });
-}
 
 
 function testTask(potnum,directionstr) {
@@ -488,26 +459,7 @@ function testTaskabs(potnum,directionstr) {
 
 
 
-function test() {
-     // 获取 select 元素
-        fetch('/test', {
-            method: 'POST', 
-            headers: {
-                'Content-Type': 'application/json'  
-            },
-            body: JSON.stringify({
-                boardtype: '1',  // 五轴板
-            })
-        })
-        .then(response => response.json())
-        .then(data => {
-              addMessage(`返回信息 : 已发送串口指令`);  // 将收到的消息保存并显示
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            addMessage("Error starting motor.");
-        });
-}
+
 
 function resetMotorPot(potnum) {
      // 获取 select 元素
@@ -700,29 +652,7 @@ function goPos(potnum,postype) {
 }
 
 
-function readPulse(mode) {
-        var motorid = document.getElementById("tastmotorid");
 
-     // 获取 select 元素
-        fetch('/readpulse', {
-            method: 'POST', 
-            headers: {
-                'Content-Type': 'application/json'  
-            },
-            body: JSON.stringify({
-               mode: mode,
-               motorid: motorid.value
-            })
-        })
-        .then(response => response.json())
-        .then(data => {
-              addMessage(`返回信息 : `+data.message);  // 将收到的消息保存并显示
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            addMessage("Error starting motor.");
-        });
-}
 
 
 
@@ -748,42 +678,6 @@ function enableall() {
 }
 
 
-function testcurvemove() {
-        var maxspeed = document.getElementById("max_speed");
-        if(maxspeed.value == "" || isNaN(maxspeed.value) || parseInt(maxspeed.value) <= 0){
-            alert("请输入有效的水平最大移动速度值（角速度）！");
-            return;
-        }
-
-       var adjust_interval = document.getElementById("adjust_interval");
-        if(adjust_interval.value == "" || isNaN(adjust_interval.value) || parseFloat(adjust_interval.value) <= 0){
-            alert("请输入变速调整间隔(秒)！");
-            return;
-        }
-
-      console.log("选中水平移动速度值是:", maxspeed.value);
-      console.log("请输入变速调整间隔(秒):", adjust_interval.value);
-
-     // 获取 select 元素
-        fetch('/testcurvemove', {
-            method: 'POST', 
-            headers: {
-                'Content-Type': 'application/json'  
-            },
-            body: JSON.stringify({
-                maxspeed: maxspeed.value,
-                adjust_interval: adjust_interval.value
-            })
-        })
-        .then(response => response.json())
-        .then(data => {
-              addMessage(`返回信息 : `+data.message);  // 将收到的消息保存并显示
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            addMessage("Error starting motor.");
-        });
-}
 
 
 function testMultiAxis() {
@@ -976,118 +870,7 @@ function testDC_command(command,pot) {
         });
 }
 
-function testVarSpeedSingle() {
-     var speed_target = document.getElementById("varspeed_target");
-        if(speed_target.value == "" || isNaN(speed_target.value) || parseInt(speed_target.value) <= 0){
-            alert("请输入有效的变速运动目标值！");
-            return;
-        }
 
-        var speed_params = document.getElementById("varspeed_params");
-
-        // 检查字符串是否为空
-        if (!speed_params.value.trim()) {
-            console.log("输入不能为空");
-            return;
-        } else {
-            // 正则表达式：匹配 [(数字,数字), (数字,数字), ...]
-            var regex = /^\[\((\d+(\.\d+)?),(\d+)\)(,\((\d+(\.\d+)?),(\d+)\))*\]$/;
-            // 使用正则表达式测试字符串
-            if (regex.test(speed_params.value)) {
-                console.log("参数串格式正确");
-            } else {
-                console.log("格式不正确");
-                return;
-            }
-        }
-
-       
-      console.log("变速运动目标值是:", speed_target.value);
-      console.log("变速运动参数值是:", speed_params.value);
-
-     // 获取 select 元素
-        fetch('/testvarspeedsingle', {
-            method: 'POST', 
-            headers: {
-                'Content-Type': 'application/json'  
-            },
-            body: JSON.stringify({
-                speed_target: speed_target.value,  
-                speed_params: speed_params.value
-            })
-        })
-        .then(response => response.json())
-        .then(data => {
-             addMessage(`返回信息 : `+data.message);  // 将收到的消息保存并显示
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            addMessage("Error starting motor.");
-        });
-}
-
-
-function testVarSpeedSingleMix(type) {
-     var flipout_speed = document.getElementById("flipout_speed");
-     var moveout_speed = document.getElementById("moveout_speed");
-     var flipback_speed = document.getElementById("flipback_speed");
-     var moveback_speed = document.getElementById("moveback_speed");
-
-    if(type == 1){
-       
-        if(flipout_speed.value == "" || isNaN(flipout_speed.value) || parseInt(flipout_speed.value) <= 0){
-            alert("请输入有效的翻转（出锅）运动目标值！");
-            return;
-        }
-
-        
-        if(moveout_speed.value == "" || isNaN(moveout_speed.value) || parseInt(moveout_speed.value) <= 0){
-            alert("请输入有效的水平（出锅）运动目标值！");
-            return;
-        }
-       console.log("翻转出锅运动速度目标值是:", flipout_speed.value);
-       console.log("水平出锅运动速度目标值是:", moveout_speed.value);
-    }else{
-       
-        if(flipback_speed.value == "" || isNaN(flipback_speed.value) || parseInt(flipback_speed.value) <= 0){
-            alert("请输入有效的翻转（回锅）运动目标值！");
-            return;
-        }
-
-       
-        if(moveback_speed.value == "" || isNaN(moveback_speed.value) || parseInt(moveback_speed.value) <= 0){
-            alert("请输入有效的水平（回锅）运动目标值！");
-            return;
-        }
-    }
-   
-
-       
-      
-
-     // 获取 select 元素
-        fetch('/testvarspeedsinglemix', {
-            method: 'POST', 
-            headers: {
-                'Content-Type': 'application/json'  
-            },
-            body: JSON.stringify({
-                flipout_speed : flipout_speed.value,  
-                moveout_speed: moveout_speed.value,
-                flipback_speed: flipback_speed.value,  
-                moveback_speed: moveback_speed.value,
-                action_type:type
-            })
-        })
-        .then(response => response.json())
-        .then(data => {
-             addMessage(`返回信息 : `+data.message);  // 将收到的消息保存并显示
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            addMessage("Error starting motor.");
-        });
-}
 
 
 function getSelectedValue(name) {
@@ -1216,70 +999,5 @@ function startWebSocket() {
     }
 }
 
-function handleVarSpeedParamChange(){
-       console.log("变速参数变化。。。。。");
-       var speed_target = document.getElementById("varspeed_target");
-        if(speed_target.value == "" || isNaN(speed_target.value) || parseInt(speed_target.value) <= 0){
-            console.log("请输入目标位置 ")
-            return;
-        }
 
-       var speed_init = document.getElementById("varspeed_init");
-        if(speed_init.value == "" || isNaN(speed_init.value) || parseInt(speed_init.value) <= 0){
-            console.log("请输入变速初始值！");
-            return;
-        }
-
-        
-       var speed_final = document.getElementById("varspeed_final");
-        if(speed_final.value == "" || isNaN(speed_final.value) || parseInt(speed_final.value) <= 0){
-            console.log("请输入变速初始值！");
-            return;
-        }
-
-        var speed_nodenums = document.getElementById("varspeed_nodenums");
-        if(speed_nodenums.value == "" || isNaN(speed_nodenums.value) || parseInt(speed_nodenums.value) <= 0){
-            console.log("请输入变速初始值！");
-            return;
-        }
-
-        var speed_profile = generateSpeedProfile(parseInt(speed_target.value), parseInt(speed_nodenums.value), parseInt(speed_final.value), parseInt(speed_init.value));
-        document.getElementById('varspeed_params').value = speed_profile;
-
-}
-
-function generateSpeedProfile(targetPosition, numNodes, targetSpeed, initialSpeed = 90) {
-    /**
-     * 生成速度-位置节点，假设速度线性增长，确保位置保留两位小数
-     * 
-     * @param {number} targetPosition 目标位置（最大位置）
-     * @param {number} numNodes 节点个数
-     * @param {number} targetSpeed 目标速度（最大速度）
-     * @param {number} initialSpeed 初始速度，默认从 90 开始
-     * @returns {Array} 生成的[(position, speed)]节点列表
-     */
-    
-    // 计算每个位置的间隔
-    const positionInterval = targetPosition / (numNodes - 1);
-    
-    // 生成节点列表
-    const speedProfile = [];
-
-    for (let i = 0; i < numNodes; i++) {
-        // 计算当前的位置，并确保保留两位小数
-        const position = (i * positionInterval).toFixed(2);  // 保留两位小数
-        
-        // 计算当前的位置对应的速度（假设速度线性增长）
-        const speed = initialSpeed + (targetSpeed - initialSpeed) * (i * positionInterval / targetPosition);
-        
-        // 将位置和速度组成数组，添加到节点列表中
-        speedProfile.push([parseFloat(position).toFixed(2), parseInt(speed)]);  // 保留两位小数
-    }
-
-    // 去掉最后一个节点，并将节点格式化为字符串（去掉空格）
-    const result = speedProfile.slice(0, -1).map(node => `(${node[0]},${node[1]})`).join(',');
-
-    // 包裹成完整的字符串格式并返回
-    return `[${result}]`;
-}
 

@@ -317,30 +317,6 @@ def stop():
  
     
    
-@app.route('/test', methods=['POST'])
-def test():
-    """
-    print("测试开始")
-    testSendDirectly()
-    print("测试完成!")
-    return jsonify({"status": "success","message": "测试成功!"})
-    """
-    data = request.get_json()
-    boardtype = data.get('boardtype')  # 获取 'boardtype' 参数
-    success = False
-    if boardtype == '1':
-        #list_ports()
-        if not boardercontrollers.get("boardcontroller1"):
-           print("找不到主板控制器，无法操作")
-           return jsonify({"status": "error","message": "找不到主板控制器，无法操作,请先连接串口"})
-        success =  boardercontrollers["boardcontroller1"].motors[1].enable_all_motors()
-
-    if success :
-        print("测试成功!")
-        return jsonify({"status": "success","message": "测试成功!"})
-    else:
-        print("测试失败!")
-        return jsonify({"status": "fail","message": "测试失败!"})
 
 
 @app.route('/fixmotor', methods=['POST'])
@@ -462,26 +438,7 @@ def resetmotorpot():
         print("测试复位失败!")
         return jsonify({"status": "fail","message": f"复位电机失败!,锅号：{potnum}，错误信息：{resp}"})
 
-@app.route('/readmotor', methods=['POST'])
-def readmotor():
-    print("电机状态读取")
-    data = request.get_json()
-    boardtype = data.get('boardtype')  # 获取 'boardtype' 参数
-    motorid = data.get('motorid')  # 获取 'port' 参数
-    success = False
-    if boardtype == '1':
-        #list_ports()
-        if not boardercontrollers.get("boardcontroller1"):
-           print("找不到主板控制器，无法操作")
-           return jsonify({"status": "error","message": "找不到主板控制器，无法操作,请先连接串口"})
-        success =  boardercontrollers["boardcontroller1"].motors[motorid].readmotor()
 
-    if success :
-        print("测试成功!")
-        return jsonify({"status": "success","message": "测试成功!"})
-    else:
-        print("测试失败!")
-        return jsonify({"status": "fail","message": "测试失败!"})
     
 @app.route('/testtask', methods=['POST'])
 def testtask():
@@ -564,31 +521,7 @@ def testmultitask():
 
 
 
-@app.route('/readpulse', methods=['POST'])
-def readpulse():
-    print("已转脉冲读取")
-    data = request.get_json()
-    mode = int(data.get('mode') ) # 获取 'boardtype' 参数
-    motorid =int(data.get('motorid'))  # 获取 'port' 参数
-    success = False
-    if not boardercontrollers.get("boardcontroller1"):
-        print("找不到主板控制器，无法操作")
-        return jsonify({"status": "error","message": "找不到主板控制器，无法操作,请先连接串口"})
-    
-    if not boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].homed or not boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].homed:
-        print("电机未归位，无法操作")
-        return jsonify({"status": "error","message": "电机未归位，无法操作,请先复位"})    
-    
-    #runtask参数：[圈数，速度，方向]
-    print(f"正在读取已转脉冲数，当前motorid:{motorid}，mode:{mode}")
-    success,resp = boardercontrollers["boardcontroller1"].motors[motorid].readpulse(mode) 
 
-    if success :
-        print("测试成功!")
-        return jsonify({"status": "success","message": f"测试成功!,返回结果:{resp}"})
-    else:
-        print("测试失败!")
-        return jsonify({"status": "fail","message": "测试失败!"})  
 
 @app.route('/testmultitaskabs', methods=['POST'])   #绝对位置任务测试
 def testmultitaskabs():
@@ -834,128 +767,7 @@ def testmultiaxis3():
 
 
 
-
-
-@app.route('/testvarspeedsingle', methods=['POST'])   #绝对位置任务测试
-def testvarspeedsingle():
-    print("1号变速运动测试开始")
-    data = request.get_json()
-    speed_target = data.get('speed_target') 
-    speed_params = data.get('speed_params') 
-    success = False
-    if not boardercontrollers.get("boardcontroller1"):
-        print("找不到主板控制器，无法操作")
-        return jsonify({"status": "error","message": "找不到主板控制器，无法操作,请先连接串口"})
-    success = False
-    if not boardercontrollers.get("boardcontroller1"):
-        print("找不到主板控制器，无法操作")
-        return jsonify({"status": "error","message": "找不到主板控制器，无法操作,请先连接串口"})
-    
-    if not boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].homed or not boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].homed:
-        print("电机未归位，无法操作")
-        return jsonify({"status": "error","message": "电机未归位，无法操作,请先复位"})
-
-    #runtask参数：[圈数，速度，方向]
-    print("**************************************1号变速运动测试开始开始******************************")
-
-
-    speed_params_val = parse_speed_params(speed_params)
-    print(speed_params_val)
-    success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask_advanced_speed(float(speed_target),speed_params_val)  
-
-    print("**************************************1号变速运动测试结束******************************")
-
-    if success :
-        print("测试成功!")
-        return jsonify({"status": "success","message": "测试成功!"})
-    else:
-        print("测试失败!")
-        return jsonify({"status": "fail","message": "测试失败!"})          
-
-
-@app.route('/testvarspeedsinglemix', methods=['POST'])   #绝对位置任务测试
-def testvarspeedsinglemix():
-    print("1号变速运动测试混合开始")
-    data = request.get_json()
-    flipout_speed = data.get('flipout_speed') 
-    moveout_speed = data.get('moveout_speed') 
-    flipback_speed = data.get('flipback_speed') 
-    moveback_speed = data.get('moveback_speed') 
-    action_type = data.get('action_type')
-    success = False
-    if not boardercontrollers.get("boardcontroller1"):
-        print("找不到主板控制器，无法操作")
-        return jsonify({"status": "error","message": "找不到主板控制器，无法操作,请先连接串口"})
-    success = False
-    if not boardercontrollers.get("boardcontroller1"):
-        print("找不到主板控制器，无法操作")
-        return jsonify({"status": "error","message": "找不到主板控制器，无法操作,请先连接串口"})
-    
-    if not boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].homed or not boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].homed:
-        print("电机未归位，无法操作")
-        return jsonify({"status": "error","message": "电机未归位，无法操作,请先复位"})
-
-    #runtask参数：[圈数，速度，方向]，主控1号锅两个配合运动
-    print("**************************************1号变速运动测试混合开始开始******************************")
-    print("当前参数列表：",action_type,flipout_speed,moveout_speed,flipback_speed,moveback_speed)
-
-
-    if action_type == 1:
-        flipout_speed = int(flipout_speed)
-        exit_pos = 4.8
-        speedup_pos = 1.0
-        init_speed = 360
-        moveout_speed = int(moveout_speed)
-        speedParams = [{"pos": 0, "speed": init_speed},{"pos": speedup_pos, "speed": moveout_speed}]
-
-        success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced(5.05,flipout_speed,False,exit_pos)  
-        success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask_advanced_speed(4.16,speedParams)  
-
-    else:
-        flipback_speed = int(flipback_speed)
-        back_pos = 3.0
-        speeddown_pos = 3.0
-        init_speed = 2520
-        moveback_speed = int(moveback_speed)
-        speedParams = [{"pos": 0, "speed": init_speed},{"pos": speeddown_pos, "speed": moveback_speed}]
-
-        success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask_advanced_speed(0,speedParams,False,back_pos)  
-        success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask(0,flipback_speed)  
-
-    print("**************************************1号变速运动测试混合结束******************************")
-
-
-    if success :
-        print("测试成功!")
-        return jsonify({"status": "success","message": "测试成功!"})
-    else:
-        print("测试失败!")
-        return jsonify({"status": "fail","message": "测试失败!"})   
-
-
-
-@app.route('/testcurvemove', methods=['POST'])
-def testcurvemove():
-    print("-------1号曲线运动测试开始------- ")
-    data = request.get_json()
-    maxspeed = data.get('maxspeed') 
-    adjust_interval = data.get('adjust_interval') 
-
-    success = False
-
-    if not boardercontrollers.get("boardcontroller1"):
-        print("找不到主板控制器，无法操作")
-        return jsonify({"status": "error","message": "找不到主板控制器，无法操作,请先连接串口"})
-    
-    print("收到参数:",maxspeed,adjust_interval)
-    success =  boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask_advanced_curve(4.16,int(maxspeed))
-
-    if success :
-        print("测试成功!")
-        return jsonify({"status": "success","message": "测试成功!"})
-    else:
-        print("测试失败!")
-        return jsonify({"status": "fail","message": "测试失败!"})    
+  
 
 
 @app.route('/testdc_command', methods=['POST'])
