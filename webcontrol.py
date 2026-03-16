@@ -425,11 +425,11 @@ def resetmotorpot():
         return jsonify({"status": "error","message": "找不到主板控制器，无法操作,请先连接串口"})
 
     if potnum ==1:   
-        success,resp =  boardercontrollers["boardcontroller1"].motors[2].resettask()
-        success,resp =  boardercontrollers["boardcontroller1"].motors[1].resettask()
+        success,resp =  boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].resettask()
+        success,resp =  boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].resettask()
     else:
-        success,resp =  boardercontrollers["boardcontroller1"].motors[4].resettask()        
-        success,resp =  boardercontrollers["boardcontroller1"].motors[3].resettask()        
+        success,resp =  boardercontrollers["boardcontroller1"].motors[POT2_MOVE_MOTOR].resettask()        
+        success,resp =  boardercontrollers["boardcontroller1"].motors[POT2_FLIP_MOTOR].resettask()        
         
     if success :
         print("测试复位成功!")
@@ -820,6 +820,8 @@ def testmultitaskabs2():
     data = request.get_json()
     speed_level = data.get('speed_level') 
     speed_flip = data.get('speed_flip') 
+    acc_percent = int(acc_percent)   # 0-100
+    speed_percent = int(speed_percent)   # 0-100
 
     success = False
     if not boardercontrollers.get("boardcontroller1"):
@@ -845,25 +847,32 @@ def testmultitaskabs2():
     elif flip_speed < 360:
         flip_speed = 360    
 
+    if acc_percent>100 or speed_percent>100 or (acc_percent+speed_percent)>100:
+        print("加速度和速度百分比之和不能大于100,设置为默认值")
+        acc_percent = 40
+        speed_percent = 40
 
-    success = boardercontrollers["boardcontroller1"].motors[POT2_FLIP_MOTOR].gotask(4.5,flip_speed)  
-    success = boardercontrollers["boardcontroller1"].motors[POT2_MOVE_MOTOR].gotask(4.15,move_speed)
+    acc_bound = round(acc_percent/100,1)
+    dec_bound = round((acc_percent+speed_percent)/100,1)
+
+    success = boardercontrollers["boardcontroller1"].motors[POT2_FLIP_MOTOR].gotask_advanced_curve(POT_POS_SAFE_FLIP,flip_speed,acc_bound,dec_bound,False,FLIP_EXITPOS)   
+    success = boardercontrollers["boardcontroller1"].motors[POT2_MOVE_MOTOR].gotask_advanced_curve(POT2_POS_INFOOD_LEVEL,move_speed,acc_bound,dec_bound)
     time.sleep(1)    
-    success = boardercontrollers["boardcontroller1"].motors[POT2_MOVE_MOTOR].gotask(0,move_speed)
-    success = boardercontrollers["boardcontroller1"].motors[POT2_FLIP_MOTOR].gotask(0,flip_speed)
+    success = boardercontrollers["boardcontroller1"].motors[POT2_MOVE_MOTOR].gotask_advanced_curve(POT2_POS_FIREPOT_LEVEL,move_speed,acc_bound,dec_bound,False,MOVE_EXITPOS)
+    success = boardercontrollers["boardcontroller1"].motors[POT2_FLIP_MOTOR].gotask_advanced_curve(POT2_POS_FIREPOT_FLIP,flip_speed,acc_bound,dec_bound)
     time.sleep(1)
 
-    success = boardercontrollers["boardcontroller1"].motors[POT2_FLIP_MOTOR].gotask(4.5,flip_speed)
-    success = boardercontrollers["boardcontroller1"].motors[POT2_MOVE_MOTOR].gotask(4.15,move_speed)
-    success = boardercontrollers["boardcontroller1"].motors[POT2_FLIP_MOTOR].gotask(20.2,flip_speed)
+    success = boardercontrollers["boardcontroller1"].motors[POT2_FLIP_MOTOR].gotask_advanced_curve(POT_POS_SAFE_FLIP,flip_speed,acc_bound,dec_bound,False,FLIP_EXITPOS)
+    success = boardercontrollers["boardcontroller1"].motors[POT2_MOVE_MOTOR].gotask_advanced_curve(POT2_POS_INFOOD_LEVEL,move_speed,acc_bound,dec_bound)
+   
+    success = boardercontrollers["boardcontroller1"].motors[POT2_FLIP_MOTOR].gotask_advanced_curve(POT2_POS_DROPFOOD_FLIP,flip_speed,acc_bound,dec_bound)
     time.sleep(1)
-    success = boardercontrollers["boardcontroller1"].motors[POT2_FLIP_MOTOR].gotask(-12.1,flip_speed)
+    success = boardercontrollers["boardcontroller1"].motors[POT2_FLIP_MOTOR].gotask_advanced_curve(POT2_POS_WASHPOT_FLIP,flip_speed,acc_bound,dec_bound)
     time.sleep(1)
-    success = boardercontrollers["boardcontroller1"].motors[POT2_FLIP_MOTOR].gotask(4.5,flip_speed)
+    success = boardercontrollers["boardcontroller1"].motors[POT2_FLIP_MOTOR].gotask_advanced_curve(POT_POS_SAFE_FLIP,flip_speed,acc_bound,dec_bound,False,FLIP_EXITPOS2)
 
-    success = boardercontrollers["boardcontroller1"].motors[POT2_MOVE_MOTOR].gotask(0,move_speed)
-    success = boardercontrollers["boardcontroller1"].motors[POT2_FLIP_MOTOR].gotask(0,flip_speed)
-
+    success = boardercontrollers["boardcontroller1"].motors[POT2_MOVE_MOTOR].gotask_advanced_curve(POT2_POS_FIREPOT_LEVEL,move_speed,acc_bound,dec_bound,False,MOVE_EXITPOS)
+    success = boardercontrollers["boardcontroller1"].motors[POT2_FLIP_MOTOR].gotask_advanced_curve(POT2_POS_FIREPOT_FLIP,flip_speed,acc_bound,dec_bound)
     print("**************************************2号锅测试水平翻转任务结束******************************")
 
     if success :
