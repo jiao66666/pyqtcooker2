@@ -890,26 +890,47 @@ def gopos():
     potnum = int(data.get('potnum')) 
     postype = str(data.get('postype')) 
     speed= int(data.get('speed')) 
-
-    if postype == 'pos_outfood':
-        print("移动到外倒料口")
-        flip_pos = POT1_POS_OUTFOOD_FLIP
-        level_pos = POT1_POS_OUTFOOD_LEVEL
-    elif postype == 'pos_infood':
-        print("移动到内倒料口口")
-        flip_pos = POT1_POS_INFOOD_FLIP
-        level_pos = POT1_POS_INFOOD_LEVEL
-    elif postype == 'pos_washpot':
-        print("移动到洗锅位置")
-        flip_pos = POT1_POS_WASHPOT_FLIP
-        level_pos = POT1_POS_WASHPOT_LEVEL
-    elif postype == 'pos_firepot':
-        flip_pos = POT1_POS_FIREPOT_FLIP
-        level_pos = POT1_POS_FIREPOT_LEVEL
-        print("移动到灶位")        
+    
+    if potnum == 1:
+        if postype == 'pos_outfood':
+            print("移动到外倒料口1")
+            flip_pos = POT1_POS_OUTFOOD_FLIP
+            level_pos = POT1_POS_OUTFOOD_LEVEL
+        elif postype == 'pos_infood':
+            print("移动到内倒料口1")
+            flip_pos = POT1_POS_INFOOD_FLIP
+            level_pos = POT1_POS_INFOOD_LEVEL
+        elif postype == 'pos_washpot':
+            print("移动到洗锅位置1")
+            flip_pos = POT1_POS_WASHPOT_FLIP
+            level_pos = POT1_POS_WASHPOT_LEVEL
+        elif postype == 'pos_firepot':
+            flip_pos = POT1_POS_FIREPOT_FLIP
+            level_pos = POT1_POS_FIREPOT_LEVEL
+            print("移动到灶位1")        
+        else:
+            print("未知位置")
+            return jsonify({"status": "fail","message": "未知位置"})
     else:
-        print("未知位置")
-        return jsonify({"status": "fail","message": "未知位置"})
+        if postype == 'pos_outfood':
+            print("移动到外倒料口2")
+            flip_pos = POT2_POS_OUTFOOD_FLIP
+            level_pos = POT2_POS_OUTFOOD_LEVEL
+        elif postype == 'pos_infood':
+            print("移动到内倒料口2")
+            flip_pos = POT2_POS_INFOOD_FLIP
+            level_pos = POT2_POS_INFOOD_LEVEL
+        elif postype == 'pos_washpot':
+            print("移动到洗锅位置2")
+            flip_pos = POT2_POS_WASHPOT_FLIP
+            level_pos = POT2_POS_WASHPOT_LEVEL
+        elif postype == 'pos_firepot':
+            flip_pos = POT2_POS_FIREPOT_FLIP
+            level_pos = POT2_POS_FIREPOT_LEVEL
+            print("移动到灶位2")        
+        else:
+            print("未知位置")
+            return jsonify({"status": "fail","message": "未知位置"})
 
     speed = speed * 360  # 转换为电机实际速度值
     if speed > 3600:   
@@ -923,9 +944,14 @@ def gopos():
         print("找不到主板控制器，无法操作")
         return jsonify({"status": "error","message": "找不到主板控制器，无法操作,请先连接串口"})
     
-    if not boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].homed or not boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].homed:
-        print("电机未归位，无法操作")
-        return jsonify({"status": "error","message": "电机未归位，无法操作,请先复位"})    
+    if potnum ==1 :
+        if not boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].homed or not boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].homed:
+            print("电机未归位，无法操作")
+            return jsonify({"status": "error","message": "电机未归位，无法操作,请先复位"})    
+    else:
+        if not boardercontrollers["boardcontroller1"].motors[POT2_FLIP_MOTOR].homed or not boardercontrollers["boardcontroller1"].motors[POT2_MOVE_MOTOR].homed:
+            print("电机未归位，无法操作")
+            return jsonify({"status": "error","message": "电机未归位，无法操作,请先复位"})       
     
     if potnum == 1:
         success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask(POT_POS_SAFE_FLIP,speed)  
