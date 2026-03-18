@@ -160,3 +160,39 @@ class DCMotorDriver:
             print(f"错误: {resp}")
             return False
         return True 
+
+    def geterrorinfo(self):
+        """获取电机相关错误信息"""
+        print("####获取电机相关错误信息####")
+        if not self.com or not self.com.connected:
+            print("错误: 串口未连接，无法运行电机")
+            return False
+        print(f"[{self.name}] ID:{self.motor_id} 获取电机相关信息... 主板类型:{self.board_id}")
+    
+        # 发送运行命令
+        success, resp = self.com.execute_command(
+            "Error_Value", 
+            [str(self.board_id), str(self.motor_id)]
+        )
+        if not success:
+            print(f"错误: {resp}")
+            return False
+        return True         
+    
+    def getrpminfo(self):
+        """获取电机转速信息"""
+        print("####获取电机转速信息####")
+        if not self.com or not self.com.connected:
+            print("错误: 串口未连接，无法运行电机")
+            return False
+        print(f"[{self.name}] ID:{self.motor_id} 获取电机相关信息... 主板类型:{self.board_id}")
+    
+        # 发送运行命令
+        success, resp = self.com.execute_command(
+            "RPM", 
+            [str(self.board_id), str(self.motor_id)]
+        )
+        if not success:
+            print(f"错误: {resp}")
+            return False
+        return True         
