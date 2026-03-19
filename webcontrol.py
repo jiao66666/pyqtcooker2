@@ -974,6 +974,8 @@ def gopos():
            
 if __name__ == '__main__':
     # 绑定到所有网络接口，允许局域网访问,测试使用3000端口，实际生产使用5000端口
-
-
+    #testobj=BoardController(BOARDTYPE_FIVE_AXIS, board_name="五轴控制板")
+    #testobj.connect(port=stepmotor_port,baudrate="115200")
+    #testobj.motors[4].adjust_accel("50,50,75,50,75")
+    
     app.run(debug=True, host='0.0.0.0', port=port)

@@ -671,6 +671,18 @@ class MotorDriver:
         
         return True 
 
+    def adjust_accel(self,accel_str):
+        print("调整电机加速度....")
+        success, resp = self.com.execute_command(
+            "SETAccele", 
+            [str(self.board_id),"0",accel_str]
+        )
+        if not success:
+            print(f"错误: {resp}")
+            return False
+        
+        return True         
+
     def run(self, circles: float, anglespeed: int, direction: int):
         """单次运转电机"""  ##相对运动
         print("####运行电机####")
