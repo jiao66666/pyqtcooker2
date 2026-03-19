@@ -62,7 +62,7 @@ class MotorDriver:
         return [self.convert_pulses_to_position(int(x), int(idx)) for idx, x in enumerate(items)]
     def updateFb_position(self, pos: float):
         self.fb_position = pos
-        if self.motor_id in [POT1_MOVE_MOTOR,POT1_FLIP_MOTOR]: 
+        if self.motor_id in [POT1_MOVE_MOTOR,POT1_FLIP_MOTOR,POT2_MOVE_MOTOR,POT2_FLIP_MOTOR]: 
            print(f"current,motorid:{self.motor_id},fb_position >>>>>>>>>>>>>>>>>>>>>>>>>>>: {self.fb_position}")
 
 
