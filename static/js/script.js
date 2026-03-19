@@ -909,17 +909,31 @@ function testDC_command(command,pot) {
 
 
 function getSelectedValue(name) {
-    const radios = document.getElementsByName(name);
-    for (let i = 0; i < radios.length; i++) {
-        if (radios[i].checked) {
-            console.log("选择的速度档位是:"+radios[i].value);
-            return radios[i].value;
-        }
-    }
-    alert("没有选择速度！");
-    return null;
+    const box = document.getElementById(name);
+    console.log("reading speed value"+box.dataset.value)
+    return box.dataset.value;
 }
 
+function setSpeed(el,speedvalue){
+    const box = document.getElementById("speed");
+    box.dataset.value = speedvalue;
+    console.log("setting value"+speedvalue);
+
+    document.querySelectorAll('.speed_circle').forEach(item => {
+        item.classList.remove('speed_selected');
+    });
+
+    el.classList.add('speed_selected');
+}
+
+//初始化速度 
+document.addEventListener("DOMContentLoaded", () => {
+    const first = document.querySelector('.speed_circle'); // ✅ 就是第一个
+
+    if (first) {
+        setSpeed(first, first.innerText);
+    }
+});
 //转换为具体电机和方向
 function getMotorInfo(potnum, directionstr){
      if(potnum == 1){

@@ -164,6 +164,22 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
     justify-content: center;
     padding-top:15px;
 }
+.speed_circle{
+    width:25px;
+    height:25px;
+    display:flex;
+    flex-flow:row nowrap;
+    align-items: center;
+    justify-content: center;
+    background-color: #EFEFEF;
+    border-radius:50%;
+    margin-right:10px;
+}
+
+.speed_selected{
+    background-color:#4B4F56!important;
+    color:#fff!important;
+}
 
 .function_container{
     display:flex;
@@ -184,6 +200,7 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
     flex-flow: row nowrap;
     align-items: center;
     justify-content: center;
+    
 }
 
 .function_container button svg{

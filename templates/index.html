@@ -54,26 +54,22 @@
 
     <div id="tab1" class="tab-content" style="display:block;">
     <div class="speed_container">
-        <label>电机速度:</label>
-        <label>
-            <input type="radio" name="speed" value="1" checked> 1
-        </label><br>
-        
-        <label>
-            <input type="radio" name="speed" value="2"> 2
-        </label><br>
-        
-        <label>
-            <input type="radio" name="speed" value="3"> 3
-        </label>
-
-        <label>
-            <input type="radio" name="speed" value="4"> 4
-        </label>
-
-        <label>
-            <input type="radio" name="speed" value="5"> 5
-        </label>
+        <label id="speed" data-speed="1">电机速度:</label>
+        <div class="speed_circle" onclick="setSpeed(this,1)">
+            1
+        </div>
+        <div class="speed_circle" onclick="setSpeed(this,2)">
+            2
+        </div>
+        <div class="speed_circle" onclick="setSpeed(this,3)">
+            3
+        </div>
+        <div class="speed_circle" onclick="setSpeed(this,4)">
+            4
+        </div>
+        <div class="speed_circle" onclick="setSpeed(this,5)">
+            5
+        </div>
     </div>
 
     <div class="function_container">
