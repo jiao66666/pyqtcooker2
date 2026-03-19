@@ -173,7 +173,7 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
     justify-content: center;
     background-color: #EFEFEF;
     border-radius:50%;
-    margin-right:10px;
+    margin:0 5px;
 }
 
 .speed_selected{
