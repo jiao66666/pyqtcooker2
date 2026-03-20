@@ -5,6 +5,9 @@ from lib.boardtype import *
 import time
 from lib.tools import is_dev_mode,parse_speed_params
 from lib.websocket_server import WebSocketServer
+import webview
+import threading
+
 
 import asyncio
 from threading import Thread
@@ -971,11 +974,32 @@ def gopos():
 
 
 
-           
+def run_flask():
+    app.run(
+    host='0.0.0.0',   # 监听所有地址
+    port=port,
+    debug=False,       # 禁用调试模式
+    use_reloader=False # 禁止自动重载
+)
+
+def start_server():
+    t = threading.Thread(target=run_flask)
+    t.daemon = True
+    t.start()
+
+def start_ui():
+    url = f"http://127.0.0.1:{port}"
+    webview.create_window("炒菜机", url)
+    webview.start()
+
+
+
 if __name__ == '__main__':
     # 绑定到所有网络接口，允许局域网访问,测试使用3000端口，实际生产使用5000端口
-    #testobj=BoardController(BOARDTYPE_FIVE_AXIS, board_name="五轴控制板")
-    #testobj.connect(port=stepmotor_port,baudrate="115200")
-    #testobj.motors[4].adjust_accel("50,50,75,50,75")
     
-    app.run(debug=True, host='0.0.0.0', port=port)
+    start_server()
+
+    # 等待服务启动（可选优化）
+    time.sleep(1)
+
+    start_ui()
