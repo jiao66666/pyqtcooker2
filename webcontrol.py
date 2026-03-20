@@ -995,11 +995,7 @@ def start_ui():
 
 
 if __name__ == '__main__':
-    # 绑定到所有网络接口，允许局域网访问,测试使用3000端口，实际生产使用5000端口
-    
     start_server()
-
     # 等待服务启动（可选优化）
     time.sleep(1)
-
     start_ui()
