@@ -823,6 +823,8 @@ def testmultitaskabs2():
     data = request.get_json()
     speed_level = data.get('speed_level') 
     speed_flip = data.get('speed_flip') 
+    acc_percent = data.get('acc_percent') 
+    speed_percent = data.get('speed_percent') 
     acc_percent = int(acc_percent)   # 0-100
     speed_percent = int(speed_percent)   # 0-100
 
