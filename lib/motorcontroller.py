@@ -14,7 +14,7 @@ class MotorController:
             return True
         return False
 
-    def release_track(self,motorid) -> bool:  # 仅限使用者有权限释放（当前还没实现权限控制）
+    def release_track(self,motorid) -> bool:  # 仅限使用者有权限释放
         if self.is_track_using and self.tracker_userid == motorid:
             self.is_track_using = False
             self.tracker_userid = None
