@@ -2,9 +2,9 @@ from lib.motordriver import MotorDriver
 from typing import List
 
 class MotorController:
-    def __init__(self, motors: List[MotorDriver]):
+    def __init__(self, allmotors: List[MotorDriver]):
         self.is_track_using = False
-        self.allmotors = motors
+        self.motors = allmotors
         self.tracker_userid = None
 
     def require_track(self,motorid) -> bool:
