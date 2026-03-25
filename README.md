@@ -36,7 +36,7 @@
 - 项目已集成pyserial库，可用于未来的串口通信功能开发
 - 当前版本为基本功能实现，保存功能仅打印到控制台，可根据需求扩展
 - 串口通信功能为预留接口，尚未实现具体功能
-## bakup1
+## bakup111
 
 ## build package command
 pyinstaller --onefile --add-data "templates;templates" --add-data "static;static" webcontrol.py
