@@ -12,15 +12,15 @@ class MotorController:
         self.share_area_isclear_event = threading.Event()  # 类成员事件,通知 共享区是否清空安全可进入
 
 
-    def require_track(self,motorid) -> bool:
+    def require_track(self,potid) -> bool:
         if not self.is_track_using and self.tracker_userid == None:
             self.is_track_using = True
-            self.tracker_userid = motorid
+            self.tracker_userid = potid
             return True
         return False
 
-    def release_track(self,motorid) -> bool:  # 仅限使用者有权限释放
-        if self.is_track_using and self.tracker_userid == motorid:
+    def release_track(self,potid) -> bool:  # 仅限使用者有权限释放
+        if self.is_track_using and self.tracker_userid == potid:
             self.is_track_using = False
             self.tracker_userid = None
             return True
@@ -29,15 +29,15 @@ class MotorController:
     def get_tracker_userid(self) -> int:
         return self.tracker_userid  
     
-    def doTask(self, pot:int,action:str):  #以锅为单位来进行
-        if pot == 1:
+    def doTask(self, potid:int,action:str):  #以锅为单位来进行
+        if potid == 1:
             move_motorid = POT1_MOVE_MOTOR
             flip_motorid = POT1_FLIP_MOTOR
         else:
             move_motorid = POT2_MOVE_MOTOR
             flip_motorid = POT2_FLIP_MOTOR
 
-        if self.require_track(move_motorid):
+        if self.require_track(potid):
            self.doActionAll(action,move_motorid,flip_motorid)
         else:
            self.doActionBySteps(action,move_motorid,flip_motorid)
