@@ -48,6 +48,7 @@ class MotorController:
             move_motorid = POT2_MOVE_MOTOR
             flip_motorid = POT2_FLIP_MOTOR
 
+        self.share_area_isclear_event.clear()
         # 确保每个锅有独立的锁
         if potid not in self.locks:
             self.locks[potid] = threading.Lock()
@@ -66,16 +67,22 @@ class MotorController:
             self.action_flags[potid] = False
 
             if self.require_track(potid):
-               print("do all actions for one time>>>")  
+               print("start doing all actions for one time>>>")  
                 # 执行任务
-               time.sleep(3)  # 模拟任务执行时间
+               time.sleep(10)  # 模拟任务执行时间
                print(f"Pot {potid} action {action} completed.")
+               self.share_area_isclear_event.set()
                #self.doActionAll(action,move_motorid,flip_motorid)
             else:
-               print("do all actions for bysteps>>>>")  
+               print("start doing all actions for bysteps>>>>")  
                 # 执行任务
                time.sleep(3)  # 模拟任务执行时间
-               print(f"Pot {potid} action {action} completed.")
+               print(f"Pot {potid} step1 {action} completed.")
+               print("now waiting for the share area to be clear.....")
+               self.share_area_isclear_event.wait()
+               time.sleep(3)  # 模拟任务执行时间
+               print(f"Pot {potid} step2 {action} completed.")
+
                #self.doActionBySteps(action,move_motorid,flip_motorid)
      
 
