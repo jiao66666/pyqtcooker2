@@ -10,7 +10,6 @@ import random
 from typing import List, Dict
 
 
-
 # 定义步进电机驱动类-5轴电机板
 class MotorDriver:
     def __init__(self, rs485_instance: RS485Communication, motor_id: int, board_type: int = BOARDTYPE_FIVE_AXIS,name: str = "", websocket_server: WebSocketServer = None):
