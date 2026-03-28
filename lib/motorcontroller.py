@@ -54,45 +54,49 @@ class MotorController:
             print(f"creating lock for potid:{potid}")
             self.locks[potid] = threading.Lock()
 
-        # ========= 进入锅锁（保证同锅串行） =========
-        with self.locks[potid]:
-            print(f"✅ Pot {potid} START action:{action}")
+        try:
+            # ========= 进入锅锁（保证同锅串行） =========
+            with self.locks[potid]:
+
+                print(f"✅ Pot {potid} START action:{action}")
+                print(f"action_flags: {self.action_flags}")
+
+                if self.require_track(potid):
+                    print(">>> FULL ACTION")
+
+                    time.sleep(10)
+
+                    print(f"Pot {potid} FULL DONE")
+
+                    self.release_track(potid)
+                    self.share_area_isclear_event.set()
+
+                else:
+                    print(">>> STEP MODE")
+
+                    time.sleep(3)
+                    print(f"Pot {potid} STEP1 done")
+
+                    print("waiting shared area...")
+                    self.share_area_isclear_event.wait()
+
+                    print("got shared area")
+
+                    # ⚠️ 重新抢占轨道（很关键）
+                    self.require_track(potid)
+
+                    time.sleep(3)
+                    print(f"Pot {potid} STEP2 done")
+
+                    self.release_track(potid)
+
+        finally:
+            # ========= 必须保证一定释放（核心） =========
+            with self.action_flags_lock:
+                self.action_flags[potid] = False
+
+            print(f"🔚 Pot {potid} END")
             print(f"action_flags: {self.action_flags}")
-
-            if self.require_track(potid):
-                print(">>> FULL ACTION")
-                time.sleep(10)
-
-                print(f"Pot {potid} FULL DONE")
-
-                self.release_track(potid)
-                self.share_area_isclear_event.set()
-
-            else:
-                print(">>> STEP MODE")
-
-                time.sleep(3)
-                print(f"Pot {potid} STEP1 done")
-
-                print("waiting shared area...")
-                self.share_area_isclear_event.wait()
-
-                print("got shared area")
-
-                # ⚠️ 这里建议重新抢占轨道
-                self.require_track(potid)
-
-                time.sleep(3)
-                print(f"Pot {potid} STEP2 done")
-
-                self.release_track(potid)
-
-        # ========= 必须保证一定释放 =========
-        with self.action_flags_lock:
-            self.action_flags[potid] = False
-
-        print(f"🔚 Pot {potid} END")
-        print(f"action_flags: {self.action_flags}")
 
     def doActionAll(self, action: str, move_motorid: int, flip_motorid: int):
         print("do all the action for once")
