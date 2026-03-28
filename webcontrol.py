@@ -1001,12 +1001,13 @@ def start_ui():
 if __name__ == '__main__':
     start_server()
     # 等待服务启动（可选优化）
-    
+    """
     boardercontrollers["boardcontroller1"] = BoardController(BOARDTYPE_FIVE_AXIS, board_name="五轴控制板")
     testController = MotorController(boardercontrollers["boardcontroller1"].motors)
     testController.doTask(1,"action all")
     testController.doTask(1,"action all")
     testController.doTask(2,"action stepby step")
     testController.doTask(2,"action stepby step")
+    """
     time.sleep(1)
     start_ui()
