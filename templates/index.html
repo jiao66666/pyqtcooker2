@@ -203,10 +203,14 @@
             <input class="input-classic" type="number" id="dc_time" placeholder="请输入持续时长" value="5000"/>
         </div>        
         <div class="function_container">
-            <button onclick="testDC_command('longrun',1)">1号锅长转测试</button>
-            <button onclick="testDC_command('longrun',2)">2号锅长转测试</button>
-            <button onclick="testDC_command('run',1)">1号锅正常转测试</button>
-            <button onclick="testDC_command('run',2)">2号锅正常转测试</button>
+            <button onclick="testDC_command('longrun',1,1)">1号锅长转测试正向</button>
+            <button onclick="testDC_command('longrun',2,1)">2号锅长转测试正向</button>
+              <button onclick="testDC_command('longrun',1,-1)">1号锅长转测试反向</button>
+               <button onclick="testDC_command('longrun',2,-1)">2号锅长转测试反向</button>
+            <button onclick="testDC_command('run',1,1)">1号锅正常转测试正向</button>
+            <button onclick="testDC_command('run',2,1)">2号锅正常转测试正向</button>
+             <button onclick="testDC_command('run',1,-1)">1号锅正常转测试反向</button>
+             <button onclick="testDC_command('run',2,-1)">2号锅正常转测试反向</button>
             <button onclick="testDC_command('stop',1)">1号锅停止测试</button>
             <button onclick="testDC_command('stop',2)">2号锅停止测试</button>
         </div>

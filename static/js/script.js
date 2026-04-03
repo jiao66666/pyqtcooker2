@@ -865,7 +865,7 @@ function testMultiAxis3() {
 
 
 
-function testDC_command(command,pot) {
+function testDC_command(command,pot,direction = 1) {
      var dc_speed = document.getElementById("dc_speed");
         if(dc_speed.value == "" || isNaN(dc_speed.value) || parseInt(dc_speed.value) <= 0){
             alert("请输入有效的速度！");
@@ -892,7 +892,8 @@ function testDC_command(command,pot) {
                 dc_speed: dc_speed.value,  
                 dc_time: dc_time.value,  
                 command: command,
-                pot:pot
+                pot:pot,
+                direction:direction
             })
         })
         .then(response => response.json())

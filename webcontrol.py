@@ -29,7 +29,7 @@ else:
     port = 5000
     stepmotor_port = 'COM6'
     feedermotor_port = 'COM7'
-    dcmotor_port = 'COM8'
+    dcmotor_port = 'COM10'
 
 
 # 保持 WebSocket 服务器的全局实例
@@ -783,9 +783,10 @@ def testdc_command():
     dc_time = data.get('dc_time') 
     command = data.get('command')    
     pot     = data.get('pot') 
+    direction = data.get('direction') 
 
     success = False
-
+    print(f"recv params {dc_speed},{dc_time},{command},{pot},{direction}")
     if not boardercontrollers.get("boardcontroller3"):
         print("找不到主板控制器，无法操作")
         return jsonify({"status": "error","message": "找不到主板控制器，无法操作,请先连接串口"})
@@ -798,9 +799,9 @@ def testdc_command():
        choosed_motor = POT2_SPIN_MOTOR
        
     if command == "longrun":
-        success =  boardercontrollers["boardcontroller3"].motors[choosed_motor].longrun(1,dc_speed) 
+        success =  boardercontrollers["boardcontroller3"].motors[choosed_motor].longrun(direction,dc_speed) 
     elif command == "run":
-        success =  boardercontrollers["boardcontroller3"].motors[choosed_motor].run(1,dc_time,dc_speed)   
+        success =  boardercontrollers["boardcontroller3"].motors[choosed_motor].run(direction,dc_time,dc_speed)   
     elif command == "stop":
         success =  boardercontrollers["boardcontroller3"].motors[choosed_motor].stop() 
 

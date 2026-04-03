@@ -65,7 +65,9 @@ class DCMotorDriver:
         if direction >0 :
             time = time
         else:
-            time = time * -1    
+            time = -abs(int(time))   
+
+        print(f"time is{time}")      
          # 发送运行命令
         success, resp = self.com.execute_command(
             "RUN", 
