@@ -45,3 +45,6 @@ DEC_BOUND = 0.8  #减速运动减速开始位置百分比
 FLIP_EXITPOS = 1.0  #翻转同步退出位置
 MOVE_EXITPOS = 2.8  #移动同步退出位置
 FLIP_EXITPOS2 = 4.0 #洗锅翻转退出位置
+
+POT1_WAIT_LEVEL = 3.0  #1号锅阻塞时等待水平位置
+POT2_WAIT_LEVEL = 3.0  #2号锅阻塞时等待水平位置
