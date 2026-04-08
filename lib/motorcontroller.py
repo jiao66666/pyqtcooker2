@@ -98,12 +98,45 @@ class MotorController:
             print(f"🔚 Pot {potid} END")
             print(f"action_flags: {self.action_flags}")
 
-    def doActionAll(self, action: str, move_motorid: int, flip_motorid: int):
+
+    def doAction(self,potid:int,action:str,step:int = 0):
         print("do all the action for once")
         # 模拟执行
         # ...这里可以按需实现具体的动作代码...
-    
-    def doActionBySteps(self, action: str, move_motorid: int, flip_motorid: int):
-        print("do all the action by steps")
-        # 模拟执行
-        # ...这里可以按需实现具体的分步动作代码...
+        if potid == 1:
+           move_motorid = POT1_MOVE_MOTOR
+           flip_motorid = POT1_FLIP_MOTOR
+           safe_flip_pos = POT_POS_SAFE_FLIP1
+           infood_pos_level = POT1_POS_INFOOD_LEVEL
+           firefood_pos_level = POT1_POS_FIREPOT_LEVEL
+           firefood_pos_flip  =  POT1_POS_FIREPOT_FLIP
+           wait_pos_level = POT1_WAIT_LEVEL
+        else:
+           move_motorid = POT2_MOVE_MOTOR
+           flip_motorid = POT2_FLIP_MOTOR   
+
+           safe_flip_pos = POT_POS_SAFE_FLIP2
+           infood_pos_level = POT2_POS_INFOOD_LEVEL
+           firefood_pos_level = POT2_POS_FIREPOT_LEVEL
+           firefood_pos_flip  =  POT2_POS_FIREPOT_FLIP
+           wait_pos_level = POT2_WAIT_LEVEL
+        
+        flip_speed = 30
+        move_speed = 30 
+        if action == "pickup_food_fire":
+            print("ready to do pickup_food_fire actions")
+            if step == 0:   # do all actions once
+                print("do it in all ")
+                self.motors[flip_motorid].gotask_advanced_curve(safe_flip_pos,flip_speed)   
+                self.motors[move_motorid].gotask_advanced_curve(infood_pos_level,move_speed)   
+                self.motors[move_motorid].gotask_advanced_curve(firefood_pos_level,move_speed)   
+                self.motors[flip_motorid].gotask_advanced_curve(firefood_pos_flip,flip_speed)   
+            elif step == 1:   #divided into two steps ,step1
+                print("do step 1")
+                self.motors[flip_motorid].gotask_advanced_curve(safe_flip_pos,flip_speed)   
+                self.motors[move_motorid].gotask_advanced_curve(wait_pos_level,move_speed)   
+            elif step == 2:   #divided into two steps ,step2
+                print("do step 2")
+                self.motors[move_motorid].gotask_advanced_curve(infood_pos_level,move_speed)   
+                self.motors[move_motorid].gotask_advanced_curve(firefood_pos_level,move_speed)  
+                self.motors[flip_motorid].gotask_advanced_curve(firefood_pos_flip,flip_speed)                    
