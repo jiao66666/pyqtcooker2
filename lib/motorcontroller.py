@@ -4,7 +4,9 @@ import threading
 from lib.boardtype import *
 from concurrent.futures import ThreadPoolExecutor
 import time
-
+from lib.threadmanager import ThreadManager
+from lib.taskbase import PotTask
+from lib.actionqueuemanager import ActionQueueManager
 
 class MotorController:
     def __init__(self, allmotors: List[MotorDriver]):
@@ -20,6 +22,11 @@ class MotorController:
 
         self.executor = ThreadPoolExecutor(max_workers=2)
 
+
+        self.threadmanager = ThreadManager(max_workers=10)
+        self.actionqueuemanager = ActionQueueManager(name="动作管理器")
+
+
     def require_track(self, potid) -> bool:
         if not self.is_track_using and self.tracker_userid is None:
             self.is_track_using = True
@@ -33,6 +40,79 @@ class MotorController:
             self.tracker_userid = None
             return True
         return False
+
+    def testMultiThreadRun(self):
+        print("===== testMultiThreadRun START =====")
+
+        self.share_area_isclear_event.clear()
+
+        # -----------------------------
+        # FULL 动作
+        # -----------------------------
+        def action_full(potid):
+            print(f"[FULL] Pot {potid} try require track")
+
+            # ❗ 占用共享区
+            self.share_area_isclear_event.clear()
+
+            if self.require_track(potid):
+                print(f"[FULL] Pot {potid} got track")
+
+                time.sleep(5)
+
+                print(f"[FULL] Pot {potid} done")
+                self.release_track(potid)
+
+                # ✅ 释放共享区
+                self.share_area_isclear_event.set()
+            else:
+                print(f"[FULL] Pot {potid} failed to get track")
+
+        # -----------------------------
+        # STEP 动作
+        # -----------------------------
+        def action_step(potid):
+            print(f"[STEP] Pot {potid} step1")
+            time.sleep(2)
+
+            print(f"[STEP] Pot {potid} waiting shared area...")
+            self.share_area_isclear_event.wait()
+
+            print(f"[STEP] Pot {potid} step2 try require track")
+
+            if not self.require_track(potid):
+                print(f"[STEP] Pot {potid} failed to get track")
+                return
+
+            time.sleep(2)
+
+            print(f"[STEP] Pot {potid} done")
+            self.release_track(potid)
+
+        # -----------------------------
+        # 封装任务（串行）
+        # -----------------------------
+        task1 = PotTask(1, action_full, 1)
+        task2 = PotTask(2, action_step, 2)
+        task3 = PotTask(1, action_step, 1)
+
+        self.actionqueuemanager.submit_task(task1)
+        self.actionqueuemanager.submit_task(task2)
+        self.actionqueuemanager.submit_task(task3)
+
+        # -----------------------------
+        # 并行任务（监控）
+        # -----------------------------
+        def monitor(potid):
+            for i in range(5):
+                print(f"[Monitor] Pot {potid} running... {i}")
+                time.sleep(1)
+
+        self.threadmanager.submit_task(lambda: monitor(1))
+        self.threadmanager.submit_task(lambda: monitor(2))
+
+        print("===== testMultiThreadRun END (main thread not blocked) =====")
+
 
     def doTask(self, potid, action):
         print(f"doTask started, POT:{potid}, action:{action}")

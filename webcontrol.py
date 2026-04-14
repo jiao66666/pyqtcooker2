@@ -1011,5 +1011,11 @@ if __name__ == '__main__':
     testController.doTask(2,"action stepby step")
     """
     
+
+    #boardercontrollers["boardcontroller1"] = BoardController(BOARDTYPE_FIVE_AXIS, board_name="五轴控制板")
+    #testController = MotorController(boardercontrollers["boardcontroller1"].motors)
+    #testController.doTask(1,"action all")
+    #testController.testMultiThreadRun()
+    
     time.sleep(1)
     start_ui()
