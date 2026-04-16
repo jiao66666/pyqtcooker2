@@ -6,13 +6,13 @@ from lib.newstructure.scancycle import ScanCycle
 def build_system():
     bus = EventBus()
 
-  # 锅1电机
-    v_motor_1 = Motor("V1", bus)
-    h_motor_1 = Motor("H1", bus)
+    # 锅1电机
+    v_motor_1 = Motor("pot1_flip_motor",1, bus)
+    h_motor_1 = Motor("pot1_move_motor",2, bus)
 
     # 锅2电机
-    v_motor_2 = Motor("V2", bus)
-    h_motor_2 = Motor("H2", bus)
+    v_motor_2 = Motor("pot2_flip_motor",3, bus)
+    h_motor_2 = Motor("pot2_move_motor",4, bus)
 
     # 状态机绑定各自电机
     pot1 = PotStateMachine(1, v_motor_1, h_motor_1, bus)

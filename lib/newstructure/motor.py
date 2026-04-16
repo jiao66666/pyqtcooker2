@@ -2,8 +2,9 @@ import threading
 import time
 
 class Motor:
-    def __init__(self, name, bus):
+    def __init__(self, name,motorid, bus):
         self.name = name
+        self.motorid = motorid
         self.bus = bus
         self.busy = False
 
@@ -18,8 +19,12 @@ class Motor:
 
     def _done(self, action):
         self.busy = False
-        print(f"[{self.name}] done {action}")
+        print(f"[{self.name}] done {action}")   
         self.bus.publish("MOTOR_DONE", {
-            "motor": self.name,
-            "action": action
+            "event": "MOTOR_DONE",
+            "source": self.name,
+            "action": action,
+            "status": "success",
+            "motor_id": self.motorid,
+            "timestamp": time.time()
         })

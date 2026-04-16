@@ -32,8 +32,8 @@ class PotStateMachine:
             self.state = "STOPPED"
 
     def on_motor_done(self, data):
-        if data["motor"] == self.v.name and self.state == "WAIT_V1":
+        if data["source"] == self.v.name and self.state == "WAIT_V1":
             self.state = "H1_READY"
 
-        elif data["motor"] == self.h.name and self.state == "WAIT_H1":
+        elif data["source"] == self.h.name and self.state == "WAIT_H1":
             self.state = "DONE"
