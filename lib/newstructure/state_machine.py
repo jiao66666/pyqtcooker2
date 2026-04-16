@@ -13,10 +13,24 @@ class PotStateMachine:
         self.pending_event = None
 
     def start(self):
-        self.state = "V1"
+        self.state = "CHECK_HOME"
 
     def tick(self):
-        if self.state in ["IDLE", "STOPPED"]:
+        if self.state == "IDLE":
+            return  # 未启动
+
+        if self.state == "STOPPED":
+            return  # 已结束
+
+        if self.state == "CHECK_HOME":
+            if self.check_home():
+                self.state = "READY"
+            else:
+                print(f"Pot {self.pot_id} home not ready")
+            return
+
+        if self.state == "READY":
+            self.state = "V1"
             return
 
         if self.state == "V1":
@@ -30,6 +44,12 @@ class PotStateMachine:
         elif self.state == "DONE":
             print(f"Pot {self.pot_id} finished")
             self.state = "STOPPED"
+
+    def reset(self):
+        self.state = "IDLE"
+
+    def check_home(self):
+        return True            
 
     def on_motor_done(self, data):
         if data["source"] == self.v.name and self.state == "WAIT_V1":
