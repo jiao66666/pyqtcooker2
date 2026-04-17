@@ -22,9 +22,9 @@ class Motor:
         print(f"[{self.name}] done {action}")   
         self.bus.publish("MOTOR_DONE", {
             "event": "MOTOR_DONE",
-            "source": self.name,
+            "name": self.name,
+            "motor_id": self.motorid,
             "action": action,
             "status": "success",
-            "motor_id": self.motorid,
             "timestamp": time.time()
         })

@@ -14,9 +14,24 @@ def build_system():
     v_motor_2 = Motor("pot2_flip_motor",3, bus)
     h_motor_2 = Motor("pot2_move_motor",4, bus)
 
-    # 状态机绑定各自电机
-    pot1 = PotStateMachine(1, v_motor_1, h_motor_1, bus)
-    pot2 = PotStateMachine(2, v_motor_2, h_motor_2, bus)
+
+
+    steps1 = [
+        {"motor": v_motor_1, "action": "flip_out_togetfood_1"},
+        {"motor": h_motor_1, "action": "move_right_togetfood_1"},
+        {"motor": h_motor_1, "action": "move_left_tofirefood_1"},
+        {"motor": v_motor_1, "action": "flip_in_tofirefood_1"}
+    ]
+    pot1 = PotStateMachine(1, steps1, bus)
+
+
+    steps2 = [
+        {"motor": v_motor_2, "action": "flip_out_togetfood_2"},
+        {"motor": h_motor_2, "action": "move_right_togetfood_2"},
+        {"motor": h_motor_2, "action": "move_left_tofirefood_2"},
+        {"motor": v_motor_2, "action": "flip_in_tofirefood_2"}
+    ]
+    pot2 = PotStateMachine(2, steps2, bus)
 
     pot1.start()
     pot2.start()
