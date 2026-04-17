@@ -1,5 +1,5 @@
 class PotStateMachine:
-    def __init__(self, pot_id, steps, bus):
+    def __init__(self, pot_id, steps, bus, track_manager):
         self.pot_id = pot_id
         self.state = "IDLE"
 
@@ -7,8 +7,8 @@ class PotStateMachine:
         self.current_step = 0
         self.steps = steps
 
-        # future: used for concurrent execution / event alignment
-        self.runtime_context = None
+        self.track = track_manager
+
 
         # 订阅电机完成事件
         self.bus.subscribe("MOTOR_DONE", self.on_motor_done)

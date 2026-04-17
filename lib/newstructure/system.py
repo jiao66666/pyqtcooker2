@@ -2,9 +2,11 @@ from lib.newstructure.eventbus import EventBus
 from lib.newstructure.motor import Motor
 from lib.newstructure.state_machine import PotStateMachine
 from lib.newstructure.scancycle import ScanCycle
+from lib.newstructure.trackmanager import TrackManager
 
 def build_system():
     bus = EventBus()
+    trackmanager = TrackManager()
 
     # 锅1电机
     v_motor_1 = Motor("pot1_flip_motor",1, bus)
@@ -22,7 +24,7 @@ def build_system():
         {"motor": h_motor_1, "action": "move_in_tofirefood_1"},
         {"motor": v_motor_1, "action": "flip_in_tofirefood_1"}
     ]
-    pot1 = PotStateMachine(1, steps1, bus)
+    pot1 = PotStateMachine(1, steps1, bus, trackmanager)
 
 
     steps2 = [
@@ -31,7 +33,7 @@ def build_system():
         {"motor": h_motor_2, "action": "move_in_tofirefood_2"},
         {"motor": v_motor_2, "action": "flip_in_tofirefood_2"}
     ]
-    pot2 = PotStateMachine(2, steps2, bus)
+    pot2 = PotStateMachine(2, steps2, bus, trackmanager)
 
     pot1.start()
     pot2.start()
