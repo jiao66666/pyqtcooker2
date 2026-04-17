@@ -18,8 +18,8 @@ def build_system():
 
     steps1 = [
         {"motor": v_motor_1, "action": "flip_out_togetfood_1"},
-        {"motor": h_motor_1, "action": "move_right_togetfood_1"},
-        {"motor": h_motor_1, "action": "move_left_tofirefood_1"},
+        {"motor": h_motor_1, "action": "move_out_togetfood_1"},
+        {"motor": h_motor_1, "action": "move_in_tofirefood_1"},
         {"motor": v_motor_1, "action": "flip_in_tofirefood_1"}
     ]
     pot1 = PotStateMachine(1, steps1, bus)
@@ -27,8 +27,8 @@ def build_system():
 
     steps2 = [
         {"motor": v_motor_2, "action": "flip_out_togetfood_2"},
-        {"motor": h_motor_2, "action": "move_right_togetfood_2"},
-        {"motor": h_motor_2, "action": "move_left_tofirefood_2"},
+        {"motor": h_motor_2, "action": "move_out_togetfood_2"},
+        {"motor": h_motor_2, "action": "move_in_tofirefood_2"},
         {"motor": v_motor_2, "action": "flip_in_tofirefood_2"}
     ]
     pot2 = PotStateMachine(2, steps2, bus)
