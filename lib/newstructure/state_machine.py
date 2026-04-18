@@ -59,7 +59,7 @@ class PotStateMachine:
         
 
         # 🟢 释放轨道
-        if self.need_track(step["action"]):
+        if self.need_track(step["action"]):  #如果需要跨动作释放，则加变量self.track_accuired 进行保存跨多个动作判断
             self.track.release(self.pot_id, step["action"])
 
         self.current_step += 1
