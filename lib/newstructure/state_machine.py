@@ -6,14 +6,10 @@ class PotStateMachine:
         self.bus = bus
         self.current_step = 0
         self.steps = steps
-
         self.track = track_manager
-
-
+        
         # 订阅电机完成事件
         self.bus.subscribe("MOTOR_DONE", self.on_motor_done)
-
-        self.pending_event = None
 
     def start(self):
         self.state = "CHECK_HOME"
@@ -30,12 +26,9 @@ class PotStateMachine:
         if self.state == "RUNNING":
             step = self.steps[self.current_step]
 
-            # 🟢 关键：先申请轨道
             if self.need_track(step["action"]) and not self.track.try_acquire(self.pot_id, step["action"]):
                 print(f"Pot {self.pot_id} waiting track")
                 return
-
-
 
             step["motor"].move(step["action"])
             self.state = "WAITING"
@@ -57,8 +50,6 @@ class PotStateMachine:
         if data["action"] != step["action"]:
             return
         
-
-        # 🟢 释放轨道
         if self.need_track(step["action"]):  #如果需要跨动作释放，则加变量self.track_accuired 进行保存跨多个动作判断
             self.track.release(self.pot_id, step["action"])
 
