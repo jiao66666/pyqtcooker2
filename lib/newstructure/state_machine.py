@@ -29,6 +29,14 @@ class PotStateMachine:
 
         if self.state == "RUNNING":
             step = self.steps[self.current_step]
+
+            # 🟢 关键：先申请轨道
+            if self.need_track(step["action"]) and not self.track.try_acquire(self.pot_id, step["action"]):
+                print(f"Pot {self.pot_id} waiting track")
+                return
+
+
+
             step["motor"].move(step["action"])
             self.state = "WAITING"
 
@@ -38,6 +46,9 @@ class PotStateMachine:
     def check_home(self):
         return True            
 
+    def need_track(self,action: str):
+        return action.startswith("move_out_togetfood")
+
     def on_motor_done(self, data):
         if self.state != "WAITING":
             return
@@ -46,6 +57,11 @@ class PotStateMachine:
         if data["action"] != step["action"]:
             return
         
+
+        # 🟢 释放轨道
+        if self.need_track(step["action"]):
+            self.track.release(self.pot_id, step["action"])
+
         self.current_step += 1
 
         if self.current_step >= len(self.steps):
