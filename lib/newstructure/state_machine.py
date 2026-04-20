@@ -28,6 +28,8 @@ class PotStateMachine:
 
             if self.need_track(step["action"]) and not self.track.try_acquire(self.pot_id, step["action"]):
                 print(f"Pot {self.pot_id} waiting track")
+                if "on_block" in step:
+                   self.insert_steps(step["on_block"])
                 return
 
             step["motor"].move(step["action"])
@@ -38,6 +40,14 @@ class PotStateMachine:
 
     def check_home(self):
         return True            
+
+    def insert_steps(self, new_steps):
+        # 把 fallback 插入到当前步骤前
+        self.steps = (
+            self.steps[:self.current_step] +
+            new_steps +
+            self.steps[self.current_step:]
+        )
 
     def need_track(self,action: str):
         return action.startswith("move_out_togetfood")

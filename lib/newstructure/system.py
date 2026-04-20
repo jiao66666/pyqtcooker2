@@ -20,7 +20,11 @@ def build_system():
 
     steps1 = [
         {"motor": v_motor_1, "action": "flip_out_togetfood_1"},
-        {"motor": h_motor_1, "action": "move_out_togetfood_1"},
+        {"motor": h_motor_1, "action": "move_out_togetfood_1",
+         "on_block": [
+            {"motor": v_motor_1, "action": "move_to_wait"},
+            {"motor": v_motor_1, "action": "move_to_track"}]
+        },
         {"motor": h_motor_1, "action": "move_in_tofirefood_1"},
         {"motor": v_motor_1, "action": "flip_in_tofirefood_1"}
     ]
@@ -29,7 +33,10 @@ def build_system():
 
     steps2 = [
         {"motor": v_motor_2, "action": "flip_out_togetfood_2"},
-        {"motor": h_motor_2, "action": "move_out_togetfood_2"},
+        {"motor": h_motor_2, "action": "move_out_togetfood_2","on_block": [
+            {"motor": v_motor_2, "action": "move_to_wait"},
+            {"motor": v_motor_2, "action": "move_to_track"}
+        ]},
         {"motor": h_motor_2, "action": "move_in_tofirefood_2"},
         {"motor": v_motor_2, "action": "flip_in_tofirefood_2"}
     ]
