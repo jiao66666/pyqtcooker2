@@ -7,7 +7,7 @@ from lib.tools import is_dev_mode,parse_speed_params
 from lib.websocket_server import WebSocketServer
 import webview
 import threading
-
+from lib.newstructure.basecom import RS485Communication
 from lib.newstructure.system import build_system
 
 import asyncio
@@ -1001,9 +1001,21 @@ def start_ui():
 if __name__ == '__main__':
     start_server()
     # 等待服务启动（可选优化）
+
+    """
+    print("test new protocol com run... ")
+    testCom = RS485Communication(port="COM4",baudrate="115200",timeout=1,boardtype=BOARDTYPE_FIVE_AXIS)
+    command = "RUN"
+    params = ["1","2", "3600", "360"]
+    testCom.connect()
+    testCom.execute_command(command, params) 
+    """
+
     print("test new structure...")
     system = build_system()
     system.run()
+
+
     
     time.sleep(1)
     start_ui()
