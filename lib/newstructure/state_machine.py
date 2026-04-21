@@ -18,12 +18,12 @@ class PotStateMachine:
         if self.state in ["IDLE", "STOPPED", "WAITING"]:
             return
 
-        if self.state == "CHECK_HOME":
+        elif self.state == "CHECK_HOME":
             if self.check_home():
                 self.state = "RUNNING"
             return
 
-        if self.state == "RUNNING":
+        elif self.state == "RUNNING":
             step = self.steps[self.current_step]
 
             if self.need_track(step["action"]) and not self.track.try_acquire(self.pot_id, step["action"]):
