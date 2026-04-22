@@ -1,21 +1,32 @@
+import queue
+
 class PotStateMachine:
-    def __init__(self, pot_id, steps, bus, track_manager):
+    def __init__(self, pot_id, bus, track_manager):
         self.pot_id = pot_id
         self.state = "IDLE"
 
         self.bus = bus
         self.current_step = 0
-        self.steps = steps
+        self.steps = None
         self.track = track_manager
+        self.command_queue = queue.Queue()
+
         
         # 订阅电机完成事件
         self.bus.subscribe("MOTOR_DONE", self.on_motor_done)
+    def submit_task(self, steps):
+        self.command_queue.put(steps)
 
-    def start(self):
-        self.state = "CHECK_HOME"
 
     def tick(self):
-        if self.state in ["IDLE", "STOPPED", "WAITING"]:
+        if self.state in ["STOPPED", "WAITING"]:
+            return
+
+        elif self.state == "IDLE":
+            if not self.command_queue.empty():
+                self.steps = self.command_queue.get()
+                self.current_step = 0
+                self.state = "CHECK_HOME"
             return
 
         elif self.state == "CHECK_HOME":

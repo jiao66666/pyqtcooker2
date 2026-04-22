@@ -1,8 +1,6 @@
 import serial
-import time
-import crcmod
 import threading
-from typing import Optional, List, Tuple, Union
+from typing import Optional, List, Tuple
 from lib.boardtype import *
 from lib.newstructure.protocols import ProtocolFactory
 
