@@ -7,9 +7,7 @@ from lib.tools import is_dev_mode,parse_speed_params
 from lib.websocket_server import WebSocketServer
 import webview
 import threading
-from lib.newstructure.basecom import RS485Communication
-from lib.newstructure.system_instance import get_system
-from lib.newstructure.system import run_system
+from lib.newstructure.system import run_system,get_system
 
 
 import asyncio
@@ -1040,7 +1038,7 @@ if __name__ == '__main__':
     print("test new structure...")
     start_system()
 
-    """
+    
     print("simulate click....")
     system = get_system()
     steps = system["stepbuilder"].build(
@@ -1056,7 +1054,7 @@ if __name__ == '__main__':
         2
     )
     system["pots"][2].submit_task(steps)
-    """
     
+
     time.sleep(1)
     start_webview()

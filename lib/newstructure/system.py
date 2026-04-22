@@ -5,6 +5,7 @@ from lib.newstructure.scancycle import ScanCycle
 from lib.newstructure.trackmanager import TrackManager
 from lib.newstructure.boardtype import *
 from lib.newstructure.stepbuilder import StepBuilder
+import threading
 
 def build_system():
     bus = EventBus()
@@ -38,3 +39,18 @@ def run_system(system):
         system["pots"][1],
         system["pots"][2]
     ]).run()
+
+
+_system = None
+_lock = threading.Lock()
+
+
+def get_system():
+    global _system
+
+    if _system is None:
+        with _lock:
+            if _system is None:   # 双重检查锁（防并发）
+                _system = build_system()
+
+    return _system
