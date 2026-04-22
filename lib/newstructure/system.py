@@ -10,9 +10,6 @@ def build_system():
     bus = EventBus()
     trackmanager = TrackManager()
 
-    pot1 = PotStateMachine(1, bus, trackmanager)
-    pot2 = PotStateMachine(2, bus, trackmanager)
-
     motors = {
         POT1_FLIP_MOTOR: Motor("pot1_flip_motor", 1, bus),
         POT1_MOVE_MOTOR: Motor("pot1_move_motor", 2, bus),
@@ -21,14 +18,23 @@ def build_system():
     }
 
     stepbuilder = StepBuilder(motors)
-    steps1 = stepbuilder.build("takefood_fire",1)
-    pot1.submit_task(steps1)
-    steps2 = stepbuilder.build("takefood_fire",2)
-    pot2.submit_task(steps2)
 
-    return ScanCycle([pot1, pot2])
+    pot1 = PotStateMachine(1, bus, trackmanager)
+    pot2 = PotStateMachine(2, bus, trackmanager)
+
+    return {
+        "bus": bus,
+        "trackmanager": trackmanager,
+        "stepbuilder": stepbuilder,
+        "pots": {
+            1: pot1,
+            2: pot2
+        }
+    }
 
 
-def main():
-    system = build_system()
-    system.run()
+def run_system(system):
+    ScanCycle([
+        system["pots"][1],
+        system["pots"][2]
+    ]).run()

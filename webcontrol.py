@@ -8,7 +8,9 @@ from lib.websocket_server import WebSocketServer
 import webview
 import threading
 from lib.newstructure.basecom import RS485Communication
-from lib.newstructure.system import build_system
+from lib.newstructure.system_instance import get_system
+from lib.newstructure.system import run_system
+
 
 import asyncio
 from threading import Thread
@@ -978,6 +980,22 @@ def gopos():
 
 
 
+@app.route("/testnewstructure", methods=["POST"])
+def testnewstructure():
+    system = get_system()
+    data = request.json
+
+    steps = system["stepbuilder"].build(
+        data["action"],
+        data["pot_id"]
+    )
+
+    system["pots"][data["pot_id"]].submit_task(steps)
+
+    return {"ok": True}
+
+
+
 def run_flask():
     app.run(
     host='0.0.0.0',   # 监听所有地址
@@ -991,11 +1009,19 @@ def start_server():
     t.daemon = True
     t.start()
 
-def start_ui():
+def start_webview():
     url = f"http://127.0.0.1:{port}"
     webview.create_window("炒菜机", url)
     webview.start()
 
+def start_system():
+    system = get_system()
+
+    t = threading.Thread(
+        target=lambda: run_system(system),
+        daemon=True
+    )
+    t.start()
 
 
 if __name__ == '__main__':
@@ -1012,10 +1038,25 @@ if __name__ == '__main__':
     """
 
     print("test new structure...")
-    system = build_system()
-    system.run()
+    start_system()
 
+    """
+    print("simulate click....")
+    system = get_system()
+    steps = system["stepbuilder"].build(
+        "takefood_fire",
+        1
+    )
+    system["pots"][1].submit_task(steps)
 
+    print("simulate click2....")
+    system = get_system()
+    steps = system["stepbuilder"].build(
+        "takefood_fire",
+        2
+    )
+    system["pots"][2].submit_task(steps)
+    """
     
     time.sleep(1)
-    start_ui()
+    start_webview()
