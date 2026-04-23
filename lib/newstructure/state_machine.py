@@ -84,6 +84,7 @@ class PotStateMachine:
         if ctx["action"] != step["action"] or data["motor_id"] != step["motor"].motor_id:  #确保数据的一致性
             return
         
+        print(f"motor {motor_id} done the action {step['action']}")
         if self.need_track(step["action"]):  #如果需要跨动作释放，则加变量self.track_accuired 进行保存跨多个动作判断
             self.track.release(self.pot_id, step["action"])
 

@@ -3,6 +3,7 @@ import time
 from lib.newstructure.boardtype import *
 from lib.newstructure.runtime import runtime
 
+
 class MotorPollingService:
     def __init__(self, rs485, bus, interval=0.2):
         self.rs485 = rs485
@@ -17,6 +18,7 @@ class MotorPollingService:
     def stop(self):
         self.running = False
 
+
     def _loop(self):
         while self.running:
             self._check_all_motors()
@@ -28,6 +30,13 @@ class MotorPollingService:
                 "RunStatus",
                 [str(motor_id)]
             )
+
+            #only used for test
+            #runtime.set_done(motor_id)
+            #self.bus.publish("MOTOR_DONE", {
+            #    "motor_id": motor_id
+            #})
+        
 
             if not success:
                 continue
