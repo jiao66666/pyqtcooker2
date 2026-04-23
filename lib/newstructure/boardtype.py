@@ -82,5 +82,35 @@ ACTION_PARAMS_CONFIG = {
         "cmd": "RUN",
         "speed": 1000,
         "target":4.6
+    },
+    "flip_out_togetfood_2": {
+        "cmd":"RUN",
+        "speed": 200,
+        "target": 4.5
+    },
+    "move_out_togetfood_2": {
+        "cmd": "RUN",
+        "speed": 1000,
+        "target":4.6
+    },
+    "move_to_wait_2": {
+        "cmd": "RUN",
+        "speed": 1000,
+        "target":4.6
+    },
+    "move_to_track_2": {
+        "cmd": "RUN",
+        "speed": 1000,
+        "target":4.6
+    },
+    "move_in_tofirefood_2": {
+        "cmd": "RUN",
+        "speed": 1000,
+        "target":4.6
+    },
+    "flip_in_tofirefood_2": {
+        "cmd": "RUN",
+        "speed": 1000,
+        "target":4.6
     }
 }

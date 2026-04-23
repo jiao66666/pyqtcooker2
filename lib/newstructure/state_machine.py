@@ -1,4 +1,5 @@
 import queue
+from lib.newstructure.runtime import runtime
 
 class PotStateMachine:
     def __init__(self, pot_id, bus, track_manager):
@@ -42,6 +43,12 @@ class PotStateMachine:
                 if "on_block" in step:
                    self.insert_steps(step["on_block"])
                 return
+            
+            runtime.set_running(
+                motor_id=step["motor"].motor_id,
+                action=step["action"],
+                pot_id=self.pot_id
+            )
 
             step["motor"].go(step["action"],step["params"])
             self.state = "WAITING"
@@ -64,11 +71,17 @@ class PotStateMachine:
         return action.startswith("move_out_togetfood")
 
     def on_motor_done(self, data):
+
+        motor_id = data["motor_id"]    
+        ctx = runtime.get(motor_id)
+        if not ctx:
+            return      
+
         if self.state != "WAITING":
-            return
+            return          
 
         step = self.steps[self.current_step]
-        if data["action"] != step["action"] or data["motor_id"] != step["motor"].motor_id:  #确保数据的一致性
+        if ctx["action"] != step["action"] or data["motor_id"] != step["motor"].motor_id:  #确保数据的一致性
             return
         
         if self.need_track(step["action"]):  #如果需要跨动作释放，则加变量self.track_accuired 进行保存跨多个动作判断

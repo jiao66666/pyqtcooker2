@@ -19,9 +19,10 @@ class Motor:
         print(f"[{self.name}] start {action}")
         target = params["target"]
         anglespeed = params["speed"]
-        if not self.homed:
-            print("not zero ,can't go move")
-            return False
+
+        #if not self.homed:
+        #    print("not zero ,can't go move")
+        #    return False
 
         params = MotionPlanner.plan_abs_move(
             motor=self,

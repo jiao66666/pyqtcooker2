@@ -1,6 +1,5 @@
 # motionplanner.py
 
-from lib.newstructure.tools import circles_to_pulses
 from lib.newstructure.boardtype import *
 
 class MotionPlanner:
@@ -8,7 +7,7 @@ class MotionPlanner:
     def __init__(self):
         pass
     @staticmethod
-    def plan_abs_move(self, motor, target, current_position, speed):
+    def plan_abs_move(motor, target, current_position, speed):
         """
         把业务目标转换为电机执行参数
         """

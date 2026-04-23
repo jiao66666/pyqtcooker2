@@ -8,11 +8,13 @@ from lib.newstructure.stepbuilder import StepBuilder
 from lib.newstructure.basecom import RS485Communication
 import threading
 from lib.newstructure.runtime import runtime
+from lib.newstructure.motorpollingservice import MotorPollingService
 
 def build_system():
     bus = EventBus()
     trackmanager = TrackManager()
     rs485 = RS485Communication(port="COM3", baudrate="19200", timeout=1.0, boardtype=BOARDTYPE_FIVE_AXIS)
+    rs485.connect()
 
     motors = {
         POT1_FLIP_MOTOR: Motor("pot1_flip_motor", 1, bus, rs485),
@@ -26,6 +28,9 @@ def build_system():
     pot1 = PotStateMachine(1, bus, trackmanager)
     pot2 = PotStateMachine(2, bus, trackmanager)
 
+
+    polling_service = MotorPollingService(rs485, bus)
+
     return {
         "bus": bus,
         "trackmanager": trackmanager,
@@ -33,7 +38,8 @@ def build_system():
         "pots": {
             1: pot1,
             2: pot2
-        }
+        },
+        "polling": polling_service,
     }
 
 def init_system():
@@ -41,6 +47,7 @@ def init_system():
         runtime.init_motor(motor_id)
 
 def run_system(system):
+    system["polling"].start()
     ScanCycle([
         system["pots"][1],
         system["pots"][2]
