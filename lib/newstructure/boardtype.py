@@ -8,6 +8,7 @@ POT1_FLIP_MOTOR = 1  # 1号锅翻转电机编号
 POT2_MOVE_MOTOR = 4  # 2号锅移动电机编号
 POT2_FLIP_MOTOR = 3  # 2号锅翻转电机编号
 
+MOTOR_LIST = [POT1_MOVE_MOTOR,POT1_FLIP_MOTOR,POT2_MOVE_MOTOR,POT2_FLIP_MOTOR]
 
 POT1_SPIN_MOTOR = 0  # 1号锅旋转DC电机编号
 POT2_SPIN_MOTOR = 1  # 2号锅旋转DC电机编号
@@ -48,3 +49,38 @@ FLIP_EXITPOS2 = 4.0 #洗锅翻转退出位置
 
 POT1_WAIT_LEVEL = 3.0  #1号锅阻塞时等待水平位置
 POT2_WAIT_LEVEL = 3.0  #2号锅阻塞时等待水平位置
+
+
+
+ACTION_PARAMS_CONFIG = {
+    "flip_out_togetfood_1": {
+        "cmd":"RUN",
+        "speed": 200,
+        "target": 4.5
+    },
+    "move_out_togetfood_1": {
+        "cmd": "RUN",
+        "speed": 1000,
+        "target":4.6
+    },
+    "move_to_wait_1": {
+        "cmd": "RUN",
+        "speed": 1000,
+        "target":4.6
+    },
+    "move_to_track_1": {
+        "cmd": "RUN",
+        "speed": 1000,
+        "target":4.6
+    },
+    "move_in_tofirefood_1": {
+        "cmd": "RUN",
+        "speed": 1000,
+        "target":4.6
+    },
+    "flip_in_tofirefood_1": {
+        "cmd": "RUN",
+        "speed": 1000,
+        "target":4.6
+    }
+}

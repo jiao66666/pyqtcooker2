@@ -43,7 +43,7 @@ class PotStateMachine:
                    self.insert_steps(step["on_block"])
                 return
 
-            step["motor"].move(step["action"])
+            step["motor"].go(step["action"],step["params"])
             self.state = "WAITING"
 
     def reset(self):
@@ -68,7 +68,7 @@ class PotStateMachine:
             return
 
         step = self.steps[self.current_step]
-        if data["action"] != step["action"]:
+        if data["action"] != step["action"] or data["motor_id"] != step["motor"].motor_id:  #确保数据的一致性
             return
         
         if self.need_track(step["action"]):  #如果需要跨动作释放，则加变量self.track_accuired 进行保存跨多个动作判断

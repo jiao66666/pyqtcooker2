@@ -7,7 +7,7 @@ from lib.tools import is_dev_mode,parse_speed_params
 from lib.websocket_server import WebSocketServer
 import webview
 import threading
-from lib.newstructure.system import run_system,get_system
+from lib.newstructure.system import run_system,get_system,init_system
 
 
 import asyncio
@@ -1013,7 +1013,9 @@ def start_webview():
     webview.start()
 
 def start_system():
+
     system = get_system()
+    init_system()
 
     t = threading.Thread(
         target=lambda: run_system(system),

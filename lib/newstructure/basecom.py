@@ -3,6 +3,7 @@ import threading
 from typing import Optional, List, Tuple
 from lib.boardtype import *
 from lib.newstructure.protocols import ProtocolFactory
+from lib.newstructure.tools import parse_motor_pulses,parse_motor_status
 
 class RS485Communication:
     """RS485通信类，实现主板通信协议"""
@@ -81,6 +82,42 @@ class RS485Communication:
             print(f"发送命令失败: {e}")
             return False            
 
+
+
+    def read_command(self, command: str, params: List[str] = None, 
+                       ) -> Tuple[bool, List[str]]:
+
+        if params is None:
+            params = []
+
+        if not self.serial_conn or not self.serial_conn.is_open:
+                print("串口未连接")
+                return False
+        try:
+            with self.lock:
+                cmd_str = self.protocol.build_command(command, params)
+                print("发送指令中....")
+                self.serial_conn.write(cmd_str.encode('utf-8'))
+                self.serial_conn.flush()
+                print("主板返回消息>>>>>>")
+                res = self.serial_conn.readline().decode('utf-8').strip()
+                print(res)
+
+                if command == "RunStatus":
+                    status = parse_motor_status(res)
+                    if status is None:
+                        print("电机状态解析失败")
+                        return False, ["电机状态解析失败","Fail"]
+                elif command == "ALLPulse" or command == "Pulse":   
+                    status = parse_motor_pulses(res)
+                    if status is None:
+                        print("电机脉冲数解析失败")
+                        return False, ["电机状态解析失败","Fail"] 
+                # 解析响应
+                return True,[f"命令执行成功,实际执行命令为{cmd_str},返回状态为{status}",status]
+        except Exception as e:
+            print(f"发送命令失败: {e}")
+            return False  
 
 
 
