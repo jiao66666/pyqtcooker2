@@ -51,7 +51,20 @@ POT1_WAIT_LEVEL = 3.0  #1号锅阻塞时等待水平位置
 POT2_WAIT_LEVEL = 3.0  #2号锅阻塞时等待水平位置
 
 
+#动作组->子动作参数Key 映射 
+ACTION_PARAMS_KEYLIST = {
+    "takefood_fire": [
+        ("v", "flip_out_togetfood"),
+        ("h", "move_out_togetfood", [
+            ("h", "move_to_wait"),
+            ("h", "move_to_track"),
+        ]),
+        ("h", "move_in_tofirefood"),
+        ("v", "flip_in_tofirefood"),
+    ]
+}
 
+#子动作参数KEY->命令参数 映射
 ACTION_PARAMS_CONFIG = {
     "flip_out_togetfood_1": {
         "cmd":"RUN",
