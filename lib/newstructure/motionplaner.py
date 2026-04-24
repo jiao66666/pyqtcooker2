@@ -9,7 +9,7 @@ class MotionPlanner:
     @staticmethod
     def plan_abs_move(motor, target, current_position, speed):
         """
-        把业务目标转换为电机执行参数
+        电机绝对值目标为移动
         """
 
         # 1️⃣ 计算位移

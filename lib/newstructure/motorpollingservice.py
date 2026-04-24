@@ -5,11 +5,12 @@ from lib.newstructure.runtime import runtime
 
 
 class MotorPollingService:
-    def __init__(self, rs485, bus, interval=0.2):
+    def __init__(self, rs485, bus, motors, interval=0.2):
         self.rs485 = rs485
         self.bus = bus
         self.interval = interval
         self.running = False
+        self.motors = motors
 
     def start(self):
         self.running = True
@@ -25,7 +26,7 @@ class MotorPollingService:
             time.sleep(self.interval)
 
     def _check_all_motors(self):
-        for motor_id in MOTOR_LIST:
+        for motor_id in self.motors:
             success, response = self.rs485.read_command(
                 "RunStatus",
                 [str(motor_id)]
