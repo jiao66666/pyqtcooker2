@@ -1,7 +1,7 @@
 import serial
 import threading
 from typing import Optional, List, Tuple
-from lib.boardtype import *
+from lib.newstructure.constant import *
 from lib.newstructure.protocols import ProtocolFactory
 from lib.newstructure.tools import parse_motor_pulses,parse_motor_status
 

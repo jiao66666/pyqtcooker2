@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from typing import List,Tuple,Type
-from lib.boardtype import BOARDTYPE_FEEDER,BOARDTYPE_FIVE_AXIS
+from lib.newstructure.constant import BOARDTYPE_FEEDER,BOARDTYPE_FIVE_AXIS
 from lib.newstructure.tools import CRCUtil
 
 class ProtocolBase(ABC):
