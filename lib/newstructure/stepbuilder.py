@@ -1,4 +1,4 @@
-from lib.newstructure.boardtype import *
+from lib.newstructure.constant import *
 class StepBuilder:
 
     def __init__(self, motors):

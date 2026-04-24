@@ -1,6 +1,6 @@
 import threading
 import time
-from lib.newstructure.boardtype import *
+from lib.newstructure.constant import *
 from lib.newstructure.runtime import runtime
 
 

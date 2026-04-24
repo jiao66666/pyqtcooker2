@@ -1,10 +1,9 @@
 import threading
-import time
 from lib.newstructure.tools import circles_to_pulses
-from lib.newstructure.boardtype import *
+from lib.newstructure.constant import *
 from lib.newstructure.motionplaner import MotionPlanner
 
-class Motor:
+class StepMotor:
     def __init__(self, name,motor_id, bus, rs485):
         self.name = name
         self.com = rs485
@@ -72,14 +71,3 @@ class Motor:
             print(f"错误: {resp}")
             return False
         return True
-
-    def _done(self, action):
-        print(f"[{self.name}] done {action}")   
-        self.bus.publish("MOTOR_DONE", {
-            "event": "MOTOR_DONE",
-            "name": self.name,
-            "motor_id": self.motor_id,
-            "action": action,
-            "status": "success",
-            "timestamp": time.time()
-        })

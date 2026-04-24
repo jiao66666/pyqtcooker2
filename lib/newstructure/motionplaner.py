@@ -1,6 +1,6 @@
 # motionplanner.py
 
-from lib.newstructure.boardtype import *
+from lib.newstructure.constant import *
 
 class MotionPlanner:
 

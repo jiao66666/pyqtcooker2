@@ -1,9 +1,9 @@
 from lib.newstructure.eventbus import EventBus
-from lib.newstructure.motor import Motor
+from lib.newstructure.stepmotor import StepMotor
 from lib.newstructure.state_machine import PotStateMachine
 from lib.newstructure.scancycle import ScanCycle
 from lib.newstructure.trackmanager import TrackManager
-from lib.newstructure.boardtype import *
+from lib.newstructure.constant import *
 from lib.newstructure.stepbuilder import StepBuilder
 from lib.newstructure.basecom import RS485Communication
 import threading
@@ -51,10 +51,10 @@ def buildboards():
 def buildmotors(bus,boards):
     return {
         "stepmotor":{
-            POT1_FLIP_MOTOR: Motor("pot1_flip_motor", 1, bus, boards["stepmotor"]),
-            POT1_MOVE_MOTOR: Motor("pot1_move_motor", 2, bus, boards["stepmotor"]),
-            POT2_FLIP_MOTOR: Motor("pot2_flip_motor", 3, bus, boards["stepmotor"]),
-            POT2_MOVE_MOTOR: Motor("pot2_move_motor", 4, bus, boards["stepmotor"])
+            POT1_FLIP_MOTOR: StepMotor("pot1_flip_motor", 1, bus, boards["stepmotor"]),
+            POT1_MOVE_MOTOR: StepMotor("pot1_move_motor", 2, bus, boards["stepmotor"]),
+            POT2_FLIP_MOTOR: StepMotor("pot2_flip_motor", 3, bus, boards["stepmotor"]),
+            POT2_MOVE_MOTOR: StepMotor("pot2_move_motor", 4, bus, boards["stepmotor"])
         }
     }
 

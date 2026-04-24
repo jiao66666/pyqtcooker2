@@ -1,5 +1,5 @@
 import crcmod
-from lib.newstructure.boardtype import *
+from lib.newstructure.constant import *
 class CRCUtil:
     crc16_func = crcmod.mkCrcFun(
         0x18005,
