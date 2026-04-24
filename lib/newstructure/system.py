@@ -24,9 +24,8 @@ def build_system():
     pot1 = PotStateMachine(1, bus, trackmanager)
     pot2 = PotStateMachine(2, bus, trackmanager)
 
+    motorpolling = MotorPollingService(boards["stepmotor"],bus,motors["stepmotor"])
     
-    pollings = buildpollings(bus,boards,motors)
-
     return {
         "bus": bus,
         "trackmanager": trackmanager,
@@ -35,7 +34,7 @@ def build_system():
             1: pot1,
             2: pot2
         },
-        "polling": pollings,
+        "motorpolling": motorpolling,
     }
 
 #RS485连接创建
@@ -58,18 +57,6 @@ def buildmotors(bus,boards):
         }
     }
 
-#轮询创建
-def buildpollings(bus,boards,motors):
-    pollings = []
-    for key, board in boards.items():
-        polling = MotorPollingService(
-            board,
-            bus,
-            motors[key]   # ⭐ 关键修复
-        )
-        pollings.append(polling)
-    return pollings    
-
 #初始化轮询状态
 def init_system():
     for motor_id in MOTOR_LIST:
@@ -77,9 +64,7 @@ def init_system():
 
 #启动主TICK循环
 def run_system(system):
-    for p in system["polling"]:
-       p.start()
-
+    system["motorpolling"].start()
     ScanCycle([
         system["pots"][1],
         system["pots"][2]
