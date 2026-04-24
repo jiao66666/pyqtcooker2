@@ -13,6 +13,30 @@ class StepMotor:
         self.homed = False  # 是否已回零位
         self.current_position = 0
 
+
+    def enable_all_motors(self):
+        print("使能所有电机....")
+        success, resp = self.com.execute_command(
+            "ENABLE", 
+            [str(self.board_id),"0",str("11111")]
+        )
+        if not success:
+            print(f"错误: {resp}")
+            return False
+        return True        
+
+    def stop_all_motors(self):
+        print("急停所有电机....")
+        success, resp = self.com.execute_command(
+            "STOP", 
+            [str(self.board_id),"0",str("11111")]
+        )
+        if not success:
+            print(f"错误: {resp}")
+            return False
+        
+        return True        
+
     #绝对值坐标运动
     def go(self, action, params):
         print(f"[{self.name}] start {action}")
