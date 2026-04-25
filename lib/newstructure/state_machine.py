@@ -59,13 +59,9 @@ class PotStateMachine:
 
         elif self.state == "WAITING":
             if time.time() - self.wait_start_time > TIMEOUT:
-                print("⚠️ 电机执行超时")
                 step = self.steps[self.current_step]
-                # 1. 尝试停电机（如果支持）
                 step["motor"].stop_all_motors()
-                # 2. 标记错误
                 self.state = "ERROR"
-                # 3. 记录错误信息
                 self.error_info = {
                     "step": self.current_step,
                     "action": step["action"],
