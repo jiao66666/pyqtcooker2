@@ -67,62 +67,50 @@ ACTION_PARAMS_KEYLIST = {
 #子动作参数KEY->命令参数 映射
 ACTION_PARAMS_CONFIG = {
     "flip_out_togetfood_1": {
-        "cmd":"RUN",
         "speed": 200,
         "target": 4.5
     },
     "move_out_togetfood_1": {
-        "cmd": "RUN",
         "speed": 1000,
         "target":4.6
     },
     "move_to_wait_1": {
-        "cmd": "RUN",
         "speed": 1000,
         "target":4.6
     },
     "move_to_track_1": {
-        "cmd": "RUN",
         "speed": 1000,
         "target":4.6
     },
     "move_in_tofirefood_1": {
-        "cmd": "RUN",
         "speed": 1000,
         "target":4.6
     },
     "flip_in_tofirefood_1": {
-        "cmd": "RUN",
         "speed": 1000,
         "target":4.6
     },
     "flip_out_togetfood_2": {
-        "cmd":"RUN",
         "speed": 200,
         "target": 4.5
     },
     "move_out_togetfood_2": {
-        "cmd": "RUN",
         "speed": 1000,
         "target":4.6
     },
     "move_to_wait_2": {
-        "cmd": "RUN",
         "speed": 1000,
         "target":4.6
     },
     "move_to_track_2": {
-        "cmd": "RUN",
         "speed": 1000,
         "target":4.6
     },
     "move_in_tofirefood_2": {
-        "cmd": "RUN",
         "speed": 1000,
         "target":4.6
     },
     "flip_in_tofirefood_2": {
-        "cmd": "RUN",
         "speed": 1000,
         "target":4.6
     }
