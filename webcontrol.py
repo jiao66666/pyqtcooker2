@@ -993,54 +993,10 @@ def testnewstructure():
     return {"ok": True}
 
 
-
-def run_flask():
-    app.run(
-    host='0.0.0.0',   # 监听所有地址
-    port=port,
-    debug=False,       # 禁用调试模式
-    use_reloader=False # 禁止自动重载
-)
-
-def start_server():
-    t = threading.Thread(target=run_flask)
-    t.daemon = True
-    t.start()
-
-def start_webview():
-    url = f"http://127.0.0.1:{port}"
-    webview.create_window("炒菜机", url)
-    webview.start()
-
-def start_system():
-
-    system = get_system()
-    init_system()
-
-    t = threading.Thread(
-        target=lambda: run_system(system),
-        daemon=True
-    )
-    t.start()
-
-
-if __name__ == '__main__':
-    start_server()
-    # 等待服务启动（可选优化）
-
-    """
-    print("test new protocol com run... ")
-    testCom = RS485Communication(port="COM4",baudrate="115200",timeout=1,boardtype=BOARDTYPE_FIVE_AXIS)
-    command = "RUN"
-    params = ["1","2", "3600", "360"]
-    testCom.connect()
-    testCom.execute_command(command, params) 
-    """
-
+def run_test_newstructure():
     print("test new structure...")
     start_system()
 
-    
     print("simulate click....")
     system = get_system()
     steps = system["stepbuilder"].build(
@@ -1057,6 +1013,45 @@ if __name__ == '__main__':
     )
     system["pots"][2].submit_task(steps)
     
+
+#启动flask后端服务器WEB UI
+def run_flask():
+    app.run(
+    host='0.0.0.0',   # 监听所有地址
+    port=port,
+    debug=False,       # 禁用调试模式
+    use_reloader=False # 禁止自动重载
+)
+
+def start_server():
+    t = threading.Thread(target=run_flask)
+    t.daemon = True
+    t.start()
+
+#启动webview的Windows窗口控制UI
+def start_webview():
+    url = f"http://127.0.0.1:{port}"
+    webview.create_window("炒菜机", url)
+    webview.start()
+
+
+#启动炒菜机控制系统
+def start_system():
+
+    system = get_system()
+    init_system()
+
+    t = threading.Thread(
+        target=lambda: run_system(system),
+        daemon=True
+    )
+    t.start()
+
+
+if __name__ == '__main__':
+    start_server()
+
+    run_test_newstructure()
 
     time.sleep(1)
     start_webview()
