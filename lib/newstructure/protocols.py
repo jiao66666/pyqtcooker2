@@ -2,12 +2,14 @@ from abc import ABC, abstractmethod
 from typing import List,Tuple,Type
 from lib.newstructure.constant import BOARDTYPE_FEEDER,BOARDTYPE_FIVE_AXIS
 from lib.newstructure.tools import CRCUtil
+from lib.newstructure.tools import parse_motor_pulses,parse_motor_status
+
 
 class ProtocolBase(ABC):
     @abstractmethod
     def build_command(self, command: str, params: List[str]) -> str:
         pass
-    def parse_response(self, response: str) -> Tuple[bool, str, List[str]]:
+    def parse_response(self, command:str,response: str) -> Tuple[bool, str, List[str]]:
         pass
 
 class FiveAxisProtocol(ProtocolBase):
@@ -21,24 +23,35 @@ class FiveAxisProtocol(ProtocolBase):
         cmd_str += f"*{lrc}"
         print(f"将构建命令串(带上LRC): {cmd_str}")
         return cmd_str
-    def parse_response(self, response: str) -> Tuple[bool, str, List[str]]:
-        # 检查是否是成功响应
-        if response.endswith("OK"):
-            # 提取命令和参数（去掉 # 和 *OK）
-            content = response[1:-3]  # 去掉 # 和 *OK
-            parts = content.split(',')  # 分割命令和参数
-            cmd = parts[0]  # 命令部分
-            params = parts[1:]  # 剩下的是参数
-            return True, cmd, params
+    def parse_response(self, command:str, response: str) -> Tuple[bool, str, List[str]]:
+        if command == "RunStatus":
+            status = parse_motor_status(response)
+            if status is None:
+                print("电机状态解析失败")
+                return False, "ERROR",["电机状态解析失败","Fail"]
+        elif command == "ALLPulse" or command == "Pulse":   
+            status = parse_motor_pulses(response)
+            if status is None:
+                print("电机脉冲数解析失败")
+                return False,"ERROR", ["电机状态解析失败","Fail"] 
+        else:
+            # 检查是否是成功响应
+            if response.endswith("OK"):
+                # 提取命令和参数（去掉 # 和 *OK）
+                content = response[1:-3]  # 去掉 # 和 *OK
+                parts = content.split(',')  # 分割命令和参数
+                cmd = parts[0]  # 命令部分
+                params = parts[1:]  # 剩下的是参数
+                return True, cmd, params
 
-        # 检查是否是失败响应
-        if response.endswith("NG"):
-            # 提取命令和参数（去掉 # 和 *NG）
-            content = response[1:-3]  # 去掉 # 和 *NG
-            parts = content.split(',')  # 分割命令和参数
-            cmd = parts[0]  # 命令部分
-            params = parts[1:]  # 剩下的是参数
-            return False, cmd, params
+            # 检查是否是失败响应
+            if response.endswith("NG"):
+                # 提取命令和参数（去掉 # 和 *NG）
+                content = response[1:-3]  # 去掉 # 和 *NG
+                parts = content.split(',')  # 分割命令和参数
+                cmd = parts[0]  # 命令部分
+                params = parts[1:]  # 剩下的是参数
+                return False, cmd, params
         
         # 如果不是 OK 或 NG，返回 INVALID
         return False, "INVALID", []
@@ -56,7 +69,7 @@ class FeederProtocol(ProtocolBase):
         print(f"将构建命令串(带上CRC):{cmd_str}")    
         return cmd_str
     
-    def parse_response(self, response: str) -> Tuple[bool, str, List[str]]:
+    def parse_response(self, command:str, response: str) -> Tuple[bool, str, List[str]]:
              # 检查是否是正确响应
         if response.startswith("+") and ":" in response:
             # 分割指令名和参数部分

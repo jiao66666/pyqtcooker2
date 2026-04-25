@@ -27,7 +27,7 @@ class MotorPollingService:
 
     def _check_all_motors(self):
         for motor_id in self.motors:
-            success, response = self.rs485.read_command(
+            success, response = self.rs485.execute_command(
                 "RunStatus",
                 [str(motor_id)]
             )

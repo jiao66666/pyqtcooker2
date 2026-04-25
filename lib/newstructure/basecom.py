@@ -62,62 +62,25 @@ class RS485Communication:
                 print(res)
                 # 解析响应
                 print("解析消息>>>>>>>")
-                success, resp_type, resp_params = self.protocol.parse_response(res)
+                success, resp_cmd, resp_result = self.protocol.parse_response(command,res)
 
                 print(f"Success: {success}")
-                print(f"Response Type: {resp_type}")
-                print(f"Response Parameters: {resp_params}")
+                print(f"Response Command: {resp_cmd}")
+                print(f"Response Result: {resp_result}")
 
                 if not success:
-                    if resp_type == "ERROR":
-                        print(False, resp_params)  # 控制台输出 False 和 resp_params
+                    if resp_cmd == "ERROR":
+                        print(False, resp_result)  # 控制台输出 False 和 resp_params
                     else:
                         print(False, ["无效响应"])  # 控制台输出 False 和无效响应
 
-                if resp_type != command:
-                    print(False, [f"响应类型不匹配，期望: {command}，实际: {resp_type}"])  # 控制台输出错误信息
+                if resp_cmd != command:
+                    print(False, [f"响应类型不匹配，期望: {command}，实际: {resp_cmd}"])  # 控制台输出错误信息
 
-                return True,["命令执行成功",f"实际执行命令为{cmd_str},返回信息: {resp_params},期望: {command}，实际: {resp_type}"]
+                return True,["命令执行成功",f"实际执行命令为{cmd_str},返回信息: {resp_result},期望: {command}，实际: {resp_cmd}",resp_result]
         except Exception as e:
             print(f"发送命令失败: {e}")
-            return False            
-
-
-
-    def read_command(self, command: str, params: List[str] = None, 
-                       ) -> Tuple[bool, List[str]]:
-
-        if params is None:
-            params = []
-
-        if not self.serial_conn or not self.serial_conn.is_open:
-                print("串口未连接")
-                return False
-        try:
-            with self.lock:
-                cmd_str = self.protocol.build_command(command, params)
-                print("发送指令中....")
-                self.serial_conn.write(cmd_str.encode('utf-8'))
-                self.serial_conn.flush()
-                print("主板返回消息>>>>>>")
-                res = self.serial_conn.readline().decode('utf-8').strip()
-                print(res)
-
-                if command == "RunStatus":
-                    status = parse_motor_status(res)
-                    if status is None:
-                        print("电机状态解析失败")
-                        return False, ["电机状态解析失败","Fail"]
-                elif command == "ALLPulse" or command == "Pulse":   
-                    status = parse_motor_pulses(res)
-                    if status is None:
-                        print("电机脉冲数解析失败")
-                        return False, ["电机状态解析失败","Fail"] 
-                # 解析响应
-                return True,[f"命令执行成功,实际执行命令为{cmd_str},返回状态为{status}",status]
-        except Exception as e:
-            print(f"发送命令失败: {e}")
-            return False  
+            return False             
 
 
 
