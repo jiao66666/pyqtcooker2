@@ -115,3 +115,5 @@ ACTION_PARAMS_CONFIG = {
         "target":4.6
     }
 }
+
+TIMEOUT = 60 #电机单步动作超时

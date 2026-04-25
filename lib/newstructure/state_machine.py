@@ -1,5 +1,7 @@
 import queue
 from lib.newstructure.runtime import runtime
+import time
+from lib.newstructure.constant import TIMEOUT
 
 class PotStateMachine:
     def __init__(self, pot_id, bus, track_manager):
@@ -11,6 +13,7 @@ class PotStateMachine:
         self.steps = None
         self.track = track_manager
         self.command_queue = queue.Queue()
+        self.wait_start_time = 0
 
         
         # 订阅电机完成事件
@@ -20,7 +23,7 @@ class PotStateMachine:
 
 
     def tick(self):
-        if self.state in ["STOPPED", "WAITING"]:
+        if self.state in ["STOPPED", "ERROR"]:
             return
 
         elif self.state == "IDLE":
@@ -52,6 +55,22 @@ class PotStateMachine:
 
             step["motor"].go(step["action"],step["params"])
             self.state = "WAITING"
+            self.wait_start_time = time.time()
+
+        elif self.state == "WAITING":
+            if time.time() - self.wait_start_time > TIMEOUT:
+                print("⚠️ 电机执行超时")
+                step = self.steps[self.current_step]
+                # 1. 尝试停电机（如果支持）
+                step["motor"].stop()
+                # 2. 标记错误
+                self.state = "ERROR"
+                # 3. 记录错误信息
+                self.error_info = {
+                    "step": self.current_step,
+                    "action": step["action"],
+                    "reason": "timeout"
+                }
 
     def reset(self):
         self.state = "IDLE"
