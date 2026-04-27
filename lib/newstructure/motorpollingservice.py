@@ -71,9 +71,17 @@ class MotorPollingService:
         
         items = resp[1].split(",")
         if len(items) != 5:
+            print("错误：电机数量有误！！！")
             return False,[f"错误: {resp}"]
         
-        return True,[f"反馈成功，返回数据为:{[self.convert_pulses_to_position(int(x), int(idx)) for idx, x in enumerate(items)]}",[self.convert_pulses_to_position(int(x), int(idx)) for idx, x in enumerate(items)]]        
+
+        pos_all = [self.convert_pulses_to_position(int(x), int(idx)) for idx, x in enumerate(items)]
+        for idx,pos in enumerate(pos_all):
+                runtime.set_position({
+                    "motor_id": self.motors[idx].motor_id,
+                    "position": pos
+        })
+        print(f"反馈成功，返回数据为:{pos_all}")
 
 
     def convert_pulses_to_position(self, pulses: int, motor_id: int) -> float:       

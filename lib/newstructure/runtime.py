@@ -28,7 +28,9 @@ class RuntimeContext:
             self.motors[motor_id] = {
                 "state": "IDLE",
                 "action": None,
-                "pot_id": None
+                "pot_id": None,
+                "position": 0    
+
             }
 
     # ---------------------------
@@ -41,6 +43,10 @@ class RuntimeContext:
                 "action": action,
                 "pot_id": pot_id
             }
+
+    def set_position(self, motor_id: int, pos: float):
+        with self._lock:
+            self.motors[motor_id]["position"] = pos
 
     def set_done(self, motor_id: int):
         with self._lock:
