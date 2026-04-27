@@ -4,7 +4,7 @@ import time
 from lib.newstructure.constant import TIMEOUT
 
 class PotStateMachine:
-    def __init__(self, pot_id, bus, track_manager):
+    def __init__(self, pot_id, bus, track_manager, motioncontroller):
         self.pot_id = pot_id
         self.state = "IDLE"
 
@@ -14,6 +14,7 @@ class PotStateMachine:
         self.track = track_manager
         self.command_queue = queue.Queue()
         self.wait_start_time = 0
+        self.motioncontroller = motioncontroller
 
         
         # 订阅电机完成事件
@@ -54,6 +55,15 @@ class PotStateMachine:
             )
 
             step["motor"].go(step["action"],step["params"])
+
+            #动态调速
+            startpos = runtime.get_position(step["motor"].motor_id)
+            self.motioncontroller.add_task(
+                motor_id=step["motor"].motor_id,
+                start=startpos,
+                end=step["params"]["target"]
+            )
+
             self.state = "WAITING"
             self.wait_start_time = time.time()
 

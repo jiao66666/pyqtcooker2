@@ -9,6 +9,7 @@ from lib.newstructure.basecom import RS485Communication
 import threading
 from lib.newstructure.runtime import runtime
 from lib.newstructure.motorpollingservice import MotorPollingService
+from lib.newstructure.motioncontroller import MotionController
 
 #系统构建中心
 def build_system():
@@ -21,8 +22,10 @@ def build_system():
 
     stepbuilder = StepBuilder(motors["stepmotor"])
 
-    pot1 = PotStateMachine(1, bus, trackmanager)
-    pot2 = PotStateMachine(2, bus, trackmanager)
+    motion_controller = MotionController(boards["stepmotor"])
+
+    pot1 = PotStateMachine(1, bus, trackmanager, motion_controller)
+    pot2 = PotStateMachine(2, bus, trackmanager, motion_controller)
 
     motorpolling = MotorPollingService(boards["stepmotor"],bus,motors["stepmotor"])
     

@@ -44,6 +44,6 @@ class MotionController:
 
     def _send_speed(self, motor_id, speed):
         self.rs485.execute_command(
-            "SET_SPEED",
-            [str(motor_id), str(speed)]
+            "SPEED",
+            [str(self.rs485.board_id), str(motor_id),str(speed)]
         )

@@ -30,7 +30,6 @@ class RuntimeContext:
                 "action": None,
                 "pot_id": None,
                 "position": 0    
-
             }
 
     # ---------------------------
@@ -38,15 +37,17 @@ class RuntimeContext:
     # ---------------------------
     def set_running(self, motor_id: int, action: str, pot_id: int = None):
         with self._lock:
-            self.motors[motor_id] = {
-                "state": "RUNNING",
-                "action": action,
-                "pot_id": pot_id
-            }
+            self.motors[motor_id]["state"] = "RUNNING"
+            self.motors[motor_id]["action"] = action
+            self.motors[motor_id]["pot_id"] = pot_id
 
     def set_position(self, motor_id: int, pos: float):
         with self._lock:
             self.motors[motor_id]["position"] = pos
+
+    def get_position(self,motor_id: int):
+        with self._lock:
+            self.motors[motor_id]["position"]      
 
     def set_done(self, motor_id: int):
         with self._lock:
