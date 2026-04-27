@@ -4,19 +4,19 @@ class MotionController:
 
     def __init__(self, rs485):
         self.rs485 = rs485
-        self.tasks = []
+        self.tasks = {}
 
     def add_task(self, motor_id, start, end):
-        self.tasks.append({
+        self.tasks[motor_id] = {
             "motor_id": motor_id,
             "start": start,
             "end": end
-        })
+        }
 
     def loop(self):
         while True:
-            for task in self.tasks:
-                self._update_speed(task)
+            for motor_id, task in self.tasks.items():
+                self._update_speed(motor_id, task)
 
             time.sleep(0.05)
 
@@ -39,6 +39,9 @@ class MotionController:
             speed = 300   # 匀速
         else:
             speed = 100   # 减速
+
+        if progress >= 1.0:
+            del self.tasks[motor_id]
 
         self._send_speed(motor_id, speed)           
 
