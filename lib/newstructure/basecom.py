@@ -7,14 +7,14 @@ from lib.newstructure.tools import parse_motor_pulses,parse_motor_status
 
 class RS485Communication:
     """RS485通信类，实现主板通信协议"""
-    def __init__(self, port: str, baudrate: int = 115200, timeout: float = 1.0, boardtype: int = BOARDTYPE_FIVE_AXIS):
+    def __init__(self, port: str, baudrate: int = 115200, timeout: float = 1.0, board_id: int = BOARDTYPE_FIVE_AXIS):
         self.port = port
         self.baudrate = baudrate
         self.timeout = timeout
-        self.boardtype = boardtype
+        self.board_id = board_id
         self.serial_conn: Optional[serial.Serial] = None
         self.lock = threading.Lock()
-        self.protocol = ProtocolFactory.create(boardtype)
+        self.protocol = ProtocolFactory.create(board_id)
         self.connected = False
 
     def connect(self) -> bool:

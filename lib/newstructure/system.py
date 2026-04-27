@@ -39,7 +39,7 @@ def build_system():
 
 #RS485连接创建
 def buildboards():
-    rs485_stepmotor = RS485Communication(port="COM3", baudrate="19200", timeout=1.0, boardtype=BOARDTYPE_FIVE_AXIS)
+    rs485_stepmotor = RS485Communication(port="COM3", baudrate="19200", timeout=1.0, board_id=BOARDTYPE_FIVE_AXIS)
     rs485_stepmotor.connect()
 
     return {

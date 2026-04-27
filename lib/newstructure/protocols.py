@@ -100,21 +100,21 @@ class ProtocolFactory:
     _registry = {}
 
     @classmethod
-    def register(cls, board_type: int, protocol_cls: Type):
+    def register(cls, board_id: int, protocol_cls: Type):
         """
         注册协议类
         """
-        cls._registry[board_type] = protocol_cls
+        cls._registry[board_id] = protocol_cls
 
     @classmethod
-    def create(cls, board_type: int):
+    def create(cls, board_id: int):
         """
         创建协议实例
         """
-        protocol_cls = cls._registry.get(board_type)
+        protocol_cls = cls._registry.get(board_id)
 
         if not protocol_cls:
-            raise ValueError(f"未知的协议类型: {board_type}")
+            raise ValueError(f"未知的协议类型: {board_id}")
 
         return protocol_cls()
     

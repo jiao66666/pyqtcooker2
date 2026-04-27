@@ -8,7 +8,7 @@ class StepMotor:
         self.name = name
         self.com = rs485
         self.motor_id = motor_id
-        self.board_id = self.com.boardtype
+        self.board_id = self.com.board_id
         self.bus = bus
         self.homed = False  # 是否已回零位
         self.current_position = 0
