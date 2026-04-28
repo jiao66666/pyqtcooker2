@@ -40,13 +40,10 @@ class StepMotor:
 
         self.cmd_running = True
 
-        def on_done(success, resp):
-            self._default_done("ENABLE", success, resp)
-
         self.com.execute_command_async(
             "ENABLE",
             [str(self.board_id), "0", "11111"],
-            callback=on_done
+            callback=self._on_run_done
         )
 
         return True
@@ -61,13 +58,10 @@ class StepMotor:
 
         self.cmd_running = True
 
-        def on_done(success, resp):
-            self._default_done("STOP", success, resp)
-
         self.com.execute_command_async(
             "STOP",
             [str(self.board_id), "0", "11111"],
-            callback=on_done
+            callback=self._on_run_done
         )
 
         return True     
