@@ -12,32 +12,65 @@ class StepMotor:
         self.bus = bus
         self.homed = False  # 是否已回零位
         self.current_position = 0
-        self.is_running = False
+        self.cmd_running = False
         self.last_result = None
+
+    def _on_run_done(self, success, resp):
+        self._default_done("RUN", success, resp)
+
+    def _default_done(self, cmd, success, resp):
+        self.last_result = (success, resp)
+
+        if not success:
+            print(f"[{cmd}] 执行失败: {resp}")
+        else:
+            print(f"[{cmd}] ACK成功")
+
+        self.cmd_running = False
+
 
 
     def enable_all_motors(self):
+
         print("使能所有电机....")
-        success, resp = self.com.execute_command(
-            "ENABLE", 
-            [str(self.board_id),"0",str("11111")]
-        )
-        if not success:
-            print(f"错误: {resp}")
+
+        if self.cmd_running:
+            print("命令还在执行中")
             return False
-        return True        
+
+        self.cmd_running = True
+
+        def on_done(success, resp):
+            self._default_done("ENABLE", success, resp)
+
+        self.com.execute_command_async(
+            "ENABLE",
+            [str(self.board_id), "0", "11111"],
+            callback=on_done
+        )
+
+        return True
 
     def stop_all_motors(self):
+
         print("急停所有电机....")
-        success, resp = self.com.execute_command(
-            "STOP", 
-            [str(self.board_id),"0",str("11111")]
-        )
-        if not success:
-            print(f"错误: {resp}")
+
+        if self.cmd_running:
+            print("命令还在执行中")
             return False
-        
-        return True        
+
+        self.cmd_running = True
+
+        def on_done(success, resp):
+            self._default_done("STOP", success, resp)
+
+        self.com.execute_command_async(
+            "STOP",
+            [str(self.board_id), "0", "11111"],
+            callback=on_done
+        )
+
+        return True     
 
     #绝对值坐标运动
     def go(self, action, params):
@@ -74,78 +107,40 @@ class StepMotor:
         print(f"执行完后当前位置:{self.current_position}")
         return True  
       
-    """      
-    #步进电机转动
     def run(self, circles: float, anglespeed: int, direction: int):
-        #单次运转电机#  ##相对运动
+        """异步运行电机（基于通信队列，无线程）"""
+
         print("####运行电机####")
+
         if not self.com or not self.com.connected:
             print("错误: 串口未连接，无法运行电机")
             return False
+
+        if self.cmd_running :
+            print("命令还在运行中")
+            return False
+
+        self.cmd_running  = True
+
         print(f"[{self.name}] ID:{self.motor_id} 运行 {circles} 圈, 角速度 {anglespeed}")
-        # 计算脉冲数
+
+        # 计算脉冲
         pulses = circles_to_pulses(circles)
-        if direction >=0:
+        if direction >= 0:
             pulses = abs(pulses)
         else:
-            pulses = -abs(pulses)    
-         # 发送运行命令
-        success, resp = self.com.execute_command(
-            "RUN", 
-            [str(self.board_id), str(self.motor_id), str(pulses), str(anglespeed)]
+            pulses = -abs(pulses)
+
+        # ⭐ 提交到通信队列（不再开线程）
+        self.com.execute_command_async(
+            "RUN",
+            [
+                str(self.board_id),
+                str(self.motor_id),
+                str(pulses),
+                str(anglespeed)
+            ],
+            callback=self._on_run_done
         )
-        if not success:
-            print(f"错误: {resp}")
-            return False
-        return True
-    """    
-
-    def run(self, circles: float, anglespeed: int, direction: int):
-        """异步运行电机（只隔离IO，不改状态机）"""
-
-        print("####运行电机####")
-
-        if not self.com or not self.com.connected:
-            print("错误: 串口未连接，无法运行电机")
-            return False
-
-        if self.is_running:
-            print("电机仍在运行中")
-            return False
-
-        self.is_running = True
-
-        print(f"[{self.name}] ID:{self.motor_id} 运行 {circles} 圈, 角速度 {anglespeed}")
-
-        def task():
-            try:
-                # 计算脉冲
-                pulses = circles_to_pulses(circles)
-                if direction >= 0:
-                    pulses = abs(pulses)
-                else:
-                    pulses = -abs(pulses)
-
-                # ✔ 这里只做 IO（阻塞放线程）
-                success, resp = self.com.execute_command(
-                    "RUN",
-                    [
-                        str(self.board_id),
-                        str(self.motor_id),
-                        str(pulses),
-                        str(anglespeed)
-                    ]
-                )
-
-                self.last_result = (success, resp)
-
-                if not success:
-                    print(f"电机执行失败: {resp}")
-
-            finally:
-                # ❗只清 IO状态，不做控制决策
-                self.is_running = False
-
-        threading.Thread(target=task, daemon=True).start()
 
         return True

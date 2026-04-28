@@ -1,22 +1,40 @@
 import serial
 import threading
-from typing import Optional, List, Tuple
+import queue
+from typing import Optional, List, Tuple, Callable, Any
 from lib.newstructure.constant import *
 from lib.newstructure.protocols import ProtocolFactory
-from lib.newstructure.tools import parse_motor_pulses,parse_motor_status
+
 
 class RS485Communication:
-    """RS485通信类，实现主板通信协议"""
+    """RS485通信类（队列化 + 异步 + 同步兼容）"""
+
+    # 优先级定义（越小越优先）
+    PRIORITY_EMERGENCY = 0
+    PRIORITY_CONTROL = 1
+    PRIORITY_NORMAL = 2
+
     def __init__(self, port: str, baudrate: int = 115200, timeout: float = 1.0, board_id: int = BOARDTYPE_FIVE_AXIS):
         self.port = port
         self.baudrate = baudrate
         self.timeout = timeout
         self.board_id = board_id
+
         self.serial_conn: Optional[serial.Serial] = None
-        self.lock = threading.Lock()
         self.protocol = ProtocolFactory.create(board_id)
         self.connected = False
 
+        # ⭐ 核心：优先级队列
+        self.queue = queue.PriorityQueue()
+        self.counter = 0
+
+        # worker线程
+        self.worker_thread = threading.Thread(target=self._worker, daemon=True)
+        self.running = False
+
+    # =========================
+    # 串口连接
+    # =========================
     def connect(self) -> bool:
         try:
             self.serial_conn = serial.Serial(
@@ -29,62 +47,141 @@ class RS485Communication:
             )
             print(f"串口{self.port}已成功打开")
             self.connected = True
+
+            # 启动 worker
+            self.running = True
+            self.worker_thread.start()
+
             return True
         except Exception as e:
             print(f"连接串口失败: {e}")
             return False
 
     def disconnect(self):
-        """断开串口连接"""
         if self.serial_conn and self.serial_conn.is_open:
+            self.running = False
             self.serial_conn.close()
             self.connected = False
             return True
         return False
 
-    def execute_command(self, command: str, params: List[str] = None) -> Tuple[bool, List[str]]:
+    # =========================
+    # ⭐ 核心：Worker线程（唯一通信入口）
+    # =========================
+    def _worker(self):
+        while self.running:
+            try:
+                priority, _, item = self.queue.get()
+
+                command = item["command"]
+                params = item["params"]
+                callback = item["callback"]
+
+                success, resp = self._execute_command_sync(command, params)
+
+                if callback:
+                    try:
+                        callback(success, resp)
+                    except Exception as e:
+                        print(f"回调执行异常: {e}")
+
+            except Exception as e:
+                print(f"Worker异常: {e}")
+
+    # =========================
+    # ⭐ 真正的同步IO（只允许内部调用）
+    # =========================
+    def _execute_command_sync(self, command: str, params: List[str] = None) -> Tuple[bool, List[str]]:
 
         if params is None:
             params = []
-       
+
         if not self.serial_conn or not self.serial_conn.is_open:
-                print("串口未连接")
-                return False
+            print("串口未连接")
+            return False, ["串口未连接"]
 
         try:
-            with self.lock:
-                cmd_str = self.protocol.build_command(command, params)
-                print("发送指令中....")
-                self.serial_conn.write(cmd_str.encode('utf-8'))
-                self.serial_conn.flush()
-                print("主板返回消息>>>>>>")
-                res = self.serial_conn.readline().decode('utf-8').strip()
-                print(res)
-                # 解析响应
-                print("解析消息>>>>>>>")
-                success, resp_cmd, resp_result = self.protocol.parse_response(command,res)
+            cmd_str = self.protocol.build_command(command, params)
 
-                print(f"Success: {success}")
-                print(f"Response Command: {resp_cmd}")
-                print(f"Response Result: {resp_result}")
+            print("发送指令中....")
+            self.serial_conn.write(cmd_str.encode('utf-8'))
+            self.serial_conn.flush()
 
-                if not success:
-                    if resp_cmd == "ERROR":
-                        print(False, resp_result)  # 控制台输出 False 和 resp_params
-                    else:
-                        print(False, ["无效响应"])  # 控制台输出 False 和无效响应
+            print("主板返回消息>>>>>>")
+            res = self.serial_conn.readline().decode('utf-8').strip()
+            print(res)
 
-                if resp_cmd != command:
-                    print(False, [f"响应类型不匹配，期望: {command}，实际: {resp_cmd}"])  # 控制台输出错误信息
+            print("解析消息>>>>>>>")
+            success, resp_cmd, resp_result = self.protocol.parse_response(command, res)
 
-                return True,["命令执行成功",f"实际执行命令为{cmd_str},返回信息: {resp_result},期望: {command}，实际: {resp_cmd}",resp_result]
+            if not success:
+                return False, resp_result
+
+            if resp_cmd != command:
+                return False, [f"响应类型不匹配，期望: {command}，实际: {resp_cmd}"]
+
+            return True, resp_result
+
         except Exception as e:
             print(f"发送命令失败: {e}")
-            return False             
+            return False, [str(e)]
 
+    # =========================
+    # ⭐ 异步接口（推荐使用）
+    # =========================
+    def execute_command_async(
+        self,
+        command: str,
+        params: List[str] = None,
+        callback: Optional[Callable[[bool, List[str]], Any]] = None,
+        priority: int = PRIORITY_NORMAL
+    ):
+        if params is None:
+            params = []
 
+        item = {
+            "command": command,
+            "params": params,
+            "callback": callback
+        }
 
+        self.counter += 1
+        self.queue.put((priority,self.counter, item))
 
+    # =========================
+    # ⭐ 同步接口（兼容旧代码）    # WARNING: blocking API - DO NOT USE IN tick loop
+    # =========================
+    def execute_command(self, command: str, params: List[str] = None) -> Tuple[bool, List[str]]:
 
+        event = threading.Event()
+        result = {}
 
+        def cb(success, resp):
+            result["data"] = (success, resp)
+            event.set()
 
+        self.execute_command_async(command, params, callback=cb)
+
+        event.wait()  # 阻塞等待结果
+
+        return result["data"]
+
+    # =========================
+    # ⭐ 急停（清空队列）
+    # =========================
+    def emergency_stop(self, command: str = "STOP", params: List[str] = None):
+        if params is None:
+            params = []
+
+        print("🚨 急停触发：清空队列")
+
+        # 清空队列
+        with self.queue.mutex:
+            self.queue.queue.clear()
+
+        # 插入最高优先级命令
+        self.execute_command_async(
+            command,
+            params,
+            priority=self.PRIORITY_EMERGENCY
+        )
