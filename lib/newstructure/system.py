@@ -38,7 +38,32 @@ def build_system():
             2: pot2
         },
         "motorpolling": motorpolling,
+        "boards":boards
     }
+
+
+def shutdown_system(system):
+    print("系统关闭中...")
+
+    # 1. 停止循环类组件
+    if "motorpolling" in system:
+        system["motorpolling"].stop()
+
+    if "scancycle" in system:
+        system["scancycle"].stop()
+
+    # 2. 关闭所有 RS485 连接
+    boards = system.get("boards", {})
+    for name, board in boards.items():
+        try:
+            if hasattr(board, "disconnect"):
+                print(f"关闭串口: {name}")
+                board.disconnect()
+        except Exception as e:
+            print(f"关闭 {name} 失败: {e}")
+
+    print("系统关闭完成")
+
 
 #RS485连接创建
 def buildboards():
@@ -68,10 +93,11 @@ def init_system():
 #启动主TICK循环
 def run_system(system):
     system["motorpolling"].start()
-    ScanCycle([
+    system["scancycle"]=ScanCycle([
         system["pots"][1],
         system["pots"][2]
-    ]).run()
+    ])
+    system["scancycle"].run()
 
 
 _system = None

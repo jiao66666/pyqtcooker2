@@ -7,7 +7,7 @@ from lib.tools import is_dev_mode,parse_speed_params
 from lib.websocket_server import WebSocketServer
 import webview
 import threading
-from lib.newstructure.system import run_system,get_system,init_system
+from lib.newstructure.system import run_system,get_system,init_system,shutdown_system
 
 
 import asyncio
@@ -1031,9 +1031,13 @@ def start_server():
 #启动webview的Windows窗口控制UI
 def start_webview():
     url = f"http://127.0.0.1:{port}"
-    webview.create_window("炒菜机", url)
+    window=webview.create_window("炒菜机", url)
+    window.events.closed += on_windows_close
     webview.start()
 
+def on_windows_close():
+    system = get_system()
+    shutdown_system(system)
 
 #启动炒菜机控制系统
 def start_system():
