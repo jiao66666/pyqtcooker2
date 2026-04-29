@@ -11,3 +11,6 @@ class ScanCycle:
                 p.tick()
 
             time.sleep(0.05)  # 20Hz控制周期
+
+    def stop(self):
+        self.running = False            
