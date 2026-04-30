@@ -101,14 +101,14 @@ def run_system(system):
 
 
 _system = None
-_lock = threading.Lock()
+_system_lock = threading.Lock()
 
 #获取系统实例
 def get_system():
     global _system
 
     if _system is None:
-        with _lock:
+        with _system_lock:
             if _system is None:   # 双重检查锁（防并发）
                 _system = build_system()
 

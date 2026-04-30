@@ -8,6 +8,7 @@ from lib.websocket_server import WebSocketServer
 import webview
 import threading
 from lib.newstructure.system import run_system,get_system,init_system,shutdown_system
+from lib.newstructure.cookservice import get_service
 
 
 import asyncio
@@ -995,25 +996,18 @@ def testnewstructure():
 
 def run_test_newstructure():
     print("test new structure...")
-    start_system()
+    service = get_service()
 
+    action_param = "takefood_fire"
+    pot_param = 1
     print("simulate click....")
-    system = get_system()
-    steps = system["stepbuilder"].build(
-        "takefood_fire",
-        1
-    )
-    system["pots"][1].submit_task(steps)
-
-    print("simulate click2....")
-    system = get_system()
-    steps = system["stepbuilder"].build(
-        "takefood_fire",
-        2
-    )
-    system["pots"][2].submit_task(steps)
+    service.run_action(action_param,pot_param)
     
-
+    action_param = "takefood_fire"
+    pot_param = 2
+    print("simulate click2....")
+    service.run_action(action_param,pot_param)
+    
 #启动flask后端服务器WEB UI
 def run_flask():
     app.run(
@@ -1054,7 +1048,7 @@ def start_system():
 
 if __name__ == '__main__':
     start_server()
-
+    start_system()
     run_test_newstructure()
 
     time.sleep(1)
