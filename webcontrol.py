@@ -1050,6 +1050,4 @@ if __name__ == '__main__':
     start_server()
     start_system()
     run_test_newstructure()
-
-    time.sleep(1)
     start_webview()
