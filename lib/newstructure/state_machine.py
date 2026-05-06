@@ -69,6 +69,7 @@ class PotStateMachine:
 
         elif self.state == "WAITING":
             if time.time() - self.wait_start_time > TIMEOUT:
+                print("motor time out !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
                 step = self.steps[self.current_step]
                 step["motor"].stop_all_motors()
                 self.state = "ERROR"

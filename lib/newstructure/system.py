@@ -38,6 +38,7 @@ def build_system():
             2: pot2
         },
         "motorpolling": motorpolling,
+        "motorcontroller":motion_controller,
         "boards":boards
     }
 
@@ -51,6 +52,9 @@ def shutdown_system(system):
 
     if "scancycle" in system:
         system["scancycle"].stop()
+
+    if "motorcontroller" in system:
+        system["motorcontroller"].stop()    
 
     # 2. 关闭所有 RS485 连接
     boards = system.get("boards", {})
@@ -93,6 +97,7 @@ def init_system():
 #启动主TICK循环
 def run_system(system):
     system["motorpolling"].start()
+    system["motorcontroller"].start()
     system["scancycle"]=ScanCycle([
         system["pots"][1],
         system["pots"][2]
