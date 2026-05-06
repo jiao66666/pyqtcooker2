@@ -5,7 +5,7 @@ from lib.newstructure.runtime import runtime
 
 class MotionController:
 
-    def __init__(self, rs485, interval=0.01):
+    def __init__(self, rs485, interval=0.05):
         self.rs485 = rs485
         self.tasks = {}
         self.lock = threading.Lock()
