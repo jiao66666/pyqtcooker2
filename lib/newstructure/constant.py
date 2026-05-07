@@ -69,62 +69,74 @@ ACTION_PARAMS_CONFIG = {
     "flip_out_togetfood_1": {
         "speed": 200,
         "target": 4.5,
-        "varspeed":False
+        "varspeed":False,
+        "quitinadvance":0
     },
     "move_out_togetfood_1": {
         "speed": 1000,
         "target":4.6,
-        "varspeed":False
+        "varspeed":False,
+        "quitinadvance":0
     },
     "move_to_wait_1": {
         "speed": 1000,
         "target":4.6,
-        "varspeed":False
+        "varspeed":False,
+        "quitinadvance":0
     },
     "move_to_track_1": {
         "speed": 1000,
         "target":4.6,
-        "varspeed":False
+        "varspeed":False,
+        "quitinadvance":0
     },
     "move_in_tofirefood_1": {
         "speed": 1000,
         "target":4.6,
-        "varspeed":False
+        "varspeed":False,
+        "quitinadvance":0
     },
     "flip_in_tofirefood_1": {
         "speed": 1000,
         "target":4.6,
-        "varspeed":False
+        "varspeed":False,
+        "quitinadvance":0
     },
     "flip_out_togetfood_2": {
         "speed": 200,
         "target": 4.5,
-        "varspeed":False
+        "varspeed":False,
+        "quitinadvance":0
     },
     "move_out_togetfood_2": {
         "speed": 1000,
         "target":4.6,
-        "varspeed":False
+        "varspeed":False,
+        "quitinadvance":0
     },
     "move_to_wait_2": {
         "speed": 1000,
         "target":4.6,
-        "varspeed":False
+        "varspeed":False,
+        "quitinadvance":0
     },
     "move_to_track_2": {
         "speed": 1000,
         "target":4.6,
-        "varspeed":False
+        "varspeed":False,
+        "quitinadvance":0
     },
     "move_in_tofirefood_2": {
         "speed": 1000,
         "target":4.6,
-        "varspeed":False
+        "varspeed":False,
+        "quitinadvance":0
     },
     "flip_in_tofirefood_2": {
         "speed": 1000,
         "target":4.6,
-        "varspeed":False
+        "varspeed":False,
+        "quitinadvance":0
     }
 }
 

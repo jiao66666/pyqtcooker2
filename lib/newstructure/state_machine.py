@@ -51,7 +51,8 @@ class PotStateMachine:
             runtime.set_running(
                 motor_id=step["motor"].motor_id,
                 action=step["action"],
-                pot_id=self.pot_id
+                pot_id=self.pot_id,
+                params=step["params"]
             )
 
             step["motor"].go(step["action"],step["params"])

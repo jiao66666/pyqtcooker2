@@ -55,8 +55,17 @@ class MotorPollingService:
 
         status = response[1]
         print(f"[Polling] motor {motor_id} status: {status}")
-
-        if status == "PAUSEING":
+        
+        #多电机同时运行情况
+        quitInAdvance = False
+        step_params = runtime.get_params(motor_id)
+        if step_params["quitinadvance"] > 0:
+           curpos = runtime.get_position(motor_id)
+           if curpos > step_params["quitinadvance"]:
+               quitInAdvance = True
+               
+    
+        if status == "PAUSEING" or quitInAdvance:
             runtime.set_done(motor_id)
             self.bus.publish("MOTOR_DONE", {"motor_id": motor_id})
 

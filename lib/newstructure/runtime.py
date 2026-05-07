@@ -35,11 +35,12 @@ class RuntimeContext:
     # ---------------------------
     # 状态变更
     # ---------------------------
-    def set_running(self, motor_id: int, action: str, pot_id: int = None):
+    def set_running(self, motor_id: int, action: str, pot_id: int = None,params:dict = {}):
         with self._lock:
             self.motors[motor_id]["state"] = "RUNNING"
             self.motors[motor_id]["action"] = action
             self.motors[motor_id]["pot_id"] = pot_id
+            self.motors[motor_id]["params"] = params
 
     def set_position(self, motor_id: int, pos: float):
         with self._lock:
@@ -47,7 +48,11 @@ class RuntimeContext:
 
     def get_position(self,motor_id: int):
         with self._lock:
-            self.motors[motor_id]["position"]      
+            self.motors[motor_id]["position"]   
+
+    def get_params(self,motor_id:int):
+        with self._lock:
+            self.motors[motor_id]["params"]           
 
     def set_done(self, motor_id: int):
         with self._lock:
