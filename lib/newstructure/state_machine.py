@@ -55,14 +55,15 @@ class PotStateMachine:
             )
 
             step["motor"].go(step["action"],step["params"])
-
-            #动态调速
-            startpos = runtime.get_position(step["motor"].motor_id)
-            self.motioncontroller.add_task(
-                motor_id=step["motor"].motor_id,
-                start=startpos,
-                end=step["params"]["target"]
-            )
+            
+            #可选动态调速
+            if step["params"]["varspeed"] == True:
+                startpos = runtime.get_position(step["motor"].motor_id)
+                self.motioncontroller.add_task(
+                    motor_id=step["motor"].motor_id,
+                    start=startpos,
+                    end=step["params"]["target"]
+                )
 
             self.state = "WAITING"
             self.wait_start_time = time.time()
