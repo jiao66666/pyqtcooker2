@@ -173,7 +173,7 @@ class RS485Communication:
         if params is None:
             params = []
 
-        print("🚨 急停触发：清空队列")
+        print("急停触发：清空队列")
 
         # 清空队列
         with self.queue.mutex:
