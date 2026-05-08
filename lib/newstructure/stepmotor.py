@@ -125,7 +125,7 @@ class StepMotor:
         else:
             pulses = -abs(pulses)
 
-        # ⭐ 提交到通信队列（不再开线程）
+        # 提交到通信队列（不再开线程）
         self.com.execute_command_async(
             "RUN",
             [

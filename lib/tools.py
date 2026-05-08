@@ -146,7 +146,7 @@ def test_ease_in_out_move_smooth_curve_bytime(start_pos, target_pos, max_speed, 
 
         p = t / total_time
 
-        # ⭐ 真正的速度比例函数
+        # 真正的速度比例函数
         speed_ratio = 4 * p * (1 - p)
 
         speed = max_speed * speed_ratio * direction

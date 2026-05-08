@@ -114,7 +114,7 @@ class MotorDriver:
                 break
 
             p = t / total_time
-             # ⭐ 真正的速度比例函数
+             # 真正的速度比例函数
             speed_ratio = 4 * p * (1 - p)
             speed = max_speed * speed_ratio * direction
             if speed > 0:

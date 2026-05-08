@@ -24,7 +24,7 @@ class RS485Communication:
         self.protocol = ProtocolFactory.create(board_id)
         self.connected = False
 
-        # ⭐ 核心：优先级队列
+        # 核心：优先级队列
         self.queue = queue.PriorityQueue()
         self.counter = 0
 
@@ -66,7 +66,7 @@ class RS485Communication:
         return False
 
     # =========================
-    # ⭐ 核心：Worker线程（唯一通信入口）
+    # 核心：Worker线程（唯一通信入口）
     # =========================
     def _worker(self):
         while self.running:
@@ -89,7 +89,7 @@ class RS485Communication:
                 print(f"Worker异常: {e}")
 
     # =========================
-    # ⭐ 真正的同步IO（只允许内部调用）
+    # 真正的同步IO（只允许内部调用）
     # =========================
     def _execute_command_sync(self, command: str, params: List[str] = None) -> Tuple[bool, List[str]]:
 
@@ -127,7 +127,7 @@ class RS485Communication:
             return False, [str(e)]
 
     # =========================
-    # ⭐ 异步接口（推荐使用）
+    # 异步接口（推荐使用）
     # =========================
     def execute_command_async(
         self,
@@ -149,7 +149,7 @@ class RS485Communication:
         self.queue.put((priority,self.counter, item))
 
     # =========================
-    # ⭐ 同步接口（兼容旧代码）    # WARNING: blocking API - DO NOT USE IN tick loop
+    # 同步接口（兼容旧代码）    # WARNING: blocking API - DO NOT USE IN tick loop
     # =========================
     def execute_command(self, command: str, params: List[str] = None) -> Tuple[bool, List[str]]:
 
@@ -167,7 +167,7 @@ class RS485Communication:
         return result["data"]
 
     # =========================
-    # ⭐ 急停（清空队列）
+    # 急停（清空队列）
     # =========================
     def emergency_stop(self, command: str = "STOP", params: List[str] = None):
         if params is None:
