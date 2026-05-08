@@ -4,10 +4,10 @@ class CookerService:
     def __init__(self,system):
         self.system = system
 
+    # 运行锅电机动作组
     def run_action(self, action_name, pot_id):
         steps = self.system["stepbuilder"].build(action_name, pot_id)
         self.system["pots"][pot_id].submit_task(steps)
-
 
 
 _service = None

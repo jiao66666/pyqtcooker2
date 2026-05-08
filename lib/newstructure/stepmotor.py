@@ -138,3 +138,56 @@ class StepMotor:
         )
 
         return True
+    
+
+    def runlong(self, anglespeed: int, direction: int):
+        """长运转电机"""
+        print("####运行电机####")
+        if not self.com or not self.com.connected:
+            print("错误: 串口未连接，无法运行电机")
+            return False
+        print(f"[{self.name}] ID:{self.motor_id} 连续运行, 角速度 {anglespeed}, 主板类型:{self.board_id}")
+
+            # 发送运行命令  优先级CONTROL 1
+        self.com.execute_command_async(
+            "LONG", 
+            [str(self.board_id), str(self.motor_id), str(direction), str(anglespeed)],
+            priority = 1
+        )
+
+        return True
+    
+
+    def pause(self):
+        """暂停电机"""
+        print("####暂停电机####")
+        if not self.com or not self.com.connected:
+            print("错误: 串口未连接，无法运行电机")
+            return False
+        print(f"[{self.name}] ID:{self.motor_id} 暂停中... 主板类型:{self.board_id}")
+      
+         # 发送运行命令
+        self.com.execute_command_async(
+            "PAUSE", 
+            [str(self.board_id), str(self.motor_id)],
+            priority = 1
+        )
+
+        return True    
+    
+    def stop(self):
+        """急停电机"""
+        print("####急停电机####")
+        if not self.com or not self.com.connected:
+            print("错误: 串口未连接，无法运行电机")
+            return False
+        print(f"[{self.name}] ID:{self.motor_id} 急停中... 主板类型:{self.board_id}")
+      
+         # 发送运行命令
+        self.com.execute_command_async(
+            "STOP", 
+            [str(self.board_id), str(self.motor_id)],
+            priority = 0
+        )
+
+        return True      
