@@ -12,7 +12,7 @@ class MotionPlanner:
         电机绝对值目标为移动
         """
 
-        # 1️⃣ 计算位移
+        # 1 计算位移
         delta = target - current_position
 
         if delta == 0:
@@ -21,16 +21,16 @@ class MotionPlanner:
         if motor.motor_id in [POT1_MOVE_MOTOR,POT2_MOVE_MOTOR] and target < 0:
             return None        
 
-        # 2️⃣ 圈数（你的系统单位）
+        # 2️ 圈数（你的系统单位）
         circles = abs(delta)
 
-        # 3️⃣ 方向（保持你原逻辑）
+        # 3️方向（保持你原逻辑）
         if motor.motor_id in [POT1_MOVE_MOTOR, POT1_FLIP_MOTOR]:
             direction = -1 if delta >= 0 else 1
         else:
             direction = 1 if delta >= 0 else -1
 
-        # 4️⃣ 转 pulses
+        # 4️ 转 pulses
         circles = abs(delta)
 
         return {
