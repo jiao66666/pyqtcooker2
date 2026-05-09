@@ -54,7 +54,7 @@ def run_websocket_server():
 # 渲染前端的 HTML 页面
 @app.route('/')
 def index():
-    return render_template('index.html')  # Flask 会自动在 templates 目录下寻找 index.html
+    return render_template('index2.html')  # Flask 会自动在 templates 目录下寻找 index.html
 
 # API 路由
 @app.route('/connect', methods=['POST'])

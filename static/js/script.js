@@ -56,7 +56,7 @@ function connect() {
         .then(response => response.json())
         .then(data => {
             if(data.status === "success"){
-                updateConnectStatus("已连接","connect_status_connected");
+                updateConnectStatus("已使能","connect_status_connected");
                 startWebSocket();
             }
             addMessage(`返回信息 : ${data.message}`);  // 将收到的消息保存并显示
@@ -81,7 +81,7 @@ function disconnect() {
         .then(response => response.json())
         .then(data => {
             if(data.status === "success"){
-                updateConnectStatus("未连接","connect_status");
+                updateConnectStatus("未使能","connect_status");
             }
             addMessage(`返回信息 : ${data.message}`);  // 将收到的消息保存并显示
         })

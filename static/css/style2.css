@@ -1,0 +1,465 @@
+/* 固定高度和滚动条样式 */
+html, body {
+    overflow-x: hidden;
+    overflow-y: scroll;
+    height: 100%;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: none;
+    /* Firefox */
+  scrollbar-width: none;
+
+    /* IE 10+ / Edge Legacy */
+  -ms-overflow-style: none;
+}
+html::-webkit-scrollbar, body::-webkit-scrollbar {
+   display:none;
+}
+#status-history {
+    height: 500px;  /* 固定高度 */
+    width: 100%;
+    overflow-y: auto;  /* 允许垂直滚动 */
+    border: 1px solid #ccc;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.message {
+    border: 1px solid #ccc;
+    padding: 8px;
+    margin-bottom: 5px;
+    background-color: #f9f9f9;
+}
+
+.timestamp {
+    font-size: 0.9em;
+    color: gray;
+}
+
+.message-text {
+    font-size: 12px;
+}
+
+.connect_container {
+    display:flex;
+    flex-flow: column nowrap;   
+}
+
+.port_row{
+    display:flex;
+    flex-flow: row nowrap; 
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.baud_row{
+    display:flex;
+    flex-flow: row nowrap; 
+    align-items:center;
+    margin-bottom: 10px;
+}
+
+.connectbtn_row{
+    display:flex;
+    flex-flow: row nowrap; 
+    align-items: center;
+    margin-bottom: 10px;
+    margin-top:10px;
+}
+
+.nomb{
+    margin-bottom: 0!important;
+}
+.mr5{
+    margin-right:5px;
+}
+.nomt10{
+    margin-bottom:0px!important;
+}
+
+.motor_container{
+    display:flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    justify-content: space-between;
+    margin-top:15px;
+}
+
+.motor_container .motor{
+    display:flex;
+    flex-flow: column nowrap;
+    border:2px dashed #ccc;
+}
+
+.motor_container .motor .motor_row{
+    display:flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.motor_row button{
+    width:60px;
+    height:60px;
+    font-size: 11px;
+    background-color: #4B4F56;
+    border: none;
+    border-radius: 10px;
+    color: #fff;
+}
+.prompt{
+    text-align: left;
+    font-size: 14px;
+    margin-top:20px;
+}
+
+.motor_container .motor .motor_row .motor_tag{
+    margin:5px 10px;
+}
+
+.motor_container .motor .motor_row .motor_lb{
+    border-left: 1px solid #ccc;
+}
+
+.fcenter{
+    justify-content: center
+}
+
+.motor_lb{
+    border-left: 1px solid #ccc;
+}
+.fcenter{
+    justify-content: center;
+}
+.motor_tag{
+    margin:5px 10px;
+    font-size:10px;
+    color:#313B49;
+    font-weight: bold;
+}
+.connect_status{
+    font-size:12px;
+    font-weight: bold;
+    color:#909399;
+    margin-left:5px;
+    background-color: rgba(144,147,153,.1);
+    padding:5px;
+    border-radius:5px;
+}
+
+.connect_status_connected{
+    font-size:12px;
+    font-weight: bold;
+    color:#67c23a;
+    margin-left:5px;
+    background-color: rgba(103,194,58,.1);
+    padding:5px;
+    border-radius:5px;
+}
+
+.speed_container{
+    display:flex;
+    flex-flow:row nowrap;
+    align-items: center;
+    justify-content: center;
+    padding-top:15px;
+}
+.speed_circle{
+    width:25px;
+    height:25px;
+    display:flex;
+    flex-flow:row nowrap;
+    align-items: center;
+    justify-content: center;
+    background-color: #EFEFEF;
+    border-radius:50%;
+    margin:0 5px;
+}
+
+.speed_selected{
+    background-color:#4B4F56!important;
+    color:#fff!important;
+}
+
+.function_container{
+    display:flex;
+    flex-flow:row wrap;
+    align-items: center;
+    padding:5px;
+    border-top:none;
+}
+
+.function_container button{
+    margin-right:5px;
+    margin-top:10px;
+    flex:1 1 40%;
+    height: 35px;
+    border: none;
+    border-radius: 5px;
+    display:flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    justify-content: center;
+    
+}
+
+.function_container button svg{
+    width:15px;
+    height:15px;
+    margin-right:5px;
+}
+
+.function_container button span{
+    font-size:12px;
+    color:#333;
+}
+
+.connectbtn_row button{
+    margin-right: 20px;
+    height: 35px;
+    border: none;
+    border-radius: 5px;
+    font-size:12px;
+}
+
+.urgentcolor{
+    background-color:#D9363E;
+    color:#fff;
+    border:none;
+    border-radius:5px;
+    font-weight:bold;
+}
+
+.input_circle{
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    padding-top:15px;
+}
+.input_circle label{
+    font-size:12px;
+    margin-right:5px;
+}
+
+.connect_outframe{
+    display:flex;
+    flex-flow: column nowrap;
+    margin-top:10px;
+    border: 1px dotted #ccc;
+    padding: 10px 5px;
+    border-radius: 10px;
+}
+
+.top_container{
+    display:flex;
+    flex-flow: column nowrap;
+    margin-left:auto;
+    justify-content: space-between;
+}
+.stopallbtn button{
+    background-color:#D9363E;
+    color:#fff;
+    border:none;
+    border-radius:5px;
+    height:45px;
+    width:80px;
+    margin-bottom:10px;
+    font-weight:bold;
+    font-size:14px;
+}
+
+.enableallbtn button{
+    background-color:#2F9E44;
+    color:#fff;
+    border:none;
+    border-radius:5px;
+    height:35px;
+    width:80px;
+    font-weight:bold;
+    font-size:14px;
+}
+
+.input_tag{
+    font-size:12px;
+    margin-left:10px;
+}
+.input-classic {
+
+    height: 36px;
+
+    padding: 0 10px;
+    font-size: 14px;
+    color: #222;
+
+    background-color: #f5f6f8;
+    border: 1px solid #c9ccd1;
+    border-radius: 6px;
+
+    outline: none;
+    box-sizing: border-box;
+
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+/* 聚焦状态 */
+.input-classic:focus {
+    background-color: #fff;
+    border-color: #4b4f56;
+    box-shadow: 0 0 0 1px rgba(75, 79, 86, 0.25);
+}
+
+/* 占位符 */
+.input-classic::placeholder {
+    color: #9aa0a6;
+}
+
+/* 禁用状态 */
+.input-classic:disabled {
+    background-color: #e9ecef;
+    color: #9aa0a6;
+    border-color: #d0d4d9;
+    cursor: not-allowed;
+}
+
+.connectstatus_row{
+    display: flex;
+    flex-flow:row nowrap;
+    align-items: center;
+    padding:5px 5px;
+}
+
+.connect_word{
+    font-size:12px;
+}
+.mainconnectbtn{
+    display:flex;
+    flex-flow: row nowrap;
+    align-items: center;  
+    justify-content: center;
+}
+.mainconnectbtn svg{
+    width: 15px;
+    height: 15px;
+    margin-right:3px;
+}
+
+.tast_container{
+    display:flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom:10px;
+}
+
+
+
+
+    .tastmotorid_select_row {
+        margin: 5px 10px;
+        font-family: Arial, sans-serif;
+    }
+
+    .tastmotorid_select_row label {
+        font-size: 14px;
+        color: #333;
+        margin-right: 10px;
+    }
+
+    .tastmotorid_select_row select {
+        width: 150px;
+        padding: 8px 12px;
+        font-size: 14px;
+        border-radius: 4px;
+        background-color: #f9f9f9;
+        color: #333;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .tastmotorid_select_row select:focus {
+        border-color: #4CAF50; /* Focused state */
+        outline: none;
+        box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
+    }
+
+    .tastmotorid_select_row select option {
+        padding: 10px;
+    }
+
+    /* Optional: Custom dropdown arrow */
+    .tastmotorid_select_row select::-ms-expand {
+        display: none; /* Hide default dropdown arrow in IE */
+    }
+
+    .tastmotorid_select_row select {
+        -webkit-appearance: none; /* Remove default dropdown arrow in Chrome/Safari */
+        -moz-appearance: none; /* Remove default dropdown arrow in Firefox */
+        appearance: none;
+        background-image: url('data:image/svg+xml;charset=UTF-8,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 10 6%22%3E%3Cpath fill=%22%23333%22 d=%22M0 0h10L5 6z%22/%3E%3C/svg%3E');
+        background-repeat: no-repeat;
+        background-position: right 10px center;
+        background-size: 12px;
+    }
+
+    .tastmotorid_select_row select:hover {
+        border-color: #45a049; /* Slightly darker border on hover */
+    }
+
+    .fb_display{
+        display:flex;
+        flex-flow: column nowrap;
+        padding:0 5px;
+    }
+
+    .fb_display_row{
+        display:flex;
+        flex-flow:row nowrap;
+        align-items: center;
+        font-size:12px;
+    }
+
+    .fb_display_row label{
+        font-size:12px;
+    }
+    .fb_realtime{
+        font-size:12px;
+    }
+
+    /* 设置 textarea 的宽度、高度及其他基本样式 */
+    textarea {
+        width: 100%; /* 使 textarea 占满父容器的宽度 */
+        padding: 5px; /* 内边距，使文字不紧贴边框 */
+        font-family: Arial, sans-serif; /* 设置字体 */
+        font-size: 12px; /* 设置字体大小 */
+        line-height: 1.2; /* 行高，使内容更为清晰 */
+        border: 1px solid #ccc; /* 边框样式 */
+        border-radius: 5px; /* 边角圆润 */
+        background-color: #f9f9f9; /* 背景色 */
+        color: #333; /* 文字颜色 */
+        resize: both; /* 允许用户拖动调整 textarea 大小 */
+        box-sizing: border-box; /* 使内外边距和边框都包含在宽高内 */
+        direction: ltr; text-align: left;
+    }
+
+    /* 设置焦点时的样式 */
+    textarea:focus {
+        outline: none; /* 去除默认的聚焦轮廓 */
+        border-color: #66afe9; /* 聚焦时改变边框颜色 */
+        background-color: #fff; /* 聚焦时改变背景色 */
+    }
+
+ .fb_display_col_container{
+    display:flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+ }   
+ .fb_display_col{
+    display:flex;
+    flex-flow:column nowrap;
+    padding:5px;
+ }   
+
+ .row_container{
+    display:flex;
+    flex-flow:row nowrap;
+ }
