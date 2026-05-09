@@ -28,6 +28,9 @@ def build_system():
     pot2 = PotStateMachine(2, bus, trackmanager, motion_controller)
 
     motorpolling = MotorPollingService(boards["stepmotor"],bus,motors["stepmotor"])
+
+    from lib.newstructure.websocket_server import WebSocketServer
+    websocket_server = WebSocketServer()
     
     return {
         "bus": bus,
@@ -39,7 +42,8 @@ def build_system():
         },
         "motorpolling": motorpolling,
         "motorcontroller":motion_controller,
-        "boards":boards
+        "boards":boards,
+        "websocket":websocket_server
     }
 
 
@@ -54,7 +58,10 @@ def shutdown_system(system):
         system["scancycle"].stop()
 
     if "motorcontroller" in system:
-        system["motorcontroller"].stop()    
+        system["motorcontroller"].stop()  
+
+    if "websocket" in system:
+        system["websocket"].stop()          
 
     # 2. 关闭所有 RS485 连接
     boards = system.get("boards", {})
@@ -98,6 +105,7 @@ def init_system():
 def run_system(system):
     system["motorpolling"].start()
     system["motorcontroller"].start()
+    system["websocket"].start()
     system["scancycle"]=ScanCycle([
         system["pots"][1],
         system["pots"][2]
