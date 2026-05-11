@@ -10,7 +10,7 @@ import threading
 from lib.newstructure.system import run_system,get_system,init_system,shutdown_system
 from lib.newstructure.cookservice import get_service
 
-
+#  2.0版本Flask Control WEB 后端服务控制程序
 import asyncio
 from threading import Thread
 app = Flask(__name__)
