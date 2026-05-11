@@ -41,7 +41,7 @@ def build_system():
             2: pot2
         },
         "motorpolling": motorpolling,
-        "motorcontroller":motion_controller,
+        "motioncontroller":motion_controller,
         "boards":boards,
         "websocket":websocket_server,
         "motors":motors
@@ -58,8 +58,8 @@ def shutdown_system(system):
     if "scancycle" in system:
         system["scancycle"].stop()
 
-    if "motorcontroller" in system:
-        system["motorcontroller"].stop()  
+    if "motioncontroller" in system:
+        system["motioncontroller"].stop()  
 
     if "websocket" in system:
         system["websocket"].stop()          
@@ -110,7 +110,7 @@ def init_system():
 #启动主TICK循环
 def run_system(system):
     system["motorpolling"].start()
-    system["motorcontroller"].start()
+    system["motioncontroller"].start()
     system["websocket"].start()
     system["scancycle"]=ScanCycle([
         system["pots"][1],
