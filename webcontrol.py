@@ -32,25 +32,6 @@ else:
     dcmotor_port = 'COM10'
 
 
-# 保持 WebSocket 服务器的全局实例
-websocket_server = None
-
-# 启动 WebSocket 服务器的异步函数
-async def start_websocket_server():
-    global websocket_server
-    websocket_server = WebSocketServer()  # 创建 WebSocket 实例
-    await websocket_server.start_in_thread()  # 启动 WebSocket 服务器
-
-# 启动 WebSocket 服务器的线程
-def run_websocket_server():
-    # 创建新的事件循环，并设置为当前线程的事件循环
-    loop = asyncio.new_event_loop()
-    asyncio.set_event_loop(loop)
-
-    # 启动 WebSocket 服务器
-    loop.run_until_complete(start_websocket_server())
-
-
 # 渲染前端的 HTML 页面
 @app.route('/')
 def index():
@@ -59,91 +40,28 @@ def index():
 # API 路由
 @app.route('/connect', methods=['POST'])
 def connect():
-    """Flask 后端接口的 connect 方法"""
-    global websocket_server
-
-    # 如果 WebSocket 服务器还没有启动，则启动它
-    if websocket_server is None:
-        print("WebSocket 服务器未启动，正在启动...")
-        # 使用 threading 启动 WebSocket 服务器
-        from threading import Thread
-        thread = Thread(target=run_websocket_server)
-        thread.start()
+    print("start Enable Power")
+    system = get_system()
+    success=system["motors"]["stepmotor"][POT1_FLIP_MOTOR].enable_all_motors()
+    if success:
+        print("使能成功!")
+        return jsonify({"status": "success","message": "使能成功!"})
     else:
-        print("WebSocket 服务器已经启动，无需重复启动")    
-
-
-    if not boardercontrollers.get("boardcontroller1"):
-        boardercontrollers["boardcontroller1"] = BoardController(BOARDTYPE_FIVE_AXIS, board_name="五轴控制板")
-
-    if not boardercontrollers.get("boardcontroller2"):
-        boardercontrollers["boardcontroller2"] = BoardController(BOARDTYPE_FEEDER, board_name="加料控制板")           
-
-    if not boardercontrollers.get("boardcontroller3"):
-        boardercontrollers["boardcontroller3"] = BoardController(BOARDTYPE_DC, board_name="DC旋转控制板")                  
-
-    if  boardercontrollers["boardcontroller1"].connected:
-        print("已经连接到五轴步进主板，无需重复连接")
-        return jsonify({"status": "fail","message": "已经连接到五轴步进主板，无需重复连接"}) 
+        print("使能失败!")
+        return jsonify({"status": "fail","message": f"使能失败!"})
     
-    if  boardercontrollers["boardcontroller2"].connected:
-        print("已经连接到加料主板，无需重复连接")
-        return jsonify({"status": "fail","message": "已经连接到加料主板，无需重复连接"}) 
-    
-    if  boardercontrollers["boardcontroller3"].connected:
-        print("已经连接到DC旋转主板，无需重复连接")
-        return jsonify({"status": "fail","message": "已经连接到DC旋转主板，无需重复连接"})     
-    
-    # 真实环境连接
-    success1 =  boardercontrollers["boardcontroller1"].connect(port=stepmotor_port,baudrate="115200")
-    success2 =  boardercontrollers["boardcontroller2"].connect(port=feedermotor_port,baudrate="9600")
-    success3 =  boardercontrollers["boardcontroller3"].connect(port=dcmotor_port,baudrate="115200")
-
-    if success1 and success2 and success3:
-        print("连接成功!")
-        return jsonify({"status": "success","message": "连接成功!"})
-    else:
-        print("连接失败!")
-        return jsonify({"status": "fail","message": f"连接失败!,连接状态：五轴板：{success1}，加料板：{success2},DC板:{success3}"})
-    
-
 @app.route('/disconnect', methods=['POST'])
+
 def disconnect():
-    if not boardercontrollers.get("boardcontroller1"):
-        print("找不到步进主板控制器，无法操作")
-        return jsonify({"status": "fail","message": "找不到步进主板控制器，无法操作"})   
-
-    if not boardercontrollers.get("boardcontroller2"):
-        print("找不到加料主板控制器，无法操作")
-        return jsonify({"status": "fail","message": "找不到加料主板控制器，无法操作"})    
-    
-    if not boardercontrollers.get("boardcontroller3"):
-        print("找不到DC主板控制器，无法操作")
-        return jsonify({"status": "fail","message": "找不到DC主板控制器，无法操作"})    
-
-    if not  boardercontrollers["boardcontroller1"].connected:
-        print("步进主板已经断开，无需重复操作")
-        return jsonify({"status": "fail","message": "步进板已经断开，无需重复操作"})      
-
-    if not  boardercontrollers["boardcontroller2"].connected:
-        print("加料主板已经断开，无需重复操作")
-        return jsonify({"status": "fail","message": "加料板已经断开，无需重复操作"})  
-    
-    if not  boardercontrollers["boardcontroller3"].connected:
-        print("DC主板已经断开，无需重复操作")
-        return jsonify({"status": "fail","message": "DC板已经断开，无需重复操作"})      
-             
-    success1 =  boardercontrollers["boardcontroller1"].disconnect()
-    success2 =  boardercontrollers["boardcontroller2"].disconnect()
-    success3 =  boardercontrollers["boardcontroller3"].disconnect()
-
-    if success1 and success2 and success3 :
-        print("断开连接成功!")
-        return jsonify({"status": "success","message": "断开连接成功!"})
+    print("start STOP Enable Power")
+    system = get_system()
+    success=system["motors"]["stepmotor"][POT1_FLIP_MOTOR].stop_all_motors()
+    if success:
+        print("关闭炒菜机成功!")
+        return jsonify({"status": "success","message": "关闭炒菜机成功!"})
     else:
-        print("断开连接失败!")
-        return jsonify({"status": "fail","message": f"断开连接失败!,断开状态：五轴板：{success1}，加料板：{success2},DC板:{success3}"})    
-
+        print("关闭炒菜机失败!")
+        return jsonify({"status": "fail","message": f"关闭炒菜机失败!"})
 
 @app.route('/testtastboardping', methods=['POST'])
 def testtastboardping():
@@ -1049,5 +967,5 @@ def start_system():
 if __name__ == '__main__':
     start_server()
     start_system()
-    run_test_newstructure()
+    #run_test_newstructure()
     start_webview()

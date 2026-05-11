@@ -9,11 +9,6 @@ from lib.newstructure.protocols import ProtocolFactory
 class RS485Communication:
     """RS485通信类（队列化 + 异步 + 同步兼容）"""
 
-    # 优先级定义（越小越优先）
-    PRIORITY_EMERGENCY = 0
-    PRIORITY_CONTROL = 1
-    PRIORITY_NORMAL = 2
-
     def __init__(self, port: str, baudrate: int = 115200, timeout: float = 1.0, board_id: int = BOARDTYPE_FIVE_AXIS):
         self.port = port
         self.baudrate = baudrate
@@ -147,6 +142,7 @@ class RS485Communication:
 
         self.counter += 1
         self.queue.put((priority,self.counter, item))
+        return True
 
     # =========================
     # 同步接口（兼容旧代码）    # WARNING: blocking API - DO NOT USE IN tick loop

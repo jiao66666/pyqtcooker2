@@ -43,7 +43,8 @@ def build_system():
         "motorpolling": motorpolling,
         "motorcontroller":motion_controller,
         "boards":boards,
-        "websocket":websocket_server
+        "websocket":websocket_server,
+        "motors":motors
     }
 
 
@@ -78,12 +79,17 @@ def shutdown_system(system):
 
 #RS485连接创建
 def buildboards():
-    rs485_stepmotor = RS485Communication(port="COM3", baudrate="19200", timeout=1.0, board_id=BOARDTYPE_FIVE_AXIS)
-    rs485_stepmotor.connect()
-
-    return {
-        "stepmotor":rs485_stepmotor
-    }
+    boards = {}
+    for item in BOARDLIST:
+        conn = RS485Communication(
+            port=item["port"],
+            baudrate=item["baudrate"],
+            timeout=item["timeout"],
+            board_id=item["board_id"]
+        )
+        conn.connect()
+        boards[item["name"]] = conn
+    return boards
 
 #电机创建
 def buildmotors(bus,boards):

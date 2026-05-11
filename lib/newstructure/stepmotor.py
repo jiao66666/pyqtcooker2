@@ -43,7 +43,8 @@ class StepMotor:
         self.com.execute_command_async(
             "ENABLE",
             [str(self.board_id), "0", "11111"],
-            callback=self._on_run_done
+            callback=self._on_run_done,
+            priority=PRIORITY_CONTROL
         )
 
         return True
@@ -61,7 +62,8 @@ class StepMotor:
         self.com.execute_command_async(
             "STOP",
             [str(self.board_id), "0", "11111"],
-            callback=self._on_run_done
+            callback=self._on_run_done,
+            priority=PRIORITY_CONTROL
         )
 
         return True     

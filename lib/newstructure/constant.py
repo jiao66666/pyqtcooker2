@@ -141,3 +141,15 @@ ACTION_PARAMS_CONFIG = {
 }
 
 TIMEOUT = 60 #电机单步动作超时
+
+
+BOARDLIST =[
+    {"name":"stepmotor","port":"COM2","baudrate":19200,"timeout":1.0,"board_id":BOARDTYPE_FIVE_AXIS},
+    {"name":"dcmotor_feeder","port":"COM3","baudrate":19200,"timeout":1.0,"board_id":BOARDTYPE_FEEDER},
+    {"name":"dcmotor_spin","port":"COM4","baudrate":19200,"timeout":1.0,"board_id":BOARDTYPE_DC}
+]
+
+# 优先级定义（越小越优先）
+PRIORITY_EMERGENCY = 0
+PRIORITY_CONTROL = 1
+PRIORITY_NORMAL = 2
