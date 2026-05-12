@@ -1,5 +1,6 @@
 from lib.newstructure.eventbus import EventBus
 from lib.newstructure.stepmotor import StepMotor
+from lib.newstructure.fdmotordriver import FeederMotor
 from lib.newstructure.state_machine import PotStateMachine
 from lib.newstructure.scancycle import ScanCycle
 from lib.newstructure.trackmanager import TrackManager
@@ -99,6 +100,33 @@ def buildmotors(bus,boards):
             POT1_MOVE_MOTOR: StepMotor("pot1_move_motor", 2, bus, boards["stepmotor"]),
             POT2_FLIP_MOTOR: StepMotor("pot2_flip_motor", 3, bus, boards["stepmotor"]),
             POT2_MOVE_MOTOR: StepMotor("pot2_move_motor", 4, bus, boards["stepmotor"])
+        },
+        "feedermotor":{
+            POT1_FLAVORMOTOR1: FeederMotor("pot1_flavor_motor1", 1, bus, boards["feedermotor"]),
+            POT1_FLAVORMOTOR2: FeederMotor("pot1_flavor_motor2", 2, bus, boards["feedermotor"]),
+            POT1_FLAVORMOTOR3: FeederMotor("pot1_flavor_motor3", 3, bus, boards["feedermotor"]),
+            POT1_FLAVORMOTOR4: FeederMotor("pot1_flavor_motor4", 4, bus, boards["feedermotor"]),
+            POT1_FLAVORMOTOR5: FeederMotor("pot1_flavor_motor5", 5, bus, boards["feedermotor"]),
+            POT1_FLAVORMOTOR6: FeederMotor("pot1_flavor_motor6", 6, bus, boards["feedermotor"]),
+            POT1_FLAVORMOTOR7: FeederMotor("pot1_flavor_motor7", 7, bus, boards["feedermotor"]),
+            POT1_FLAVORMOTOR8: FeederMotor("pot1_flavor_motor8", 8, bus, boards["feedermotor"]),
+            POT1_FLAVORMOTOR9: FeederMotor("pot1_flavor_motor9", 9, bus, boards["feedermotor"]),
+            POT1_FLAVORMOTOR10: FeederMotor("pot1_flavor_motor10", 10, bus, boards["feedermotor"]),
+            POT1_FLAVORMOTOR11: FeederMotor("pot1_flavor_motor11", 11, bus, boards["feedermotor"]),
+            POT1_FLAVORMOTOR12: FeederMotor("pot1_flavor_motor12", 12, bus, boards["feedermotor"]),
+
+            POT2_FLAVORMOTOR13: FeederMotor("pot2_flavor_motor1", 13, bus, boards["feedermotor"]),
+            POT2_FLAVORMOTOR14: FeederMotor("pot2_flavor_motor2", 14, bus, boards["feedermotor"]),
+            POT2_FLAVORMOTOR15: FeederMotor("pot2_flavor_motor3", 15, bus, boards["feedermotor"]),
+            POT2_FLAVORMOTOR16: FeederMotor("pot2_flavor_motor4", 16, bus, boards["feedermotor"]),
+            POT2_FLAVORMOTOR17: FeederMotor("pot2_flavor_motor5", 17, bus, boards["feedermotor"]),
+            POT2_FLAVORMOTOR18: FeederMotor("pot2_flavor_motor6", 18, bus, boards["feedermotor"]),
+            POT2_FLAVORMOTOR19: FeederMotor("pot2_flavor_motor7", 19, bus, boards["feedermotor"]),
+            POT2_FLAVORMOTOR20: FeederMotor("pot2_flavor_motor8", 20, bus, boards["feedermotor"]),
+            POT2_FLAVORMOTOR21: FeederMotor("pot2_flavor_motor9", 21, bus, boards["feedermotor"]),
+            POT2_FLAVORMOTOR22: FeederMotor("pot2_flavor_motor10", 22, bus, boards["feedermotor"]),
+            POT2_FLAVORMOTOR23: FeederMotor("pot2_flavor_motor11", 23, bus, boards["feedermotor"]),
+            POT2_FLAVORMOTOR24: FeederMotor("pot2_flavor_motor12", 24, bus, boards["feedermotor"])
         }
     }
 

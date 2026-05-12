@@ -1,7 +1,7 @@
 # flaskcontrol.py
 from flask import Flask, render_template, jsonify,request
 from lib.boardcontroller import BoardController
-from lib.boardtype import *
+from lib.newstructure.constant import *
 import time
 from lib.tools import is_dev_mode,parse_speed_params
 from lib.websocket_server import WebSocketServer
@@ -11,8 +11,7 @@ from lib.newstructure.system import run_system,get_system,init_system,shutdown_s
 from lib.newstructure.cookservice import get_service
 
 #  2.0版本Flask Control WEB 后端服务控制程序
-import asyncio
-from threading import Thread
+
 app = Flask(__name__)
 
 boardercontrollers = {}
@@ -66,10 +65,8 @@ def disconnect():
 @app.route('/testtastboardping', methods=['POST'])
 def testtastboardping():
     print("测试加料板连通性")
-    if not boardercontrollers.get("boardcontroller2"):
-        print("找不到加料主板控制器，无法操作")
-        return jsonify({"status": "error","message": "找不到加料主板控制器，无法操作,请先连接串口"})
-    success =  boardercontrollers["boardcontroller2"].motors[0].ping()
+    system = get_system()
+    success =  system["motors"]["feedermotor"][POT1_FLAVORMOTOR1].ping()
     if success :
         print("测试加料板连通性成功!")
         return jsonify({"status": "success","message": f"运行成功"})
@@ -86,10 +83,9 @@ def runtastmotor():
     overtime = data.get('overtime')
     success = False
     print("收到参数 :", motorid)
-    if not boardercontrollers.get("boardcontroller2"):
-        print("找不到加料主板控制器，无法操作")
-        return jsonify({"status": "error","message": "找不到加料主板控制器，无法操作,请先连接串口"})
-    success =  boardercontrollers["boardcontroller2"].motors[int(motorid)].run(int(overtime))
+  
+    system = get_system() 
+    success =  system["motors"]["feedermotor"][int(motorid)].run(int(overtime))
     if success :
         print("测试加料板打开成功!")
         return jsonify({"status": "success","message": f"运行成功"})
@@ -106,13 +102,11 @@ def gettastmotorfb():
     mode = data.get('mode')
     success = False
     print("收到参数 :", motorid)
-    if not boardercontrollers.get("boardcontroller2"):
-        print("找不到加料主板控制器，无法操作")
-        return jsonify({"status": "error","message": "找不到加料主板控制器，无法操作,请先连接串口"})
-    success,resp =  boardercontrollers["boardcontroller2"].motors[int(motorid)].getfb(int(mode))
+    system = get_system() 
+    success = system["motors"]["feedermotor"][int(motorid)].getfb(int(mode))
     if success :
         print("测试加料板打开成功!")
-        return jsonify({"status": "success","message": f"运行获取反馈成功，反馈结果：{resp}"})
+        return jsonify({"status": "success","message": f"运行获取反馈成功，反馈结果"})
     else:
         print("测试加料板打开失败!")
         return jsonify({"status": "fail","message": "运转失败!"})
