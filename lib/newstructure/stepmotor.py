@@ -30,6 +30,9 @@ class StepMotor:
 
 
 
+    def reset_home(self):
+        self.home = False
+
     def enable_all_motors(self):
 
         print("使能所有电机....")

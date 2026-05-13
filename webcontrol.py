@@ -120,14 +120,11 @@ def runlong():
     motorid = data.get('motorid')  # 获取 'port' 参数
     direction = data.get('direction')  # 获取 'baudrate' 参数
     speed = data.get('speed')  # 获取 'boardtype' 参数
-    boardtype = data.get('boardtype')  # 获取 'boardtype' 参数
     success = False
     print("收到参数 :", motorid, direction,speed)
-    if boardtype == '1':
-        if not boardercontrollers.get("boardcontroller1"):
-           print("找不到主板控制器，无法操作")
-           return jsonify({"status": "error","message": "找不到主板控制器，无法操作,请先连接串口"})
-        success =  boardercontrollers["boardcontroller1"].motors[motorid].runlong(int(int(speed)*360),int(direction))
+
+    system = get_system() 
+    success =  system["motors"]["stepmotor"][int(motorid)].runlong(int(int(speed)*360),int(direction))
     if success :
         print("电机长运转成功!")
         return jsonify({"status": "success","message": f"长运行成功!电机：{motorid}，方向：{direction}，速度：{speed}"})
@@ -143,23 +140,18 @@ def run():
     motorid = data.get('motorid')  # 获取 'port' 参数
     direction = data.get('direction')  # 获取 'baudrate' 参数
     speed = data.get('speed')  # 获取 'boardtype' 参数
-    boardtype = data.get('boardtype')  # 获取 'boardtype' 参数
     circles = data.get('circle')  # 获取 'boardtype' 参数
     success = False
     print("收到参数 :", motorid, direction,speed)
-    if boardtype == '1':
-        if not boardercontrollers.get("boardcontroller1"):
-           print("找不到主板控制器，无法操作")
-           return jsonify({"status": "error","message": "找不到主板控制器，无法操作,请先连接串口"})
-        success =  boardercontrollers["boardcontroller1"].motors[motorid].run(float(circles),int(int(speed)*360),int(direction))
+
+    system = get_system() 
+    success =  system["motors"]["stepmotor"][int(motorid)].run(float(circles),int(int(speed)*360),int(direction))
     if success :
         print("电机单次运转成功!")
         return jsonify({"status": "success","message": f"单运行成功!电机：{motorid}，方向：{direction}，速度：{speed}"})
     else:
         print("电机单次运转失败!")
         return jsonify({"status": "fail","message": "单运转失败!"})
-
-
 
 
 @app.route('/runabs', methods=['POST'])
@@ -173,16 +165,10 @@ def runabs():
     circles = data.get('circle')  # 获取 'boardtype' 参数
     success = False
     print("收到参数 :", motorid, direction,speed)
-    if boardtype == '1':
-        if not boardercontrollers.get("boardcontroller1"):
-           print("找不到主板控制器，无法操作")
-           return jsonify({"status": "error","message": "找不到主板控制器，无法操作,请先连接串口"})
-        ishomed = boardercontrollers["boardcontroller1"].motors[motorid].homed
-        if not ishomed:
-           return jsonify({"status": "error","message": "电机未归零，无法运行绝对位置，请先复位电机!"})
-        
-        success =  boardercontrollers["boardcontroller1"].motors[motorid].go(float(circles),int(int(speed)*360))
-        currentpos = boardercontrollers["boardcontroller1"].motors[motorid].current_position
+      
+    system = get_system() 
+    success =  system["motors"]["stepmotor"][int(motorid)].go(float(circles),int(int(speed)*360))
+    currentpos = system["motors"]["stepmotor"][int(motorid)].current_position
     if success :
         print("电机单次运转成功!")
         return jsonify({"status": "success","message": f"运行电机成功!电机号：{motorid}，速度：{speed}，当前位置：{currentpos}"})
@@ -195,14 +181,11 @@ def pause():
     print("暂停电机运转")
     data = request.get_json()
     motorid = data.get('motorid')  # 获取 'port' 参数
-    boardtype = data.get('boardtype')  # 获取 'boardtype' 参数
     success = False
     print("收到参数 :", motorid)
-    if boardtype == '1':
-        if not boardercontrollers.get("boardcontroller1"):
-           print("找不到主板控制器，无法操作")
-           return jsonify({"status": "error","message": "找不到主板控制器，无法操作,请先连接串口"})
-        success =  boardercontrollers["boardcontroller1"].motors[motorid].pause()
+
+    system = get_system() 
+    success =  system["motors"]["stepmotor"][int(motorid)].pause()
     if success :
         print("电机暂停成功!")
         return jsonify({"status": "success","message": "电机暂停成功!"})
@@ -216,14 +199,10 @@ def stop():
     print("暂停电机运转")
     data = request.get_json()
     motorid = data.get('motorid')  # 获取 'port' 参数
-    boardtype = data.get('boardtype')  # 获取 'boardtype' 参数
     success = False
     print("收到参数 :", motorid)
-    if boardtype == '1':
-        if not boardercontrollers.get("boardcontroller1"):
-           print("找不到主板控制器，无法操作")
-           return jsonify({"status": "error","message": "找不到主板控制器，无法操作,请先连接串口"})
-        success =  boardercontrollers["boardcontroller1"].motors[motorid].stop()
+    system = get_system() 
+    success = system["motors"]["stepmotor"][int(motorid)].stop()
     if success :
         print("电机暂停成功!")
         return jsonify({"status": "success","message": "电机暂停成功!"})
@@ -232,47 +211,15 @@ def stop():
         return jsonify({"status": "fail","message": "电机暂停失败!"})    
     
  
-    
-   
-
-
-@app.route('/fixmotor', methods=['POST'])
-def fixmotor():
-    print("电机归零")
-    data = request.get_json()
-    boardtype = data.get('boardtype')  # 获取 'boardtype' 参数
-    success = False
-    if boardtype == '1':
-        #list_ports()
-        if not boardercontrollers.get("boardcontroller1"):
-           print("找不到主板控制器，无法操作")
-           return jsonify({"status": "error","message": "找不到主板控制器，无法操作,请先连接串口"})
-        success =  boardercontrollers["boardcontroller1"].motors[1].fix_all_motors()
-
-    if success :
-        print("测试成功!")
-        return jsonify({"status": "success","message": "测试成功!"})
-    else:
-        print("测试失败!")
-        return jsonify({"status": "fail","message": "测试失败!"})
-
 @app.route('/stopall', methods=['POST'])
 def stopall():
     print("所有电机急停")
-    data = request.get_json()
-    boardtype = data.get('boardtype')  # 获取 'boardtype' 参数
     success = False
-    if boardtype == '1':
-        #list_ports()
-        if not boardercontrollers.get("boardcontroller1"):
-           print("找不到主板控制器，无法操作")
-           return jsonify({"status": "error","message": "找不到主板控制器，无法操作,请先连接串口"})
-        success =  boardercontrollers["boardcontroller1"].motors[1].stop_all_motors()
+    system = get_system() 
+    success =  system["motors"]["stepmotor"][1].stop_all_motors()
 
-        for motor_id in range(5):  # 由于是异常终止 ，需要手动将所有电机的归位状态设为 False
-            motor = boardercontrollers["boardcontroller1"].motors[motor_id]
-            if motor.homed:
-                motor.homed = False
+    for motor_id in range(5):  # 由于是异常终止 ，需要手动将所有电机的归位状态设为 False
+        system["motors"]["stepmotor"][int(motor_id)].reset_home()
 
     if success :
         print("测试成功!")
@@ -281,6 +228,7 @@ def stopall():
         print("测试失败!")
         return jsonify({"status": "fail","message": "急停所有电机失败!"})
     
+
 
 @app.route('/enableall', methods=['POST'])
 def enableall():

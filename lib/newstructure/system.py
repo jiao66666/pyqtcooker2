@@ -96,6 +96,7 @@ def buildboards():
 def buildmotors(bus,boards):
     return {
         "stepmotor":{
+            POT_BACKUP_MOTOR: StepMotor("pot_backup_motor", 0, bus, boards["stepmotor"]),
             POT1_FLIP_MOTOR: StepMotor("pot1_flip_motor", 1, bus, boards["stepmotor"]),
             POT1_MOVE_MOTOR: StepMotor("pot1_move_motor", 2, bus, boards["stepmotor"]),
             POT2_FLIP_MOTOR: StepMotor("pot2_flip_motor", 3, bus, boards["stepmotor"]),
