@@ -80,6 +80,7 @@ POT2_SPIN_MOTOR = 1  # 2号锅旋转DC电机编号
 
 ########其它配置###########
 
+RESET_PULSES = 3200000 #复位给的脉冲数
 MICRO_STEP = 128  #当前步进电机细分
 FB_CHECK_INTERVAL = 0.05        #坐标反馈检查间隔  #0.1 isOK
 MTSTATUS_CHECK_INTERVAL = 0.05  #电机状态检查间隔  #0.2 isOK

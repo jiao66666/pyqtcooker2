@@ -2,6 +2,8 @@ import threading
 from lib.newstructure.tools import circles_to_pulses
 from lib.newstructure.constant import *
 from lib.newstructure.motionplaner import MotionPlanner
+from typing import  List, Tuple
+
 
 class StepMotor:
     def __init__(self, name,motor_id, bus, rs485):
@@ -28,48 +30,9 @@ class StepMotor:
 
         self.cmd_running = False
 
-
-
     def reset_home(self):
         self.home = False
 
-    def enable_all_motors(self):
-
-        print("使能所有电机....")
-
-        if self.cmd_running:
-            print("命令还在执行中")
-            return False
-
-        self.cmd_running = True
-
-        self.com.execute_command_async(
-            "ENABLE",
-            [str(self.board_id), "0", "11111"],
-            callback=self._on_run_done,
-            priority=PRIORITY_CONTROL
-        )
-
-        return True
-
-    def stop_all_motors(self):
-
-        print("急停所有电机....")
-
-        if self.cmd_running:
-            print("命令还在执行中")
-            return False
-
-        self.cmd_running = True
-
-        self.com.execute_command_async(
-            "STOP",
-            [str(self.board_id), "0", "11111"],
-            callback=self._on_run_done,
-            priority=PRIORITY_CONTROL
-        )
-
-        return True     
 
     #绝对值坐标运动
     def go(self, action, params):
@@ -196,3 +159,38 @@ class StepMotor:
         )
 
         return True      
+    
+    def reset_zero(self)-> Tuple[bool, List[str]]:
+        """复位单个电机"""
+        print("####复位电机####")
+        if not self.com or not self.com.connected:
+            print("错误: 串口未连接，无法运行电机")
+            return False
+        print(f"[{self.name}] ID:{self.motor_id} 运行 复位电机【{self.name}】, 主板类型:{self.board_id}")
+        # 复位脉冲数
+        pulses = RESET_PULSES
+
+        # 复位方向
+        if self.motor_id in [1,2]:  # 1号锅
+            direction = 1
+        else:
+            direction = -1     
+
+        if direction >=0:
+            pulses = abs(pulses)
+        else:
+            pulses = -abs(pulses)   
+
+        #复位速度
+        anglespeed = 360      
+         # 发送运行命令
+        self.com.execute_command_async(
+            "ORGRST", 
+            [str(self.board_id), str(self.motor_id), str(pulses), "0",str(anglespeed)]
+        )
+ 
+
+        self.current_position = 0
+        self.homed = True
+    
+        return True,[f"电机{self.name}复位成功"]

@@ -41,7 +41,7 @@ def index():
 def connect():
     print("start Enable Power")
     system = get_system()
-    success=system["motors"]["stepmotor"][POT1_FLIP_MOTOR].enable_all_motors()
+    success=system["motorsmanager"].enable_all_motors()
     if success:
         print("使能成功!")
         return jsonify({"status": "success","message": "使能成功!"})
@@ -54,7 +54,7 @@ def connect():
 def disconnect():
     print("start STOP Enable Power")
     system = get_system()
-    success=system["motors"]["stepmotor"][POT1_FLIP_MOTOR].stop_all_motors()
+    success=system["motorsmanager"].stop_all_motors()
     if success:
         print("关闭炒菜机成功!")
         return jsonify({"status": "success","message": "关闭炒菜机成功!"})
@@ -161,7 +161,6 @@ def runabs():
     motorid = data.get('motorid')  # 获取 'port' 参数
     direction = data.get('direction')  # 获取 'baudrate' 参数
     speed = data.get('speed')  # 获取 'boardtype' 参数
-    boardtype = data.get('boardtype')  # 获取 'boardtype' 参数
     circles = data.get('circle')  # 获取 'boardtype' 参数
     success = False
     print("收到参数 :", motorid, direction,speed)
@@ -214,44 +213,16 @@ def stop():
 @app.route('/stopall', methods=['POST'])
 def stopall():
     print("所有电机急停")
-    success = False
     system = get_system() 
-    success =  system["motors"]["stepmotor"][1].stop_all_motors()
-
-    for motor_id in range(5):  # 由于是异常终止 ，需要手动将所有电机的归位状态设为 False
-        system["motors"]["stepmotor"][int(motor_id)].reset_home()
-
-    if success :
+    success1 = system["motorsmanager"].stop_all_motors()
+    success2 = system["motorsmanager"].reset_home_all()
+    if success1 and success2 :
         print("测试成功!")
         return jsonify({"status": "success","message": "急停所有电机成功!"})
     else:
         print("测试失败!")
         return jsonify({"status": "fail","message": "急停所有电机失败!"})
     
-
-
-@app.route('/enableall', methods=['POST'])
-def enableall():
-    print("所有电机使能")
-    data = request.get_json()
-    boardtype = data.get('boardtype')  # 获取 'boardtype' 参数
-    success = False
-    if boardtype == '1':
-        #list_ports()
-        if not boardercontrollers.get("boardcontroller1"):
-           print("找不到主板控制器，无法操作")
-           return jsonify({"status": "error","message": "找不到主板控制器，无法操作,请先连接串口"})
-        success =  boardercontrollers["boardcontroller1"].motors[1].enable_all_motors()
-
-    if success :
-        print("测试成功!")
-        return jsonify({"status": "success","message": "测试成功!"})
-    else:
-        print("测试失败!")
-        return jsonify({"status": "fail","message": "测试失败!"})    
-
-
-
 
 @app.route('/resetmotor', methods=['POST'])
 def resetmotor():
@@ -260,14 +231,11 @@ def resetmotor():
     motorid = data.get('motorid')  # 获取 'port' 参数
     direction = data.get('direction')  # 获取 'baudrate' 参数
     speed = data.get('speed')  # 获取 'boardtype' 参数
-    boardtype = data.get('boardtype')  # 获取 'boardtype' 参数
     success = False
     print("收到参数 :", motorid, direction,speed)
-    if boardtype == '1':
-        if not boardercontrollers.get("boardcontroller1"):
-           print("找不到主板控制器，无法操作")
-           return jsonify({"status": "error","message": "找不到主板控制器，无法操作,请先连接串口"})
-        success,resp =  boardercontrollers["boardcontroller1"].motors[motorid].reset_one_motor()
+
+    system = get_system() 
+    success,resp =  system["motors"]["stepmotor"][int(motorid)].reset_zero()
     if success :
         print("测试复位成功!")
         return jsonify({"status": "success","message": f"复位电机成功!电机：{motorid}，方向：{direction}"})
@@ -275,7 +243,7 @@ def resetmotor():
         print("测试复位失败!")
         return jsonify({"status": "fail","message": f"复位电机失败!,电机：{motorid}，错误信息：{resp}"})
 
-
+###----to here#####
 
 @app.route('/resetmotorpot', methods=['POST'])
 def resetmotorpot():
@@ -285,9 +253,6 @@ def resetmotorpot():
     success = False
     print("收到参数 :", potnum)
 
-    if not boardercontrollers.get("boardcontroller1"):
-        print("找不到主板控制器，无法操作")
-        return jsonify({"status": "error","message": "找不到主板控制器，无法操作,请先连接串口"})
 
     if potnum ==1:   
         success,resp =  boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].resettask()

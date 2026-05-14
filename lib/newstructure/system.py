@@ -11,6 +11,7 @@ import threading
 from lib.newstructure.runtime import runtime
 from lib.newstructure.motorpollingservice import MotorPollingService
 from lib.newstructure.motioncontroller import MotionController
+from lib.newstructure.stepmotor_manager import StepMotorManager
 
 #系统构建中心
 def build_system():
@@ -20,6 +21,8 @@ def build_system():
     boards = buildboards()
 
     motors = buildmotors(bus,boards)
+
+    motors_manager = buildmotors_manager(bus,boards,motors)
 
     stepbuilder = StepBuilder(motors["stepmotor"])
 
@@ -45,7 +48,8 @@ def build_system():
         "motioncontroller":motion_controller,
         "boards":boards,
         "websocket":websocket_server,
-        "motors":motors
+        "motors":motors,
+        "motorsmanager":motors_manager
     }
 
 
@@ -130,6 +134,10 @@ def buildmotors(bus,boards):
             POT2_FLAVORMOTOR24: FeederMotor("pot2_flavor_motor12", 24, bus, boards["feedermotor"])
         }
     }
+
+#电机管理器创建
+def buildmotors_manager(bus,boards,motors):
+    return StepMotorManager(boards["stepmotor"].board_id,motors["stepmotor"],boards["stepmotor"])
 
 #初始化轮询状态
 def init_system():
