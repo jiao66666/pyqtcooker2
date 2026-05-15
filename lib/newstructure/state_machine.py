@@ -57,7 +57,7 @@ class PotStateMachine:
                 params=step["params"]
             )
 
-            step["motor"].go(step["action"],step["params"])
+            step["motor"].go_action(step["action"],step["params"])
             
             #可选动态调速
             if step["params"]["varspeed"] == True:

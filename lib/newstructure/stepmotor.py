@@ -35,7 +35,7 @@ class StepMotor:
 
 
     #绝对值坐标运动
-    def go(self, action, params):
+    def go_action(self, action, params):
         print(f"[{self.name}] start {action}")
         target = params["target"]
         anglespeed = params["speed"]
@@ -67,6 +67,57 @@ class StepMotor:
         print("执行成功")
         print(f"执行完后当前位置:{self.current_position}")
         return True  
+    
+        
+    def go(self, target: float, anglespeed: int):  # 回零后进行绝对运动，水平离开0点位置 为正值，翻转离开0点 逆时针为正值 ，顺时值为负值
+        """单次运转电机"""  ##绝对运动
+        print("####运行电机####")
+        if not self.com or not self.com.connected:
+            print("错误: 串口未连接，无法运行电机")
+            return False
+        print(f"[{self.name}] ID:{self.motor_id} 运行到位置{target}, 角速度 {anglespeed}, 主板类型:{self.board_id}")
+ 
+        #if not self.homed:
+        #   print("错误: 电机未回零，无法进行绝对运动")
+        #   return False
+        # 计算脉冲数
+        if self.motor_id in [POT1_MOVE_MOTOR,POT2_MOVE_MOTOR] and target < 0:
+            print("错误: 水平电机不能运动到负值位置")
+            return False
+        
+        deltaDistance = target - self.current_position 
+        if deltaDistance == 0:
+            print("目标位置与当前位置相同，无需运动")
+            return True
+         # 计算需要运动的圈数
+
+        circles = abs(deltaDistance)
+
+        if deltaDistance >=0:  ## 确定 目标位在当前位置 的左还是右侧
+            if self.motor_id in [POT1_MOVE_MOTOR,POT1_FLIP_MOTOR]:
+                direction = -1
+            else:
+                direction = 1
+        else:
+            if self.motor_id in [1,2]:
+                direction = 1
+            else:
+                direction = -1
+
+        self.current_position = target       
+         # 发送运行命令
+        success = self.run(
+            circles,
+            anglespeed,
+            direction
+        )
+        if not success:
+            print(f"错误: 运行命令失败")
+            return False
+        
+        print("执行成功")
+        print(f"执行完后当前位置:{self.current_position}")
+        return True    
       
     def run(self, circles: float, anglespeed: int, direction: int):
         """异步运行电机（基于通信队列，无线程）"""
