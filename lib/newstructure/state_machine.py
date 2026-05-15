@@ -3,6 +3,7 @@ from lib.newstructure.runtime import runtime
 import time
 from lib.newstructure.constant import TIMEOUT
 
+
 class PotStateMachine:
     def __init__(self, pot_id, bus, track_manager, motioncontroller):
         self.pot_id = pot_id
@@ -75,7 +76,8 @@ class PotStateMachine:
             if time.time() - self.wait_start_time > TIMEOUT:
                 print("motor time out !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
                 step = self.steps[self.current_step]
-                step["motor"].stop_all_motors()
+                #system = get_system()
+                #system["motorsmanager"].stop_all_motors()
                 self.state = "ERROR"
                 self.error_info = {
                     "step": self.current_step,
