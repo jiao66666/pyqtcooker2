@@ -7,8 +7,9 @@ from lib.tools import is_dev_mode,parse_speed_params
 from lib.websocket_server import WebSocketServer
 import webview
 import threading
-from lib.newstructure.system import run_system,get_system,init_system,shutdown_system
+from lib.newstructure.system import run_system,init_system,shutdown_system
 from lib.newstructure.cookservice import get_service
+from lib.newstructure.system_runtime import system
 
 #  2.0版本Flask Control WEB 后端服务控制程序
 
@@ -40,7 +41,6 @@ def index():
 @app.route('/connect', methods=['POST'])
 def connect():
     print("start Enable Power")
-    system = get_system()
     success=system["motorsmanager"].enable_all_motors()
     if success:
         print("使能成功!")
@@ -53,7 +53,6 @@ def connect():
 
 def disconnect():
     print("start STOP Enable Power")
-    system = get_system()
     success=system["motorsmanager"].stop_all_motors()
     if success:
         print("关闭炒菜机成功!")
@@ -65,7 +64,6 @@ def disconnect():
 @app.route('/testtastboardping', methods=['POST'])
 def testtastboardping():
     print("测试加料板连通性")
-    system = get_system()
     success =  system["motors"]["feedermotor"][POT1_FLAVORMOTOR1].ping()
     if success :
         print("测试加料板连通性成功!")
@@ -84,7 +82,7 @@ def runtastmotor():
     success = False
     print("收到参数 :", motorid)
   
-    system = get_system() 
+
     success =  system["motors"]["feedermotor"][int(motorid)].run(int(overtime))
     if success :
         print("测试加料板打开成功!")
@@ -102,7 +100,7 @@ def gettastmotorfb():
     mode = data.get('mode')
     success = False
     print("收到参数 :", motorid)
-    system = get_system() 
+
     success = system["motors"]["feedermotor"][int(motorid)].getfb(int(mode))
     if success :
         print("测试加料板打开成功!")
@@ -123,7 +121,6 @@ def runlong():
     success = False
     print("收到参数 :", motorid, direction,speed)
 
-    system = get_system() 
     success =  system["motors"]["stepmotor"][int(motorid)].runlong(int(int(speed)*360),int(direction))
     if success :
         print("电机长运转成功!")
@@ -144,7 +141,7 @@ def run():
     success = False
     print("收到参数 :", motorid, direction,speed)
 
-    system = get_system() 
+
     success =  system["motors"]["stepmotor"][int(motorid)].run(float(circles),int(int(speed)*360),int(direction))
     if success :
         print("电机单次运转成功!")
@@ -165,7 +162,6 @@ def runabs():
     success = False
     print("收到参数 :", motorid, direction,speed)
       
-    system = get_system() 
     success =  system["motors"]["stepmotor"][int(motorid)].go(float(circles),int(int(speed)*360))
     currentpos = system["motors"]["stepmotor"][int(motorid)].current_position
     if success :
@@ -183,7 +179,6 @@ def pause():
     success = False
     print("收到参数 :", motorid)
 
-    system = get_system() 
     success =  system["motors"]["stepmotor"][int(motorid)].pause()
     if success :
         print("电机暂停成功!")
@@ -200,7 +195,7 @@ def stop():
     motorid = data.get('motorid')  # 获取 'port' 参数
     success = False
     print("收到参数 :", motorid)
-    system = get_system() 
+
     success = system["motors"]["stepmotor"][int(motorid)].stop()
     if success :
         print("电机暂停成功!")
@@ -213,7 +208,7 @@ def stop():
 @app.route('/stopall', methods=['POST'])
 def stopall():
     print("所有电机急停")
-    system = get_system() 
+
     success1 = system["motorsmanager"].stop_all_motors()
     success2 = system["motorsmanager"].reset_home_all()
     if success1 and success2 :
@@ -234,7 +229,6 @@ def resetmotor():
     success = False
     print("收到参数 :", motorid, direction,speed)
 
-    system = get_system() 
     success,resp =  system["motors"]["stepmotor"][int(motorid)].reset_zero()
     if success :
         print("测试复位成功!")
@@ -803,7 +797,7 @@ def gopos():
 
 @app.route("/testnewstructure", methods=["POST"])
 def testnewstructure():
-    system = get_system()
+
     data = request.json
 
     steps = system["stepbuilder"].build(
@@ -852,13 +846,10 @@ def start_webview():
     webview.start()
 
 def on_windows_close():
-    system = get_system()
     shutdown_system(system)
 
 #启动炒菜机控制系统
 def start_system():
-
-    system = get_system()
     init_system()
 
     t = threading.Thread(
