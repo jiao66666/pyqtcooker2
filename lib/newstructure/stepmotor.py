@@ -35,9 +35,10 @@ class StepMotor:
 
 
     #绝对值坐标运动
-    def go(self, target, anglespeed):
-        print(f"[{self.name}] start goabs")
-
+    def go(self, action, params):
+        print(f"[{self.name}] start {action}")
+        target = params["target"]
+        anglespeed = params["speed"]
         #if not self.homed:
         #    print("not zero ,can't go move")
         #    return False
