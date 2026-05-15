@@ -29,7 +29,6 @@ class StepBuilder:
             raise ValueError(f"Invalid pot_id: {pot_id}")
 
     def _build_steps(self, template, pot_id, motor_map):
-        print("构建动作中。》》》》》》")
         steps = []
 
         for item in template:
