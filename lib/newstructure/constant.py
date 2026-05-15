@@ -3,6 +3,8 @@ BOARDTYPE_FEEDER = 1     # 加料板
 BOARDTYPE_FIVE_AXIS = 2  # 五轴板
 BOARDTYPE_DC = 3         # 直流板
 
+
+######当前仅为测试端口，实际部署请替换为真实端口#########
 BOARDLIST =[
     {"name":"stepmotor","port":"COM2","baudrate":19200,"timeout":1.0,"board_id":BOARDTYPE_FIVE_AXIS},
     {"name":"feedermotor","port":"COM3","baudrate":19200,"timeout":1.0,"board_id":BOARDTYPE_FEEDER},
