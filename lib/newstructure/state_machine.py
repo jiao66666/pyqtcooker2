@@ -21,6 +21,7 @@ class PotStateMachine:
         self.bus.subscribe("MOTOR_DONE", self.on_motor_done)
     def submit_task(self, steps):
         self.command_queue.put(steps)
+        print("submitt task OK@!>>>>")
 
 
     def tick(self):
@@ -40,6 +41,7 @@ class PotStateMachine:
             return
 
         elif self.state == "RUNNING":
+            print("motor start running .....")
             step = self.steps[self.current_step]
 
             if self.need_track(step["action"]) and not self.track.try_acquire(self.pot_id, step["action"]):

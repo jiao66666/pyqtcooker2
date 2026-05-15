@@ -106,6 +106,10 @@ ACTION_PARAMS_KEYLIST = {
         ]),
         ("h", "move_in_tofirefood"),
         ("v", "flip_in_tofirefood"),
+    ],
+    "resetzero":[
+       ("h","moveh_zero"),
+       ("v","movev_zero")
     ]
 }
 
@@ -180,6 +184,30 @@ ACTION_PARAMS_CONFIG = {
     "flip_in_tofirefood_2": {
         "speed": 1000,
         "target":4.6,
+        "varspeed":False,
+        "quitinadvance":0
+    },
+    "moveh_zero_1":{
+        "speed": 10,
+        "target":0,
+        "varspeed":False,
+        "quitinadvance":0
+    },
+    "moveh_zero_2":{
+        "speed": 10,
+        "target":0,
+        "varspeed":False,
+        "quitinadvance":0
+    },
+    "movev_zero_1":{
+        "speed": 10,
+        "target":0,
+        "varspeed":False,
+        "quitinadvance":0
+    },
+    "movev_zero_2":{
+        "speed": 10,
+        "target":0,
         "varspeed":False,
         "quitinadvance":0
     }

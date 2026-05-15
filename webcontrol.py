@@ -253,21 +253,18 @@ def resetmotorpot():
     success = False
     print("收到参数 :", potnum)
 
-
-    if potnum ==1:   
-        success,resp =  boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].resettask()
-        success,resp =  boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].resettask()
-    else:
-        success,resp =  boardercontrollers["boardcontroller1"].motors[POT2_MOVE_MOTOR].resettask()        
-        success,resp =  boardercontrollers["boardcontroller1"].motors[POT2_FLIP_MOTOR].resettask()        
-        
+    service = get_service()
+    action_param = "resetzero"
+    pot_param = potnum
+    print("run resetmotorpot action now.........")
+    success = service.run_action(action_param,pot_param)
+           
     if success :
         print("测试复位成功!")
         return jsonify({"status": "success","message": f"复位电机成功!锅号：{potnum}"})
     else:
         print("测试复位失败!")
-        return jsonify({"status": "fail","message": f"复位电机失败!,锅号：{potnum}，错误信息：{resp}"})
-
+        return jsonify({"status": "fail","message": f"复位电机失败!,锅号：{potnum}，错误信息"})
 
     
 @app.route('/testtask', methods=['POST'])
