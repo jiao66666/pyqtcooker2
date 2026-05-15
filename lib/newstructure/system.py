@@ -153,7 +153,7 @@ def run_system(system):
         system["pots"][1],
         system["pots"][2]
     ])
-    system["scancycle"].run()
+    system["scancycle"].start()
 
 
 _system = None
