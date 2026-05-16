@@ -50,6 +50,13 @@ class MotorPollingService:
     # =========================
     def _on_motor_status(self, motor_id, success, response):
 
+        print("电机状态回调中》》》》》》》")
+        #测试的时候关闭
+        #仅测试用       
+        runtime.set_done(motor_id)
+        self.bus.publish("MOTOR_DONE", {"motor_id": motor_id})
+        return
+
         if not success:
             return
 
@@ -63,8 +70,7 @@ class MotorPollingService:
            curpos = runtime.get_position(motor_id)
            if curpos > step_params["quitinadvance"]:
                quitInAdvance = True
-               
-    
+
         if status == "PAUSEING" or quitInAdvance:
             runtime.set_done(motor_id)
             self.bus.publish("MOTOR_DONE", {"motor_id": motor_id})
