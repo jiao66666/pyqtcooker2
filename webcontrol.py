@@ -82,7 +82,6 @@ def runtastmotor():
     success = False
     print("收到参数 :", motorid)
   
-
     success =  system["motors"]["feedermotor"][int(motorid)].run(int(overtime))
     if success :
         print("测试加料板打开成功!")
@@ -90,7 +89,6 @@ def runtastmotor():
     else:
         print("测试加料板打开失败!")
         return jsonify({"status": "fail","message": "运转失败!"})
-
 
 @app.route('/gettastmotorfb', methods=['POST'])
 def gettastmotorfb():
@@ -109,15 +107,13 @@ def gettastmotorfb():
         print("测试加料板打开失败!")
         return jsonify({"status": "fail","message": "运转失败!"})
     
-
-
 @app.route('/runlong', methods=['POST'])
 def runlong():
     print("运行电机长运转")
     data = request.get_json()
-    motorid = data.get('motorid')  # 获取 'port' 参数
-    direction = data.get('direction')  # 获取 'baudrate' 参数
-    speed = data.get('speed')  # 获取 'boardtype' 参数
+    motorid = data.get('motorid')  
+    direction = data.get('direction')  
+    speed = data.get('speed')  
     success = False
     print("收到参数 :", motorid, direction,speed)
 
@@ -129,18 +125,16 @@ def runlong():
         print("电机长运转失败!")
         return jsonify({"status": "fail","message": "长运转失败!"})
     
-
 @app.route('/run', methods=['POST'])
 def run():
     print("运行电机单次运转")
     data = request.get_json()
-    motorid = data.get('motorid')  # 获取 'port' 参数
-    direction = data.get('direction')  # 获取 'baudrate' 参数
-    speed = data.get('speed')  # 获取 'boardtype' 参数
-    circles = data.get('circle')  # 获取 'boardtype' 参数
+    motorid = data.get('motorid')  
+    direction = data.get('direction')  
+    speed = data.get('speed')  
+    circles = data.get('circle') 
     success = False
     print("收到参数 :", motorid, direction,speed)
-
 
     success =  system["motors"]["stepmotor"][int(motorid)].run(float(circles),int(int(speed)*360),int(direction))
     if success :
@@ -150,15 +144,14 @@ def run():
         print("电机单次运转失败!")
         return jsonify({"status": "fail","message": "单运转失败!"})
 
-
 @app.route('/runabs', methods=['POST'])
 def runabs():
     print("运行电机单次运转绝对值坐标")
     data = request.get_json()
-    motorid = data.get('motorid')  # 获取 'port' 参数
-    direction = data.get('direction')  # 获取 'baudrate' 参数
-    speed = data.get('speed')  # 获取 'boardtype' 参数
-    circles = data.get('circle')  # 获取 'boardtype' 参数
+    motorid = data.get('motorid')  
+    direction = data.get('direction')  
+    speed = data.get('speed')  
+    circles = data.get('circle') 
     success = False
     print("收到参数 :", motorid, direction,speed)
       
@@ -175,7 +168,7 @@ def runabs():
 def pause():
     print("暂停电机运转")
     data = request.get_json()
-    motorid = data.get('motorid')  # 获取 'port' 参数
+    motorid = data.get('motorid') 
     success = False
     print("收到参数 :", motorid)
 
@@ -187,12 +180,11 @@ def pause():
         print("电机暂停失败!")
         return jsonify({"status": "fail","message": "电机暂停失败!"})    
 
-
 @app.route('/stop', methods=['POST'])
 def stop():
     print("暂停电机运转")
     data = request.get_json()
-    motorid = data.get('motorid')  # 获取 'port' 参数
+    motorid = data.get('motorid') 
     success = False
     print("收到参数 :", motorid)
 
@@ -204,11 +196,9 @@ def stop():
         print("电机暂停失败!")
         return jsonify({"status": "fail","message": "电机暂停失败!"})    
     
- 
 @app.route('/stopall', methods=['POST'])
 def stopall():
     print("所有电机急停")
-
     success1 = system["motorsmanager"].stop_all_motors()
     success2 = system["motorsmanager"].reset_home_all()
     if success1 and success2 :
@@ -218,14 +208,13 @@ def stopall():
         print("测试失败!")
         return jsonify({"status": "fail","message": "急停所有电机失败!"})
     
-
 @app.route('/resetmotor', methods=['POST'])
 def resetmotor():
     print("运行电机长运转")
     data = request.get_json()
-    motorid = data.get('motorid')  # 获取 'port' 参数
-    direction = data.get('direction')  # 获取 'baudrate' 参数
-    speed = data.get('speed')  # 获取 'boardtype' 参数
+    motorid = data.get('motorid')  
+    direction = data.get('direction')  
+    speed = data.get('speed')  
     success = False
     print("收到参数 :", motorid, direction,speed)
 
@@ -236,8 +225,6 @@ def resetmotor():
     else:
         print("测试复位失败!")
         return jsonify({"status": "fail","message": f"复位电机失败!,电机：{motorid}，错误信息：{resp}"})
-
-###----to here#####
 
 @app.route('/resetmotorpot', methods=['POST'])
 def resetmotorpot():
@@ -260,90 +247,6 @@ def resetmotorpot():
         print("测试复位失败!")
         return jsonify({"status": "fail","message": f"复位电机失败!,锅号：{potnum}，错误信息"})
 
-    
-@app.route('/testtask', methods=['POST'])
-def testtask():
-    print("电机状态读取")
-    data = request.get_json()
-    boardtype = data.get('boardtype')  # 获取 'boardtype' 参数
-    motorid = data.get('motorid')  # 获取 'port' 参数
-    success = False
-    if boardtype == '1':
-        #list_ports()
-        if not boardercontrollers.get("boardcontroller1"):
-           print("找不到主板控制器，无法操作")
-           return jsonify({"status": "error","message": "找不到主板控制器，无法操作,请先连接串口"})
-        
-        #runtask参数：[圈数，速度，方向]
-        success = boardercontrollers["boardcontroller1"].motors[motorid].runtask(0.5,360,1)   
-        success = boardercontrollers["boardcontroller1"].motors[motorid].runtask(0.5,360,-1)
-
-    if success :
-        print("测试成功!")
-        return jsonify({"status": "success","message": "测试成功!"})
-    else:
-        print("测试失败!")
-        return jsonify({"status": "fail","message": "测试失败!"})    
-
-
-
-
-
-@app.route('/testtaskabs', methods=['POST'])
-def testtaskabs():
-    print("电机状态读取")
-    data = request.get_json()
-    boardtype = data.get('boardtype')  # 获取 'boardtype' 参数
-    motorid = data.get('motorid')  # 获取 'port' 参数
-    success = False
-    if boardtype == '1':
-        #list_ports()
-        if not boardercontrollers.get("boardcontroller1"):
-           print("找不到主板控制器，无法操作")
-           return jsonify({"status": "error","message": "找不到主板控制器，无法操作,请先连接串口"})
-        
-        #runtask参数：[圈数，速度，方向]
-        success = boardercontrollers["boardcontroller1"].motors[motorid].gotask(1,360)   
-        success = boardercontrollers["boardcontroller1"].motors[motorid].gotask(0,360)
-
-    if success :
-        print("测试成功!")
-        return jsonify({"status": "success","message": "测试成功!"})
-    else:
-        print("测试失败!")
-        return jsonify({"status": "fail","message": "测试失败!"})    
-
-
-@app.route('/testmultitask', methods=['POST'])
-def testmultitask():
-    print("电机状态读取")
-    data = request.get_json()
-    boardtype = data.get('boardtype')  # 获取 'boardtype' 参数
-    motorid = data.get('motorid')  # 获取 'port' 参数
-    success = False
-    if boardtype == '1':
-        #list_ports()
-        if not boardercontrollers.get("boardcontroller1"):
-           print("找不到主板控制器，无法操作")
-           return jsonify({"status": "error","message": "找不到主板控制器，无法操作,请先连接串口"})
-        
-        #runtask参数：[圈数，速度，方向]
-        success = boardercontrollers["boardcontroller1"].motors[2].runtask(0.5,360,1)  
-        success = boardercontrollers["boardcontroller1"].motors[2].runtask(0.5,360,-1)    
-        success = boardercontrollers["boardcontroller1"].motors[1].runtask(0.2,360,-1)
-        success = boardercontrollers["boardcontroller1"].motors[1].runtask(0.2,360,1)
-
-    if success :
-        print("测试成功!")
-        return jsonify({"status": "success","message": "测试成功!"})
-    else:
-        print("测试失败!")
-        return jsonify({"status": "fail","message": "测试失败!"})    
-
-
-
-
-
 @app.route('/testmultitaskabs', methods=['POST'])   #绝对位置任务测试
 def testmultitaskabs():
     print("1号锅测试水平翻转任务开始")
@@ -354,15 +257,7 @@ def testmultitaskabs():
     acc_percent = data.get('acc_percent') 
     speed_percent = data.get('speed_percent') 
     success = False
-    if not boardercontrollers.get("boardcontroller1"):
-        print("找不到主板控制器，无法操作")
-        return jsonify({"status": "error","message": "找不到主板控制器，无法操作,请先连接串口"})
     
-    if not boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].homed or not boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].homed:
-        print("电机未归位，无法操作")
-        return jsonify({"status": "error","message": "电机未归位，无法操作,请先复位"})
-
-
     #runtask参数：[圈数，速度，方向]
     print("**************************************1号锅测试水平翻转任务开始******************************")
     

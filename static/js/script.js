@@ -392,75 +392,6 @@ function stopMotor(potnum,directionstr) {
 
 
 
-
-function testTask(potnum,directionstr) {
-     // 获取 select 元素
-
-        var motorObj = getMotorInfo(potnum,directionstr);
-        if(motorObj == null){
-            console.log("获取电机信息失败");
-            return;
-        }
-        fetch('/testtaskabs', {
-            method: 'POST', 
-            headers: {
-                'Content-Type': 'application/json'  
-            },
-            body: JSON.stringify({
-                boardtype: '1',  // 五轴板
-                motorid: motorObj.motor
-            })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if(data.status === "success"){
-                addMessage(`返回信息 : ${data.message}`);  // 将收到的消息保存并显示
-            }
-            
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            addMessage("Error starting motor.");
-        });
-}
-
-
-function testTaskabs(potnum,directionstr) {
-     // 获取 select 元素
-
-        var motorObj = getMotorInfo(potnum,directionstr);
-        if(motorObj == null){
-            console.log("获取电机信息失败");
-            return;
-        }
-        fetch('/testtaskabs', {
-            method: 'POST', 
-            headers: {
-                'Content-Type': 'application/json'  
-            },
-            body: JSON.stringify({
-                boardtype: '1',  // 五轴板
-                motorid: motorObj.motor
-            })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if(data.status === "success"){
-                addMessage(`返回信息 : ${data.message}`);  // 将收到的消息保存并显示
-            }
-            
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            addMessage("Error starting motor.");
-        });
-}
-
-
-
-
-
-
 function resetMotorPot(potnum) {
      // 获取 select 元素
         fetch('/resetmotorpot', {
@@ -507,28 +438,6 @@ function stopall() {
         });
 }
 
-
-
-function testMultiTask() {
-     // 获取 select 元素
-        fetch('/testmultitask', {
-            method: 'POST', 
-            headers: {
-                'Content-Type': 'application/json'  
-            },
-            body: JSON.stringify({
-                boardtype: '1',  // 五轴板
-            })
-        })
-        .then(response => response.json())
-        .then(data => {
-              addMessage(`返回信息 : 已发送串口指令`);  // 将收到的消息保存并显示
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            addMessage("Error starting motor.");
-        });
-}
 
 function testMultiTaskabs() {
       var speed_level = document.getElementById("speed_level");
