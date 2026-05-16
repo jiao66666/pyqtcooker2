@@ -20,6 +20,18 @@ class RuntimeContext:
         #     "pot_id": int
         # }
 
+
+       # =========================
+        # 动态动作参数覆盖
+        # 例如：
+        # {
+        #     "move_out_togetfood_1": {
+        #         "speed": 1500
+        #     }
+        # }
+        # =========================
+        self.action_params = {}
+
     # ---------------------------
     # 初始化
     # ---------------------------
@@ -31,6 +43,34 @@ class RuntimeContext:
                 "pot_id": None,
                 "position": 0    
             }
+
+
+    # ==================================================
+    # 设置动作参数覆盖
+    # ==================================================
+    def set_action_override(self, key, params):
+        with self._lock:
+            if key not in self.action_params:
+                self.action_params[key] = {}
+
+            self.action_params[key].update(params)
+
+    # ==================================================
+    # 获取动作参数覆盖
+    # ==================================================
+    def get_action_override(self, key):
+        with self._lock:
+            return self.action_params.get(key, {}).copy()
+
+    # ==================================================
+    # 获取最终动作参数
+    # ==================================================
+    def get_final_action_params(self, action_key, default_config):
+        final_params = default_config.copy()
+        override = self.get_action_override(action_key)
+        final_params.update(override)
+        return final_params
+    
 
     # ---------------------------
     # 状态变更

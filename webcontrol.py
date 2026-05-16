@@ -8,8 +8,9 @@ from lib.websocket_server import WebSocketServer
 import webview
 import threading
 from lib.newstructure.system import run_system,init_system,shutdown_system
-from lib.newstructure.cookservice import get_service
+from lib.newstructure.cookservice import cookservice
 from lib.newstructure.system_runtime import system
+from lib.newstructure.runtime import runtime
 
 #  2.0版本Flask Control WEB 后端服务控制程序
 
@@ -234,11 +235,10 @@ def resetmotorpot():
     success = False
     print("收到参数 :", potnum)
 
-    service = get_service()
     action_param = "resetzero"
     pot_param = potnum
     print("run resetmotorpot action now.........")
-    success = service.run_action(action_param,pot_param)
+    success = cookservice.run_action(action_param,pot_param)
            
     if success :
         print("测试复位成功!")
@@ -254,18 +254,13 @@ def testmultitaskabs():
     data = request.get_json()
     speed_level = data.get('speed_level') 
     speed_flip = data.get('speed_flip') 
-    acc_percent = data.get('acc_percent') 
-    speed_percent = data.get('speed_percent') 
+   
     success = False
-    
     #runtask参数：[圈数，速度，方向]
     print("**************************************1号锅测试水平翻转任务开始******************************")
-    
     move_speed = int(speed_level)   
     flip_speed = int(speed_flip)    
-    acc_percent = int(acc_percent)   # 0-100
-    speed_percent = int(speed_percent)   # 0-100
-
+   
     if move_speed > 3600:   #  10圈/秒  已经非常快了，超过这个速度可能会有安全隐患，限制最高速度为3600
         move_speed = 3600
     elif move_speed < 360:
@@ -276,35 +271,41 @@ def testmultitaskabs():
     elif flip_speed < 360:
         flip_speed = 360    
 
-    if acc_percent>100 or speed_percent>100 or (acc_percent+speed_percent)>100:
-        print("加速度和速度百分比之和不能大于100,设置为默认值")
-        acc_percent = 40
-        speed_percent = 40
+    ####### 动态修改固定动作参数 ####### 
+    # 当前动作组模板
+    template = ACTION_PARAMS_KEYLIST["take_fire_pour"]
+    # 遍历动作树
+    stack = [template]
 
-    acc_bound = round(acc_percent/100,1)
-    dec_bound = round((acc_percent+speed_percent)/100,1)
-   
-    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced_curve(POT_POS_SAFE_FLIP1,flip_speed,acc_bound,dec_bound,False,FLIP_EXITPOS)   
-    success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask_advanced_curve(POT1_POS_INFOOD_LEVEL,move_speed,acc_bound,dec_bound)
-    time.sleep(1)    
-    success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask_advanced_curve(POT1_POS_FIREPOT_LEVEL,move_speed,acc_bound,dec_bound,False,MOVE_EXITPOS)
-    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced_curve(POT1_POS_FIREPOT_FLIP,flip_speed,acc_bound,dec_bound)
-    time.sleep(1)
+    while stack:
+        current_template = stack.pop()
+        for item in current_template:
+            action_name = item[1]
+            # move开头
+            if action_name.startswith("move"):
+                runtime.set_action_override(
+                    action_name,
+                    {
+                        "speed": move_speed
+                    }
+                )
+            # flip开头
+            elif action_name.startswith("flip"):
+                runtime.set_action_override(
+                    action_name,
+                    {
+                        "speed": flip_speed
+                    }
+                )
+            # 存在子动作
+            if len(item) > 2:
+                stack.append(item[2])
 
-    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced_curve(POT_POS_SAFE_FLIP1,flip_speed,acc_bound,dec_bound,False,FLIP_EXITPOS)
-    success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask_advanced_curve(POT1_POS_INFOOD_LEVEL,move_speed,acc_bound,dec_bound)
-   
-    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced_curve(POT1_POS_DROPFOOD_FLIP,flip_speed,acc_bound,dec_bound)
-    time.sleep(1)
-    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced_curve(POT1_POS_WASHPOT_FLIP,flip_speed,acc_bound,dec_bound)
-    time.sleep(1)
-    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced_curve(POT_POS_SAFE_FLIP1,flip_speed,acc_bound,dec_bound,False,FLIP_EXITPOS2)
-
-    success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask_advanced_curve(POT1_POS_FIREPOT_LEVEL,move_speed,acc_bound,dec_bound,False,MOVE_EXITPOS)
-    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced_curve(POT1_POS_FIREPOT_FLIP,flip_speed,acc_bound,dec_bound)
-    
+    action_param = "take_fire_pour"
+    pot_param = 1
+    print("simulate click....")
+    success = cookservice.run_action(action_param,pot_param)
     print("**************************************1号锅测试水平翻转任务结束******************************")
-    
     if success :
         print("测试成功!")
         return jsonify({"status": "success","message": "测试成功!"})
@@ -707,17 +708,16 @@ def testnewstructure():
 
 def run_test_newstructure():
     print("test new structure...")
-    service = get_service()
 
     action_param = "takefood_fire"
     pot_param = 1
     print("simulate click....")
-    service.run_action(action_param,pot_param)
+    cookservice.run_action(action_param,pot_param)
     
     action_param = "takefood_fire"
     pot_param = 2
     print("simulate click2....")
-    service.run_action(action_param,pot_param)
+    cookservice.run_action(action_param,pot_param)
     
 #启动flask后端服务器WEB UI
 def run_flask():

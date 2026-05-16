@@ -1,4 +1,5 @@
 from lib.newstructure.constant import *
+from lib.newstructure.runtime import runtime
 
 class StepBuilder:
 
@@ -36,12 +37,18 @@ class StepBuilder:
             action_name = item[1]
             sub_template = item[2] if len(item) > 2 else None
 
-            action_key = f"{action_name}_{pot_id}"
+            action_key = f"{action_name}"
+
+            default_params = ACTION_PARAMS_CONFIG[action_key]
+            final_params = runtime.get_final_action_params(   #动态修改固定动作，合并处
+                action_key,
+                default_params
+            )
 
             step = {
                 "motor": motor_map[motor_key],
                 "action": action_key,
-                "params": ACTION_PARAMS_CONFIG[action_key]
+                "params": final_params
             }
 
             # 递归处理 on_block

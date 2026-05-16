@@ -112,104 +112,93 @@ ACTION_PARAMS_KEYLIST = {
     "resetzero":[
        ("h","moveh_zero"),
        ("v","movev_zero")
+    ],
+    "take_fire_pour":[
+        ("v", "flip_out_togetfood"),
+        ("h", "move_out_togetfood", [
+            ("h", "move_to_wait"),
+            ("h", "move_to_track"),
+        ]),
+        ("h", "move_in_tofirefood"),
+        ("v", "flip_in_tofirefood"),
+        ("v", "flip_out_togetfood"),
+        ("h", "move_out_togetfood", [
+            ("h", "move_to_wait"),
+            ("h", "move_to_track"),
+        ]),
+        ("v", "flip_out_pour"),
+        ("v", "flip_in_wash"),
+        ("v", "flip_out_getfood"),
+        ("h", "move_in_tofirefood"),
+        ("v", "flip_in_tofirefood")
     ]
 }
 
 #子动作参数KEY->命令参数 映射
 ACTION_PARAMS_CONFIG = {
-    "flip_out_togetfood_1": {
+    "flip_out_togetfood": {
         "speed": 200,
         "target": 4.5,
         "varspeed":False,
         "quitinadvance":0
     },
-    "move_out_togetfood_1": {
+    "move_out_togetfood": {
         "speed": 1000,
         "target":4.6,
         "varspeed":False,
         "quitinadvance":0
     },
-    "move_to_wait_1": {
+    "move_to_wait": {
         "speed": 1000,
         "target":4.6,
         "varspeed":False,
         "quitinadvance":0
     },
-    "move_to_track_1": {
+    "move_to_track": {
         "speed": 1000,
         "target":4.6,
         "varspeed":False,
         "quitinadvance":0
     },
-    "move_in_tofirefood_1": {
+    "move_in_tofirefood": {
         "speed": 1000,
         "target":4.6,
         "varspeed":False,
         "quitinadvance":0
     },
-    "flip_in_tofirefood_1": {
+    "flip_in_tofirefood": {
         "speed": 1000,
         "target":4.6,
         "varspeed":False,
         "quitinadvance":0
     },
-    "flip_out_togetfood_2": {
-        "speed": 200,
-        "target": 4.5,
-        "varspeed":False,
-        "quitinadvance":0
-    },
-    "move_out_togetfood_2": {
+    "flip_out_pour": {
         "speed": 1000,
         "target":4.6,
         "varspeed":False,
         "quitinadvance":0
     },
-    "move_to_wait_2": {
+    "flip_in_wash": {
         "speed": 1000,
         "target":4.6,
         "varspeed":False,
         "quitinadvance":0
     },
-    "move_to_track_2": {
+    "flip_out_getfood": {
         "speed": 1000,
         "target":4.6,
         "varspeed":False,
         "quitinadvance":0
     },
-    "move_in_tofirefood_2": {
+    "move_in_tofirefood": {
         "speed": 1000,
         "target":4.6,
         "varspeed":False,
         "quitinadvance":0
     },
-    "flip_in_tofirefood_2": {
+    "flip_in_tofirefood": {
         "speed": 1000,
         "target":4.6,
-        "varspeed":False,
-        "quitinadvance":0
-    },
-    "moveh_zero_1":{
-        "speed": 10,
-        "target":0,
-        "varspeed":False,
-        "quitinadvance":0
-    },
-    "moveh_zero_2":{
-        "speed": 10,
-        "target":0,
-        "varspeed":False,
-        "quitinadvance":0
-    },
-    "movev_zero_1":{
-        "speed": 10,
-        "target":0,
-        "varspeed":False,
-        "quitinadvance":0
-    },
-    "movev_zero_2":{
-        "speed": 10,
-        "target":0,
         "varspeed":False,
         "quitinadvance":0
     }

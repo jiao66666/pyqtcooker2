@@ -14,7 +14,7 @@ class CookerService:
 _service = None
 _service_lock = threading.Lock()
 
-def get_service():
+def get_cookservice():
     global _service
 
     if _service is None:
@@ -23,3 +23,5 @@ def get_service():
                 _service = CookerService(get_system())
 
     return _service
+
+cookservice = get_cookservice()
