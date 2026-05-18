@@ -1,6 +1,5 @@
 # motor_driver.py
-from lib.basecom import RS485Communication
-from lib.boardtype import *
+from lib.newstructure.constant import *
 from typing import Optional, List, Tuple, Union
 
 # 定义DC电机驱动类-加料电机板

@@ -12,6 +12,7 @@ from lib.newstructure.runtime import runtime
 from lib.newstructure.motorpollingservice import MotorPollingService
 from lib.newstructure.motioncontroller import MotionController
 from lib.newstructure.stepmotor_manager import StepMotorManager
+from lib.newstructure.dcmotordriver import DCMotor
 
 #系统构建中心
 def build_system():
@@ -132,6 +133,10 @@ def buildmotors(bus,boards):
             POT2_FLAVORMOTOR22: FeederMotor("pot2_flavor_motor10", 22, bus, boards["feedermotor"]),
             POT2_FLAVORMOTOR23: FeederMotor("pot2_flavor_motor11", 23, bus, boards["feedermotor"]),
             POT2_FLAVORMOTOR24: FeederMotor("pot2_flavor_motor12", 24, bus, boards["feedermotor"])
+        },
+        "spinmotor":{
+            POT1_SPIN_MOTOR:DCMotor("pot1_spin_motor", 1, bus, boards["spinmotor"]),
+            POT2_SPIN_MOTOR:DCMotor("pot2_spin_motor", 2, bus, boards["spinmotor"])
         }
     }
 

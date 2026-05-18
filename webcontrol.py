@@ -341,11 +341,7 @@ def testdc_command():
     direction = data.get('direction') 
 
     success = False
-    print(f"recv params {dc_speed},{dc_time},{command},{pot},{direction}")
-    if not boardercontrollers.get("boardcontroller3"):
-        print("找不到主板控制器，无法操作")
-        return jsonify({"status": "error","message": "找不到主板控制器，无法操作,请先连接串口"})
-    
+    print(f"recv params {dc_speed},{dc_time},{command},{pot},{direction}") 
     print("收到参数:",dc_speed,dc_time,command,pot)
     
     if pot == 1:
@@ -354,11 +350,11 @@ def testdc_command():
        choosed_motor = POT2_SPIN_MOTOR
        
     if command == "longrun":
-        success =  boardercontrollers["boardcontroller3"].motors[choosed_motor].longrun(direction,dc_speed) 
+        success =  system["motors"]["spinmotor"][choosed_motor].longrun(direction,dc_speed) 
     elif command == "run":
-        success =  boardercontrollers["boardcontroller3"].motors[choosed_motor].run(direction,dc_time,dc_speed)   
+        success =  system["motors"]["spinmotor"][choosed_motor].run(direction,dc_time,dc_speed)   
     elif command == "stop":
-        success =  boardercontrollers["boardcontroller3"].motors[choosed_motor].stop() 
+        success =  system["motors"]["spinmotor"][choosed_motor].stop() 
 
     if success :
         print("测试成功!")
