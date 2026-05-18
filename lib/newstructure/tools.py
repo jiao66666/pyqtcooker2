@@ -1,5 +1,7 @@
 import crcmod
 from lib.newstructure.constant import *
+from lib.newstructure.runtime import runtime
+import sys
 class CRCUtil:
     crc16_func = crcmod.mkCrcFun(
         0x18005,
@@ -57,3 +59,49 @@ def circles_to_pulses(circles, step_angle = 1.8, microsteps = MICRO_STEP):
     # 总脉冲数 = 圈数 * 每圈的脉冲数
     total_pulses = int(circles * pulses_per_revolution)
     return total_pulses     
+
+
+
+
+def apply_action_speed_override(template_name, move_speed, flip_speed):
+    """
+    根据动作模板，动态覆盖动作速度
+    """
+
+    template = ACTION_PARAMS_KEYLIST[template_name]
+
+    stack = [template]
+
+    while stack:
+        current_template = stack.pop()
+
+        for item in current_template:
+            action_name = item[1]
+
+            # move 开头动作
+            if action_name.startswith("move"):
+                runtime.set_action_override(
+                    action_name,
+                    {
+                        "speed": move_speed
+                    }
+                )
+
+            # flip 开头动作
+            elif action_name.startswith("flip"):
+                runtime.set_action_override(
+                    action_name,
+                    {
+                        "speed": flip_speed
+                    }
+                )
+
+            # 子动作树
+            if len(item) > 2:
+                stack.append(item[2])
+
+
+
+def is_dev_mode():
+    """判断是否是测试环境"""
+    return not getattr(sys, 'frozen', False)                

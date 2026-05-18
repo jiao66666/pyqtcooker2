@@ -3,14 +3,13 @@ from flask import Flask, render_template, jsonify,request
 from lib.boardcontroller import BoardController
 from lib.newstructure.constant import *
 import time
-from lib.tools import is_dev_mode,parse_speed_params
+from lib.newstructure.tools import is_dev_mode,apply_action_speed_override
 from lib.websocket_server import WebSocketServer
 import webview
 import threading
 from lib.newstructure.system import run_system,init_system,shutdown_system
 from lib.newstructure.cookservice import cookservice
 from lib.newstructure.system_runtime import system
-from lib.newstructure.runtime import runtime
 
 #  2.0版本Flask Control WEB 后端服务控制程序
 
@@ -271,36 +270,12 @@ def testmultitaskabs():
     elif flip_speed < 360:
         flip_speed = 360    
 
-    ####### 动态修改固定动作参数 ####### 
-    # 当前动作组模板
-    template = ACTION_PARAMS_KEYLIST["take_fire_pour"]
-    # 遍历动作树
-    stack = [template]
-
-    while stack:
-        current_template = stack.pop()
-        for item in current_template:
-            action_name = item[1]
-            # move开头
-            if action_name.startswith("move"):
-                runtime.set_action_override(
-                    action_name,
-                    {
-                        "speed": move_speed
-                    }
-                )
-            # flip开头
-            elif action_name.startswith("flip"):
-                runtime.set_action_override(
-                    action_name,
-                    {
-                        "speed": flip_speed
-                    }
-                )
-            # 存在子动作
-            if len(item) > 2:
-                stack.append(item[2])
-
+  ####### 动态修改固定动作参数 #######
+    apply_action_speed_override(
+        "take_fire_pour",
+        move_speed,
+        flip_speed
+    )
     action_param = "take_fire_pour"
     pot_param = 1
     print("simulate click....")
@@ -312,9 +287,6 @@ def testmultitaskabs():
     else:
         print("测试失败!")
         return jsonify({"status": "fail","message": "测试失败!"})  
-
-
-
 
 @app.route('/testmultiaxis', methods=['POST'])   #绝对位置任务测试
 def testmultiaxis():
