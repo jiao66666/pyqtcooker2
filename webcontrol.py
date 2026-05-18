@@ -1,10 +1,7 @@
 # flaskcontrol.py
 from flask import Flask, render_template, jsonify,request
-from lib.boardcontroller import BoardController
 from lib.newstructure.constant import *
-import time
 from lib.newstructure.tools import is_dev_mode,apply_action_speed_override
-from lib.websocket_server import WebSocketServer
 import webview
 import threading
 from lib.newstructure.system import run_system,init_system,shutdown_system
@@ -420,27 +417,18 @@ def gopos():
 
     success = False
 
-    if not boardercontrollers.get("boardcontroller1"):
-        print("找不到主板控制器，无法操作")
-        return jsonify({"status": "error","message": "找不到主板控制器，无法操作,请先连接串口"})
-    
-    if potnum ==1 :
-        if not boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].homed or not boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].homed:
-            print("电机未归位，无法操作")
-            return jsonify({"status": "error","message": "电机未归位，无法操作,请先复位"})    
-    else:
-        if not boardercontrollers["boardcontroller1"].motors[POT2_FLIP_MOTOR].homed or not boardercontrollers["boardcontroller1"].motors[POT2_MOVE_MOTOR].homed:
-            print("电机未归位，无法操作")
-            return jsonify({"status": "error","message": "电机未归位，无法操作,请先复位"})       
-    
-    if potnum == 1:
-        success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask(POT_POS_SAFE_FLIP1,speed)  
-        success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask(level_pos,speed)  
-        success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask(flip_pos,speed)  
-    elif potnum == 2:
-        success = boardercontrollers["boardcontroller1"].motors[POT2_FLIP_MOTOR].gotask(POT_POS_SAFE_FLIP2,speed)  
-        success = boardercontrollers["boardcontroller1"].motors[POT2_MOVE_MOTOR].gotask(level_pos,speed)  
-        success = boardercontrollers["boardcontroller1"].motors[POT2_FLIP_MOTOR].gotask(flip_pos,speed)    
+    ####### 动态修改固定动作参数 #######
+    apply_action_speed_override(
+        "take_fire_pour",
+        speed,
+        speed,
+        level_pos,
+        flip_pos
+    )
+
+    action_param = "go_to_potpos"
+    pot_param = potnum
+    success = cookservice.run_action(action_param,pot_param)
     
     if success :
         print("测试成功!")
@@ -448,22 +436,6 @@ def gopos():
     else:
         print("测试失败!")
         return jsonify({"status": "fail","message": "测试失败!"})    
-
-
-
-@app.route("/testnewstructure", methods=["POST"])
-def testnewstructure():
-
-    data = request.json
-
-    steps = system["stepbuilder"].build(
-        data["action"],
-        data["pot_id"]
-    )
-
-    system["pots"][data["pot_id"]].submit_task(steps)
-
-    return {"ok": True}
 
 
 def run_test_newstructure():
@@ -512,7 +484,6 @@ def start_system():
         daemon=True
     )
     t.start()
-
 
 if __name__ == '__main__':
     start_server()

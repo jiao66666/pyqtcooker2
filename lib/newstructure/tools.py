@@ -63,9 +63,21 @@ def circles_to_pulses(circles, step_angle = 1.8, microsteps = MICRO_STEP):
 
 
 
-def apply_action_speed_override(template_name, move_speed, flip_speed):
+def apply_action_speed_override(
+    template_name,
+    move_speed=None,
+    flip_speed=None,
+    move_target=None,
+    flip_target=None
+):
     """
-    根据动作模板，动态覆盖动作速度
+    根据动作模板，动态覆盖动作参数
+
+    参数:
+        move_speed   : move动作 speed
+        flip_speed   : flip动作 speed
+        move_target  : move动作 target
+        flip_target  : flip动作 target
     """
 
     template = ACTION_PARAMS_KEYLIST[template_name]
@@ -78,28 +90,40 @@ def apply_action_speed_override(template_name, move_speed, flip_speed):
         for item in current_template:
             action_name = item[1]
 
+            override_data = None
+
             # move 开头动作
             if action_name.startswith("move"):
-                runtime.set_action_override(
-                    action_name,
-                    {
-                        "speed": move_speed
-                    }
-                )
+
+                override_data = {}
+
+                if move_speed is not None:
+                    override_data["speed"] = move_speed
+
+                if move_target is not None:
+                    override_data["target"] = move_target
 
             # flip 开头动作
             elif action_name.startswith("flip"):
+
+                override_data = {}
+
+                if flip_speed is not None:
+                    override_data["speed"] = flip_speed
+
+                if flip_target is not None:
+                    override_data["target"] = flip_target
+
+            # 存在有效覆盖数据才更新
+            if override_data:
                 runtime.set_action_override(
                     action_name,
-                    {
-                        "speed": flip_speed
-                    }
+                    override_data
                 )
 
             # 子动作树
             if len(item) > 2:
                 stack.append(item[2])
-
 
 
 def is_dev_mode():

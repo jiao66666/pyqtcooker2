@@ -131,6 +131,11 @@ ACTION_PARAMS_KEYLIST = {
         ("v", "flip_out_getfood"),
         ("h", "move_in_tofirefood"),
         ("v", "flip_in_tofirefood")
+    ],
+    "go_to_potpos":[
+        ("v","flip_to_safepos"),
+        ("h","move_in_tofirefood"),
+        ("v","flip_in_tofirefood")
     ]
 }
 
@@ -197,6 +202,12 @@ ACTION_PARAMS_CONFIG = {
         "quitinadvance":0
     },
     "flip_in_tofirefood": {
+        "speed": 1000,
+        "target":4.6,
+        "varspeed":False,
+        "quitinadvance":0
+    },
+    "flip_to_safepos":{
         "speed": 1000,
         "target":4.6,
         "varspeed":False,
