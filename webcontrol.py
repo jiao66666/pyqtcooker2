@@ -215,13 +215,13 @@ def resetmotor():
     success = False
     print("收到参数 :", motorid, direction,speed)
 
-    success,resp =  system["motors"]["stepmotor"][int(motorid)].reset_zero()
+    success =  system["motors"]["stepmotor"][int(motorid)].reset_zero()
     if success :
         print("测试复位成功!")
         return jsonify({"status": "success","message": f"复位电机成功!电机：{motorid}，方向：{direction}"})
     else:
         print("测试复位失败!")
-        return jsonify({"status": "fail","message": f"复位电机失败!,电机：{motorid}，错误信息：{resp}"})
+        return jsonify({"status": "fail","message": f"复位电机失败!,电机：{motorid}，错误信息"})
 
 @app.route('/resetmotorpot', methods=['POST'])
 def resetmotorpot():

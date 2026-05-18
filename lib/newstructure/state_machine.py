@@ -103,6 +103,8 @@ class PotStateMachine:
         return action.startswith("move_out_togetfood")
 
     def on_motor_done(self, data):
+        print("电机完成运动@@@@@@@@@@@@@@@@@@@@@@@@")
+
         motor_id = data["motor_id"]    
         ctx = runtime.get(motor_id)
         if not ctx:
