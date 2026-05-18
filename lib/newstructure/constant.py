@@ -110,8 +110,8 @@ ACTION_PARAMS_KEYLIST = {
         ("v", "flip_in_tofirefood"),
     ],
     "resetzero":[
-       ("h","moveh_zero"),
-       ("v","movev_zero")
+       ("h","move_in_tofirefood"),
+       ("v","flip_in_tofirefood")
     ],
     "take_fire_pour":[
         ("v", "flip_out_togetfood"),
@@ -162,13 +162,13 @@ ACTION_PARAMS_CONFIG = {
     },
     "move_in_tofirefood": {
         "speed": 1000,
-        "target":4.6,
+        "target":0,
         "varspeed":False,
         "quitinadvance":0
     },
     "flip_in_tofirefood": {
         "speed": 1000,
-        "target":4.6,
+        "target":0,
         "varspeed":False,
         "quitinadvance":0
     },

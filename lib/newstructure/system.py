@@ -1,5 +1,6 @@
 from lib.newstructure.eventbus import EventBus
-from lib.newstructure.stepmotor import StepMotor
+from lib.newstructure.stepmotordriver import StepMotor
+from lib.newstructure.dcmotordriver import DCMotor
 from lib.newstructure.fdmotordriver import FeederMotor
 from lib.newstructure.state_machine import PotStateMachine
 from lib.newstructure.scancycle import ScanCycle
@@ -12,7 +13,6 @@ from lib.newstructure.runtime import runtime
 from lib.newstructure.motorpollingservice import MotorPollingService
 from lib.newstructure.motioncontroller import MotionController
 from lib.newstructure.stepmotor_manager import StepMotorManager
-from lib.newstructure.dcmotordriver import DCMotor
 
 #系统构建中心
 def build_system():
