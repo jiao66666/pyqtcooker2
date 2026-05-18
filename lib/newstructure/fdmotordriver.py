@@ -15,10 +15,8 @@ class FeederMotor:
         self.name = name
         self.board_id = self.com.board_id
         self.bus = bus
-
         self.overtime = 1000  # 默认加料电机持续运行时间1秒
 
-        
     def ping(self):
         print("测试加料板连通性....")
         self.com.execute_command_async(
@@ -28,11 +26,9 @@ class FeederMotor:
        
         return True      
 
-
     def run(self, overtime:int):
         """运转加料电机"""  ##相对运动
         print("####运行加料电机####")
-
         self.overtime = overtime  # 更新持续运行时间
          # 发送运行命令,默认使用模式0（按持续时间开锁），锁开启后反馈为高电平(1)
         self.com.execute_command_async(

@@ -17,11 +17,7 @@ class DCMotor:
     def stop(self):
         """急停电机"""
         print("####急停电机####")
-        if not self.com or not self.com.connected:
-            print("错误: 串口未连接，无法运行电机")
-            return False
         print(f"[{self.name}] ID:{self.motor_id} 急停中... 主板类型:{self.board_id}")
-      
          # 发送运行命令
         self.com.execute_command_async(
             "STOP", 
@@ -34,9 +30,6 @@ class DCMotor:
     def longrun(self,direction,speed):
         """长运行DC电机"""
         print("####长运行DC电机####")
-        if not self.com or not self.com.connected:
-            print("错误: 串口未连接，无法运行电机")
-            return False
         print(f"[{self.name}] ID:{self.motor_id} 长运行DC电机...,方向:{direction}，速度：{speed} 主板类型:{self.board_id}")
       
          # 发送运行命令
@@ -51,9 +44,6 @@ class DCMotor:
     def run(self,direction,time,speed):
         """运行DC电机"""
         print("####运行DC电机####")
-        if not self.com or not self.com.connected:
-            print("错误: 串口未连接，无法运行电机")
-            return False
         print(f"[{self.name}] ID:{self.motor_id} 运行DC电机...方向:{direction},运行时间:{time},速度:{speed} ,主板类型:{self.board_id}")
       
         if direction >0 :
@@ -75,9 +65,6 @@ class DCMotor:
     def setspeed(self,speed):
         """设置电机速度"""
         print("####设置电机速度####")
-        if not self.com or not self.com.connected:
-            print("错误: 串口未连接，无法运行电机")
-            return False
         print(f"[{self.name}] ID:{self.motor_id} 设置DC电机速度... 主板类型:{self.board_id}")
       
          # 发送运行命令
@@ -91,9 +78,6 @@ class DCMotor:
     def allrun(self,direction1,time1,speed1,direction2,time2,speed2):
         """设置全部电机旋转"""
         print("####设置全部电机旋转####")
-        if not self.com or not self.com.connected:
-            print("错误: 串口未连接，无法运行电机")
-            return False
         print(f"[{self.name}] ID:{self.motor_id} 设置DC电机全部旋转... 主板类型:{self.board_id}")
       
         if direction1 >0 :
@@ -117,9 +101,6 @@ class DCMotor:
     def getpowerinfo(self):
         """获取电流电压温度相关信息"""
         print("####获取电流电压温度关信息####")
-        if not self.com or not self.com.connected:
-            print("错误: 串口未连接，无法运行电机")
-            return False
         print(f"[{self.name}] ID:{self.motor_id} 获取电流电压温度相关信息... 主板类型:{self.board_id}")
       
          # 发送运行命令
@@ -134,9 +115,6 @@ class DCMotor:
     def getmotorinfo(self):
         """获取电机相关信息"""
         print("####获取电机相关信息####")
-        if not self.com or not self.com.connected:
-            print("错误: 串口未连接，无法运行电机")
-            return False
         print(f"[{self.name}] ID:{self.motor_id} 获取电机相关信息... 主板类型:{self.board_id}")
     
         # 发送运行命令
@@ -150,9 +128,6 @@ class DCMotor:
     def geterrorinfo(self):
         """获取电机相关错误信息"""
         print("####获取电机相关错误信息####")
-        if not self.com or not self.com.connected:
-            print("错误: 串口未连接，无法运行电机")
-            return False
         print(f"[{self.name}] ID:{self.motor_id} 获取电机相关信息... 主板类型:{self.board_id}")
     
         # 发送运行命令
@@ -166,9 +141,6 @@ class DCMotor:
     def getrpminfo(self):
         """获取电机转速信息"""
         print("####获取电机转速信息####")
-        if not self.com or not self.com.connected:
-            print("错误: 串口未连接，无法运行电机")
-            return False
         print(f"[{self.name}] ID:{self.motor_id} 获取电机相关信息... 主板类型:{self.board_id}")
     
         # 发送运行命令

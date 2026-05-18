@@ -72,9 +72,6 @@ class StepMotor:
     def go(self, target: float, anglespeed: int):  # 回零后进行绝对运动，水平离开0点位置 为正值，翻转离开0点 逆时针为正值 ，顺时值为负值
         """单次运转电机"""  ##绝对运动
         print("####运行电机####")
-        if not self.com or not self.com.connected:
-            print("错误: 串口未连接，无法运行电机")
-            return False
         print(f"[{self.name}] ID:{self.motor_id} 运行到位置{target}, 角速度 {anglespeed}, 主板类型:{self.board_id}")
  
         #if not self.homed:
@@ -123,11 +120,6 @@ class StepMotor:
         """异步运行电机（基于通信队列，无线程）"""
 
         print("####运行电机####")
-
-        if not self.com or not self.com.connected:
-            print("错误: 串口未连接，无法运行电机")
-            return False
-
         if self.cmd_running :
             print("命令还在运行中")
             return False
@@ -162,9 +154,6 @@ class StepMotor:
     def runlong(self, anglespeed: int, direction: int):
         """长运转电机"""
         print("####运行电机####")
-        if not self.com or not self.com.connected:
-            print("错误: 串口未连接，无法运行电机")
-            return False
         print(f"[{self.name}] ID:{self.motor_id} 连续运行, 角速度 {anglespeed}, 主板类型:{self.board_id}")
 
             # 发送运行命令  优先级CONTROL 1
@@ -180,9 +169,6 @@ class StepMotor:
     def pause(self):
         """暂停电机"""
         print("####暂停电机####")
-        if not self.com or not self.com.connected:
-            print("错误: 串口未连接，无法运行电机")
-            return False
         print(f"[{self.name}] ID:{self.motor_id} 暂停中... 主板类型:{self.board_id}")
       
          # 发送运行命令
@@ -197,9 +183,6 @@ class StepMotor:
     def stop(self):
         """急停电机"""
         print("####急停电机####")
-        if not self.com or not self.com.connected:
-            print("错误: 串口未连接，无法运行电机")
-            return False
         print(f"[{self.name}] ID:{self.motor_id} 急停中... 主板类型:{self.board_id}")
       
          # 发送运行命令
@@ -214,9 +197,6 @@ class StepMotor:
     def reset_zero(self)-> Tuple[bool, List[str]]:
         """复位单个电机"""
         print("####复位电机####")
-        if not self.com or not self.com.connected:
-            print("错误: 串口未连接，无法运行电机")
-            return False
         print(f"[{self.name}] ID:{self.motor_id} 运行 复位电机【{self.name}】, 主板类型:{self.board_id}")
         # 复位脉冲数
         pulses = RESET_PULSES
@@ -241,7 +221,6 @@ class StepMotor:
             priority = PRIORITY_CONTROL
         )
  
-
         self.current_position = 0
         self.homed = True
     
