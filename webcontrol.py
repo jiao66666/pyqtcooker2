@@ -288,29 +288,17 @@ def testmultitaskabs():
         print("测试失败!")
         return jsonify({"status": "fail","message": "测试失败!"})  
 
-@app.route('/testmultiaxis', methods=['POST'])   #绝对位置任务测试
-def testmultiaxis():
-    print("1号多轴同步运动任务开始")
+@app.route('/testmultitaskabs2', methods=['POST'])   #绝对位置任务测试
+def testmultitaskabs2():
+    print("2号锅测试水平翻转任务开始")
     data = request.get_json()
     speed_level = data.get('speed_level') 
     speed_flip = data.get('speed_flip') 
-    exit_pos = data.get('exit_pos')
+   
     success = False
-    if not boardercontrollers.get("boardcontroller1"):
-        print("找不到主板控制器，无法操作")
-        return jsonify({"status": "error","message": "找不到主板控制器，无法操作,请先连接串口"})
-    success = False
-    if not boardercontrollers.get("boardcontroller1"):
-        print("找不到主板控制器，无法操作")
-        return jsonify({"status": "error","message": "找不到主板控制器，无法操作,请先连接串口"})
-    
-    if not boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].homed or not boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].homed:
-        print("电机未归位，无法操作")
-        return jsonify({"status": "error","message": "电机未归位，无法操作,请先复位"})
 
     #runtask参数：[圈数，速度，方向]
-    print("**************************************1号多轴同步运动任务开始开始******************************")
-
+    print("**************************************2号锅测试水平翻转任务开始******************************")
     move_speed = int(speed_level)   #2160  tested
     flip_speed = int(speed_flip)   #2520  tested 
 
@@ -324,140 +312,23 @@ def testmultiaxis():
     elif flip_speed < 360:
         flip_speed = 360    
 
-    acc_bound = 0.2
-    dec_bound = 0.6 
-
-    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced_curve(POT_POS_SAFE_FLIP1,flip_speed,acc_bound,dec_bound,False,float(exit_pos))  
-    success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask_advanced_curve(POT1_POS_INFOOD_LEVEL,move_speed)
-    
-
-    print("**************************************1号多轴同步运动任务开始任务结束******************************")
-
+    ####### 动态修改固定动作参数 #######
+    apply_action_speed_override(
+        "take_fire_pour",
+        move_speed,
+        flip_speed
+    )
+    action_param = "take_fire_pour"
+    pot_param = 1
+    print("simulate click....")
+    success = cookservice.run_action(action_param,pot_param)
+    print("**************************************2号锅测试水平翻转任务结束******************************")
     if success :
         print("测试成功!")
         return jsonify({"status": "success","message": "测试成功!"})
     else:
         print("测试失败!")
         return jsonify({"status": "fail","message": "测试失败!"})  
-
-
-
-@app.route('/testmultiaxis2', methods=['POST'])   #绝对位置任务测试
-def testmultiaxis2():
-    print("1号多轴同步运动任务2开始")
-    data = request.get_json()
-    speed_level = data.get('speed_level') 
-    speed_flip = data.get('speed_flip') 
-    exit_pos = data.get('exit_pos')
-
-    success = False
-    if not boardercontrollers.get("boardcontroller1"):
-        print("找不到主板控制器，无法操作")
-        return jsonify({"status": "error","message": "找不到主板控制器，无法操作,请先连接串口"})
-    success = False
-    if not boardercontrollers.get("boardcontroller1"):
-        print("找不到主板控制器，无法操作")
-        return jsonify({"status": "error","message": "找不到主板控制器，无法操作,请先连接串口"})
-    
-    if not boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].homed or not boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].homed:
-        print("电机未归位，无法操作")
-        return jsonify({"status": "error","message": "电机未归位，无法操作,请先复位"})
-
-    #runtask参数：[圈数，速度，方向]
-    print("**************************************1号多轴同步运动任务2开始开始******************************")
-
-    move_speed = int(speed_level)   #2160  tested
-    flip_speed = int(speed_flip)   #2520  tested 
-
-    if move_speed > 3600:   #  10圈/秒  已经非常快了，超过这个速度可能会有安全隐患，限制最高速度为3600
-        move_speed = 3600
-    elif move_speed < 360:
-        move_speed = 360
-
-    if flip_speed > 3600:   
-        flip_speed = 3600
-    elif flip_speed < 360:
-        flip_speed = 360    
-
-
-    acc_bound = 0.2
-    dec_bound = 0.6 
-
-    success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask_advanced_curve(POT1_POS_FIREPOT_LEVEL,move_speed,acc_bound,dec_bound,False,float(exit_pos))
-    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced_curve(POT1_POS_FIREPOT_FLIP,flip_speed)  
-    
-    
-
-    print("**************************************1号多轴同步运动任务2开始任务结束******************************")
-
-    if success :
-        print("测试成功!")
-        return jsonify({"status": "success","message": "测试成功!"})
-    else:
-        print("测试失败!")
-        return jsonify({"status": "fail","message": "测试失败!"})  
-    
-
-
-@app.route('/testmultiaxis3', methods=['POST'])   #绝对位置任务测试
-def testmultiaxis3():
-    print("1号多轴同步运动任务3开始")
-    data = request.get_json()
-    speed_level = data.get('speed_level') 
-    speed_flip = data.get('speed_flip') 
-    exit_pos = data.get('exit_pos')
-
-    success = False
-    if not boardercontrollers.get("boardcontroller1"):
-        print("找不到主板控制器，无法操作")
-        return jsonify({"status": "error","message": "找不到主板控制器，无法操作,请先连接串口"})
-    success = False
-    if not boardercontrollers.get("boardcontroller1"):
-        print("找不到主板控制器，无法操作")
-        return jsonify({"status": "error","message": "找不到主板控制器，无法操作,请先连接串口"})
-    
-    if not boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].homed or not boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].homed:
-        print("电机未归位，无法操作")
-        return jsonify({"status": "error","message": "电机未归位，无法操作,请先复位"})
-
-    #runtask参数：[圈数，速度，方向]
-    print("**************************************1号多轴同步运动任务3开始开始******************************")
-
-    move_speed = int(speed_level)   #2160  tested
-    flip_speed = int(speed_flip)   #2520  tested 
-
-    if move_speed > 3600:   #  10圈/秒  已经非常快了，超过这个速度可能会有安全隐患，限制最高速度为3600
-        move_speed = 3600
-    elif move_speed < 360:
-        move_speed = 360
-
-    if flip_speed > 3600:   
-        flip_speed = 3600
-    elif flip_speed < 360:
-        flip_speed = 360    
-
-
-    acc_bound = 0.2
-    dec_bound = 0.6 
-
-    success = boardercontrollers["boardcontroller1"].motors[POT1_FLIP_MOTOR].gotask_advanced_curve(POT_POS_SAFE_FLIP1,flip_speed,acc_bound,dec_bound,False,float(exit_pos))  
-    success = boardercontrollers["boardcontroller1"].motors[POT1_MOVE_MOTOR].gotask_advanced_curve(POT1_POS_FIREPOT_LEVEL,move_speed)
-    
-
-    print("**************************************1号多轴同步运动任务3开始任务结束******************************")
-
-    if success :
-        print("测试成功!")
-        return jsonify({"status": "success","message": "测试成功!"})
-    else:
-        print("测试失败!")
-        return jsonify({"status": "fail","message": "测试失败!"})  
-
-
-
-
-  
-
 
 @app.route('/testdc_command', methods=['POST'])
 def testdc_command():
@@ -495,85 +366,6 @@ def testdc_command():
     else:
         print("测试失败!")
         return jsonify({"status": "fail","message": "测试失败!"})    
-
-
-
-
-
-
-
-
-
-@app.route('/testmultitaskabs2', methods=['POST'])   #绝对位置任务测试
-def testmultitaskabs2():
-    print("2号锅测试水平翻转任务开始")
-    data = request.get_json()
-    speed_level = data.get('speed_level') 
-    speed_flip = data.get('speed_flip') 
-    acc_percent = data.get('acc_percent') 
-    speed_percent = data.get('speed_percent') 
-    acc_percent = int(acc_percent)   # 0-100
-    speed_percent = int(speed_percent)   # 0-100
-
-    success = False
-    if not boardercontrollers.get("boardcontroller1"):
-        print("找不到主板控制器，无法操作")
-        return jsonify({"status": "error","message": "找不到主板控制器，无法操作,请先连接串口"})
-    
-    if not boardercontrollers["boardcontroller1"].motors[POT2_FLIP_MOTOR].homed or not boardercontrollers["boardcontroller1"].motors[POT2_MOVE_MOTOR].homed:
-        print("电机未归位，无法操作")
-        return jsonify({"status": "error","message": "电机未归位，无法操作,请先复位"})
-
-    #runtask参数：[圈数，速度，方向]
-    print("**************************************2号锅测试水平翻转任务开始******************************")
-    move_speed = int(speed_level)   #2160  tested
-    flip_speed = int(speed_flip)   #2520  tested 
-
-    if move_speed > 3600:   #  10圈/秒  已经非常快了，超过这个速度可能会有安全隐患，限制最高速度为3600
-        move_speed = 3600
-    elif move_speed < 360:
-        move_speed = 360
-
-    if flip_speed > 3600:   
-        flip_speed = 3600
-    elif flip_speed < 360:
-        flip_speed = 360    
-
-    if acc_percent>100 or speed_percent>100 or (acc_percent+speed_percent)>100:
-        print("加速度和速度百分比之和不能大于100,设置为默认值")
-        acc_percent = 40
-        speed_percent = 40
-
-    acc_bound = round(acc_percent/100,1)
-    dec_bound = round((acc_percent+speed_percent)/100,1)
-
-    success = boardercontrollers["boardcontroller1"].motors[POT2_FLIP_MOTOR].gotask_advanced_curve(POT_POS_SAFE_FLIP2,flip_speed,acc_bound,dec_bound)   
-    success = boardercontrollers["boardcontroller1"].motors[POT2_MOVE_MOTOR].gotask_advanced_curve(POT2_POS_INFOOD_LEVEL,move_speed,acc_bound,dec_bound)
-    time.sleep(1)    
-    success = boardercontrollers["boardcontroller1"].motors[POT2_MOVE_MOTOR].gotask_advanced_curve(POT2_POS_FIREPOT_LEVEL,move_speed,acc_bound,dec_bound)
-    success = boardercontrollers["boardcontroller1"].motors[POT2_FLIP_MOTOR].gotask_advanced_curve(POT2_POS_FIREPOT_FLIP,flip_speed,acc_bound,dec_bound)
-    time.sleep(1)
-
-    success = boardercontrollers["boardcontroller1"].motors[POT2_FLIP_MOTOR].gotask_advanced_curve(POT_POS_SAFE_FLIP2,flip_speed,acc_bound,dec_bound)
-    success = boardercontrollers["boardcontroller1"].motors[POT2_MOVE_MOTOR].gotask_advanced_curve(POT2_POS_INFOOD_LEVEL,move_speed,acc_bound,dec_bound)
-   
-    success = boardercontrollers["boardcontroller1"].motors[POT2_FLIP_MOTOR].gotask_advanced_curve(POT2_POS_DROPFOOD_FLIP,flip_speed,acc_bound,dec_bound)
-    time.sleep(1)
-    success = boardercontrollers["boardcontroller1"].motors[POT2_FLIP_MOTOR].gotask_advanced_curve(POT2_POS_WASHPOT_FLIP,flip_speed,acc_bound,dec_bound)
-    time.sleep(1)
-    success = boardercontrollers["boardcontroller1"].motors[POT2_FLIP_MOTOR].gotask_advanced_curve(POT_POS_SAFE_FLIP2,flip_speed,acc_bound,dec_bound)
-
-    success = boardercontrollers["boardcontroller1"].motors[POT2_MOVE_MOTOR].gotask_advanced_curve(POT2_POS_FIREPOT_LEVEL,move_speed,acc_bound,dec_bound)
-    success = boardercontrollers["boardcontroller1"].motors[POT2_FLIP_MOTOR].gotask_advanced_curve(POT2_POS_FIREPOT_FLIP,flip_speed,acc_bound,dec_bound)
-    print("**************************************2号锅测试水平翻转任务结束******************************")
-
-    if success :
-        print("测试成功!")
-        return jsonify({"status": "success","message": "测试成功!"})
-    else:
-        print("测试失败!")
-        return jsonify({"status": "fail","message": "测试失败!"})  
-
 
 @app.route('/gopos', methods=['POST'])
 def gopos():
