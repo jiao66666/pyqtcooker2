@@ -9,10 +9,7 @@ from lib.newstructure.cookservice import cookservice
 from lib.newstructure.system_runtime import system
 
 #  2.0版本Flask Control WEB 后端服务控制程序
-
 app = Flask(__name__)
-
-boardercontrollers = {}
 
 # 根据传入的命令行参数设置端口,方便测试和生产环境使用不同的端口
 if is_dev_mode():
