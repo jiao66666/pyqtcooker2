@@ -253,18 +253,10 @@ def testmultitaskabs():
     print("**************************************1号锅测试水平翻转任务开始******************************")
     move_speed = int(speed_level)   
     flip_speed = int(speed_flip)    
-   
-    if move_speed > 3600:   #  10圈/秒  已经非常快了，超过这个速度可能会有安全隐患，限制最高速度为3600
-        move_speed = 3600
-    elif move_speed < 360:
-        move_speed = 360
+    move_speed = max(360, min(move_speed, 3600))
+    flip_speed = max(360, min(flip_speed, 3600))
 
-    if flip_speed > 3600:   
-        flip_speed = 3600
-    elif flip_speed < 360:
-        flip_speed = 360    
-
-  ####### 动态修改固定动作参数 #######
+    ####### 动态修改固定动作参数 #######
     apply_action_speed_override(
         "take_fire_pour",
         move_speed,
@@ -295,16 +287,8 @@ def testmultitaskabs2():
     print("**************************************2号锅测试水平翻转任务开始******************************")
     move_speed = int(speed_level)   #2160  tested
     flip_speed = int(speed_flip)   #2520  tested 
-
-    if move_speed > 3600:   #  10圈/秒  已经非常快了，超过这个速度可能会有安全隐患，限制最高速度为3600
-        move_speed = 3600
-    elif move_speed < 360:
-        move_speed = 360
-
-    if flip_speed > 3600:   
-        flip_speed = 3600
-    elif flip_speed < 360:
-        flip_speed = 360    
+    move_speed = max(360, min(move_speed, 3600))
+    flip_speed = max(360, min(flip_speed, 3600))
 
     ####### 动态修改固定动作参数 #######
     apply_action_speed_override(
@@ -366,13 +350,9 @@ def gopos():
     speed= int(data.get('speed')) 
     
     speed = speed * 360  # 转换为电机实际速度值
-    if speed > 3600:   
-        speed = 3600
-    elif speed < 360:
-        speed = 360
+    speed = max(360, min(speed, 3600))
 
     success = False
-
     pos_info = get_pot_pos(potnum,postype)
     ####### 动态修改固定动作参数 #######
     apply_action_speed_override(
