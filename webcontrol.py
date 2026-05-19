@@ -1,7 +1,7 @@
 # flaskcontrol.py
 from flask import Flask, render_template, jsonify,request
 from lib.newstructure.constant import *
-from lib.newstructure.tools import is_dev_mode,apply_action_speed_override
+from lib.newstructure.tools import is_dev_mode,apply_action_speed_override,get_pot_pos
 import webview
 import threading
 from lib.newstructure.system import run_system,init_system,shutdown_system
@@ -368,47 +368,6 @@ def gopos():
     postype = str(data.get('postype')) 
     speed= int(data.get('speed')) 
     
-    if potnum == 1:
-        if postype == 'pos_outfood':
-            print("移动到外倒料口1")
-            flip_pos = POT1_POS_OUTFOOD_FLIP
-            level_pos = POT1_POS_OUTFOOD_LEVEL
-        elif postype == 'pos_infood':
-            print("移动到内倒料口1")
-            flip_pos = POT1_POS_INFOOD_FLIP
-            level_pos = POT1_POS_INFOOD_LEVEL
-        elif postype == 'pos_washpot':
-            print("移动到洗锅位置1")
-            flip_pos = POT1_POS_WASHPOT_FLIP
-            level_pos = POT1_POS_WASHPOT_LEVEL
-        elif postype == 'pos_firepot':
-            flip_pos = POT1_POS_FIREPOT_FLIP
-            level_pos = POT1_POS_FIREPOT_LEVEL
-            print("移动到灶位1")        
-        else:
-            print("未知位置")
-            return jsonify({"status": "fail","message": "未知位置"})
-    else:
-        if postype == 'pos_outfood':
-            print("移动到外倒料口2")
-            flip_pos = POT2_POS_OUTFOOD_FLIP
-            level_pos = POT2_POS_OUTFOOD_LEVEL
-        elif postype == 'pos_infood':
-            print("移动到内倒料口2")
-            flip_pos = POT2_POS_INFOOD_FLIP
-            level_pos = POT2_POS_INFOOD_LEVEL
-        elif postype == 'pos_washpot':
-            print("移动到洗锅位置2")
-            flip_pos = POT2_POS_WASHPOT_FLIP
-            level_pos = POT2_POS_WASHPOT_LEVEL
-        elif postype == 'pos_firepot':
-            flip_pos = POT2_POS_FIREPOT_FLIP
-            level_pos = POT2_POS_FIREPOT_LEVEL
-            print("移动到灶位2")        
-        else:
-            print("未知位置")
-            return jsonify({"status": "fail","message": "未知位置"})
-
     speed = speed * 360  # 转换为电机实际速度值
     if speed > 3600:   
         speed = 3600
@@ -417,13 +376,14 @@ def gopos():
 
     success = False
 
+    pos_info = get_pot_pos(potnum,postype)
     ####### 动态修改固定动作参数 #######
     apply_action_speed_override(
         "take_fire_pour",
         speed,
         speed,
-        level_pos,
-        flip_pos
+        pos_info["level_pos"],
+        pos_info["flip_pos"]
     )
 
     action_param = "go_to_potpos"

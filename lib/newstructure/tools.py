@@ -126,6 +126,52 @@ def apply_action_speed_override(
                 stack.append(item[2])
 
 
+def get_pot_pos(potnum,postype):
+    if potnum == 1:
+        if postype == 'pos_outfood':
+            print("移动到外倒料口1")
+            flip_pos = POT1_POS_OUTFOOD_FLIP
+            level_pos = POT1_POS_OUTFOOD_LEVEL
+        elif postype == 'pos_infood':
+            print("移动到内倒料口1")
+            flip_pos = POT1_POS_INFOOD_FLIP
+            level_pos = POT1_POS_INFOOD_LEVEL
+        elif postype == 'pos_washpot':
+            print("移动到洗锅位置1")
+            flip_pos = POT1_POS_WASHPOT_FLIP
+            level_pos = POT1_POS_WASHPOT_LEVEL
+        elif postype == 'pos_firepot':
+            flip_pos = POT1_POS_FIREPOT_FLIP
+            level_pos = POT1_POS_FIREPOT_LEVEL
+            print("移动到灶位1")        
+        else:
+            print("未知位置")
+            flip_pos = 0
+            level_pos = 0
+    else:
+        if postype == 'pos_outfood':
+            print("移动到外倒料口2")
+            flip_pos = POT2_POS_OUTFOOD_FLIP
+            level_pos = POT2_POS_OUTFOOD_LEVEL
+        elif postype == 'pos_infood':
+            print("移动到内倒料口2")
+            flip_pos = POT2_POS_INFOOD_FLIP
+            level_pos = POT2_POS_INFOOD_LEVEL
+        elif postype == 'pos_washpot':
+            print("移动到洗锅位置2")
+            flip_pos = POT2_POS_WASHPOT_FLIP
+            level_pos = POT2_POS_WASHPOT_LEVEL
+        elif postype == 'pos_firepot':
+            flip_pos = POT2_POS_FIREPOT_FLIP
+            level_pos = POT2_POS_FIREPOT_LEVEL
+            print("移动到灶位2")        
+        else:
+            print("未知位置")
+            flip_pos = 0
+            level_pos = 0
+        
+    return {"flip_pos":flip_pos,"level_pos":level_pos}
+
 def is_dev_mode():
     """判断是否是测试环境"""
     return not getattr(sys, 'frozen', False)                
