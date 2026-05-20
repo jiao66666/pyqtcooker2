@@ -16,14 +16,21 @@ class PotStateMachine:
         self.command_queue = queue.Queue()
         self.wait_start_time = 0
         self.motioncontroller = motioncontroller
+        self.running_tasks = set()
+        self.running_taskname = None
 
         
         # 订阅电机完成事件
         self.bus.subscribe("MOTOR_DONE", self.on_motor_done)
-    def submit_task(self, steps):
+    def submit_task(self, action_name,steps):
+        if action_name in self.running_tasks:
+           print("任务还在执行中，请稍后...")
+           return False
+        self.running_tasks.add(action_name)
+        self.running_taskname = action_name
         self.command_queue.put(steps)
         print("submitt task OK@!>>>>")
-
+        print(self.command_queue.qsize())
 
     def tick(self):
         if self.state in ["STOPPED", "ERROR"]:
@@ -125,5 +132,6 @@ class PotStateMachine:
 
         if self.current_step >= len(self.steps):
             self.state = "DONE"
+            self.running_tasks.remove(self.running_taskname)
         else:
             self.state = "RUNNING"
