@@ -22,12 +22,12 @@ class PotStateMachine:
         
         # 订阅电机完成事件
         self.bus.subscribe("MOTOR_DONE", self.on_motor_done)
-    def submit_task(self, action_name,steps):
-        if action_name in self.running_tasks:
+    def submit_task(self, task_name,steps):
+        if task_name in self.running_tasks:
            print("任务还在执行中，请稍后...")
            return False
-        self.running_tasks.add(action_name)
-        self.running_taskname = action_name
+        self.running_tasks.add(task_name)
+        self.running_taskname = task_name
         self.command_queue.put(steps)
         print("submitt task OK@!>>>>")
         print(self.command_queue.qsize())

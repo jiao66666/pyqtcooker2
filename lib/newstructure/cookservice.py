@@ -5,9 +5,9 @@ class CookerService:
         self.system = system
 
     # 运行锅电机动作组
-    def run_action(self, action_name, pot_id):
-        steps = self.system["stepbuilder"].build(action_name, pot_id)
-        self.system["pots"][pot_id].submit_task(action_name,steps)
+    def run_action(self, task_name, pot_id):
+        steps = self.system["stepbuilder"].build(task_name, pot_id)
+        self.system["pots"][pot_id].submit_task(task_name,steps)
         return True
 
 
