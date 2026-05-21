@@ -13,6 +13,8 @@ from lib.newstructure.runtime import runtime
 from lib.newstructure.motorpollingservice import MotorPollingService
 from lib.newstructure.motioncontroller import MotionController
 from lib.newstructure.stepmotor_manager import StepMotorManager
+from lib.newstructure.command_dispatcher import CommandDispatcher
+from lib.newstructure.taskresourcemanager import TaskResourceManager
 
 #系统构建中心
 def build_system():
@@ -36,6 +38,9 @@ def build_system():
 
     from lib.newstructure.websocket_server import WebSocketServer
     websocket_server = WebSocketServer()
+
+    resource_manager = TaskResourceManager()
+    dispatcher = CommandDispatcher(resource_manager)
     
     return {
         "bus": bus,
@@ -50,7 +55,8 @@ def build_system():
         "boards":boards,
         "websocket":websocket_server,
         "motors":motors,
-        "motorsmanager":motors_manager
+        "motorsmanager":motors_manager,
+        "dispatcher":dispatcher
     }
 
 

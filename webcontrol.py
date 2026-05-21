@@ -110,8 +110,7 @@ def runlong():
     speed = data.get('speed')  
     success = False
     print("收到参数 :", motorid, direction,speed)
-
-    success =  system["motors"]["stepmotor"][int(motorid)].runlong(int(int(speed)*360),int(direction))
+    success =  cookservice.run_single_action(motorid,"runlong",{"speed":int(int(speed)*360),"direction":int(direction)})
     if success :
         print("电机长运转成功!")
         return jsonify({"status": "success","message": f"长运行成功!电机：{motorid}，方向：{direction}，速度：{speed}"})
@@ -130,7 +129,7 @@ def run():
     success = False
     print("收到参数 :", motorid, direction,speed)
 
-    success =  system["motors"]["stepmotor"][int(motorid)].run(float(circles),int(int(speed)*360),int(direction))
+    success =  cookservice.run_single_action(motorid,"run",{"circle":float(circles),"speed":int(int(speed)*360),"direction":int(direction)})
     if success :
         print("电机单次运转成功!")
         return jsonify({"status": "success","message": f"单运行成功!电机：{motorid}，方向：{direction}，速度：{speed}"})
@@ -149,7 +148,7 @@ def runabs():
     success = False
     print("收到参数 :", motorid, direction,speed)
       
-    success =  system["motors"]["stepmotor"][int(motorid)].go(float(circles),int(int(speed)*360))
+    success =  cookservice.run_single_action(motorid,"go",{"target":float(circles),"anglespeed":int(int(speed)*360)})
     currentpos = system["motors"]["stepmotor"][int(motorid)].current_position
     if success :
         print("电机单次运转成功!")
@@ -166,7 +165,7 @@ def pause():
     success = False
     print("收到参数 :", motorid)
 
-    success =  system["motors"]["stepmotor"][int(motorid)].pause()
+    success =  cookservice.run_control_cmd(motorid,"pause",{})
     if success :
         print("电机暂停成功!")
         return jsonify({"status": "success","message": "电机暂停成功!"})
@@ -182,7 +181,7 @@ def stop():
     success = False
     print("收到参数 :", motorid)
 
-    success = system["motors"]["stepmotor"][int(motorid)].stop()
+    success = cookservice.run_control_cmd(motorid,"stop",{})
     if success :
         print("电机暂停成功!")
         return jsonify({"status": "success","message": "电机暂停成功!"})
@@ -212,7 +211,7 @@ def resetmotor():
     success = False
     print("收到参数 :", motorid, direction,speed)
 
-    success =  system["motors"]["stepmotor"][int(motorid)].reset_zero()
+    success =  cookservice.run_single_action(motorid,"reset",{})
     if success :
         print("测试复位成功!")
         return jsonify({"status": "success","message": f"复位电机成功!电机：{motorid}，方向：{direction}"})
@@ -231,8 +230,7 @@ def resetmotorpot():
     action_param = "resetzero"
     pot_param = potnum
     print("run resetmotorpot action now.........")
-    success = cookservice.run_action(action_param,pot_param)
-           
+    success = cookservice.run_task(action_param,pot_param)
     if success :
         print("测试复位成功!")
         return jsonify({"status": "success","message": f"复位电机成功!锅号：{potnum}"})
@@ -265,7 +263,7 @@ def testmultitaskabs():
     action_param = "take_fire_pour"
     pot_param = 1
     print("simulate click....")
-    success = cookservice.run_action(action_param,pot_param)
+    success = cookservice.run_task(action_param,pot_param)
     print("**************************************1号锅测试水平翻转任务结束******************************")
     if success :
         print("测试成功!")
@@ -299,7 +297,7 @@ def testmultitaskabs2():
     action_param = "take_fire_pour"
     pot_param = 1
     print("simulate click....")
-    success = cookservice.run_action(action_param,pot_param)
+    success = cookservice.run_task(action_param,pot_param)
     print("**************************************2号锅测试水平翻转任务结束******************************")
     if success :
         print("测试成功!")
@@ -365,7 +363,7 @@ def gopos():
 
     action_param = "go_to_potpos"
     pot_param = potnum
-    success = cookservice.run_action(action_param,pot_param)
+    success = cookservice.run_task(action_param,pot_param)
     
     if success :
         print("测试成功!")
@@ -381,12 +379,12 @@ def run_test_newstructure():
     action_param = "takefood_fire"
     pot_param = 1
     print("simulate click....")
-    cookservice.run_action(action_param,pot_param)
+    cookservice.run_task(action_param,pot_param)
     
     action_param = "takefood_fire"
     pot_param = 2
     print("simulate click2....")
-    cookservice.run_action(action_param,pot_param)
+    cookservice.run_task(action_param,pot_param)
     
 #启动flask后端服务器WEB UI
 def run_flask():
