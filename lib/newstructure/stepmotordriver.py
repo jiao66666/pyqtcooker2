@@ -37,6 +37,8 @@ class StepMotor:
     def reset_home(self):
         self.home = False
         
+    def get_current_pos(self):
+        return self.current_position    
     #绝对值坐标运动
     def go_action(self, action, params):
         print(f"[{self.name}] start {action}")

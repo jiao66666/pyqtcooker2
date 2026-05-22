@@ -149,7 +149,7 @@ def runabs():
     print("收到参数 :", motorid, direction,speed)
       
     success =  cookservice.run_single_action(motorid,"go",{"target":float(circles),"anglespeed":int(int(speed)*360)})
-    currentpos = system["motors"]["stepmotor"][int(motorid)].current_position
+    currentpos = system["motors"]["stepmotor"][int(motorid)].get_current_pos()
     if success :
         print("电机单次运转成功!")
         return jsonify({"status": "success","message": f"运行电机成功!电机号：{motorid}，速度：{speed}，当前位置：{currentpos}"})
@@ -371,20 +371,6 @@ def gopos():
     else:
         print("测试失败!")
         return jsonify({"status": "fail","message": "测试失败!"})    
-
-
-def run_test_newstructure():
-    print("test new structure...")
-
-    action_param = "takefood_fire"
-    pot_param = 1
-    print("simulate click....")
-    cookservice.run_task(action_param,pot_param)
-    
-    action_param = "takefood_fire"
-    pot_param = 2
-    print("simulate click2....")
-    cookservice.run_task(action_param,pot_param)
     
 #启动flask后端服务器WEB UI
 def run_flask():
@@ -423,5 +409,4 @@ def start_system():
 if __name__ == '__main__':
     start_server()
     start_system()
-    #run_test_newstructure()
     start_webview()
