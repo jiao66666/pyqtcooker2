@@ -15,6 +15,7 @@ from lib.newstructure.motioncontroller import MotionController
 from lib.newstructure.stepmotor_manager import StepMotorManager
 from lib.newstructure.command_dispatcher import CommandDispatcher
 from lib.newstructure.taskresourcemanager import TaskResourceManager
+from lib.newstructure.tools import get_boardlist
 
 #系统构建中心
 def build_system():
@@ -92,7 +93,8 @@ def shutdown_system(system):
 #RS485连接创建
 def buildboards():
     boards = {}
-    for item in BOARDLIST:
+    boardlist = get_boardlist()
+    for item in boardlist:
         conn = RS485Communication(
             port=item["port"],
             baudrate=item["baudrate"],

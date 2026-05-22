@@ -174,4 +174,55 @@ def get_pot_pos(potnum,postype):
 
 def is_dev_mode():
     """判断是否是测试环境"""
-    return not getattr(sys, 'frozen', False)                
+    return not getattr(sys, 'frozen', False)    
+
+
+def get_boardlist():
+    if is_dev_mode():
+        return [
+            {
+                "name":"stepmotor",
+                "port":"COM2",
+                "baudrate":19200,
+                "timeout":1.0,
+                "board_id":BOARDTYPE_FIVE_AXIS
+            },
+            {
+                "name":"feedermotor",
+                "port":"COM3",
+                "baudrate":19200,
+                "timeout":1.0,
+                "board_id":BOARDTYPE_FEEDER
+            },
+            {
+                "name":"spinmotor",
+                "port":"COM4",
+                "baudrate":19200,
+                "timeout":1.0,
+                "board_id":BOARDTYPE_DC
+            }
+        ]
+    else:
+        return [
+            {
+                "name":"stepmotor",
+                "port":"COM6",
+                "baudrate":19200,
+                "timeout":1.0,
+                "board_id":BOARDTYPE_FIVE_AXIS
+            },
+            {
+                "name":"feedermotor",
+                "port":"COM7",
+                "baudrate":19200,
+                "timeout":1.0,
+                "board_id":BOARDTYPE_FEEDER
+            },
+            {
+                "name":"spinmotor",
+                "port":"COM10",
+                "baudrate":19200,
+                "timeout":1.0,
+                "board_id":BOARDTYPE_DC
+            }
+        ]

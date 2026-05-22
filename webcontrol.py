@@ -15,16 +15,9 @@ app = Flask(__name__)
 if is_dev_mode():
     print("当前环境: 开发环境，使用测试端口")
     port = 3000
-    stepmotor_port = "COM2"
-    feedermotor_port = "COM3"
-    dcmotor_port = "COM4"
 else:
     print("当前环境: 生产环境，使用生产端口")
     port = 5000
-    stepmotor_port = 'COM6'
-    feedermotor_port = 'COM7'
-    dcmotor_port = 'COM10'
-
 
 # 渲染前端的 HTML 页面
 @app.route('/')
