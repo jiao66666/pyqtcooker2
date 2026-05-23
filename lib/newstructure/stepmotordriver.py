@@ -165,6 +165,7 @@ class StepMotor:
         self.com.execute_command_async(
             "LONG", 
             [str(self.board_id), str(self.motor_id), str(direction), str(anglespeed)],
+            callback=self._on_run_done,
             priority = PRIORITY_CONTROL
         )
 
@@ -180,6 +181,7 @@ class StepMotor:
         self.com.execute_command_async(
             "PAUSE", 
             [str(self.board_id), str(self.motor_id)],
+            callback=self._on_run_done,
             priority = PRIORITY_CONTROL
         )
 
@@ -194,6 +196,7 @@ class StepMotor:
         self.com.execute_command_async(
             "STOP", 
             [str(self.board_id), str(self.motor_id)],
+            callback=self._on_run_done,
             priority = PRIORITY_EMERGENCY
         )
 
@@ -227,6 +230,7 @@ class StepMotor:
         self.com.execute_command_async(
             "ORGRST", 
             [str(self.board_id), str(self.motor_id), str(pulses), "0",str(anglespeed)],
+            callback=self._on_run_done,
             priority = PRIORITY_CONTROL
         )
  

@@ -1,4 +1,5 @@
 import threading
+from lib.newstructure.runtime import runtime
 class TaskResourceManager:
     """
     任务级资源所有权管理器
@@ -9,14 +10,16 @@ class TaskResourceManager:
     3. 资源生命周期 = task 生命周期
     """
 
-    def __init__(self):
+    def __init__(self,bus):
         # resource_id -> task_id
         self.resource_owner = {}
 
         # task_id -> set(resource_id)
         self.task_resources = {}
+        self.bus = bus
 
         self.lock = threading.Lock()
+        self.bus.subscribe("MOTOR_DONE", self.on_motor_done)
 
     # =====================================
     # 申请资源
@@ -100,3 +103,16 @@ class TaskResourceManager:
 
         with self.lock:
             return task_id in self.task_resources
+        
+
+    def on_motor_done(self, data):
+        print("电机完成运动@@@@@@@@@@@@@@@@@@@@@@@@")
+
+        motor_id = data["motor_id"]    
+        ctx = runtime.get(motor_id)
+        if not ctx:
+            print("no runtime context")
+            return      
+        task_id = ctx["task_id"]
+        print(f"release resource>>>>>>>>>>>>>>>>>>>>,taskid:{task_id}")
+        self.release_task_resources(task_id)

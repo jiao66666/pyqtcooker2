@@ -1,15 +1,20 @@
 import threading
-
+from lib.newstructure.runtime import runtime
 #任务型 还是 指令型 全部通过此命令器分发，防冲突
 class CommandDispatcher:
 
-    def __init__(self, resource_manager):
+    def __init__(self, resource_manager,bus):
         self.rm = resource_manager
 
         # 防止重复提交（可选增强）
         self.active_tasks = set()
 
         self.lock = threading.Lock()
+
+        self.bus = bus
+
+        self.bus.subscribe("MOTOR_DONE", self.on_motor_done)
+
 
     def submit(self, task_id, resources, run_fn):
         """
@@ -59,3 +64,16 @@ class CommandDispatcher:
                 self.active_tasks.remove(task_id)
 
             self.rm.release_task_resources(task_id)
+
+
+    def on_motor_done(self, data):
+        print("电机完成运动@@@@@@@@@@@@@@@@@@@@@@@@")
+
+        motor_id = data["motor_id"]    
+        ctx = runtime.get(motor_id)
+        if not ctx:
+            print("no runtime context")
+            return      
+        task_id = ctx["task_id"]
+        print(f"release resource>>>>>>>>>>>>>>>>>>>>,taskid:{task_id}")
+        self._cleanup(task_id)            

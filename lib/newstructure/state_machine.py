@@ -62,7 +62,8 @@ class PotStateMachine:
                 motor_id=step["motor"].motor_id,
                 action=step["action"],
                 pot_id=self.pot_id,
-                params=step["params"]
+                params=step["params"],
+                task_id=f"task_{self.running_taskname}"
             )
 
             step["motor"].go_action(step["action"],step["params"])

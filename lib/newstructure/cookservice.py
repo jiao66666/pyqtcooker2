@@ -1,5 +1,6 @@
 import threading
 from lib.newstructure.system import get_system
+from lib.newstructure.runtime import runtime
 class CookerService:
     def __init__(self,system):
         self.system = system
@@ -28,6 +29,14 @@ class CookerService:
             if not handler:
                 raise Exception(f"unknown action: {action}")
             handler(motor, params)
+
+        runtime.set_running(
+            motor_id=motor_id,
+            action=action,
+            pot_id=0,
+            params=params,
+            task_id=task_id
+        )
 
         ok = self.dispatcher.submit(
             task_id=task_id,

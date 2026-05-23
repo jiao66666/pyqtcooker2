@@ -40,8 +40,8 @@ def build_system():
     from lib.newstructure.websocket_server import WebSocketServer
     websocket_server = WebSocketServer()
 
-    resource_manager = TaskResourceManager()
-    dispatcher = CommandDispatcher(resource_manager)
+    resource_manager = TaskResourceManager(bus)
+    dispatcher = CommandDispatcher(resource_manager,bus)
     
     return {
         "bus": bus,
