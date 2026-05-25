@@ -4,7 +4,7 @@ from lib.newstructure.constant import *
 from lib.newstructure.tools import is_dev_mode,apply_action_speed_override,get_pot_pos
 import webview
 import threading
-from lib.newstructure.system import run_system,init_system,shutdown_system
+from lib.newstructure.system import run_system,init_system,shutdown_system,set_system_dirty
 from lib.newstructure.cookservice import cookservice
 from lib.newstructure.system_runtime import system
 
@@ -187,6 +187,7 @@ def stopall():
     print("所有电机急停")
     success1 = system["motorsmanager"].stop_all_motors()
     success2 = system["motorsmanager"].reset_home_all()
+    set_system_dirty(system,True)
     if success1 and success2 :
         print("测试成功!")
         return jsonify({"status": "success","message": "急停所有电机成功!"})

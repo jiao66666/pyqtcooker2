@@ -44,6 +44,11 @@ def build_system():
     dispatcher = CommandDispatcher(resource_manager,bus)
     
     return {
+        "state": {
+        "mode": "READY",   # READY / EMERGENCY / RECOVERING / ERROR
+        "dirty": False     # 是否需要恢复重新初始化
+        },
+
         "bus": bus,
         "trackmanager": trackmanager,
         "stepbuilder": stepbuilder,
@@ -60,6 +65,13 @@ def build_system():
         "dispatcher":dispatcher
     }
 
+
+def set_system_state(system, mode):
+    system["state"]["mode"] = mode
+
+
+def set_system_dirty(system, value: bool):
+    system["state"]["dirty"] = value
 
 def shutdown_system(system):
     print("系统关闭中...")
