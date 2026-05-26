@@ -46,6 +46,20 @@ class RuntimeContext:
 
 
     # ==================================================
+    # 获取所有运行中的电机
+    # ==================================================
+    def get_running_motors(self):
+        with self._lock:
+
+            return [
+                motor_id
+                for motor_id, info in self.motors.items()
+                if info["state"] == "RUNNING"
+            ]
+
+
+
+    # ==================================================
     # 设置动作参数覆盖
     # ==================================================
     def set_action_override(self, key, params):

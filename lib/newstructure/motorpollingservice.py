@@ -45,9 +45,80 @@ class MotorPollingService:
                 callback=lambda s, r, mid=motor_id: self._on_motor_status(mid, s, r)
             )
 
+
+    #为最大化查询效率可考虑替换此方法
+    def _check_all_motors_byonce(self):
+        self.rs485.execute_command_async(
+            "ALLRunStatus",
+            [],
+            callback=self._on_motor_status_all
+        )
+
     # =========================
     # 回调：电机状态
     # =========================
+
+    def _on_motor_status_all(self, success, resp):
+
+        print("电机状态回调中>>>>>>>>>>")
+
+        if not success:
+            return
+
+        items = resp[1].split(",")
+
+        # 假设：0~4号电机
+        motor_ids = range(len(items))
+
+        if len(items) != len(self.motors):
+            print("警告：电机数量与返回不一致")
+
+        for motor_id, status in enumerate(items):
+
+            motor_id = int(motor_id)
+            status = status.strip()
+
+            # 只处理 runtime 中存在的电机
+            if motor_id not in self.motors:
+                continue
+
+            # 当前运行参数
+            step_params = runtime.get_params(motor_id)
+            if not step_params:
+                continue
+
+            # =========================
+            # quit in advance 判断
+            # =========================
+            quit_in_advance = False
+
+            if step_params.get("quitinadvance", 0) > 0:
+
+                curpos = runtime.get_position(motor_id)
+
+                if curpos > step_params["quitinadvance"]:
+                    quit_in_advance = True
+
+            # =========================
+            # 状态处理
+            # =========================
+            if status == "PAUSEING" or quit_in_advance:
+
+                runtime.set_done(motor_id)
+
+                self.bus.publish(
+                    "MOTOR_DONE",
+                    {"motor_id": motor_id}
+                )
+
+            elif status == "ERROR":
+
+                self.bus.publish(
+                    "MOTOR_ERROR",
+                    {"motor_id": motor_id}
+                )
+
+
     def _on_motor_status(self, motor_id, success, response):
 
         print("电机状态回调中》》》》》》》")
