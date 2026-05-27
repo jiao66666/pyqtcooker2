@@ -188,6 +188,11 @@ def stopall():
     success1 = system["motorsmanager"].stop_all_motors()
     success2 = system["motorsmanager"].reset_home_all()
     set_system_dirty(system,True)
+
+    system["bus"].publish(
+        "ESTOP_TRIGGERED",
+        {}
+    )
     if success1 and success2 :
         print("测试成功!")
         return jsonify({"status": "success","message": "急停所有电机成功!"})

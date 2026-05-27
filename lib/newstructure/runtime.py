@@ -126,10 +126,14 @@ class RuntimeContext:
                 self.motors[motor_id]["state"] = "ERROR"
 
     def set_idle(self, motor_id: int):
+
         with self._lock:
+
             if motor_id in self.motors:
-                self.motors[motor_id]["state"] = "IDLE"
-                self.motors[motor_id]["action"] = None
+
+                self._reset_motor_info(
+                    self.motors[motor_id]
+                )
 
     # ---------------------------
     # 查询
@@ -148,5 +152,31 @@ class RuntimeContext:
             m = self.motors.get(motor_id)
             return bool(m and m["state"] == "RUNNING")
         
+
+    # ---------------------------
+    # 内部复位
+    # ---------------------------
+    def _reset_motor_info(self, info: dict):
+
+        info["state"] = "IDLE"
+        info["action"] = None
+        info["pot_id"] = None
+        info["params"] = {}
+        info["task_id"] = None        
+
+
+    # ---------------------------
+    # 清理某个锅相关的运行状态
+    # ---------------------------
+    def clear_pot(self, pot_id: int):
+
+        with self._lock:
+
+            for info in self.motors.values():
+
+                if info["pot_id"] == pot_id:
+
+                    self._reset_motor_info(info)
+
 
 runtime = RuntimeContext()        

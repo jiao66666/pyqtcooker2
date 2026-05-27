@@ -22,6 +22,8 @@ class PotStateMachine:
         
         # 订阅电机完成事件
         self.bus.subscribe("MOTOR_DONE", self.on_motor_done)
+        self.bus.subscribe("ESTOP_TRIGGERED", self.on_estop)
+
     def submit_task(self, task_name,steps):
         if task_name in self.running_tasks:
            print("任务还在执行中，请稍后...")
@@ -31,6 +33,10 @@ class PotStateMachine:
         self.command_queue.put(steps)
         print("submitt task OK@!>>>>")
         print(self.command_queue.qsize())
+
+    def clear_running_task(self):
+        self.running_tasks = set()
+        self.running_taskname = None
 
     def tick(self):
         if self.state in ["STOPPED", "ERROR"]:
@@ -136,3 +142,25 @@ class PotStateMachine:
             self.running_tasks.remove(self.running_taskname)
         else:
             self.state = "RUNNING"
+
+
+    def on_estop(self, data=None):
+        print(f"[Pot {self.pot_id}] ESTOP triggered!")
+
+        self.state = "STOPPED"
+
+        # 清队列
+        while not self.command_queue.empty():
+            self.command_queue.get()
+
+        # 清 track
+        self.track.release(self.pot_id)
+
+        # 清运行任务
+        self.clear_running_task()
+
+        # 通知 motioncontroller
+        self.motioncontroller.stop()
+
+        # 更新 runtime
+        runtime.clear_pot(self.pot_id)            

@@ -26,7 +26,7 @@ class TrackManager:
             }
             return True
 
-    def release(self, pot_id, action):
+    def release(self, pot_id, action=""):
         """
         释放轨道
         """
