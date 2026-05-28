@@ -4,7 +4,7 @@ from lib.newstructure.constant import *
 from lib.newstructure.tools import is_dev_mode,apply_action_speed_override,get_pot_pos
 import webview
 import threading
-from lib.newstructure.system import run_system,init_system,shutdown_system,set_system_dirty
+from lib.newstructure.system import run_system,init_system,shutdown_system,set_system_dirty,recovery_system
 from lib.newstructure.cookservice import cookservice
 from lib.newstructure.system_runtime import system
 
@@ -200,6 +200,18 @@ def stopall():
         print("测试失败!")
         return jsonify({"status": "fail","message": "急停所有电机失败!"})
     
+
+@app.route('/initall', methods=['POST'])
+def initall():
+    print("所有电机急停")
+    success = recovery_system(system)
+    if success:
+        print("测试成功!")
+        return jsonify({"status": "success","message": "初始化/恢复所有电机成功!"})
+    else:
+        print("测试失败!")
+        return jsonify({"status": "fail","message": "初始化/恢复所有电机失败!"})
+        
 @app.route('/resetmotor', methods=['POST'])
 def resetmotor():
     print("运行电机长运转")

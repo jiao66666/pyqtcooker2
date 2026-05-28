@@ -602,6 +602,29 @@ function enableall() {
 }
 
 
+
+
+function initall() {
+     // 获取 select 元素
+        fetch('/initall', {
+            method: 'POST', 
+            headers: {
+                'Content-Type': 'application/json'  
+            },
+            body: JSON.stringify({
+                boardtype: '1',  // 五轴板
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+              addMessage(`返回信息 : 已发送串口指令`);  // 将收到的消息保存并显示
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            addMessage("Error starting motor.");
+        });
+}
+
 function testDC_command(command,pot,direction = 1) {
      var dc_speed = document.getElementById("dc_speed");
         if(dc_speed.value == "" || isNaN(dc_speed.value) || parseInt(dc_speed.value) <= 0){

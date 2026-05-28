@@ -73,6 +73,14 @@ def set_system_state(system, mode):
 def set_system_dirty(system, value: bool):
     system["state"]["dirty"] = value
 
+
+
+def recovery_system(system):
+    print("recovery system .....")
+    system["state"]["dirty"]=False
+    system["state"]["mode"]="READY"
+    return True
+
 def shutdown_system(system):
     print("系统关闭中...")
 

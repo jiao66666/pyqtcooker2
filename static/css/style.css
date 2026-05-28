@@ -268,7 +268,7 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
     font-size:14px;
 }
 
-.enableallbtn button{
+.initbtn button{
     background-color:#2F9E44;
     color:#fff;
     border:none;
