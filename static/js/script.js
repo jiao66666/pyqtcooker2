@@ -69,7 +69,7 @@ function connect() {
 
 //断开连接炒菜机串口
 function disconnect() {
-        fetch('/disconnect', {
+        fetch('/stopall', {
             method: 'POST', 
             headers: {
                 'Content-Type': 'application/json'  

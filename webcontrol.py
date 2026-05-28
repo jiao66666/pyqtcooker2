@@ -38,18 +38,6 @@ def connect():
         print("使能失败!")
         return jsonify({"status": "fail","message": f"使能失败!"})
     
-@app.route('/disconnect', methods=['POST'])
-
-def disconnect():
-    print("start STOP Enable Power")
-    success=system["motorsmanager"].stop_all_motors()
-    runtime.set_all_enabled(False)
-    if success:
-        print("关闭炒菜机成功!")
-        return jsonify({"status": "success","message": "关闭炒菜机成功!"})
-    else:
-        print("关闭炒菜机失败!")
-        return jsonify({"status": "fail","message": f"关闭炒菜机失败!"})
 
 @app.route('/testtastboardping', methods=['POST'])
 def testtastboardping():
@@ -191,7 +179,7 @@ def stopall():
     success1 = system["motorsmanager"].stop_all_motors()
     success2 = system["motorsmanager"].reset_home_all()
     set_system_dirty(system,True)
-
+    runtime.set_all_enabled(False)
     system["bus"].publish(
         "ESTOP_TRIGGERED",
         {}
