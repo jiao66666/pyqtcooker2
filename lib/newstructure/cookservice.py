@@ -80,10 +80,11 @@ class CookerService:
         def run_fn():
             handler = self.action_map.get(action)
             if not handler:
-                raise Exception(f"unknown action: {action}")
+                return False,f"unknown action: {action}"
             handler(motor, params)
-        ok=run_fn()
-        return ok
+            return True,"run cmd OK"
+        ok,msg=run_fn()
+        return ok,msg
 
     def _pause_action(self,motor,params):
         motor.pause()

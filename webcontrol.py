@@ -149,13 +149,13 @@ def pause():
     success = False
     print("收到参数 :", motorid)
 
-    success =  cookservice.run_control_cmd(motorid,"pause",{})
+    success,msg =  cookservice.run_control_cmd(motorid,"pause",{})
     if success :
         print("电机暂停成功!")
         return jsonify({"status": "success","message": "电机暂停成功!"})
     else:
         print("电机暂停失败!")
-        return jsonify({"status": "fail","message": "电机暂停失败!"})    
+        return jsonify({"status": "fail","message": f"电机暂停失败!错误:{msg}"})    
 
 @app.route('/stop', methods=['POST'])
 def stop():
@@ -165,13 +165,13 @@ def stop():
     success = False
     print("收到参数 :", motorid)
 
-    success = cookservice.run_control_cmd(motorid,"stop",{})
+    success,msg = cookservice.run_control_cmd(motorid,"stop",{})
     if success :
         print("电机暂停成功!")
         return jsonify({"status": "success","message": "电机暂停成功!"})
     else:
         print("电机暂停失败!")
-        return jsonify({"status": "fail","message": "电机暂停失败!"})    
+        return jsonify({"status": "fail","message": f"电机暂停失败!错误:{msg}"})    
     
 @app.route('/stopall', methods=['POST'])
 def stopall():
