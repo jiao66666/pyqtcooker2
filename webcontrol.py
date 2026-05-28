@@ -94,13 +94,13 @@ def runlong():
     speed = data.get('speed')  
     success = False
     print("收到参数 :", motorid, direction,speed)
-    success =  cookservice.run_single_action(motorid,"runlong",{"speed":int(int(speed)*360),"direction":int(direction)})
+    success,msg =  cookservice.run_single_action(motorid,"runlong",{"speed":int(int(speed)*360),"direction":int(direction)})
     if success :
         print("电机长运转成功!")
         return jsonify({"status": "success","message": f"长运行成功!电机：{motorid}，方向：{direction}，速度：{speed}"})
     else:
         print("电机长运转失败!")
-        return jsonify({"status": "fail","message": "长运转失败!"})
+        return jsonify({"status": "fail","message": f"长运转失败!错误:{msg}"})
     
 @app.route('/run', methods=['POST'])
 def run():
@@ -113,13 +113,13 @@ def run():
     success = False
     print("收到参数 :", motorid, direction,speed)
 
-    success =  cookservice.run_single_action(motorid,"run",{"circle":float(circles),"speed":int(int(speed)*360),"direction":int(direction)})
+    success,msg =  cookservice.run_single_action(motorid,"run",{"circle":float(circles),"speed":int(int(speed)*360),"direction":int(direction)})
     if success :
         print("电机单次运转成功!")
         return jsonify({"status": "success","message": f"单运行成功!电机：{motorid}，方向：{direction}，速度：{speed}"})
     else:
         print("电机单次运转失败!")
-        return jsonify({"status": "fail","message": "单运转失败!"})
+        return jsonify({"status": "fail","message": f"单运转失败!错误:{msg}"})
 
 @app.route('/runabs', methods=['POST'])
 def runabs():
@@ -132,14 +132,14 @@ def runabs():
     success = False
     print("收到参数 :", motorid, direction,speed)
       
-    success =  cookservice.run_single_action(motorid,"go",{"target":float(circles),"anglespeed":int(int(speed)*360)})
+    success,msg =  cookservice.run_single_action(motorid,"go",{"target":float(circles),"anglespeed":int(int(speed)*360)})
     currentpos = system["motors"]["stepmotor"][int(motorid)].get_current_pos()
     if success :
         print("电机单次运转成功!")
         return jsonify({"status": "success","message": f"运行电机成功!电机号：{motorid}，速度：{speed}，当前位置：{currentpos}"})
     else:
         print("电机单次运转失败!")
-        return jsonify({"status": "fail","message": "运转失败!"})
+        return jsonify({"status": "fail","message": f"运转失败!错误:{msg}"})
 
 @app.route('/pause', methods=['POST'])
 def pause():
@@ -213,13 +213,13 @@ def resetmotor():
     success = False
     print("收到参数 :", motorid, direction,speed)
 
-    success =  cookservice.run_single_action(motorid,"reset",{})
+    success,msg =  cookservice.run_single_action(motorid,"reset",{})
     if success :
         print("测试复位成功!")
         return jsonify({"status": "success","message": f"复位电机成功!电机：{motorid}，方向：{direction}"})
     else:
         print("测试复位失败!")
-        return jsonify({"status": "fail","message": f"复位电机失败!,电机：{motorid}，错误信息"})
+        return jsonify({"status": "fail","message": f"复位电机失败!,电机：{motorid}，错误信息:{msg}"})
 
 @app.route('/resetmotorpot', methods=['POST'])
 def resetmotorpot():
@@ -232,13 +232,13 @@ def resetmotorpot():
     action_param = "resetzero"
     pot_param = potnum
     print("run resetmotorpot action now.........")
-    success = cookservice.run_task(action_param,pot_param)
+    success,msg = cookservice.run_task(action_param,pot_param)
     if success :
         print("测试复位成功!")
         return jsonify({"status": "success","message": f"复位电机成功!锅号：{potnum}"})
     else:
         print("测试复位失败!")
-        return jsonify({"status": "fail","message": f"复位电机失败!,锅号：{potnum}，错误信息"})
+        return jsonify({"status": "fail","message": f"复位电机失败!,锅号：{potnum}，错误信息:{msg}"})
 
 @app.route('/testmultitaskabs', methods=['POST'])   #绝对位置任务测试
 def testmultitaskabs():
@@ -265,14 +265,14 @@ def testmultitaskabs():
     action_param = "take_fire_pour"
     pot_param = 1
     print("simulate click....")
-    success = cookservice.run_task(action_param,pot_param)
+    success,msg = cookservice.run_task(action_param,pot_param)
     print("**************************************1号锅测试水平翻转任务结束******************************")
     if success :
         print("测试成功!")
         return jsonify({"status": "success","message": "测试成功!"})
     else:
         print("测试失败!")
-        return jsonify({"status": "fail","message": "测试失败!"})  
+        return jsonify({"status": "fail","message": f"测试失败!错误：{msg}"})  
 
 @app.route('/testmultitaskabs2', methods=['POST'])   #绝对位置任务测试
 def testmultitaskabs2():
@@ -299,14 +299,14 @@ def testmultitaskabs2():
     action_param = "take_fire_pour"
     pot_param = 1
     print("simulate click....")
-    success = cookservice.run_task(action_param,pot_param)
+    success,msg = cookservice.run_task(action_param,pot_param)
     print("**************************************2号锅测试水平翻转任务结束******************************")
     if success :
         print("测试成功!")
         return jsonify({"status": "success","message": "测试成功!"})
     else:
         print("测试失败!")
-        return jsonify({"status": "fail","message": "测试失败!"})  
+        return jsonify({"status": "fail","message": f"测试失败!错误：{msg}"})  
 
 @app.route('/testdc_command', methods=['POST'])
 def testdc_command():
@@ -365,14 +365,14 @@ def gopos():
 
     action_param = "go_to_potpos"
     pot_param = potnum
-    success = cookservice.run_task(action_param,pot_param)
+    success,msg = cookservice.run_task(action_param,pot_param)
     
     if success :
         print("测试成功!")
         return jsonify({"status": "success","message": "测试成功!"})
     else:
         print("测试失败!")
-        return jsonify({"status": "fail","message": "测试失败!"})    
+        return jsonify({"status": "fail","message": f"测试失败!错误:{msg}"})    
     
 #启动flask后端服务器WEB UI
 def run_flask():

@@ -22,26 +22,34 @@ class CookerService:
 
         # 系统脏状态
         if state["dirty"]:
-            raise Exception("system dirty")
+            return False,"系统被异常终止，请检查后重新初始化"
 
         # 系统模式检查
         if state["mode"] != "READY":
-            raise Exception("system not ready")
+            return False,"系统状态还为准备就绪"
 
         # 电机使能检查
         if not runtime.is_all_enabled():
-            raise Exception("motors not enabled")
+            return False,"电机未使能"
+        
+        return True,"workable OK"
 
     # 运行锅电机动作组
     def run_task(self, task_name, pot_id):
-        self.check_workable()
+        OK,msg = self.check_workable()
+        print(f"OK status:{OK}")
+        if not OK:
+            return False,msg
 
         steps = self.system["stepbuilder"].build(task_name, pot_id)
         self.system["pots"][pot_id].submit_task(task_name,steps)
-        return True
+        return True,"submit task OK"
 
     def run_single_action(self, motor_id, action, params):
-        self.check_workable()
+        OK,msg = self.check_workable()
+        print(f"OK status:{OK}")
+        if not OK:
+            return False,msg
 
         motor = self.system["motors"]["stepmotor"][motor_id]
         task_id = f"single:{motor_id}:{action}"
@@ -59,13 +67,13 @@ class CookerService:
             task_id=task_id
         )
 
-        ok = self.dispatcher.submit(
+        self.dispatcher.submit(
             task_id=task_id,
             resources=[motor_id],
             run_fn=run_fn
         )
 
-        return ok
+        return True,"submit task ok"
     
     def run_control_cmd(self,motor_id,action,params):
         motor = self.system["motors"]["stepmotor"][motor_id]
