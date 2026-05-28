@@ -7,6 +7,7 @@ import threading
 from lib.newstructure.system import run_system,init_system,shutdown_system,set_system_dirty,recovery_system
 from lib.newstructure.cookservice import cookservice
 from lib.newstructure.system_runtime import system
+from lib.newstructure.runtime import runtime
 
 #  2.0版本Flask Control WEB 后端服务控制程序
 app = Flask(__name__)
@@ -29,6 +30,7 @@ def index():
 def connect():
     print("start Enable Power")
     success=system["motorsmanager"].enable_all_motors()
+    runtime.set_all_enabled(True)
     if success:
         print("使能成功!")
         return jsonify({"status": "success","message": "使能成功!"})
@@ -41,6 +43,7 @@ def connect():
 def disconnect():
     print("start STOP Enable Power")
     success=system["motorsmanager"].stop_all_motors()
+    runtime.set_all_enabled(False)
     if success:
         print("关闭炒菜机成功!")
         return jsonify({"status": "success","message": "关闭炒菜机成功!"})

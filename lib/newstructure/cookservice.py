@@ -16,25 +16,32 @@ class CookerService:
             "stop":self._stop_action
         }
 
-    def ensure_system_ready(self):
+
+    def check_workable(self):
         state = self.system["state"]
 
+        # 系统脏状态
         if state["dirty"]:
             raise Exception("system dirty")
 
+        # 系统模式检查
         if state["mode"] != "READY":
             raise Exception("system not ready")
 
+        # 电机使能检查
+        if not runtime.is_all_enabled():
+            raise Exception("motors not enabled")
+
     # 运行锅电机动作组
     def run_task(self, task_name, pot_id):
-        self.ensure_system_ready()
+        self.check_workable()
 
         steps = self.system["stepbuilder"].build(task_name, pot_id)
         self.system["pots"][pot_id].submit_task(task_name,steps)
         return True
 
     def run_single_action(self, motor_id, action, params):
-        self.ensure_system_ready()
+        self.check_workable()
 
         motor = self.system["motors"]["stepmotor"][motor_id]
         task_id = f"single:{motor_id}:{action}"

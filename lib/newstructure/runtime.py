@@ -39,6 +39,7 @@ class RuntimeContext:
         with self._lock:
             self.motors[motor_id] = {
                 "state": "IDLE",
+                "enabled": False,
                 "action": None,
                 "pot_id": None,
                 "position": 0    
@@ -151,7 +152,30 @@ class RuntimeContext:
         with self._lock:
             m = self.motors.get(motor_id)
             return bool(m and m["state"] == "RUNNING")
-        
+
+    def set_all_enabled(self, enabled):
+
+        with self._lock:
+            for motor in self.motors.values():
+                motor["enabled"] = enabled
+
+
+    def set_enabled(self, motor_id, enabled):
+        with self._lock:
+            self.motors[motor_id]["enabled"] = enabled
+
+
+    def is_enabled(self, motor_id):
+        with self._lock:
+            return self.motors[motor_id].get("enabled", False)            
+
+
+    def is_all_enabled(self):
+        with self._lock:
+            return all(
+                motor.get("enabled", False)
+                for motor in self.motors.values()
+            )
 
     # ---------------------------
     # 内部复位
@@ -159,6 +183,7 @@ class RuntimeContext:
     def _reset_motor_info(self, info: dict):
 
         info["state"] = "IDLE"
+        info["enabled"] = False
         info["action"] = None
         info["pot_id"] = None
         info["params"] = {}
