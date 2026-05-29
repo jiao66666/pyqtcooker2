@@ -76,6 +76,11 @@ class CookerService:
         return True,"submit task ok"
     
     def run_control_cmd(self,motor_id,action,params):
+        OK,msg = self.check_workable()
+        print(f"OK status:{OK}")
+        if not OK:
+            return False,msg
+
         motor = self.system["motors"]["stepmotor"][motor_id]
         def run_fn():
             handler = self.action_map.get(action)

@@ -200,7 +200,7 @@ function startMotor(potnum,directionstr) {
         .then(data => {
             if(data.status === "success"){
                 addMessage(`返回信息 : ${data.message}`);  // 将收到的消息保存并显示
-            }else if(data.status === "error"){
+            }else{
                 addMessage(`返回信息 : ${data.message}`);  // 将收到的消息保存并显示
             }
             
