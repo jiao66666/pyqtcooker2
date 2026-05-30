@@ -15,8 +15,8 @@ class CookerService:
             "pause":self._pause_action,
             "stop":self._stop_action,
             "ping":self._ping_action,
-            "openfeeder":self._opentastmotor_action,
-            "getfeeder":self._gettastmotor_action
+            "openfeeder":self._openfeedermotor_action,
+            "getfeeder":self._getfeedermotor_action
         }
 
 
@@ -141,10 +141,10 @@ class CookerService:
     def _ping_action(self,motor,params):
         motor.ping()
 
-    def _opentastmotor_action(self,motor,params):
+    def _openfeedermotor_action(self,motor,params):
         motor.run(params["overtime"])
 
-    def _gettastmotor_action(self,motor,params):
+    def _getfeedermotor_action(self,motor,params):
         motor.getfb(params["mode"])   
                             
 
