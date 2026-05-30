@@ -13,7 +13,10 @@ class CookerService:
             "move": self._move_action,
             "go":self._go_action,
             "pause":self._pause_action,
-            "stop":self._stop_action
+            "stop":self._stop_action,
+            "ping":self._ping_action,
+            "openfeeder":self._opentastmotor_action,
+            "getfeeder":self._gettastmotor_action
         }
 
 
@@ -91,6 +94,15 @@ class CookerService:
         ok,msg=run_fn()
         return ok,msg
 
+    def run_tastemotor_cmd(self,motor_id,action,params):
+        motor = self.system["motors"]["feedermotor"][motor_id]
+        def run_fn():
+            handler = self.action_map.get(action)
+            if not handler:
+                raise Exception(f"unknown action: {action}")
+            handler(motor, params)
+        run_fn()
+
     def _pause_action(self,motor,params):
         motor.pause()
 
@@ -123,7 +135,18 @@ class CookerService:
         motor.go(
             params["target"],
             params["anglespeed"]
-        )                 
+        )      
+
+
+    def _ping_action(self,motor,params):
+        motor.ping()
+
+    def _opentastmotor_action(self,motor,params):
+        motor.run(params["overtime"])
+
+    def _gettastmotor_action(self,motor,params):
+        motor.getfb(params["mode"])   
+                            
 
 _service = None
 _service_lock = threading.Lock()
