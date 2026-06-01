@@ -42,13 +42,13 @@ def connect():
 @app.route('/testtastboardping', methods=['POST'])
 def testtastboardping():
     print("测试加料板连通性")
-    success =  cookservice.run_tastemotor_cmd(POT1_FLAVORMOTOR1,"ping",{})
+    success,msg =  cookservice.run_tastemotor_cmd(POT1_FLAVORMOTOR1,"ping",{})
     if success :
         print("测试加料板连通性成功!")
         return jsonify({"status": "success","message": f"运行成功"})
     else:
         print("测试加料板连通性失败!")
-        return jsonify({"status": "fail","message": "运转失败!"})
+        return jsonify({"status": "fail","message": f"运转失败,错误:{msg}!"})
 
 
 @app.route('/runtastmotor', methods=['POST'])
@@ -60,13 +60,13 @@ def runtastmotor():
     success = False
     print("收到参数 :", motorid)
   
-    success =  cookservice.run_tastemotor_cmd(int(motorid),"openfeeder",{"overtime":int(overtime)})
+    success,msg =  cookservice.run_tastemotor_cmd(int(motorid),"openfeeder",{"overtime":int(overtime)})
     if success :
         print("测试加料板打开成功!")
         return jsonify({"status": "success","message": f"运行成功"})
     else:
         print("测试加料板打开失败!")
-        return jsonify({"status": "fail","message": "运转失败!"})
+        return jsonify({"status": "fail","message": f"运转失败!错误:{msg}"})
 
 @app.route('/gettastmotorfb', methods=['POST'])
 def gettastmotorfb():
@@ -76,13 +76,13 @@ def gettastmotorfb():
     mode = data.get('mode')
     success = False
     print("收到参数 :", motorid)
-    success = cookservice.run_tastemotor_cmd(int(motorid),"getfeeder",{"mode":int(mode)})
+    success,msg = cookservice.run_tastemotor_cmd(int(motorid),"getfeeder",{"mode":int(mode)})
     if success :
         print("测试加料板打开成功!")
         return jsonify({"status": "success","message": f"运行获取反馈成功，反馈结果"})
     else:
         print("测试加料板打开失败!")
-        return jsonify({"status": "fail","message": "运转失败!"})
+        return jsonify({"status": "fail","message": f"运转失败!错误:{msg}"})
     
 @app.route('/runlong', methods=['POST'])
 def runlong():
