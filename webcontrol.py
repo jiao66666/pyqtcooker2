@@ -296,7 +296,7 @@ def testmultitaskabs2():
         flip_speed
     )
     action_param = "take_fire_pour"
-    pot_param = 1
+    pot_param = 2
     print("simulate click....")
     success,msg = cookservice.run_task(action_param,pot_param)
     print("**************************************2号锅测试水平翻转任务结束******************************")
