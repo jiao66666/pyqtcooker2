@@ -193,9 +193,11 @@ def stopall():
 
 @app.route('/initall', methods=['POST'])
 def initall():
-    print("所有电机急停")
+    print("所有电机恢复")
     success = recovery_system(system)
-    if success:
+    success2 = system["motorsmanager"].enable_all_motors()
+    runtime.set_all_enabled(True)
+    if success and success2:
         print("测试成功!")
         return jsonify({"status": "success","message": "初始化/恢复所有电机成功!"})
     else:
