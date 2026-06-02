@@ -69,7 +69,7 @@ function connect() {
 
 //断开连接炒菜机串口
 function disconnect() {
-        fetch('/stopall', {
+        fetch('/disconnect', {
             method: 'POST', 
             headers: {
                 'Content-Type': 'application/json'  
@@ -618,6 +618,7 @@ function initall() {
         })
         .then(response => response.json())
         .then(data => {
+              updateConnectStatus("已使能","connect_status_connected");
               addMessage(`返回信息 : `+data.message);  // 将收到的消息保存并显示
         })
         .catch(error => {

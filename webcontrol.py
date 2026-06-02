@@ -4,7 +4,7 @@ from lib.newstructure.constant import *
 from lib.newstructure.tools import is_dev_mode,apply_action_speed_override,get_pot_pos
 import webview
 import threading
-from lib.newstructure.system import run_system,init_system,shutdown_system,set_system_dirty,recovery_system
+from lib.newstructure.system import run_system,init_system,shutdown_system,set_system_dirty,recovery_system,shutdown_device
 from lib.newstructure.cookservice import cookservice
 from lib.newstructure.system_runtime import system
 from lib.newstructure.runtime import runtime
@@ -39,6 +39,17 @@ def connect():
         return jsonify({"status": "fail","message": f"使能失败!"})
     
 
+@app.route('/disconnect', methods=['POST'])
+def disconnect():
+    print("start Shutdown Power")
+    success=shutdown_device(system)
+    if success:
+        print("关闭炒菜机成功!")
+        return jsonify({"status": "success","message": "关闭成功!"})
+    else:
+        print("关闭炒菜机失败!")
+        return jsonify({"status": "fail","message": f"关闭失败!"})
+    
 @app.route('/testtastboardping', methods=['POST'])
 def testtastboardping():
     print("测试加料板连通性")

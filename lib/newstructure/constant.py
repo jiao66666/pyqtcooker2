@@ -3,6 +3,11 @@ BOARDTYPE_FEEDER = 1     # 加料板
 BOARDTYPE_FIVE_AXIS = 2  # 五轴板
 BOARDTYPE_DC = 3         # 直流板
 
+########锅设置########
+POT1 = 1
+POT2 = 2
+
+
 #######步进板配置######
 POT_BACKUP_MOTOR= 0  # 1号锅移动电机编号
 POT1_MOVE_MOTOR = 2  # 1号锅移动电机编号

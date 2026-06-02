@@ -45,8 +45,8 @@ def build_system():
     
     return {
         "state": {
-        "mode": "READY",   # READY / EMERGENCY / RECOVERING / ERROR
-        "dirty": False     # 是否需要恢复重新初始化
+            "mode": "READY",   # READY / EMERGENCY / RECOVERING / ERROR
+            "dirty": False     # 是否需要恢复重新初始化
         },
 
         "bus": bus,
@@ -81,10 +81,40 @@ def recovery_system(system):
     system["state"]["mode"]="READY"
     return True
 
+
+def shutdown_device(system):
+    motors = system["motorsmanager"]
+    motors.stop_all_motors()
+    system["state"]["mode"] = "OFF"
+    system["state"]["dirty"] = True
+    return True
+
 def shutdown_system(system):
     print("系统关闭中...")
 
-    # 1. 停止循环类组件
+    # =========================
+    # 0. 先安全停止所有电机（新增）
+    # =========================
+    try:
+        if "motorsmanager" in system:
+            print("停止所有电机...")
+            system["motorsmanager"].stop_all_motors()
+            system["motorsmanager"].reset_home_all()
+    except Exception as e:
+        print(f"停止电机失败: {e}")
+
+    # =========================
+    # 1. 清理系统运行状态（新增重点）
+    # =========================
+    try:
+        if runtime:
+            print("清理runtime状态...")
+            runtime.clear_pot(POT1)  
+            runtime.clear_pot(POT2)  
+    except Exception as e:
+        print(f"runtime清理失败: {e}")
+
+    # 2. 停止循环类组件
     if "motorpolling" in system:
         system["motorpolling"].stop()
 
@@ -97,7 +127,7 @@ def shutdown_system(system):
     if "websocket" in system:
         system["websocket"].stop()          
 
-    # 2. 关闭所有 RS485 连接
+    # 3. 关闭所有 RS485 连接
     boards = system.get("boards", {})
     for name, board in boards.items():
         try:
@@ -107,8 +137,17 @@ def shutdown_system(system):
         except Exception as e:
             print(f"关闭 {name} 失败: {e}")
 
-    print("系统关闭完成")
+    # =========================
+    # 4. 最终系统状态标记（新增）
+    # =========================
+    try:
+        system["state"]["mode"]  = "OFF"
+        system["state"]["dirty"] = False
+    except Exception as e:
+        print(f"系统状态设置失败: {e}")
 
+    print("系统关闭完成")
+    return True
 
 #RS485连接创建
 def buildboards():
