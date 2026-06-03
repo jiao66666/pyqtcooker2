@@ -35,10 +35,10 @@ def build_system():
     pot1 = PotStateMachine(1, bus, trackmanager, motion_controller)
     pot2 = PotStateMachine(2, bus, trackmanager, motion_controller)
 
-    motorpolling = MotorPollingService(boards["stepmotor"],bus,motors["stepmotor"])
-
     from lib.newstructure.websocket_server import WebSocketServer
     websocket_server = WebSocketServer()
+
+    motorpolling = MotorPollingService(boards["stepmotor"],bus,motors["stepmotor"],websocket_server)
 
     resource_manager = TaskResourceManager(bus)
     dispatcher = CommandDispatcher(resource_manager,bus)

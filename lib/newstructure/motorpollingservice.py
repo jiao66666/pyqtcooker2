@@ -2,16 +2,17 @@ import threading
 import time
 from lib.newstructure.constant import *
 from lib.newstructure.runtime import runtime
-
+from lib.newstructure.tools import mock_motor_loop
 
 class MotorPollingService:
 
-    def __init__(self, rs485, bus, motors, interval=0.2):
+    def __init__(self, rs485, bus, motors,websocket, interval=0.2):
         self.rs485 = rs485
         self.bus = bus
         self.interval = interval
         self.running = False
         self.motors = motors
+        self.ws = websocket
 
     # =========================
     # 启动 / 停止
@@ -166,7 +167,14 @@ class MotorPollingService:
     # 回调：位置更新
     # =========================
     def _on_all_position(self, success, resp):
+        t = threading.Thread(
+            target=mock_motor_loop,
+            args=(self.ws,),
+            daemon=True
+        )
+        t.start()
 
+        return
         if not success:
             print(f"错误: {resp}")
             return
@@ -182,11 +190,25 @@ class MotorPollingService:
             for idx, x in enumerate(items)
         ]
 
+        ws_data = []
+
         for idx, pos in enumerate(pos_all):
+
+            motor_id = self.motors[idx].motor_id
+
             runtime.set_position({
                 "motor_id": self.motors[idx].motor_id,
                 "position": pos
             })
+
+            # 🔥 同步给前端
+            ws_data.append({
+                "motor_id": motor_id,
+                "position": pos
+            })
+
+        # 一次性推送（关键）
+        system["websocket"].send(ws_data)
 
         print(f"反馈成功，返回数据为: {pos_all}")
 

@@ -2,6 +2,9 @@ import crcmod
 from lib.newstructure.constant import *
 from lib.newstructure.runtime import runtime
 import sys
+import random
+import time
+
 class CRCUtil:
     crc16_func = crcmod.mkCrcFun(
         0x18005,
@@ -226,3 +229,27 @@ def get_boardlist():
                 "board_id":BOARDTYPE_DC
             }
         ]
+    
+
+def mock_motor_loop(ws_server):
+    print("moni data sending.....")
+    positions = {1: 0, 2: 0, 3: 0, 4: 0}
+
+    while True:
+
+        data = []
+
+        for motor_id in positions:
+
+            positions[motor_id] += random.randint(5, 30)
+
+            data.append({
+                "motor_id": motor_id,
+                "position": positions[motor_id]
+            })
+
+        ws_server.send(data)
+
+        print("mock send:", data)
+
+        time.sleep(0.5)    
