@@ -12,7 +12,7 @@ class MotorPollingService:
         self.interval = interval
         self.running = False
         self.motors = motors
-        self.ws = websocket
+        self.ws = websocket   #用于向前端实时反馈数据
 
     # =========================
     # 启动 / 停止
