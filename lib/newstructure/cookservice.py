@@ -1,6 +1,7 @@
 import threading
 from lib.newstructure.system import get_system
 from lib.newstructure.runtime import runtime
+from lib.newstructure.tools import get_pot_id
 class CookerService:
     def __init__(self,system):
         self.system = system
@@ -62,10 +63,11 @@ class CookerService:
                 raise Exception(f"unknown action: {action}")
             handler(motor, params)
 
+        potid = get_pot_id(motor_id)
         runtime.set_running(
             motor_id=motor_id,
             action=action,
-            pot_id=0,
+            pot_id=potid,
             params=params,
             task_id=task_id
         )
