@@ -17,7 +17,10 @@ class CookerService:
             "stop":self._stop_action,
             "ping":self._ping_action,
             "openfeeder":self._openfeedermotor_action,
-            "getfeeder":self._getfeedermotor_action
+            "getfeeder":self._getfeedermotor_action,
+            "dc_longrun":self._dclongrun_action,
+            "dc_run":self._dcrun_action,
+            "dc_stop":self._dcstop_action
         }
 
 
@@ -105,6 +108,17 @@ class CookerService:
             handler(motor, params)
         run_fn()
         return True,"run cmd OK"
+    
+    def run_dcmotor_cmd(self,motor_id,action,params):
+        motor = self.system["motors"]["spinmotor"][motor_id]
+        def run_fn():
+            handler = self.action_map.get(action)
+            if not handler:
+                return False,f"unknown action: {action}"
+            handler(motor, params)
+        run_fn()
+        return True,"run cmd OK"
+
 
     def _pause_action(self,motor,params):
         motor.pause()
@@ -148,7 +162,17 @@ class CookerService:
         motor.run(params["overtime"])
 
     def _getfeedermotor_action(self,motor,params):
-        motor.getfb(params["mode"])   
+        motor.getfb(params["mode"])  
+
+
+    def _dclongrun_action(self,motor,params):
+        motor.longrun(params["direction"],params["speed"])
+
+    def _dcrun_action(self,motor,params):
+        motor.run(params["direction"],params["time"],params["speed"])
+
+    def _dcstop_action(self,motor,params):
+        motor.stop()       
                             
 
 _service = None

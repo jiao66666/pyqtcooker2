@@ -335,17 +335,21 @@ def testdc_command():
     print("收到参数:",dc_speed,dc_time,command,pot)
     
     if pot == 1:
-       choosed_motor = POT1_SPIN_MOTOR
+       motor_id = POT1_SPIN_MOTOR
     else:
-       choosed_motor = POT2_SPIN_MOTOR
+       motor_id = POT2_SPIN_MOTOR
        
     if command == "longrun":
-        success =  system["motors"]["spinmotor"][choosed_motor].longrun(direction,dc_speed) 
+        action = "dc_longrun"
+        params = {"direction":direction,"speed":dc_speed}
     elif command == "run":
-        success =  system["motors"]["spinmotor"][choosed_motor].run(direction,dc_time,dc_speed)   
-    elif command == "stop":
-        success =  system["motors"]["spinmotor"][choosed_motor].stop() 
+        action = "dc_run"
+        params = {"direction":direction,"time":dc_time,"speed":dc_speed}
+    else:
+        action = "dc_stop"
+        params = {}
 
+    success = cookservice.run_dcmotor_cmd(motor_id,action,params)
     if success :
         print("测试成功!")
         return jsonify({"status": "success","message": "测试成功!"})
