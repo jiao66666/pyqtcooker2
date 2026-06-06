@@ -26,14 +26,28 @@ class StepMotor:
 
     def _default_done(self, cmd, success, resp):
         self.last_result = (success, resp)
+        self.cmd_running = False
 
         if not success:
             print(f"[{cmd}] 执行失败: {resp}")
+            self.bus.publish(
+                "command_failed",
+                {
+                    "cmd": cmd,
+                    "resp": resp
+                }
+            )
+
         else:
             print(f"[{cmd}] ACK成功")
-
-        self.cmd_running = False
-
+            self.bus.publish(
+                "command_ack",
+                {
+                    "cmd": cmd,
+                    "resp": resp
+                }
+            )
+           
     def reset_home(self):
         self.home = False
         
