@@ -162,22 +162,3 @@ class RS485Communication:
 
         return result["data"]
 
-    # =========================
-    # 急停（清空队列）
-    # =========================
-    def emergency_stop(self, command: str = "STOP", params: List[str] = None):
-        if params is None:
-            params = []
-
-        print("急停触发：清空队列")
-
-        # 清空队列
-        with self.queue.mutex:
-            self.queue.queue.clear()
-
-        # 插入最高优先级命令
-        self.execute_command_async(
-            command,
-            params,
-            priority=self.PRIORITY_EMERGENCY
-        )
