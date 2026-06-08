@@ -715,7 +715,7 @@ function updateSpeed(speedval) {
 
 //初始化速度 
 document.addEventListener("DOMContentLoaded", () => {
-    const first = document.querySelector('.speed_circle'); // ✅ 就是第一个
+    const first = document.querySelector('.speed_circle'); //  就是第一个
 
     if (first) {
         setSpeed(first, first.innerText);
