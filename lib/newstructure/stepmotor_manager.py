@@ -64,3 +64,22 @@ class StepMotorManager:
             motor.reset_home()
 
         return True    
+    
+
+    def speed_all(self,speedval):
+        print("加速所有电机....")
+
+        if self.cmd_running:
+            print("命令还在执行中")
+            return False
+
+        self.cmd_running = True
+        cmdstr =f"{speedval},{speedval},{speedval},{speedval},{speedval}"
+        self.com.execute_command_async(
+            "SPEED",
+            [str(self.board_id), "0", cmdstr],
+            callback=self._on_run_done,
+            priority=PRIORITY_CONTROL
+        )
+
+        return True

@@ -39,6 +39,24 @@ def connect():
         return jsonify({"status": "fail","message": f"使能失败!"})
     
 
+
+
+
+# API 路由
+@app.route('/dynamicSpeed', methods=['POST'])
+def dynamicSpeed():
+    print("dynamic speed")
+    data = request.get_json()
+    speed = data.get('speed')
+    success=system["motorsmanager"].speed_all(speed*360)
+    if success:
+        print("动态修改速度成功!")
+        return jsonify({"status": "success","message": "动态修改速度成功!"})
+    else:
+        print("动态修改速度失败!")
+        return jsonify({"status": "fail","message": f"动态修改速度失败!"})
+    
+
 @app.route('/disconnect', methods=['POST'])
 def disconnect():
     print("start Shutdown Power")

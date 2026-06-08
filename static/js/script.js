@@ -687,7 +687,31 @@ function setSpeed(el,speedvalue){
     });
 
     el.classList.add('speed_selected');
+    updateSpeed(parseInt(speedvalue))
 }
+
+
+function updateSpeed(speedval) {
+     // 获取 select 元素
+        fetch('/dynamicSpeed', {
+            method: 'POST', 
+            headers: {
+                'Content-Type': 'application/json'  
+            },
+            body: JSON.stringify({
+               speed:speedval
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+              addMessage(`返回信息 : `+data.message);  // 将收到的消息保存并显示
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            addMessage("Error starting motor.");
+        });
+}
+
 
 //初始化速度 
 document.addEventListener("DOMContentLoaded", () => {
