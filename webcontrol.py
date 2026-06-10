@@ -1,7 +1,7 @@
 # flaskcontrol.py
 from flask import Flask, render_template, jsonify,request
 from lib.newstructure.constant import *
-from lib.newstructure.tools import is_dev_mode,apply_action_speed_override,get_pot_pos
+from lib.newstructure.tools import is_dev_mode,apply_action_speed_override,get_pot_pos,build_dc_action
 import webview
 import threading
 from lib.newstructure.system import run_system,init_system,shutdown_system,set_system_dirty,recovery_system,shutdown_device
@@ -357,15 +357,12 @@ def testdc_command():
     else:
        motor_id = POT2_SPIN_MOTOR
        
-    if command == "longrun":
-        action = "dc_longrun"
-        params = {"direction":direction,"speed":dc_speed}
-    elif command == "run":
-        action = "dc_run"
-        params = {"direction":direction,"time":dc_time,"speed":dc_speed}
-    else:
-        action = "dc_stop"
-        params = {}
+    action, params = build_dc_action(
+        command,
+        direction,
+        dc_speed,
+        dc_time
+    )
 
     success = cookservice.run_dcmotor_cmd(motor_id,action,params)
     if success :

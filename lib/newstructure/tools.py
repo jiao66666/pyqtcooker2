@@ -258,4 +258,23 @@ def get_pot_id(motorid):
     if motorid in [POT1_MOVE_MOTOR,POT1_SPIN_MOTOR]:
         return POT1
     else:
-        return POT2        
+        return POT2       
+
+
+
+
+def build_dc_action(command, direction, dc_speed, dc_time):
+    if command == "longrun":
+        return "dc_longrun", {
+            "direction": direction,
+            "speed": dc_speed
+        }
+
+    if command == "run":
+        return "dc_run", {
+            "direction": direction,
+            "time": dc_time,
+            "speed": dc_speed
+        }
+
+    return "dc_stop", {}     
