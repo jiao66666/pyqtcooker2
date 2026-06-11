@@ -28,10 +28,32 @@ class MotorPollingService:
     # 主循环
     # =========================
     def _loop(self):
+
+        tick = 0   #降频使用
+
         while self.running:
             self._check_all_motors()
             self._check_all_position()
+
+            tick += 1
+            if tick % 10 == 0:
+                self._check_all_errors()
+
             time.sleep(self.interval)
+
+    
+    #检测所有电机是否有错误
+    def _check_all_errors(self):
+        self.rs485.execute_command_async(
+            "Error_Value",
+            ["1","0"],
+            callback=self._on_motor_error_handler
+        )
+
+    #处理检查到的错误
+    def _on_motor_error_handler(self):
+        print("process error here if checked ")
+
 
     # =========================
     # 电机状态查询（异步化）
@@ -39,19 +61,17 @@ class MotorPollingService:
     def _check_all_motors(self):
 
         for motor_id in self.motors:
-
             self.rs485.execute_command_async(
                 "RunStatus",
                 [str(motor_id)],
                 callback=lambda s, r, mid=motor_id: self._on_motor_status(mid, s, r)
             )
 
-
     #为最大化查询效率可考虑替换此方法
     def _check_all_motors_byonce(self):
         self.rs485.execute_command_async(
             "ALLRunStatus",
-            [],
+            ["1","0"],
             callback=self._on_motor_status_all
         )
 
