@@ -51,9 +51,24 @@ class MotorPollingService:
         )
 
     #处理检查到的错误
-    def _on_motor_error_handler(self):
+    def _on_motor_error_handler(self, success, resp):
         print("process error here if checked ")
+        if not success:
+            return
+        items = resp[1].split(",")
 
+        # 假设：0~4号电机
+        motor_ids = range(len(items))
+
+        if len(items) != len(self.motors):
+            print("警告：电机数量与返回不一致")
+
+        for motor_id, status in enumerate(items):
+            runtime.set_error(motor_id)
+            self.bus.publish(
+                "MOTOR_ERROR",
+                {"motor_id": motor_id}
+            )
 
     # =========================
     # 电机状态查询（异步化）
