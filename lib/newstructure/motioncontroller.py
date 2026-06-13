@@ -1,6 +1,8 @@
 import time
 import threading
 from lib.newstructure.runtime import runtime 
+import math
+
 
 
 class MotionController:
@@ -72,41 +74,48 @@ class MotionController:
     # =========================
     def _update_speed(self, task):
         motor_id = task["motor_id"]
-        """
+
         pos = runtime.get_position(motor_id)
         if pos is None:
             return
-        
+
         start = task["start"]
         end = task["end"]
 
         distance = end - start
+
+        # 防止除0
         if distance == 0:
             self.remove_task(motor_id)
             return
 
+        # 当前进度
         progress = (pos - start) / distance
 
-        # 限制范围（防止超出）
-        if progress < 0:
-            progress = 0
-        elif progress > 1:
-            progress = 1
+        # 限制在0~1之间
+        progress = max(0.0, min(1.0, progress))
 
-        # 三段速度（可后续升级为曲线）
-        if progress < 0.2:
-            speed = 100
-        elif progress < 0.8:
-            speed = 300
-        else:
-            speed = 100
-
-        # 结束判断
+        # 到达终点
         if progress >= 1.0:
             self.remove_task(motor_id)
             return
-        """
-        speed = 1
+
+        # --------------------------
+        # 速度参数
+        # --------------------------
+        MIN_SPEED = 100
+        MAX_SPEED = 300
+
+        # --------------------------
+        # S曲线速度
+        # --------------------------
+        factor = math.sin(math.pi * progress)
+
+        speed = MIN_SPEED + (MAX_SPEED - MIN_SPEED) * factor
+
+        # 转整数
+        speed = int(speed)
+
         self._send_speed(motor_id, speed)
 
     # =========================
