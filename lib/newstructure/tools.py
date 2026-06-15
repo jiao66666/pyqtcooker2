@@ -252,7 +252,7 @@ def mock_motor_loop(ws_server):
 
         print("mock send:", data)
 
-        time.sleep(0.2)    
+        time.sleep(1)    
 
 def get_pot_id(motorid):
     if motorid in [POT1_MOVE_MOTOR,POT1_SPIN_MOTOR]:

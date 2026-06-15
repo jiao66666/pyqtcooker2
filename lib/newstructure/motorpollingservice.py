@@ -13,6 +13,7 @@ class MotorPollingService:
         self.running = False
         self.motors = motors
         self.ws = websocket   #用于向前端实时反馈数据
+        self.mock_started = False
 
     # =========================
     # 启动 / 停止
@@ -202,6 +203,12 @@ class MotorPollingService:
     # 回调：位置更新
     # =========================
     def _on_all_position(self, success, resp):
+
+        if self.mock_started:
+            return
+
+        self.mock_started = True
+
         t = threading.Thread(
             target=mock_motor_loop,
             args=(self.ws,),
