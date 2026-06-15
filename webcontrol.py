@@ -422,15 +422,25 @@ def start_server():
 #启动webview的Windows窗口控制UI
 def start_webview():
     url = f"http://127.0.0.1:{port}"
-    window=webview.create_window(
+
+    screen = webview.screens[0]
+    width, height = 800, 1000
+
+    x = (screen.width - width) // 2
+    y = (screen.height - height) // 2
+
+    window = webview.create_window(
         "炒菜机",
         url,
-        width=800,
-        height=1000,
-        min_size=(800, 1000)
+        width=width,
+        height=height,
+        x=x,
+        y=y,
+        min_size=(width, height)
     )
+
     window.events.closed += on_windows_close
-    webview.start()
+    webview.start(gui='edgechromium')
 
 def on_windows_close():
     shutdown_system(system)
