@@ -89,6 +89,7 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
     display:flex;
     flex-flow: column nowrap;
     border:2px dashed #ccc;
+    width:50%;
 }
 
 .motor_container .motor .motor_row{
@@ -96,6 +97,7 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
     flex-flow: row nowrap;
     align-items: center;
     margin-bottom: 10px;
+    justify-content: space-around;
 }
 
 .motor_row button{
