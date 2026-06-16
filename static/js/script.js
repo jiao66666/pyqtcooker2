@@ -123,6 +123,7 @@ function runTastMotor() {
         var tastMotorOvertime = document.getElementById("tastmotorovertime");
         if(tastMotorOvertime.value == "" || isNaN(tastMotorOvertime.value)){
             addMessage("请输入超时时间");
+            alert("请输入超时时间!");
             return;
         }
 
