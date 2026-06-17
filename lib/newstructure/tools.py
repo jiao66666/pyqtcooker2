@@ -257,12 +257,11 @@ def mock_motor_loop():
 
         time.sleep(0.2)    
 
-def trace_info(info, trace_cmds=None):
-     
-    if trace_cmds:
-        cmd = info.split(",", 1)[0]
-        if cmd not in trace_cmds:
-            return
+TRACE_CMDS = {"#RUN", "#SPEED", "#ORGRST"}
+def trace_info(info):
+    cmd = info.split(",", 1)[0].upper()
+    if cmd not in TRACE_CMDS:
+        return
     data = []
     data.append({
         "type":"command",
