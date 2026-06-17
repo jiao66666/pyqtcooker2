@@ -789,6 +789,29 @@ function createMotorStatusApp(el) {
   });
 }
 
+
+const commandApp = new Vue({
+    el: "#command_history",
+    delimiters: ['${', '}'],
+    data: {
+        commandHistory: []
+    },
+    methods: {
+        addCommand(cmd) {
+            const now = new Date().toLocaleTimeString();
+
+            this.commandHistory.unshift({
+                timestamp: now,
+                message: cmd
+            });
+
+            if (this.commandHistory.length > 500) {
+                this.commandHistory.pop();
+            }
+        }
+    }
+});
+
 // 创建两个实例（变量互不影响）
 const app = createMotorStatusApp('#motor_status_1');
 
@@ -812,7 +835,7 @@ function setupWebSocket(url) {
             if(item.type=="cordinate"){
                 app.updateMotorData(item.motor_id, item.position);
             }else if(item.type=="command"){
-                
+                commandApp.addCommand(item.info);
             }
         }
     };

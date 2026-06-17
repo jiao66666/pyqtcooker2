@@ -104,8 +104,7 @@ class RS485Communication:
             self.serial_conn.flush()
 
             trace_info(
-                cmd_str,
-                trace_cmds=["#Run", "#ORGRST","#SPEED"]
+                cmd_str
             )
 
             print("主板返回消息>>>>>>")

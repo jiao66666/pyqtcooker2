@@ -301,7 +301,25 @@
 
 
     <div class="prompt">控制台消息</div>
-    <div id="status-history"></div> <!-- 用于显示历史消息 -->
+    <div class="history_con">
+        <div id="status-history" class="status-history"></div> <!-- 用于显示历史消息 -->
+        <div id="command_history" class="status-history">
+            <div
+                class="message"
+                v-for="(msg, index) in commandHistory"
+                :key="index"
+            >
+                <div class="timestamp">
+                    ${ msg.timestamp }
+                </div>
+                <div class="message-text">
+                    ${ msg.message }
+                </div>
+            </div>
+        </div>
+    </div>
+
+
 
 
       <!-- Vue 模板 -->

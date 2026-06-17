@@ -258,15 +258,18 @@ def mock_motor_loop():
         time.sleep(0.2)    
 
 def trace_info(info, trace_cmds=None):
-    websocket_server.send(info)
-
+     
     if trace_cmds:
         cmd = info.split(",", 1)[0]
-
         if cmd not in trace_cmds:
             return
-
-    print(f"ws:executing info:{info}")
+    data = []
+    data.append({
+        "type":"command",
+        "info": info
+    })
+    websocket_server.send(data)
+    print("ws:executing info",data)
 
 
 def get_pot_id(motorid):
