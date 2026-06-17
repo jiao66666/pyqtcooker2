@@ -1,6 +1,8 @@
 import crcmod
 from lib.newstructure.constant import *
 from lib.newstructure.runtime import runtime
+from lib.newstructure.websocket_runtime import websocket_server
+
 import sys
 import random
 import time
@@ -231,7 +233,7 @@ def get_boardlist():
         ]
     
 
-def mock_motor_loop(ws_server):
+def mock_motor_loop():
     print("moni data sending.....")
     positions = {1: 0, 2: 0, 3: 0, 4: 0}
 
@@ -244,15 +246,28 @@ def mock_motor_loop(ws_server):
             positions[motor_id] += random.randint(5, 30)
 
             data.append({
+                "type":"cordinate",
                 "motor_id": motor_id,
                 "position": positions[motor_id]
             })
 
-        ws_server.send(data)
+        websocket_server.send(data)
 
         print("mock send:", data)
 
         time.sleep(0.2)    
+
+def trace_info(info, trace_cmds=None):
+    websocket_server.send(info)
+
+    if trace_cmds:
+        cmd = info.split(",", 1)[0]
+
+        if cmd not in trace_cmds:
+            return
+
+    print(f"ws:executing info:{info}")
+
 
 def get_pot_id(motorid):
     if motorid in [POT1_MOVE_MOTOR,POT1_SPIN_MOTOR]:

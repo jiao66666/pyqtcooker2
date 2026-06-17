@@ -4,6 +4,7 @@ import queue
 from typing import Optional, List, Tuple, Callable, Any
 from lib.newstructure.constant import *
 from lib.newstructure.protocols import ProtocolFactory
+from lib.newstructure.tools import trace_info
 
 
 class RS485Communication:
@@ -101,6 +102,11 @@ class RS485Communication:
             print("发送指令中....")
             self.serial_conn.write(cmd_str.encode('utf-8'))
             self.serial_conn.flush()
+
+            trace_info(
+                cmd_str,
+                trace_cmds=["#Run", "#ORGRST","#SPEED"]
+            )
 
             print("主板返回消息>>>>>>")
             res = self.serial_conn.readline().decode('utf-8').strip()

@@ -3,7 +3,6 @@ import time
 from lib.newstructure.constant import *
 from lib.newstructure.runtime import runtime
 from lib.newstructure.tools import mock_motor_loop
-from lib.newstructure.websocket_runtime import websocket_server
 
 
 class MotorPollingService:
@@ -212,7 +211,6 @@ class MotorPollingService:
 
         t = threading.Thread(
             target=mock_motor_loop,
-            args=(websocket_server,),
             daemon=True
         )
         t.start()

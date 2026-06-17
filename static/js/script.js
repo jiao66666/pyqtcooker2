@@ -809,7 +809,11 @@ function setupWebSocket(url) {
     ws.onmessage = (event) => {
         const arr = JSON.parse(event.data); // [{motor_id, position}, ...]
         for (const item of arr) {
-            app.updateMotorData(item.motor_id, item.position);
+            if(item.type=="cordinate"){
+                app.updateMotorData(item.motor_id, item.position);
+            }else if(item.type=="command"){
+                
+            }
         }
     };
 
