@@ -3,16 +3,17 @@ import time
 from lib.newstructure.constant import *
 from lib.newstructure.runtime import runtime
 from lib.newstructure.tools import mock_motor_loop
+from lib.newstructure.websocket_runtime import websocket_server
+
 
 class MotorPollingService:
 
-    def __init__(self, rs485, bus, motors,websocket, interval=0.2):
+    def __init__(self, rs485, bus, motors,interval=0.2):
         self.rs485 = rs485
         self.bus = bus
         self.interval = interval
         self.running = False
         self.motors = motors
-        self.ws = websocket   #用于向前端实时反馈数据
         self.mock_started = False
 
     # =========================
@@ -211,7 +212,7 @@ class MotorPollingService:
 
         t = threading.Thread(
             target=mock_motor_loop,
-            args=(self.ws,),
+            args=(websocket_server,),
             daemon=True
         )
         t.start()

@@ -133,3 +133,17 @@ class WebSocketServer:
             self._send_async(data),
             self.loop
         )
+
+_websocket = None
+_websocket_lock = threading.Lock()
+
+#获取websocket实例
+def get_websocket():
+    global _websocket
+
+    if _websocket is None:
+        with _websocket_lock:
+            if _websocket is None:   # 双重检查锁（防并发）
+                _websocket =  WebSocketServer()
+
+    return _websocket
