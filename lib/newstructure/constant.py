@@ -140,19 +140,19 @@ ACTION_PARAMS_KEYLIST = {
 ACTION_PARAMS_CONFIG = {
     "flip_out_togetfood": {
         "speed": 200,
-        "target": 4.5,
+        "target": 4.6,
         "varspeed":False,
         "quitinadvance":0
     },
     "move_out_togetfood": {
         "speed": 1000,
-        "target":4.6,
+        "target":4.16,
         "varspeed":False,
         "quitinadvance":0
     },
     "move_to_wait": {
         "speed": 1000,
-        "target":4.6,
+        "target":3,
         "varspeed":False,
         "quitinadvance":0
     },
@@ -176,29 +176,17 @@ ACTION_PARAMS_CONFIG = {
     },
     "flip_out_pour": {
         "speed": 1000,
-        "target":4.6,
+        "target":20.2,
         "varspeed":False,
         "quitinadvance":0
     },
     "flip_in_wash": {
         "speed": 1000,
-        "target":4.6,
+        "target":-11.5,
         "varspeed":False,
         "quitinadvance":0
     },
     "flip_out_getfood": {
-        "speed": 1000,
-        "target":4.6,
-        "varspeed":False,
-        "quitinadvance":0
-    },
-    "move_in_tofirefood": {
-        "speed": 1000,
-        "target":4.6,
-        "varspeed":False,
-        "quitinadvance":0
-    },
-    "flip_in_tofirefood": {
         "speed": 1000,
         "target":4.6,
         "varspeed":False,
