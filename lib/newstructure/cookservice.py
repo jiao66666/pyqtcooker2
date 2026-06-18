@@ -49,6 +49,8 @@ class CookerService:
             return False,msg
 
         steps = self.system["stepbuilder"].build(task_name, pot_id)
+        print("printing.....steps>>>>>>>>>>>>>>>>>>>>>>")
+        print(steps)
         self.system["pots"][pot_id].submit_task(task_name,steps)
         return True,"submit task OK"
 

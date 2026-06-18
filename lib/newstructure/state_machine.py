@@ -57,7 +57,7 @@ class PotStateMachine:
         elif self.state == "RUNNING":
             print("motor start running .....")
             step = self.steps[self.current_step]
-
+            
             if self.need_track(step["action"]) and not self.track.try_acquire(self.pot_id, step["action"]):
                 print(f"Pot {self.pot_id} waiting track")
                 if "on_block" in step:
@@ -85,7 +85,7 @@ class PotStateMachine:
 
             self.state = "WAITING"
             self.wait_start_time = time.time()
-
+   
         elif self.state == "WAITING":
             if time.time() - self.wait_start_time > TIMEOUT:
                 print("motor time out !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
@@ -98,6 +98,8 @@ class PotStateMachine:
                     "action": step["action"],
                     "reason": "timeout"
                 }
+        elif self.state == "DONE":
+            print("ALL ACTION IS DONE!!!!!!!!!!!")
 
     def reset(self):
         self.state = "IDLE"

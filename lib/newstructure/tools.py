@@ -253,7 +253,7 @@ def mock_motor_loop():
 
         websocket_server.send(data)
 
-        print("mock send:", data)
+        #print("mock send:", data)
 
         time.sleep(0.2)    
 
@@ -268,7 +268,7 @@ def trace_info(info):
         "info": info
     })
     websocket_server.send(data)
-    print("ws:executing info",data)
+    #print("ws:executing info",data)
 
 
 def get_pot_id(motorid):

@@ -26,6 +26,7 @@ class StepMotor:
 
     def _default_done(self, cmd, success, resp):
         self.last_result = (success, resp)
+        print(f"{cmd} is executed done ,ready to set cmd_running false<<<<<<<")
         self.cmd_running = False
 
         if not success:

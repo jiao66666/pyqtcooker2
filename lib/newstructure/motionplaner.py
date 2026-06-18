@@ -15,8 +15,9 @@ class MotionPlanner:
         # 1 计算位移
         delta = target - current_position
 
-        if delta == 0:
-            return None  # 不需要动
+        #测试时暂时关闭此判断
+        #if delta == 0:
+        #    return None  # 不需要动
         
         if motor.motor_id in [POT1_MOVE_MOTOR,POT2_MOVE_MOTOR] and target < 0:
             return None        
