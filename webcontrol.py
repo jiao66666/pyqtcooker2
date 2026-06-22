@@ -8,6 +8,7 @@ from lib.newstructure.system import run_system,init_system,shutdown_system,set_s
 from lib.newstructure.cookservice import cookservice
 from lib.newstructure.system_runtime import system
 from lib.newstructure.runtime import runtime
+from lib.newstructure.monitor import start_memory_monitor
 
 #  2.0版本Flask Control WEB 后端服务控制程序
 app = Flask(__name__)
@@ -458,4 +459,5 @@ def start_system():
 if __name__ == '__main__':
     start_server()
     start_system()
+    start_memory_monitor()
     start_webview()
