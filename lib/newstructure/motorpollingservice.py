@@ -14,6 +14,7 @@ class MotorPollingService:
         self.running = False
         self.motors = motors
         self.mock_started = False
+        self.motor_inflight = set()
 
     # =========================
     # 启动 / 停止
@@ -77,6 +78,12 @@ class MotorPollingService:
     def _check_all_motors(self):
 
         for motor_id in self.motors:
+
+            if motor_id in self.motor_inflight:
+                        continue
+
+            self.motor_inflight.add(motor_id)
+
             self.rs485.execute_command_async(
                 "RunStatus",
                 [str(motor_id)],
@@ -159,6 +166,7 @@ class MotorPollingService:
     def _on_motor_status(self, motor_id, success, response):
 
         print("电机状态回调中》》》》》》》")
+        self.motor_inflight.discard(motor_id)
         #测试的时候关闭
         #仅测试用       
         #time.sleep(1)
