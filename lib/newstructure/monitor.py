@@ -4,6 +4,7 @@ import time
 import psutil
 import threading
 from collections import Counter
+from lib.newstructure.system_runtime import system
 
 _last_objects = 0
 
@@ -52,6 +53,8 @@ def memory_monitor_loop(interval=1):
 
         try:
             memory_check()
+            ouput_moreinfo()
+            find_motor_callback_count()
 
         except Exception as e:
             print("memory monitor error:", e)
@@ -68,3 +71,40 @@ def start_memory_monitor():
     )
 
     t.start()
+
+def ouput_moreinfo():
+    try:
+
+        bus = system["bus"]
+
+        total_callbacks = 0
+
+        for callbacks in bus.subscribers.values():
+            total_callbacks += len(callbacks)
+
+        print(
+            f"[BUS] "
+            f"EVENTS={len(bus.subscribers)} "
+            f"CALLBACKS={total_callbacks}"
+        )
+
+    except Exception as e:
+        print("BUS INFO ERROR:", e)
+
+
+def find_motor_callback_count():
+
+    count = 0
+
+    for obj in gc.get_objects():
+
+        try:
+            if callable(obj):
+
+                if getattr(obj, "__name__", "") == "_cb":
+                    count += 1
+
+        except:
+            pass
+
+    print("[CALLBACK _cb]", count)        
