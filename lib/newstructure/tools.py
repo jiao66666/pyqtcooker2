@@ -255,7 +255,7 @@ def mock_motor_loop():
 
         #print("mock send:", data)
 
-        time.sleep(0.5)    
+        time.sleep(0.2)    
 
 TRACE_CMDS = {"#RUN", "#SPEED", "#ORGRST"}
 def trace_info(info):
