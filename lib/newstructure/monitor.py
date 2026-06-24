@@ -5,6 +5,7 @@ import psutil
 import threading
 from collections import Counter
 from lib.newstructure.system_runtime import system
+from lib.newstructure.websocket_runtime import websocket_server
 import tracemalloc
 
 
@@ -115,6 +116,7 @@ def memory_monitor_loop(interval=1):
             memory_check()
             ouput_moreinfo()
             find_motor_callback_count()
+            websocket_check()  
             memory_monitor_strong()
 
         except Exception as e:
@@ -125,7 +127,7 @@ def memory_monitor_loop(interval=1):
 
 def start_memory_monitor():
     tracemalloc.start(25)   
-    
+
     t = threading.Thread(
         target=memory_monitor_loop,
         daemon=True,
@@ -170,3 +172,23 @@ def find_motor_callback_count():
             pass
 
     print("[CALLBACK _cb]", count)        
+
+
+
+def websocket_check():
+    try:
+        ws = websocket_server  # 你全局实例
+
+        client_count = len(ws.clients)
+
+        print(f"[WS] CLIENTS={client_count}")
+
+        # ⚠️ 如果 loop 存在，检查 task backlog
+        if ws.loop:
+            import asyncio
+
+            tasks = asyncio.all_tasks(ws.loop)
+            print(f"[WS] ASYNC_TASKS={len(tasks)}")
+
+    except Exception as e:
+        print("[WS] CHECK ERROR:", e)    
