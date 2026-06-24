@@ -23,6 +23,8 @@ class PotStateMachine:
         # 订阅电机完成事件
         self.bus.subscribe("MOTOR_DONE", self.on_motor_done)
         self.bus.subscribe("ESTOP_TRIGGERED", self.on_estop)
+        self.bus.subscribe("MOTOR_ERROR", self.on_motor_error)
+
 
     def submit_task(self, task_name,steps):
         if task_name in self.running_tasks:
@@ -39,7 +41,7 @@ class PotStateMachine:
         self.running_taskname = None
 
     def tick(self):
-        if self.state in ["STOPPED", "ERROR"]:
+        if self.state in ["STOPPED"]:
             return
 
         elif self.state == "IDLE":
@@ -100,6 +102,12 @@ class PotStateMachine:
                 }
         elif self.state == "DONE":
             print("ALL ACTION IS DONE!!!!!!!!!!!")
+            self.bus.unsubscribe("MOTOR_DONE", self.on_motor_done)
+
+        elif self.state == "ERROR":
+            print("error happened!!!!")  
+            self.bus.unsubscribe("MOTOR_ERROR", self.on_motor_error)
+  
 
     def reset(self):
         self.state = "IDLE"
@@ -120,7 +128,7 @@ class PotStateMachine:
 
     def on_motor_done(self, data):
         print("电机完成运动@@@@@@@@@@@@@@@@@@@@@@@@")
-
+        self.state = "DONE"  #only for test
         motor_id = data["motor_id"]    
         ctx = runtime.get(motor_id)
         if not ctx:
@@ -166,3 +174,6 @@ class PotStateMachine:
 
         # 更新 runtime
         runtime.clear_pot(self.pot_id)            
+
+    def on_motor_error(self):
+        self.state = "ERROR"    
