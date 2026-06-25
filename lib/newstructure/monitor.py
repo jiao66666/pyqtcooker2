@@ -69,42 +69,31 @@ def memory_monitor_strong():
 
     _last_snapshot = snapshot
 
-
 def memory_check():
+    if not hasattr(memory_check, "tick"):
+        memory_check.tick = 0
 
-    global _last_objects
+    memory_check.tick += 1
+    tick = memory_check.tick
 
     process = psutil.Process(os.getpid())
-
     rss = process.memory_info().rss / 1024 / 1024
 
     objs = gc.get_objects()
-
     obj_count = len(objs)
 
     print(
-        f"[MEMORY] "
-        f"RSS={rss:.2f}MB "
-        f"THREADS={threading.active_count()} "
-        f"OBJECTS={obj_count} "
-        f"DIFF={obj_count - _last_objects:+}"
+        f"[MEMORY] RSS={rss:.2f}MB THREADS={threading.active_count()} OBJECTS={obj_count} TICK={tick}"
     )
 
     _last_objects = obj_count
 
-    # 对象增长过快时打印TOP20
-    if obj_count % 2000 < 200:
-
-        counter = Counter(
-            type(obj).__name__
-            for obj in objs
-        )
+    if tick % 3 == 0:
+        counter = Counter(type(obj).__name__ for obj in objs)
 
         print("\n===== TOP OBJECTS =====")
-
         for name, count in counter.most_common(20):
             print(f"{name:<30} {count}")
-
         print("=======================\n")
 
 
@@ -114,10 +103,10 @@ def memory_monitor_loop(interval=1):
 
         try:
             memory_check()
-            ouput_moreinfo()
-            find_motor_callback_count()
-            websocket_check()  
-            memory_monitor_strong()
+            #ouput_moreinfo()
+            #find_motor_callback_count()
+            #websocket_check()  
+            #memory_monitor_strong()
 
         except Exception as e:
             print("memory monitor error:", e)
