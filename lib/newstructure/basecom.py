@@ -21,7 +21,7 @@ class RS485Communication:
         self.connected = False
 
         # 核心：优先级队列
-        self.queue = queue.PriorityQueue(maxsize=200)
+        self.queue = queue.PriorityQueue(maxsize=MAX_CMD_NUMS)
         self.counter = 0
 
         # worker线程
