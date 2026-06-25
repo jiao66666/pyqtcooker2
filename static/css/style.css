@@ -101,6 +101,8 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
 }
 
 .motor_row button{
+    appearance: none;
+    -webkit-appearance: none;
     width:60px;
     height:60px;
     font-size: 11px;
@@ -108,6 +110,9 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
     border: none;
     border-radius: 10px;
     color: #fff;
+    outline:none;
+    box-shadow: none;
+    text-shadow: none !important;
 }
 .prompt{
     text-align: left;
