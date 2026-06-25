@@ -177,3 +177,9 @@ class PotStateMachine:
 
     def on_motor_error(self):
         self.state = "ERROR"    
+
+
+    def destroy(self):
+        self.bus.unsubscribe("MOTOR_DONE", self.on_motor_done)
+        self.bus.unsubscribe("ESTOP_TRIGGERED", self.on_estop)
+        self.bus.unsubscribe("MOTOR_ERROR", self.on_motor_error)     

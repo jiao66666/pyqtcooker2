@@ -5,7 +5,8 @@ class EventBus:
         self.subscribers = defaultdict(list)
 
     def subscribe(self, event_type, callback):
-        self.subscribers[event_type].append(callback)
+        if callback not in self.subscribers[event_type]:
+           self.subscribers[event_type].append(callback)
 
     def publish(self, event_type, data=None):
         for cb in self.subscribers[event_type]:
