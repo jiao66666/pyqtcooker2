@@ -90,6 +90,8 @@ class MotorPollingService:
                 callback=lambda s, r, mid=motor_id: self._on_motor_status(mid, s, r)
             )
 
+            print("QUEUE SIZE:", self.rs485.queue.qsize())
+
     #为最大化查询效率可考虑替换此方法
     def _check_all_motors_byonce(self):
         self.rs485.execute_command_async(

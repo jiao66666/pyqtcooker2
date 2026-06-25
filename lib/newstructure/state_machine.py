@@ -101,7 +101,7 @@ class PotStateMachine:
                     "reason": "timeout"
                 }
         elif self.state == "DONE":
-            print("ALL ACTION IS DONE!!!!!!!!!!!")
+            #print("ALL ACTION IS DONE!!!!!!!!!!!")
             self.bus.unsubscribe("MOTOR_DONE", self.on_motor_done)
 
         elif self.state == "ERROR":

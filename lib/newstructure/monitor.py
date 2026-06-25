@@ -83,7 +83,7 @@ def memory_check():
     obj_count = len(objs)
 
     print(
-        f"[MEMORY] RSS={rss:.2f}MB THREADS={threading.active_count()} OBJECTS={obj_count} TICK={tick}"
+        f"[MEMORY] RSS={rss:.2f}MB THREADS={threading.active_count()} OBJECTS={obj_count} TICK={tick} QUEUE={system['boards']['stepmotor'].queue.qsize()}"
     )
 
     _last_objects = obj_count
@@ -103,7 +103,7 @@ def memory_monitor_loop(interval=1):
 
         try:
             memory_check()
-            #ouput_moreinfo()
+            ouput_moreinfo()
             #find_motor_callback_count()
             #websocket_check()  
             #memory_monitor_strong()
