@@ -459,5 +459,5 @@ def start_system():
 if __name__ == '__main__':
     start_server()
     start_system()
-    start_memory_monitor()
+    #start_memory_monitor()
     start_webview()
