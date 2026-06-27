@@ -452,12 +452,11 @@ def start_system():
 
     t = threading.Thread(
         target=lambda: run_system(system),
-        daemon=True
+        daemon=False
     )
     t.start()
 
 if __name__ == '__main__':
     start_server()
     start_system()
-    #start_memory_monitor()
     start_webview()
