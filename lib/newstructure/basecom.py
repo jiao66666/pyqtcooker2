@@ -99,7 +99,7 @@ class RS485Communication:
         try:
             cmd_str = self.protocol.build_command(command, params)
 
-            print("发送指令中....")
+            print(f"发送指令{cmd_str}中....")
             self.serial_conn.write(cmd_str.encode('utf-8'))
             self.serial_conn.flush()
 
