@@ -45,6 +45,7 @@ class PotStateMachine:
             return
 
         elif self.state == "IDLE":
+            print("state machine status is IDLE")
             if not self.command_queue.empty():
                 self.steps = self.command_queue.get()
                 self.current_step = 0
@@ -52,12 +53,13 @@ class PotStateMachine:
             return
 
         elif self.state == "CHECK_HOME":
+            print("state machine status is CHECK_HOME")
             if self.check_home():
                 self.state = "RUNNING"
             return
 
         elif self.state == "RUNNING":
-            print("motor start running .....")
+            print("state machine state is RUNNING")
             step = self.steps[self.current_step]
             
             if self.need_track(step["action"]) and not self.track.try_acquire(self.pot_id, step["action"]):
