@@ -34,7 +34,7 @@ class PotStateMachine:
         self.running_taskname = task_name
         self.command_queue.put(steps)
         print("submitt task OK@!>>>>")
-        print(self.command_queue.qsize())
+        #print(self.command_queue.qsize())
 
     def clear_running_task(self):
         self.running_tasks = set()
