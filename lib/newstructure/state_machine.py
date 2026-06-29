@@ -42,11 +42,11 @@ class PotStateMachine:
 
     def tick(self):
         if self.state in ["STOPPED"]:
-            print("state machine state is STOPPED")
+            print(f"{self.pot_id} state machine state is STOPPED")
             return
 
         elif self.state == "IDLE":
-            print("state machine status is IDLE")
+            print(f"{self.pot_id} machine status is IDLE")
             if not self.command_queue.empty():
                 self.steps = self.command_queue.get()
                 self.current_step = 0
@@ -54,13 +54,13 @@ class PotStateMachine:
             return
 
         elif self.state == "CHECK_HOME":
-            print("state machine status is CHECK_HOME")
+            print(f"{self.pot_id} machine status is CHECK_HOME")
             if self.check_home():
                 self.state = "RUNNING"
             return
 
         elif self.state == "RUNNING":
-            print("state machine state is RUNNING")
+            print(f"{self.pot_id} machine state is RUNNING")
             step = self.steps[self.current_step]
             
             if self.need_track(step["action"]) and not self.track.try_acquire(self.pot_id, step["action"]):
@@ -92,7 +92,7 @@ class PotStateMachine:
             self.wait_start_time = time.time()
    
         elif self.state == "WAITING":
-            print("state machine state is WAITING")
+            print(f"{self.pot_id} machine state is WAITING")
             if time.time() - self.wait_start_time > TIMEOUT:
                 print("motor time out !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
                 step = self.steps[self.current_step]
@@ -106,11 +106,11 @@ class PotStateMachine:
                 }
         elif self.state == "DONE":
             #print("ALL ACTION IS DONE!!!!!!!!!!!")
-            print("state machine state is DONE")
+            print(f"{self.pot_id} machine state is DONE")
             self.bus.unsubscribe("MOTOR_DONE", self.on_motor_done)
 
         elif self.state == "ERROR":
-            print("state machine state is ERROR")  
+            print(f"{self.pot_id} machine state is ERROR")  
             self.bus.unsubscribe("MOTOR_ERROR", self.on_motor_error)
   
 
