@@ -53,7 +53,7 @@ class MotorPollingService:
         )
 
     #处理检查到的错误
-    def _on_motor_error_handler(self, success, resp):
+    def _on_motor_error_handler(self, command,success, resp):
         print("process error here if checked ")
         if not success:
             return
@@ -87,7 +87,7 @@ class MotorPollingService:
             self.rs485.execute_command_async(
                 "RunStatus",
                 [str(motor_id)],
-                callback=lambda s, r, mid=motor_id: self._on_motor_status(mid, s, r)
+                callback=lambda c,s, r, mid=motor_id: self._on_motor_status(mid, s, r ,c)
             )
 
             print("QUEUE SIZE:", self.rs485.queue.qsize())
@@ -104,7 +104,7 @@ class MotorPollingService:
     # 回调：电机状态
     # =========================
 
-    def _on_motor_status_all(self, success, resp):
+    def _on_motor_status_all(self, command,success, resp):
 
         print("电机状态回调中>>>>>>>>>>")
 
@@ -165,7 +165,7 @@ class MotorPollingService:
                 )
 
 
-    def _on_motor_status(self, motor_id, success, response):
+    def _on_motor_status(self, motor_id, success, response ,command):
 
         print("电机状态回调中》》》》》》》")
         self.motor_inflight.discard(motor_id)
@@ -212,7 +212,7 @@ class MotorPollingService:
     # =========================
     # 回调：位置更新
     # =========================
-    def _on_all_position(self, success, resp):
+    def _on_all_position(self, command,success, resp):
 
         if self.mock_started:
             return

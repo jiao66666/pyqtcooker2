@@ -77,7 +77,7 @@ class RS485Communication:
 
                 if callback:
                     try:
-                        callback(success, resp)
+                        callback(command,success, resp)
                     except Exception as e:
                         print(f"回调执行异常: {e}")
 
