@@ -21,8 +21,8 @@ class StepMotor:
         print(f"{action} is ready to execute,setting cmdrunning true>>>>>>>")
         self.cmd_running = True
 
-    def _on_run_done(self, success, resp):
-        self._default_done("RUN", success, resp)
+    def _on_run_done(self,command ,success, resp):
+        self._default_done(command, success, resp)
 
     def _default_done(self, cmd, success, resp):
         self.last_result = (success, resp)
