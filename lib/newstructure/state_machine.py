@@ -42,6 +42,7 @@ class PotStateMachine:
 
     def tick(self):
         if self.state in ["STOPPED"]:
+            print("state machine state is STOPPED")
             return
 
         elif self.state == "IDLE":
@@ -91,6 +92,7 @@ class PotStateMachine:
             self.wait_start_time = time.time()
    
         elif self.state == "WAITING":
+            print("state machine state is WAITING")
             if time.time() - self.wait_start_time > TIMEOUT:
                 print("motor time out !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
                 step = self.steps[self.current_step]
@@ -104,10 +106,11 @@ class PotStateMachine:
                 }
         elif self.state == "DONE":
             #print("ALL ACTION IS DONE!!!!!!!!!!!")
+            print("state machine state is DONE")
             self.bus.unsubscribe("MOTOR_DONE", self.on_motor_done)
 
         elif self.state == "ERROR":
-            print("error happened!!!!")  
+            print("state machine state is ERROR")  
             self.bus.unsubscribe("MOTOR_ERROR", self.on_motor_error)
   
 
