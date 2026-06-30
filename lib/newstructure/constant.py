@@ -200,7 +200,7 @@ ACTION_PARAMS_CONFIG = {
     }
 }
 
-TIMEOUT = 60 #电机单步动作超时
+TIMEOUT = 600 #电机单步动作超时
 
 # 优先级定义（越小越优先）
 PRIORITY_EMERGENCY = 0
