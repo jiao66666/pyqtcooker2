@@ -20,6 +20,7 @@ class MotionPlanner:
         #    return None  # 不需要动
         
         if motor.motor_id in [POT1_MOVE_MOTOR,POT2_MOVE_MOTOR] and target < 0:
+            print("计算位移出错！！！！》》》")
             return None        
 
         # 2️ 圈数（你的系统单位）

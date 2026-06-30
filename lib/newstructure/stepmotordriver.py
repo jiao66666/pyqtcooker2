@@ -16,6 +16,7 @@ class StepMotor:
         self.current_position = 0
         self.cmd_running = False
         self.last_result = None
+        self.current_target = 0  #use for simulation
 
     def set_cmd_running(self,action):
         print(f"{action} is ready to execute,setting cmdrunning true>>>>>>>")
@@ -28,7 +29,7 @@ class StepMotor:
         self.last_result = (success, resp)
         print(f"{cmd} is executed done ,ready to set cmd_running false<<<<<<<")
         self.cmd_running = False
-
+        self.update_current_pos(self.current_target)
         if not success:
             print(f"[{cmd}] 执行失败: {resp}")
             self.bus.publish(
@@ -53,7 +54,10 @@ class StepMotor:
         self.home = False
         
     def get_current_pos(self):
-        return self.current_position    
+        return self.current_position  
+
+    def update_current_pos(self,pos):
+        self.current_position =  pos
     #绝对值坐标运动
     def go_action(self, action, params):
         print(f"[{self.name}] start {action}")
@@ -69,10 +73,12 @@ class StepMotor:
             speed=anglespeed
         )
 
+
         if params is None:
             print("no movement needed")
             return False
-  
+
+
         # 发送运行命令
         success = self.run(
             params["circles"],
@@ -82,7 +88,9 @@ class StepMotor:
         if not success:
             print(f"错误: 运行命令失败")
             return False
-        
+
+        self.current_target = target
+
         print("执行成功")
         print(f"执行完后当前位置:{self.current_position}")
         return True  
