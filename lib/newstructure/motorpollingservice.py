@@ -34,7 +34,7 @@ class MotorPollingService:
         tick = 0   #降频使用
 
         while self.running:
-            self._check_all_motors()
+            self._check_all_motors()  #for each motor效率太低，必须改成一次性查询所有电机的状态
             self._check_all_position()
 
             tick += 1
