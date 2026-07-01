@@ -3,6 +3,7 @@ import time
 from lib.newstructure.constant import *
 from lib.newstructure.runtime import runtime
 from lib.newstructure.tools import mock_motor_loop
+import random
 
 
 class MotorPollingService:
@@ -34,7 +35,7 @@ class MotorPollingService:
         tick = 0   #降频使用
 
         while self.running:
-            self._check_all_motors()  #for each motor效率太低，必须改成一次性查询所有电机的状态
+            self._check_all_motors_byonce()  #for each motor效率太低，必须改成一次性查询所有电机的状态
             self._check_all_position()
 
             tick += 1
@@ -94,6 +95,7 @@ class MotorPollingService:
 
     #为最大化查询效率可考虑替换此方法
     def _check_all_motors_byonce(self):
+
         self.rs485.execute_command_async(
             "ALLRunStatus",
             ["1","0"],
@@ -104,8 +106,19 @@ class MotorPollingService:
     # 回调：电机状态
     # =========================
 
-    def _on_motor_status_all(self, command,success, resp):
+    def _on_motor_status_all(self, command, success, resp):
 
+        print("电机状态回调中》》》》》》》")
+        # 从 MOTOR_LIST 随机选一个 motor
+        motor_id = random.choice(MOTOR_LIST)
+        runtime.set_done(motor_id)
+
+        self.bus.publish(
+            "MOTOR_DONE",
+            {"motor_id": motor_id}
+        )
+
+        return
         print("电机状态回调中>>>>>>>>>>")
 
         if not success:

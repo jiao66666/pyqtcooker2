@@ -133,6 +133,7 @@ class PotStateMachine:
 
     def on_motor_done(self, data):
         print("电机完成运动@@@@@@@@@@@@@@@@@@@@@@@@")
+        print(f"subscribe data:",data)
         #self.state = "DONE"  #only for test
         motor_id = data["motor_id"]    
         ctx = runtime.get(motor_id)
