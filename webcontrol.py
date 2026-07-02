@@ -431,7 +431,7 @@ def start_webview():
     y = (screen.height - height) // 2
 
     window = webview.create_window(
-        "炒菜机",
+        "极傲炒菜机桌面实时控制系统",
         url,
         width=width,
         height=height,
