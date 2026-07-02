@@ -300,7 +300,7 @@ def testmultitaskabs():
     print("**************************************1号锅测试水平翻转任务结束******************************")
     if success :
         print("测试成功!")
-        return jsonify({"status": "success","message": "测试成功!"})
+        return jsonify({"status": "success","message": "1号锅任务提交成功!"})
     else:
         print("测试失败!")
         return jsonify({"status": "fail","message": f"测试失败!错误：{msg}"})  
@@ -334,7 +334,7 @@ def testmultitaskabs2():
     print("**************************************2号锅测试水平翻转任务结束******************************")
     if success :
         print("测试成功!")
-        return jsonify({"status": "success","message": "测试成功!"})
+        return jsonify({"status": "success","message": "2号锅任务提交成功!"})
     else:
         print("测试失败!")
         return jsonify({"status": "fail","message": f"测试失败!错误：{msg}"})  

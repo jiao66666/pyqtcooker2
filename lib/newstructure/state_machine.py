@@ -107,7 +107,8 @@ class PotStateMachine:
         elif self.state == "DONE":
             #print("ALL ACTION IS DONE!!!!!!!!!!!")
             print(f"{self.pot_id} machine state is DONE")
-            self.bus.unsubscribe("MOTOR_DONE", self.on_motor_done)
+            #self.bus.unsubscribe("MOTOR_DONE", self.on_motor_done)
+            self.state = "IDLE"
 
         elif self.state == "ERROR":
             print(f"{self.pot_id} machine state is ERROR")  
