@@ -15,7 +15,7 @@ from lib.newstructure.motioncontroller import MotionController
 from lib.newstructure.stepmotor_manager import StepMotorManager
 from lib.newstructure.command_dispatcher import CommandDispatcher
 from lib.newstructure.taskresourcemanager import TaskResourceManager
-from lib.newstructure.tools import get_boardlist
+import lib.newstructure.tools as tools
 from lib.newstructure.websocket_runtime import websocket_server
 
 #系统构建中心
@@ -146,13 +146,16 @@ def shutdown_system(system):
     except Exception as e:
         print(f"系统状态设置失败: {e}")
 
+    # 5. 关闭模拟数据
+    tools.mock_running = False    
+
     print("系统关闭完成")
     return True
 
 #RS485连接创建
 def buildboards():
     boards = {}
-    boardlist = get_boardlist()
+    boardlist = tools.get_boardlist()
     for item in boardlist:
         conn = RS485Communication(
             port=item["port"],

@@ -232,12 +232,12 @@ def get_boardlist():
             }
         ]
     
-
+mock_running = True
 def mock_motor_loop():
     print("moni data sending.....")
     positions = {1: 0, 2: 0, 3: 0, 4: 0}
 
-    while True:
+    while mock_running:
 
         data = []
 
