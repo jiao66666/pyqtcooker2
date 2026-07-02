@@ -688,7 +688,7 @@ function setSpeed(el,speedvalue){
     });
 
     el.classList.add('speed_selected');
-    updateSpeed(parseInt(speedvalue))
+    //updateSpeed(parseInt(speedvalue))
 }
 
 
