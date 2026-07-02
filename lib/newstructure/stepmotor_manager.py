@@ -1,4 +1,5 @@
 from lib.newstructure.constant import *
+from typing import List, Tuple
 
 class StepMotorManager:
     def __init__(self, board_id,motors,rs485):
@@ -21,13 +22,13 @@ class StepMotorManager:
 
         self.cmd_running = False
 
-    def enable_all_motors(self):
+    def enable_all_motors(self)-> Tuple[bool, List[str]]:
 
         print("使能所有电机....")
 
         if self.cmd_running:
             print("命令还在执行中")
-            return False
+            return False,[f"请稍后再试"]
 
         self.cmd_running = True
 
@@ -38,7 +39,7 @@ class StepMotorManager:
             priority=PRIORITY_CONTROL
         )
 
-        return True
+        return True,["使能成功"]
 
     def stop_all_motors(self):
 

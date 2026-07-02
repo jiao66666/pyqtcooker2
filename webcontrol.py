@@ -30,14 +30,14 @@ def index():
 @app.route('/connect', methods=['POST'])
 def connect():
     print("start Enable Power")
-    success=system["motorsmanager"].enable_all_motors()
-    runtime.set_all_enabled(True)
+    success,msg=system["motorsmanager"].enable_all_motors()
     if success:
         print("使能成功!")
+        runtime.set_all_enabled(True)
         return jsonify({"status": "success","message": "使能成功!"})
     else:
         print("使能失败!")
-        return jsonify({"status": "fail","message": f"使能失败!"})
+        return jsonify({"status": "fail","message": msg})
     
 
 
@@ -225,14 +225,14 @@ def stopall():
 def initall():
     print("所有电机恢复")
     success = recovery_system(system)
-    success2 = system["motorsmanager"].enable_all_motors()
-    runtime.set_all_enabled(True)
+    success2,msg = system["motorsmanager"].enable_all_motors()
     if success and success2:
         print("测试成功!")
+        runtime.set_all_enabled(True)
         return jsonify({"status": "success","message": "初始化/恢复所有电机成功!"})
     else:
         print("测试失败!")
-        return jsonify({"status": "fail","message": "初始化/恢复所有电机失败!"})
+        return jsonify({"status": "fail","message": msg})
         
 @app.route('/resetmotor', methods=['POST'])
 def resetmotor():
