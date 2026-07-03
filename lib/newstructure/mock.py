@@ -21,7 +21,7 @@ class MockMotor:
             for motor_id in positions:
                 positions[motor_id] += random.randint(5, 30)
 
-            print("send:", positions)
+            #print("send:", positions)
 
             self.websocket_server.send([
                 {
