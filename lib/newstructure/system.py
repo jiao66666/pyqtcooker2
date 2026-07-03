@@ -17,7 +17,7 @@ from lib.newstructure.command_dispatcher import CommandDispatcher
 from lib.newstructure.taskresourcemanager import TaskResourceManager
 import lib.newstructure.tools as tools
 from lib.newstructure.websocket_runtime import websocket_server
-
+from lib.newstructure.mock import MockMotor
 #系统构建中心
 def build_system():
     bus = EventBus()
@@ -37,12 +37,12 @@ def build_system():
     pot2 = PotStateMachine(2, bus, trackmanager, motion_controller)
 
 
-
-    motorpolling = MotorPollingService(boards["stepmotor"],bus,motors["stepmotor"])
+    mockmotor = MockMotor(websocket_server)
+    motorpolling = MotorPollingService(boards["stepmotor"],bus,motors["stepmotor"],mockmotor)
 
     resource_manager = TaskResourceManager(bus)
     dispatcher = CommandDispatcher(resource_manager,bus)
-    
+  
     return {
         "state": {
             "mode": "READY",   # READY / EMERGENCY / RECOVERING / ERROR
@@ -62,7 +62,8 @@ def build_system():
         "websocket":websocket_server,
         "motors":motors,
         "motorsmanager":motors_manager,
-        "dispatcher":dispatcher
+        "dispatcher":dispatcher,
+        "mockmotor":mockmotor
     }
 
 
@@ -79,6 +80,7 @@ def recovery_system(system):
     print("recovery system .....")
     system["state"]["dirty"]=False
     system["state"]["mode"]="READY"
+    system["mockmotor"].start()
     return True
 
 
@@ -87,6 +89,7 @@ def shutdown_device(system):
     motors.stop_all_motors()
     system["state"]["mode"] = "OFF"
     system["state"]["dirty"] = True
+    system["mockmotor"].stop()
     return True
 
 def shutdown_system(system):
@@ -147,7 +150,7 @@ def shutdown_system(system):
         print(f"系统状态设置失败: {e}")
 
     # 5. 关闭模拟数据
-    tools.mock_running = False    
+    system["mockmotor"].stop()
 
     print("系统关闭完成")
     return True

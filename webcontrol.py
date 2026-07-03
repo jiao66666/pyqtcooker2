@@ -34,6 +34,8 @@ def connect():
     if success:
         print("使能成功!")
         runtime.set_all_enabled(True)
+        if system["state"]["dirty"]:
+            recovery_system(system)
         return jsonify({"status": "success","message": "使能成功!"})
     else:
         print("使能失败!")

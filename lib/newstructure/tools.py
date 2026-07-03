@@ -232,31 +232,6 @@ def get_boardlist():
             }
         ]
     
-mock_running = True
-def mock_motor_loop():
-    print("moni data sending.....")
-    positions = {1: 0, 2: 0, 3: 0, 4: 0}
-
-    while mock_running:
-
-        data = []
-
-        for motor_id in positions:
-
-            positions[motor_id] += random.randint(5, 30)
-
-            data.append({
-                "type":"cordinate",
-                "motor_id": motor_id,
-                "position": positions[motor_id]
-            })
-
-        websocket_server.send(data)
-
-        #print("mock send:", data)
-
-        time.sleep(0.05)    
-
 TRACE_CMDS = {"#RUN", "#SPEED", "#ORGRST"}
 def trace_info(info):
     cmd = info.split(",", 1)[0].upper()
@@ -278,8 +253,6 @@ def get_pot_id(motorid):
         return POT2       
 
 
-
-
 def build_dc_action(command, direction, dc_speed, dc_time):
     if command == "longrun":
         return "dc_longrun", {
@@ -295,3 +268,4 @@ def build_dc_action(command, direction, dc_speed, dc_time):
         }
 
     return "dc_stop", {}     
+

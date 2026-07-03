@@ -2,20 +2,20 @@ import threading
 import time
 from lib.newstructure.constant import *
 from lib.newstructure.runtime import runtime
-from lib.newstructure.tools import mock_motor_loop
 import random
 
 
 class MotorPollingService:
 
-    def __init__(self, rs485, bus, motors,interval=0.2):
+    def __init__(self, rs485, bus, motors, mockmotor,interval=0.2):
         self.rs485 = rs485
         self.bus = bus
         self.interval = interval
         self.running = False
         self.motors = motors
-        self.mock_started = False
         self.motor_inflight = set()
+        self.mock_started = False
+        self.mockmotor = mockmotor
 
     # =========================
     # 启动 / 停止
@@ -226,18 +226,11 @@ class MotorPollingService:
     # 回调：位置更新
     # =========================
     def _on_all_position(self, command,success, resp):
-
         if self.mock_started:
+            #print('mock has been started')
             return
-
         self.mock_started = True
-
-        t = threading.Thread(
-            target=mock_motor_loop,
-            daemon=True
-        )
-        t.start()
-
+        self.mockmotor.start()       
         return
         if not success:
             print(f"错误: {resp}")
