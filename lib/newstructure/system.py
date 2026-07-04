@@ -95,6 +95,9 @@ def shutdown_device(system):
 def shutdown_system(system):
     print("系统关闭中...")
 
+    # A. 关闭模拟数据
+    system["mockmotor"].stop()
+
     # =========================
     # 0. 先安全停止所有电机（新增）
     # =========================
@@ -149,8 +152,7 @@ def shutdown_system(system):
     except Exception as e:
         print(f"系统状态设置失败: {e}")
 
-    # 5. 关闭模拟数据
-    system["mockmotor"].stop()
+
 
     print("系统关闭完成")
     return True
