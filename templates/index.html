@@ -286,18 +286,28 @@
 
     <div class="prompt">控制台消息</div>
     <div class="history_con">
-        <div id="status-history" class="status-history"></div> <!-- 用于显示历史消息 -->
-        <div id="command_history" class="status-history">
-            <div
-                class="message"
-                v-for="(msg, index) in commandHistory"
-                :key="index"
-            >
-                <div class="timestamp">
-                    ${ msg.timestamp }
-                </div>
-                <div class="message-text">
-                    ${ msg.message }
+        <div class="clear_row">
+             <div class="clear_btn" onclick="clearHistory('status')">
+                  清空
+             </div>
+             <div class="clear_btn" onclick="clearHistory('command')">
+                  清空
+             </div>
+        </div>
+        <div class="history_row">
+            <div id="status-history" class="status-history"></div> <!-- 用于显示历史消息 -->
+            <div id="command_history" class="status-history">
+                <div
+                    class="message"
+                    v-for="(msg, index) in commandHistory"
+                    :key="index"
+                >
+                    <div class="timestamp">
+                        ${ msg.timestamp }
+                    </div>
+                    <div class="message-text">
+                        ${ msg.message }
+                    </div>
                 </div>
             </div>
         </div>

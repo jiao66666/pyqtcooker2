@@ -761,7 +761,6 @@ function showTab(tabNumber, buttonElement) {
 }
 
 
-
 function createMotorStatusApp(el) {
   return new Vue({
     el: el,
@@ -808,6 +807,9 @@ const commandApp = new Vue({
             if (this.commandHistory.length > 500) {
                 this.commandHistory.pop();
             }
+        },
+        clearHistory(){
+            this.commandHistory = []
         }
     }
 });
@@ -852,6 +854,18 @@ function setupWebSocket(url) {
 }
 
 
+function clearHistory(type){
+    if(type=="status"){
+        clearStatusHistory()
+    }else if(type=="command"){
+        commandApp.clearHistory()
+    }
+}
+
+function clearStatusHistory() {
+    messageHistory = [];
+    displayMessageHistory();
+}
 
 // 点击按钮启动 WebSocket 连接
 function startWebSocket() {
