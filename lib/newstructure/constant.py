@@ -200,7 +200,7 @@ ACTION_PARAMS_CONFIG = {
     }
 }
 
-TIMEOUT = 600 #电机单步动作超时
+TIMEOUT = 300 #电机单步动作超时
 
 # 优先级定义（越小越优先）
 PRIORITY_EMERGENCY = 0
@@ -208,4 +208,4 @@ PRIORITY_CONTROL = 1
 PRIORITY_NORMAL = 2
 
 #RS485最大队列命令缓冲数量
-MAX_CMD_NUMS = 2000
+MAX_CMD_NUMS = 500
