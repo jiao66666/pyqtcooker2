@@ -73,7 +73,6 @@ def build_system():
     system["cookservice"] = cookservice
     pot1.set_cookservice(cookservice)
     pot2.set_cookservice(cookservice)
-    dispatcher.set_cookservice(cookservice)
    
     return system
 

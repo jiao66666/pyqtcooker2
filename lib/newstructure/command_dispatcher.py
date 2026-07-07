@@ -13,12 +13,8 @@ class CommandDispatcher:
 
         self.bus = bus
 
-        self.cookservice = None
-
         self.bus.subscribe("MOTOR_DONE", self.on_motor_done)
 
-    def set_cookservice(self,cookservice):
-        self.cookservice = cookservice
 
     def submit(self, task_id, resources, run_fn):
         """
