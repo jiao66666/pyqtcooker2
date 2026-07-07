@@ -23,6 +23,15 @@ class CookerService:
             "dc_stop":self._dcstop_action
         }
 
+        self.task_running = False
+
+
+    def resetRunning(self):
+        print("################################重置运行状态##########################")
+        self.task_running = False
+
+    def setRunning(self):
+        self.task_running = True    
 
     def check_workable(self):
         state = self.system["state"]
@@ -39,6 +48,9 @@ class CookerService:
         if not runtime.is_all_enabled():
             return False,"电机未使能"
         
+        if self.task_running:
+            return False,"任务正在执行中"
+
         return True,"workable OK"
 
     # 运行锅电机动作组
@@ -51,6 +63,7 @@ class CookerService:
         steps = self.system["stepbuilder"].build(task_name, pot_id)
         print("printing.....steps>>>>>>>>>>>>>>>>>>>>>>")
         print(steps)
+        self.setRunning()
         self.system["pots"][pot_id].submit_task(task_name,steps)
         return True,"submit task OK"
 
@@ -86,10 +99,12 @@ class CookerService:
         return True,"submit task ok"
     
     def run_control_cmd(self,motor_id,action,params):
+        """ 
         OK,msg = self.check_workable()
         print(f"OK status:{OK}")
         if not OK:
             return False,msg
+        """
 
         motor = self.system["motors"]["stepmotor"][motor_id]
         def run_fn():
@@ -177,17 +192,3 @@ class CookerService:
         motor.stop()       
                             
 
-_service = None
-_service_lock = threading.Lock()
-
-def get_cookservice():
-    global _service
-
-    if _service is None:
-        with _service_lock:
-            if _service is None:
-                _service = CookerService(get_system())
-
-    return _service
-
-cookservice = get_cookservice()

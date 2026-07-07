@@ -109,8 +109,18 @@ class MotorPollingService:
     def _on_motor_status_all(self, command, success, resp):
 
         print("电机状态回调中》》》》》》》")
-        # 从 MOTOR_LIST 随机选一个 motor
-        motor_id = random.choice(MOTOR_LIST)
+
+        # 获取所有正在运行的电机
+        running_motors = runtime.get_running_motors()
+
+        # 没有运行中的电机，直接返回
+        if not running_motors:
+            print("当前没有运行中的电机")
+            return
+
+        # 从运行中的电机中随机选择一个
+        motor_id = random.choice(running_motors)
+
         runtime.set_done(motor_id)
 
         self.bus.publish(

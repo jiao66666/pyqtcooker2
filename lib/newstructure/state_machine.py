@@ -18,6 +18,7 @@ class PotStateMachine:
         self.motioncontroller = motioncontroller
         self.running_tasks = set()
         self.running_taskname = None
+        self.cookservice = None
 
         
         # 订阅电机完成事件
@@ -25,6 +26,8 @@ class PotStateMachine:
         self.bus.subscribe("ESTOP_TRIGGERED", self.on_estop)
         self.bus.subscribe("MOTOR_ERROR", self.on_motor_error)
 
+    def set_cookservice(self,cookservice):
+        self.cookservice = cookservice
 
     def submit_task(self, task_name,steps):
         if task_name in self.running_tasks:
@@ -108,6 +111,7 @@ class PotStateMachine:
             #print("ALL ACTION IS DONE!!!!!!!!!!!")
             print(f"{self.pot_id} machine state is DONE")
             #self.bus.unsubscribe("MOTOR_DONE", self.on_motor_done)
+            self.cookservice.resetRunning()
             self.state = "IDLE"
 
         elif self.state == "ERROR":
@@ -133,7 +137,7 @@ class PotStateMachine:
         return action.startswith("move_out_togetfood")
 
     def on_motor_done(self, data):
-        print("电机完成运动@@@@@@@@@@@@@@@@@@@@@@@@")
+        print("电机完成运动@@@@@@@@@@@@@@@@@@@@@@@@----statemachine")
         print(f"subscribe data:",data)
         #self.state = "DONE"  #only for test
         motor_id = data["motor_id"]    

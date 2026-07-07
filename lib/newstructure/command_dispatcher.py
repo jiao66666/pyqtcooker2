@@ -13,8 +13,12 @@ class CommandDispatcher:
 
         self.bus = bus
 
+        self.cookservice = None
+
         self.bus.subscribe("MOTOR_DONE", self.on_motor_done)
 
+    def set_cookservice(self,cookservice):
+        self.cookservice = cookservice
 
     def submit(self, task_id, resources, run_fn):
         """
@@ -67,8 +71,7 @@ class CommandDispatcher:
 
 
     def on_motor_done(self, data):
-        print("电机完成运动@@@@@@@@@@@@@@@@@@@@@@@@")
-
+        print("电机完成运动@@@@@@@@@@@@@@@@@@@@@@@@---disptcher")
         motor_id = data["motor_id"]    
         ctx = runtime.get(motor_id)
         if not ctx:
@@ -76,4 +79,5 @@ class CommandDispatcher:
             return      
         task_id = ctx["task_id"]
         print(f"release resource>>>>>>>>>>>>>>>>>>>>,taskid:{task_id}")
+        
         self._cleanup(task_id)            

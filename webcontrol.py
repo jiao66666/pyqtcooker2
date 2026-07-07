@@ -5,7 +5,6 @@ from lib.newstructure.tools import is_dev_mode,apply_action_speed_override,get_p
 import webview
 import threading
 from lib.newstructure.system import run_system,init_system,shutdown_system,set_system_dirty,recovery_system,shutdown_device
-from lib.newstructure.cookservice import cookservice
 from lib.newstructure.system_runtime import system
 from lib.newstructure.runtime import runtime
 from lib.newstructure.monitor import start_memory_monitor
@@ -74,7 +73,7 @@ def disconnect():
 @app.route('/testtastboardping', methods=['POST'])
 def testtastboardping():
     print("测试加料板连通性")
-    success,msg =  cookservice.run_tastemotor_cmd(POT1_FLAVORMOTOR1,"ping",{})
+    success,msg =  system["cookservice"].run_tastemotor_cmd(POT1_FLAVORMOTOR1,"ping",{})
     if success :
         print("测试加料板连通性成功!")
         return jsonify({"status": "success","message": f"运行成功"})
@@ -92,7 +91,7 @@ def runtastmotor():
     success = False
     print("收到参数 :", motorid)
   
-    success,msg =  cookservice.run_tastemotor_cmd(int(motorid),"openfeeder",{"overtime":int(overtime)})
+    success,msg =  system["cookservice"].run_tastemotor_cmd(int(motorid),"openfeeder",{"overtime":int(overtime)})
     if success :
         print("测试加料板打开成功!")
         return jsonify({"status": "success","message": f"运行成功"})
@@ -108,7 +107,7 @@ def gettastmotorfb():
     mode = data.get('mode')
     success = False
     print("收到参数 :", motorid)
-    success,msg = cookservice.run_tastemotor_cmd(int(motorid),"getfeeder",{"mode":int(mode)})
+    success,msg = system["cookservice"].run_tastemotor_cmd(int(motorid),"getfeeder",{"mode":int(mode)})
     if success :
         print("测试加料板打开成功!")
         return jsonify({"status": "success","message": f"运行获取反馈成功，反馈结果"})
@@ -125,7 +124,7 @@ def runlong():
     speed = data.get('speed')  
     success = False
     print("收到参数 :", motorid, direction,speed)
-    success,msg =  cookservice.run_single_action(motorid,"runlong",{"speed":int(int(speed)*360),"direction":int(direction)})
+    success,msg =  system["cookservice"].run_single_action(motorid,"runlong",{"speed":int(int(speed)*360),"direction":int(direction)})
     if success :
         print("电机长运转成功!")
         return jsonify({"status": "success","message": f"长运行成功!电机：{motorid}，方向：{direction}，速度：{speed}"})
@@ -144,7 +143,7 @@ def run():
     success = False
     print("收到参数 :", motorid, direction,speed)
 
-    success,msg =  cookservice.run_single_action(motorid,"run",{"circle":float(circles),"speed":int(int(speed)*360),"direction":int(direction)})
+    success,msg =  system["cookservice"].run_single_action(motorid,"run",{"circle":float(circles),"speed":int(int(speed)*360),"direction":int(direction)})
     if success :
         print("电机单次运转成功!")
         return jsonify({"status": "success","message": f"单运行成功!电机：{motorid}，方向：{direction}，速度：{speed}"})
@@ -163,7 +162,7 @@ def runabs():
     success = False
     print("收到参数 :", motorid, direction,speed)
       
-    success,msg =  cookservice.run_single_action(motorid,"go",{"target":float(circles),"anglespeed":int(int(speed)*360)})
+    success,msg =  system["cookservice"].run_single_action(motorid,"go",{"target":float(circles),"anglespeed":int(int(speed)*360)})
     currentpos = system["motors"]["stepmotor"][int(motorid)].get_current_pos()
     if success :
         print("电机单次运转成功!")
@@ -180,7 +179,7 @@ def pause():
     success = False
     print("收到参数 :", motorid)
 
-    success,msg =  cookservice.run_control_cmd(motorid,"pause",{})
+    success,msg =  system["cookservice"].run_control_cmd(motorid,"pause",{})
     if success :
         print("电机暂停成功!")
         return jsonify({"status": "success","message": "电机暂停成功!"})
@@ -196,7 +195,7 @@ def stop():
     success = False
     print("收到参数 :", motorid)
 
-    success,msg = cookservice.run_control_cmd(motorid,"stop",{})
+    success,msg = system["cookservice"].run_control_cmd(motorid,"stop",{})
     if success :
         print("电机暂停成功!")
         return jsonify({"status": "success","message": "电机暂停成功!"})
@@ -246,7 +245,7 @@ def resetmotor():
     success = False
     print("收到参数 :", motorid, direction,speed)
 
-    success,msg =  cookservice.run_single_action(motorid,"reset",{})
+    success,msg =  system["cookservice"].run_single_action(motorid,"reset",{})
     if success :
         print("测试复位成功!")
         return jsonify({"status": "success","message": f"复位电机任务提交成功!电机：{motorid}，方向：{direction}"})
@@ -265,7 +264,7 @@ def resetmotorpot():
     action_param = "resetzero"
     pot_param = potnum
     print("run resetmotorpot action now.........")
-    success,msg = cookservice.run_task(action_param,pot_param)
+    success,msg = system["cookservice"].run_task(action_param,pot_param)
     if success :
         print("测试复位成功!")
         return jsonify({"status": "success","message": f"自动复位电机任务提交成功!锅号：{potnum}"})
@@ -298,7 +297,7 @@ def testmultitaskabs():
     action_param = "take_fire_pour"
     pot_param = 1
     print("simulate click....")
-    success,msg = cookservice.run_task(action_param,pot_param)
+    success,msg = system["cookservice"].run_task(action_param,pot_param)
     print("**************************************1号锅测试水平翻转任务结束******************************")
     if success :
         print("测试成功!")
@@ -332,7 +331,7 @@ def testmultitaskabs2():
     action_param = "take_fire_pour"
     pot_param = 2
     print("simulate click....")
-    success,msg = cookservice.run_task(action_param,pot_param)
+    success,msg = system["cookservice"].run_task(action_param,pot_param)
     print("**************************************2号锅测试水平翻转任务结束******************************")
     if success :
         print("测试成功!")
@@ -367,7 +366,7 @@ def testdc_command():
         dc_time
     )
 
-    success = cookservice.run_dcmotor_cmd(motor_id,action,params)
+    success = system["cookservice"].run_dcmotor_cmd(motor_id,action,params)
     if success :
         print("测试成功!")
         return jsonify({"status": "success","message": "测试成功!"})
@@ -399,7 +398,7 @@ def gopos():
 
     action_param = "go_to_potpos"
     pot_param = potnum
-    success,msg = cookservice.run_task(action_param,pot_param)
+    success,msg = system["cookservice"].run_task(action_param,pot_param)
     
     if success :
         print("测试成功!")
