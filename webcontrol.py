@@ -179,7 +179,7 @@ def pause():
     success = False
     print("收到参数 :", motorid)
 
-    success,msg =  system["cookservice"].run_control_cmd(motorid,"pause",{})
+    success,msg =  system["cookservice"].run_single_action(motorid,"pause",{})
     if success :
         print("电机暂停成功!")
         return jsonify({"status": "success","message": "电机暂停成功!"})
