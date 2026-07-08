@@ -112,6 +112,7 @@ class RS485Communication:
             print(res)
 
             print("解析消息>>>>>>>")
+            print("当前队列数量:", self.queue.qsize())
             success, resp_cmd, resp_result = self.protocol.parse_response(command, res)
 
             if not success:
