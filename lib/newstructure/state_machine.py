@@ -111,7 +111,7 @@ class PotStateMachine:
             #print("ALL ACTION IS DONE!!!!!!!!!!!")
             print(f"{self.pot_id} machine state is DONE")
             #self.bus.unsubscribe("MOTOR_DONE", self.on_motor_done)
-            self.cookservice.resetRunning()
+            self.cookservice.resetRunning(self.pot_id)
             self.state = "IDLE"
 
         elif self.state == "ERROR":

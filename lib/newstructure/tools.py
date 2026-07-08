@@ -247,7 +247,8 @@ def trace_info(info):
 
 
 def get_pot_id(motorid):
-    if motorid in [POT1_MOVE_MOTOR,POT1_SPIN_MOTOR]:
+    print(f"get motorid is:{motorid},ready to transform")
+    if motorid in [POT1_MOVE_MOTOR,POT1_FLIP_MOTOR]:
         return POT1
     else:
         return POT2       

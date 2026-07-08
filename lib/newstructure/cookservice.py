@@ -23,17 +23,20 @@ class CookerService:
             "dc_stop":self._dcstop_action
         }
 
-        self.task_running = False
+        self.task_running = {
+            1: False,
+            2: False
+        }
 
 
-    def resetRunning(self):
-        print("################################重置运行状态##########################")
-        self.task_running = False
+    def resetRunning(self, pot_id):
+        print(f"{pot_id} 重置运行状态")
+        self.task_running[pot_id] = False
 
-    def setRunning(self):
-        self.task_running = True    
+    def setRunning(self, pot_id):
+        self.task_running[pot_id] = True 
 
-    def check_workable(self):
+    def check_workable(self,pot_id):
         state = self.system["state"]
 
         # 系统脏状态
@@ -48,14 +51,18 @@ class CookerService:
         if not runtime.is_all_enabled():
             return False,"电机未使能"
         
-        if self.task_running:
-            return False,"任务正在执行中"
+
+        # 检查锅运行锁
+        print(f"%&&&&&&&&&Task running lock info:current pot is:{pot_id}")
+        print(self.task_running)
+        if self.task_running.get(pot_id, False):
+            return False, f"{pot_id} 正在执行任务"
 
         return True,"workable OK"
 
     # 运行锅电机动作组
     def run_task(self, task_name, pot_id):
-        OK,msg = self.check_workable()
+        OK,msg = self.check_workable(pot_id)
         print(f"OK status:{OK}")
         if not OK:
             return False,msg
@@ -63,12 +70,13 @@ class CookerService:
         steps = self.system["stepbuilder"].build(task_name, pot_id)
         print("printing.....steps>>>>>>>>>>>>>>>>>>>>>>")
         print(steps)
-        self.setRunning()
+        self.setRunning(pot_id)
         self.system["pots"][pot_id].submit_task(task_name,steps)
         return True,"submit task OK"
 
     def run_single_action(self, motor_id, action, params):
-        OK,msg = self.check_workable()
+        potid = get_pot_id(motor_id)
+        OK,msg = self.check_workable(potid)
         print(f"OK status:{OK}")
         if not OK:
             return False,msg
@@ -81,7 +89,6 @@ class CookerService:
                 raise Exception(f"unknown action: {action}")
             handler(motor, params)
 
-        potid = get_pot_id(motor_id)
         runtime.set_running(
             motor_id=motor_id,
             action=action,
