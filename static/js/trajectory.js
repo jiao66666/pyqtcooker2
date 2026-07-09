@@ -5,6 +5,12 @@ class TrajectoryViewer {
         this.canvas =
             document.getElementById(canvasId);
 
+
+        // 让内部绘图宽度跟随显示宽度
+        this.canvas.width =
+            this.canvas.clientWidth;
+
+
         this.ctx =
             this.canvas.getContext("2d");
 
