@@ -264,37 +264,65 @@ def get_boardlist():
             }
         ]
     
-TRACE_CMDS = {"#RUN", "#SPEED", "#ORGRST"}
+TRACE_CMDS = {
+    "#RUN",
+    "#SPEED",
+    "#ORGRST"
+}
+
+current_position = {
+    "x":0,
+    "y":0
+}
+
 def trace_info(info):
+
     parts = info.split(",")
     cmd = parts[0].upper()
     if cmd not in TRACE_CMDS:
         return
+
     data = []
     data.append({
         "type":"command",
-        "info": info
+        "info":info
     })
     websocket_server.send(data)
-    
     if cmd == "#RUN":
         cordinfo = []
         pulses = int(parts[3])
         motorid = int(parts[2])
-        circles = pulses_to_circles(pulses)
-        corddata = {}
-        corddata["type"]= "trajectory"
-        if motorid in [POT1_FLIP_MOTOR,POT2_FLIP_MOTOR]:
-            corddata["x"]=0
-            corddata["y"]=circles
-        elif motorid in [POT1_MOVE_MOTOR,POT2_MOVE_MOTOR]:
-            corddata["y"]=0
-            corddata["x"]=circles
+        # 本次移动量
+        delta = pulses_to_circles(
+            pulses
+        )
+        if motorid in [
+            POT1_FLIP_MOTOR,
+            POT2_FLIP_MOTOR
+        ]:
+            current_position["y"] += delta
 
+        elif motorid in [
+            POT1_MOVE_MOTOR,
+            POT2_MOVE_MOTOR
+        ]:
+            current_position["x"] += delta
+
+        corddata = {
+            "type":"trajectory",
+            "x":
+                round(current_position["x"],2),
+            "y":
+                round(current_position["y"],2)
+        }
         cordinfo.append(corddata)
-        print("即将发送坐标信息到前端>>>>>>>>>>>>>>>>>>>>>>>>")
-        print(cordinfo)
-        websocket_server.send(cordinfo)
+        print(
+            "发送轨迹:",
+            cordinfo
+        )
+        websocket_server.send(
+            cordinfo
+        )
      
     #print("ws:executing info",data)
 
