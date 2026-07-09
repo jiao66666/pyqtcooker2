@@ -66,6 +66,38 @@ def circles_to_pulses(circles, step_angle = 1.8, microsteps = MICRO_STEP):
     return total_pulses     
 
 
+def pulses_to_circles(
+        pulses,
+        step_angle=1.8,
+        microsteps=MICRO_STEP
+):
+    """
+    脉冲转换为旋转圈数
+
+    pulses:
+        电机脉冲数，可正可负
+
+    step_angle:
+        步进电机步距角，默认1.8度
+
+    microsteps:
+        细分数
+
+    return:
+        电机旋转圈数，可正可负
+    """
+
+    # 每圈基础步数
+    steps_per_revolution = 360 / step_angle
+
+    # 每圈脉冲数
+    pulses_per_revolution = (
+        steps_per_revolution * microsteps
+    )
+
+    circles = pulses / pulses_per_revolution
+
+    return circles
 
 
 def apply_action_speed_override(
@@ -234,7 +266,8 @@ def get_boardlist():
     
 TRACE_CMDS = {"#RUN", "#SPEED", "#ORGRST"}
 def trace_info(info):
-    cmd = info.split(",", 1)[0].upper()
+    parts = info.split(",")
+    cmd = parts[0].upper()
     if cmd not in TRACE_CMDS:
         return
     data = []
@@ -243,6 +276,26 @@ def trace_info(info):
         "info": info
     })
     websocket_server.send(data)
+    
+    if cmd == "#RUN":
+        cordinfo = []
+        pulses = int(parts[3])
+        motorid = int(parts[2])
+        circles = pulses_to_circles(pulses)
+        corddata = {}
+        corddata["type"]= "trajectory"
+        if motorid in [POT1_FLIP_MOTOR,POT2_FLIP_MOTOR]:
+            corddata["x"]=0
+            corddata["y"]=circles
+        elif motorid in [POT1_MOVE_MOTOR,POT2_MOVE_MOTOR]:
+            corddata["y"]=0
+            corddata["x"]=circles
+
+        cordinfo.append(corddata)
+        print("即将发送坐标信息到前端>>>>>>>>>>>>>>>>>>>>>>>>")
+        print(cordinfo)
+        websocket_server.send(cordinfo)
+     
     #print("ws:executing info",data)
 
 

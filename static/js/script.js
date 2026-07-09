@@ -838,6 +838,11 @@ function setupWebSocket(url) {
                 app.updateMotorData(item.motor_id, item.position);
             }else if(item.type=="command"){
                 commandApp.addCommand(item.info);
+            }else if(item.type=="trajectory"){
+                trajectory.addPoint(
+                    item.x,
+                    item.y
+                );
             }
         }
     };
