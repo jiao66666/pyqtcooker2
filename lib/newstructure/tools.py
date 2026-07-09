@@ -97,7 +97,7 @@ def pulses_to_circles(
 
     circles = pulses / pulses_per_revolution
 
-    return circles
+    return round(circles,2)
 
 
 def apply_action_speed_override(
