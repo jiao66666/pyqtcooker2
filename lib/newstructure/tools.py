@@ -300,14 +300,18 @@ def trace_info(info):
             POT1_FLIP_MOTOR,
             POT2_FLIP_MOTOR
         ]:
-            current_position["y"] += delta
-
+            if motorid == POT2_FLIP_MOTOR:
+               current_position["y"] += delta*(-1)
+            else:
+               current_position["y"] += delta
         elif motorid in [
             POT1_MOVE_MOTOR,
             POT2_MOVE_MOTOR
         ]:
-            current_position["x"] += delta
-
+            if motorid == POT1_MOVE_MOTOR:
+               current_position["x"] += delta*(-1)
+            else:
+               current_position["x"] += delta*(-1)
         corddata = {
             "type":"trajectory",
             "x":
