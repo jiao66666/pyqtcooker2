@@ -29,7 +29,7 @@ class TrajectoryViewer {
 
 
         // 坐标比例
-        this.scale = 1;
+        this.scale = 5;
 
 
         // 坐标偏移
@@ -40,8 +40,13 @@ class TrajectoryViewer {
             this.canvas.height / 2;
 
 
-        // 保存轨迹
+        // 保存轨迹线
         this.lines = [];
+
+
+        // 保存轨迹点
+        // 保存机械坐标和屏幕坐标
+        this.points = [];
 
     }
 
@@ -66,12 +71,12 @@ class TrajectoryViewer {
 
             x:
             this.offsetX +
-            x*this.scale,
+            x * this.scale,
 
 
             y:
             this.offsetY -
-            y*this.scale
+            y * this.scale
 
         };
 
@@ -85,6 +90,23 @@ class TrajectoryViewer {
 
         let p =
             this.transform(x,y);
+
+
+
+        // 保存点
+
+        this.points.push({
+
+            // 原始机械坐标
+            x:x,
+            y:y,
+
+
+            // canvas坐标
+            px:p.x,
+            py:p.y
+
+        });
 
 
 
@@ -116,7 +138,6 @@ class TrajectoryViewer {
 
             this.colorIndex++;
 
-
         }
 
 
@@ -126,8 +147,8 @@ class TrajectoryViewer {
 
         this.redraw();
 
-
     }
+
 
 
 
@@ -148,7 +169,9 @@ class TrajectoryViewer {
 
 
 
-        // 画所有轨迹
+        /*
+            绘制轨迹线
+        */
 
         for(let line of this.lines){
 
@@ -168,11 +191,11 @@ class TrajectoryViewer {
             );
 
 
-            ctx.strokeStyle=
+            ctx.strokeStyle =
                 line.color;
 
 
-            ctx.lineWidth=3;
+            ctx.lineWidth = 3;
 
 
             ctx.stroke();
@@ -181,7 +204,75 @@ class TrajectoryViewer {
 
 
 
-        // 画当前位置
+
+        /*
+            绘制所有坐标点
+        */
+
+
+        ctx.font = "14px Arial";
+
+        ctx.fillStyle = "black";
+
+
+        for(let point of this.points){
+
+
+            // 画点
+
+            ctx.beginPath();
+
+            ctx.arc(
+
+                point.px,
+
+                point.py,
+
+                4,
+
+                0,
+
+                Math.PI * 2
+
+            );
+
+
+            ctx.fillStyle = "black";
+
+            ctx.fill();
+
+
+
+            // 坐标文字
+
+            ctx.fillStyle = "black";
+
+
+            ctx.fillText(
+
+                "(" +
+                point.x +
+                "," +
+                point.y +
+                ")",
+
+
+                point.px + 8,
+
+                point.py - 8
+
+            );
+
+
+        }
+
+
+
+
+
+        /*
+            当前运动位置
+        */
 
         if(this.lastPoint){
 
@@ -190,28 +281,40 @@ class TrajectoryViewer {
 
 
             ctx.arc(
+
                 this.lastPoint.x,
+
                 this.lastPoint.y,
-                5,
+
+                6,
+
                 0,
-                Math.PI*2
+
+                Math.PI * 2
+
             );
 
 
-            ctx.fillStyle="black";
+            ctx.fillStyle="red";
 
 
             ctx.fill();
 
         }
 
+
     }
+
+
+
 
 
 
     clear(){
 
         this.lines=[];
+
+        this.points=[];
 
         this.lastPoint=null;
 
@@ -224,21 +327,32 @@ class TrajectoryViewer {
 }
 
 
+
+
+
 let trajectory = null;
 
 
+
 window.addEventListener(
+
     "DOMContentLoaded",
+
     function(){
 
+
         trajectory =
+
             new TrajectoryViewer(
+
                 "trajectory"
+
             );
 
 
-        window.trajectory =
-            trajectory;
+        window.trajectory = trajectory;
+
 
     }
+
 );
