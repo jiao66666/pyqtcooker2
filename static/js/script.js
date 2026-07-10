@@ -758,6 +758,22 @@ function showTab(tabNumber, buttonElement) {
   document.getElementById('tab' + tabNumber).style.display = 'block';
   // 高亮选中按钮
   buttonElement.classList.add('active');
+
+    // ============================
+    // 轨迹页面特殊处理
+    // ============================
+    if(tabNumber === 3){
+
+        if(window.trajectory){
+
+            trajectory.resize();
+
+        }
+
+    }
+
+
+
 }
 
 

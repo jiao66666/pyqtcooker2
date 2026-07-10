@@ -220,7 +220,27 @@ class TrajectoryViewer {
 
 
 
+    resize(){
 
+        this.canvas.width =
+            this.canvas.clientWidth;
+
+
+        this.canvas.height =
+            this.canvas.clientWidth;
+
+
+        this.offsetX =
+            this.canvas.width / 2;
+
+
+        this.offsetY =
+            this.canvas.height / 2;
+
+
+        this.redraw();
+
+    }
 
 
 
