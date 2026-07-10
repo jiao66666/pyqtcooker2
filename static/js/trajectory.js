@@ -39,7 +39,7 @@ class TrajectoryViewer {
 
 
         // 坐标比例
-        this.scale = 5;
+        this.scale = 10;
 
 
         // 坐标偏移
