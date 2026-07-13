@@ -134,6 +134,7 @@ class PotStateMachine:
         )
 
     def need_track(self,action: str):
+        print(f"<<<<<<<<<<<current action is {action}>>>>>>>>>>>>")
         return action.startswith("move_out_togetfood")
 
     def on_motor_done(self, data):

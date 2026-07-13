@@ -14,8 +14,10 @@ class TrackManager:
         尝试占用轨道
         返回 True / False
         """
+        print(f"POT{pot_id}UUUUU尝试占用轨道UUUUUUUUU")
         with self.lock:
             if self.occupied:
+                print(f"POT{pot_id}占用失败")
                 return False
 
             self.occupied = True
@@ -24,6 +26,7 @@ class TrackManager:
                 "action": action,
                 "time": time.time()
             }
+            print(f"POT{pot_id}占用成功")
             return True
 
     def release(self, pot_id, action=""):
