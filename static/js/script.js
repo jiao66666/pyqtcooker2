@@ -856,6 +856,7 @@ function setupWebSocket(url) {
                 commandApp.addCommand(item.info);
             }else if(item.type=="trajectory"){
                 trajectory.addPoint(
+                    item.potid,
                     item.x,
                     item.y
                 );

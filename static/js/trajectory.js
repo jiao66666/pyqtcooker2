@@ -2,29 +2,14 @@ class TrajectoryViewer {
 
     constructor(canvasId){
 
-        this.canvas =
-            document.getElementById(canvasId);
+        this.canvas=document.getElementById(canvasId);
 
+        this.canvas.width=this.canvas.clientWidth;
+        this.canvas.height=this.canvas.clientWidth;
 
-        // 让内部绘图宽度跟随显示宽度
-        this.canvas.width =
-            this.canvas.clientWidth;
+        this.ctx=this.canvas.getContext("2d");
 
-
-        this.ctx =
-            this.canvas.getContext("2d");
-
-
-        // 当前屏幕位置
-        this.lastPoint = null;
-
-
-        // 是否已经初始化
-        this.initialized = false;
-
-
-        // 颜色列表
-        this.colors = [
+        this.colors=[
             "red",
             "blue",
             "green",
@@ -34,437 +19,349 @@ class TrajectoryViewer {
             "magenta"
         ];
 
+        this.scale=10;
 
-        this.colorIndex = 0;
+        this.offsetY=this.canvas.height/2;
 
+        this.pots={
 
-        // 坐标比例
-        this.scale = 10;
+            1:{
+                centerX:this.canvas.width*0.25,
+                initialized:false,
+                lastPoint:null,
+                colorIndex:0,
+                lines:[],
+                points:[]
+            },
 
-
-        // 坐标偏移
-        this.offsetX =
-            this.canvas.width / 2;
-
-        this.offsetY =
-            this.canvas.height / 2;
-
-
-
-        // 保存轨迹线
-        this.lines = [];
-
-
-        // 保存轨迹点
-        this.points = [];
-
-    }
-
-
-
-
-    /*
-        机械坐标 -> Canvas坐标
-
-        X方向:
-            正方向向右
-
-        Y方向:
-            正方向向上
-
-        Canvas:
-            Y轴向下
-
-    */
-
-    transform(x,y){
-
-        return {
-
-            x:
-            this.offsetX +
-            x * this.scale,
-
-
-            y:
-            this.offsetY -
-            y * this.scale
+            2:{
+                centerX:this.canvas.width*0.75,
+                initialized:false,
+                lastPoint:null,
+                colorIndex:0,
+                lines:[],
+                points:[]
+            }
 
         };
 
     }
 
+    //----------------------------------------
+    // 坐标转换
+    //----------------------------------------
 
+    transform(potId,x,y){
 
+        let pot=this.pots[potId];
 
+        return{
 
-    addPoint(x,y){
+            x:pot.centerX+x*this.scale,
 
+            y:this.offsetY-y*this.scale
 
-        let p =
-            this.transform(x,y);
+        };
 
+    }
 
+    //----------------------------------------
+    // 对外接口
+    //----------------------------------------
 
+    addPoint1(x,y){
 
-        /*
-            第一次收到运动点
+        this.addPoint(1,x,y);
 
-            自动增加起始点(0,0)
+    }
 
-        */
+    addPoint2(x,y){
 
-        if(!this.initialized){
+        this.addPoint(2,x,y);
 
+    }
 
-            let start =
-                this.transform(0,0);
+    //----------------------------------------
+    // 通用添加点
+    //----------------------------------------
 
+    addPoint(potId,x,y){
 
+        let pot=this.pots[potId];
 
-            this.lastPoint = start;
+        let p=this.transform(
+            potId,
+            x,
+            y
+        );
 
+        if(!pot.initialized){
 
+            let start=this.transform(
+                potId,
+                0,
+                0
+            );
 
-            this.points.push({
+            pot.lastPoint=start;
+
+            pot.points.push({
 
                 x:0,
-
                 y:0,
 
                 px:start.x,
-
                 py:start.y
 
             });
 
-
-
-            this.initialized = true;
+            pot.initialized=true;
 
         }
 
-
-
-
-        /*
-            保存当前目标点
-        */
-
-        this.points.push({
+        pot.points.push({
 
             x:x,
-
             y:y,
 
             px:p.x,
-
             py:p.y
 
         });
 
+        if(pot.lastPoint){
 
+            pot.lines.push({
 
-
-
-        /*
-            生成轨迹线
-
-        */
-
-        if(this.lastPoint){
-
-
-            let line={
-
-
-                x1:this.lastPoint.x,
-
-                y1:this.lastPoint.y,
-
+                x1:pot.lastPoint.x,
+                y1:pot.lastPoint.y,
 
                 x2:p.x,
-
                 y2:p.y,
 
-
-                color:
-                this.colors[
-                    this.colorIndex %
+                color:this.colors[
+                    pot.colorIndex%
                     this.colors.length
                 ]
 
-            };
+            });
 
-
-
-            this.lines.push(line);
-
-
-            this.colorIndex++;
-
+            pot.colorIndex++;
 
         }
 
-
-
-
-
-        this.lastPoint = p;
-
-
-        this.redraw();
-
-
-    }
-
-
-
-    resize(){
-
-        this.canvas.width =
-            this.canvas.clientWidth;
-
-
-        this.canvas.height =
-            this.canvas.clientWidth;
-
-
-        this.offsetX =
-            this.canvas.width / 2;
-
-
-        this.offsetY =
-            this.canvas.height / 2;
-
+        pot.lastPoint=p;
 
         this.redraw();
 
     }
 
-
+    //----------------------------------------
+    // 重绘
+    //----------------------------------------
 
     redraw(){
 
-
         let ctx=this.ctx;
 
-
-
         ctx.clearRect(
-
             0,
-
             0,
-
             this.canvas.width,
-
             this.canvas.height
-
         );
 
+        ctx.font="14px Arial";
 
+        ctx.textAlign="center";
 
+        //========================
+        // 绘制两个中心十字
+        //========================
 
+        for(let id in this.pots){
 
-        /*
-            绘制轨迹
-        */
+            let pot=this.pots[id];
 
-        for(let line of this.lines){
+            ctx.strokeStyle="#CCCCCC";
 
+            ctx.lineWidth=1;
 
             ctx.beginPath();
-
-
-            ctx.moveTo(
-
-                line.x1,
-
-                line.y1
-
-            );
-
-
-            ctx.lineTo(
-
-                line.x2,
-
-                line.y2
-
-            );
-
-
-
-            ctx.strokeStyle =
-                line.color;
-
-
-
-            ctx.lineWidth = 3;
-
-
-
+            ctx.moveTo(pot.centerX-15,this.offsetY);
+            ctx.lineTo(pot.centerX+15,this.offsetY);
             ctx.stroke();
 
-
-        }
-
-
-
-
-
-
-
-        /*
-            绘制点和坐标
-        */
-
-
-        ctx.font = "14px Arial";
-
-
-        for(let point of this.points){
-
-
-
-            // 点
-
             ctx.beginPath();
-
-
-            ctx.arc(
-
-                point.px,
-
-                point.py,
-
-                4,
-
-                0,
-
-                Math.PI * 2
-
-            );
-
+            ctx.moveTo(pot.centerX,this.offsetY-15);
+            ctx.lineTo(pot.centerX,this.offsetY+15);
+            ctx.stroke();
 
             ctx.fillStyle="black";
-
-
-            ctx.fill();
-
-
-
-
-
-            // 坐标文字
-
-            ctx.fillStyle="black";
-
-
             ctx.fillText(
-
-                "(" +
-                point.x +
-                "," +
-                point.y +
-                ")",
-
-
-                point.px + 8,
-
-                point.py - 8
-
+                "锅"+id,
+                pot.centerX,
+                20
             );
-
 
         }
 
+        //========================
+        // 轨迹
+        //========================
 
+        for(let id in this.pots){
 
+            let pot=this.pots[id];
 
+            for(let line of pot.lines){
 
+                ctx.beginPath();
 
+                ctx.moveTo(
+                    line.x1,
+                    line.y1
+                );
 
-        /*
-            当前运动位置
-        */
+                ctx.lineTo(
+                    line.x2,
+                    line.y2
+                );
 
+                ctx.strokeStyle=line.color;
 
-        if(this.lastPoint){
+                ctx.lineWidth=3;
 
+                ctx.stroke();
 
-            ctx.beginPath();
-
-
-            ctx.arc(
-
-                this.lastPoint.x,
-
-                this.lastPoint.y,
-
-                6,
-
-                0,
-
-                Math.PI * 2
-
-            );
-
-
-            ctx.fillStyle="red";
-
-
-            ctx.fill();
-
+            }
 
         }
 
+        //========================
+        // 点
+        //========================
+
+        ctx.textAlign="left";
+
+        for(let id in this.pots){
+
+            let pot=this.pots[id];
+
+            for(let point of pot.points){
+
+                ctx.beginPath();
+
+                ctx.arc(
+                    point.px,
+                    point.py,
+                    4,
+                    0,
+                    Math.PI*2
+                );
+
+                ctx.fillStyle="black";
+
+                ctx.fill();
+
+                ctx.fillStyle="black";
+
+                ctx.fillText(
+
+                    "("+
+                    point.x+
+                    ","+
+                    point.y+
+                    ")",
+
+                    point.px+8,
+                    point.py-8
+
+                );
+
+            }
+
+        }
+
+        //========================
+        // 当前运动点
+        //========================
+
+        for(let id in this.pots){
+
+            let pot=this.pots[id];
+
+            if(pot.lastPoint){
+
+                ctx.beginPath();
+
+                ctx.arc(
+                    pot.lastPoint.x,
+                    pot.lastPoint.y,
+                    6,
+                    0,
+                    Math.PI*2
+                );
+
+                ctx.fillStyle="red";
+
+                ctx.fill();
+
+            }
+
+        }
 
     }
 
+    //----------------------------------------
+    // 自适应
+    //----------------------------------------
 
+    resize(){
 
+        this.canvas.width=this.canvas.clientWidth;
 
+        this.canvas.height=this.canvas.clientWidth;
 
+        this.offsetY=this.canvas.height/2;
 
+        this.pots[1].centerX=this.canvas.width*0.25;
 
-
-    clear(){
-
-
-        this.lines=[];
-
-
-        this.points=[];
-
-
-        this.lastPoint=null;
-
-
-        this.initialized=false;
-
-
-        this.colorIndex=0;
-
+        this.pots[2].centerX=this.canvas.width*0.75;
 
         this.redraw();
 
+    }
+
+    //----------------------------------------
+    // 清空
+    //----------------------------------------
+
+    clear(){
+
+        for(let id in this.pots){
+
+            let pot=this.pots[id];
+
+            pot.lines=[];
+
+            pot.points=[];
+
+            pot.lastPoint=null;
+
+            pot.initialized=false;
+
+            pot.colorIndex=0;
+
+        }
+
+        this.redraw();
 
     }
 
-
 }
 
-
-
-
-
-
-
-let trajectory = null;
-
-
+let trajectory=null;
 
 window.addEventListener(
 
@@ -472,20 +369,9 @@ window.addEventListener(
 
     function(){
 
+        trajectory=new TrajectoryViewer("trajectory");
 
-        trajectory =
-
-            new TrajectoryViewer(
-
-                "trajectory"
-
-            );
-
-
-
-        window.trajectory =
-            trajectory;
-
+        window.trajectory=trajectory;
 
     }
 

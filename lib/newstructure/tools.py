@@ -296,6 +296,7 @@ def trace_info(info):
         delta = pulses_to_circles(
             pulses
         )
+
         if motorid in [
             POT1_FLIP_MOTOR,
             POT2_FLIP_MOTOR
@@ -312,8 +313,11 @@ def trace_info(info):
                current_position["x"] += delta*(-1)
             else:
                current_position["x"] += delta*(-1)
+
+        potid = get_pot_id(motorid)
         corddata = {
             "type":"trajectory",
+            "potid":potid,
             "x":
                 round(current_position["x"],2),
             "y":
