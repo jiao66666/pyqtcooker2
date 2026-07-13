@@ -270,69 +270,101 @@ TRACE_CMDS = {
     "#ORGRST"
 }
 
-current_position = {
-    "x":0,
-    "y":0
+# 两个锅各自维护自己的当前位置
+current_positions = {
+
+    1: {
+        "x": 0,
+        "y": 0
+    },
+
+    2: {
+        "x": 0,
+        "y": 0
+    }
+
 }
+
 
 def trace_info(info):
 
     parts = info.split(",")
     cmd = parts[0].upper()
+
     if cmd not in TRACE_CMDS:
         return
 
     data = []
     data.append({
-        "type":"command",
-        "info":info
+        "type": "command",
+        "info": info
     })
+
     websocket_server.send(data)
+
     if cmd == "#RUN":
+
         cordinfo = []
+
         pulses = int(parts[3])
         motorid = int(parts[2])
-        # 本次移动量
-        delta = pulses_to_circles(
-            pulses
-        )
 
+        # 当前属于哪个锅
+        potid = get_pot_id(motorid)
+
+        # 当前锅的位置
+        pos = current_positions[potid]
+
+        # 本次移动量
+        delta = pulses_to_circles(pulses)
+
+        # -----------------------------
+        # Y轴（翻锅）
+        # -----------------------------
         if motorid in [
             POT1_FLIP_MOTOR,
             POT2_FLIP_MOTOR
         ]:
+
             if motorid == POT2_FLIP_MOTOR:
-               current_position["y"] += delta*(-1)
+                pos["y"] -= delta
             else:
-               current_position["y"] += delta
+                pos["y"] += delta
+
+        # -----------------------------
+        # X轴（移动）
+        # -----------------------------
         elif motorid in [
             POT1_MOVE_MOTOR,
             POT2_MOVE_MOTOR
         ]:
-            if motorid == POT1_MOVE_MOTOR:
-               current_position["x"] += delta*(-1)
-            else:
-               current_position["x"] += delta*(-1)
 
-        potid = get_pot_id(motorid)
+            # 目前两个锅方向一致
+            pos["x"] -= delta
+
+        # 发送当前锅轨迹
         corddata = {
-            "type":"trajectory",
-            "potid":potid,
-            "x":
-                round(current_position["x"],2),
-            "y":
-                round(current_position["y"],2)
+
+            "type": "trajectory",
+
+            "potid": potid,
+
+            "x": round(pos["x"], 2),
+
+            "y": round(pos["y"], 2)
+
         }
+
         cordinfo.append(corddata)
+
         print(
             "发送轨迹:",
             cordinfo
         )
-        websocket_server.send(
-            cordinfo
-        )
-     
-    #print("ws:executing info",data)
+
+        websocket_server.send(cordinfo)
+
+    # print("ws:executing info", data)
 
 
 def get_pot_id(motorid):
