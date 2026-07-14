@@ -138,6 +138,7 @@ class PotStateMachine:
 
         track_actions = [
             "move_out_togetfood",
+            "move_to_track",
             "flip_out_pour",
             "flip_in_wash",
             "flip_out_getfood",
