@@ -158,7 +158,7 @@ ACTION_PARAMS_CONFIG = {
     },
     "move_to_track": {
         "speed": 1000,
-        "target":4.6,
+        "target":4.16,
         "varspeed":False,
         "quitinadvance":0
     },
