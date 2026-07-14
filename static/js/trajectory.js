@@ -40,7 +40,7 @@ class TrajectoryViewer {
                 initialized:false,
                 lastPoint:null,
                 colorIndex:0,
-                color:"#ff6699",
+                color:"#008200",
                 lines:[],
                 points:[]
             }
