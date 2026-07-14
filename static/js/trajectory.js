@@ -30,6 +30,7 @@ class TrajectoryViewer {
                 initialized:false,
                 lastPoint:null,
                 colorIndex:0,
+                color:"blue",
                 lines:[],
                 points:[]
             },
@@ -39,6 +40,7 @@ class TrajectoryViewer {
                 initialized:false,
                 lastPoint:null,
                 colorIndex:0,
+                color:"pink",
                 lines:[],
                 points:[]
             }
@@ -139,10 +141,7 @@ class TrajectoryViewer {
                 x2:p.x,
                 y2:p.y,
 
-                color:this.colors[
-                    pot.colorIndex%
-                    this.colors.length
-                ]
+                color:pot.color
 
             });
 
