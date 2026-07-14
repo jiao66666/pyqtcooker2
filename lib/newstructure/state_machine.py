@@ -66,7 +66,7 @@ class PotStateMachine:
             print(f"{self.pot_id} machine state is RUNNING")
             step = self.steps[self.current_step]
             
-            if self.need_track(step["action"]) and not self.track.try_acquire(self.pot_id, step["action"]):
+            if self.need_track_acquire(step["action"]) and not self.track.try_acquire(self.pot_id):
                 print(f"Pot {self.pot_id} waiting track")
                 if "on_block" in step:
                    self.insert_steps(step["on_block"])
@@ -133,9 +133,30 @@ class PotStateMachine:
             self.steps[self.current_step:]
         )
 
-    def need_track(self,action: str):
+    def need_track_acquire(self, action: str):
         print(f"<<<<<<<<<<<current action is {action}>>>>>>>>>>>>")
-        return action.startswith("move_out_togetfood")
+
+        track_actions = [
+            "move_out_togetfood",
+            "flip_out_pour",
+            "flip_in_wash",
+            "flip_out_getfood",
+        ]
+
+        return any(action.startswith(prefix) for prefix in track_actions)
+    
+
+    def need_track_release(self, action):
+
+        release_actions = [
+            "move_in_tofirefood"
+        ]
+
+        return any(
+            action.startswith(prefix)
+            for prefix in release_actions
+        )
+
 
     def on_motor_done(self, data):
         print("电机完成运动@@@@@@@@@@@@@@@@@@@@@@@@----statemachine")
@@ -159,8 +180,8 @@ class PotStateMachine:
         print(f"motor {motor_id} done the action {step['action']}")
         print(f"OK检查未过关OK{ctx['action']},{step['action']},{data['motor_id']},{step['motor'].motor_id}")
 
-        if self.need_track(step["action"]):  #如果需要跨动作释放，则加变量self.track_accuired 进行保存跨多个动作判断
-            self.track.release(self.pot_id, step["action"])
+        if self.need_track_release(step["action"]):  #如果需要跨动作释放，则加变量self.track_accuired 进行保存跨多个动作判断
+            self.track.release(self.pot_id)
 
         self.current_step += 1
 

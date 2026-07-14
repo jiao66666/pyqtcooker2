@@ -200,6 +200,9 @@ ACTION_PARAMS_CONFIG = {
     }
 }
 
+
+
+
 TIMEOUT = 6000 #电机单步动作超时
 
 # 优先级定义（越小越优先）
