@@ -32,7 +32,9 @@ class TrajectoryViewer {
                 colorIndex:0,
                 color:"#0066ff",
                 lines:[],
-                points:[]
+                points:[],
+                movingPoint:null,
+                animating:false
             },
 
             2:{
@@ -42,7 +44,9 @@ class TrajectoryViewer {
                 colorIndex:0,
                 color:"#008200",
                 lines:[],
-                points:[]
+                points:[],
+                movingPoint:null,
+                animating:false
             }
 
         };
@@ -131,6 +135,7 @@ class TrajectoryViewer {
 
         });
 
+        /*
         if(pot.lastPoint){
 
             pot.lines.push({
@@ -151,7 +156,16 @@ class TrajectoryViewer {
 
         pot.lastPoint=p;
 
-        this.redraw();
+        this.redraw();*/
+
+        let start = pot.lastPoint;
+
+        this.animateMove(
+            pot,
+            start,
+            p
+        );
+
 
     }
 
@@ -294,13 +308,18 @@ class TrajectoryViewer {
 
                 ctx.beginPath();
 
-                ctx.arc(
-                    pot.lastPoint.x,
-                    pot.lastPoint.y,
-                    6,
-                    0,
-                    Math.PI*2
-                );
+                let drawPoint = pot.movingPoint || pot.lastPoint;
+
+                if(drawPoint){
+
+                    ctx.arc(
+                        drawPoint.x,
+                        drawPoint.y,
+                        6,
+                        0,
+                        Math.PI*2
+                    );
+                }
 
                 ctx.fillStyle="red";
 
@@ -315,6 +334,61 @@ class TrajectoryViewer {
     //----------------------------------------
     // 自适应
     //----------------------------------------
+
+    animateMove(pot, start, end){
+
+        let progress = 0;
+
+        const step = ()=>{
+
+            progress += 0.05;
+
+            if(progress >= 1){
+
+                // 动画结束
+
+                pot.movingPoint = null;
+
+                // 这时候再真正加入轨迹
+                pot.lines.push({
+
+                    x1:start.x,
+                    y1:start.y,
+
+                    x2:end.x,
+                    y2:end.y,
+
+                    color:pot.color
+
+                });
+
+                // 更新当前位置
+                pot.lastPoint = end;
+
+                this.redraw();
+
+                return;
+            }
+
+            // 动画中
+            pot.movingPoint = {
+
+                x:start.x + (end.x-start.x)*progress,
+
+                y:start.y + (end.y-start.y)*progress
+
+            };
+
+            this.redraw();
+
+            requestAnimationFrame(step);
+
+        };
+
+        requestAnimationFrame(step);
+
+    }
+
 
     resize(){
 
