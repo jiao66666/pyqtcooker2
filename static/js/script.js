@@ -854,6 +854,7 @@ function setupWebSocket(url) {
                 app.updateMotorData(item.motor_id, item.position);
             }else if(item.type=="command"){
                 commandApp.addCommand(item.info);
+                updatePotCommand(item.potid,item.info)
             }else if(item.type=="trajectory"){
                 trajectory.addPoint(
                     item.potid,
@@ -874,6 +875,27 @@ function setupWebSocket(url) {
         console.log('WebSocket connection closed');
     };
 }
+
+
+function updatePotCommand(potid, info) {
+
+    let el = null;
+
+    if (potid == 1) {
+        el = document.getElementById("pot1_cmdshow");
+    } else if (potid == 2) {
+        el = document.getElementById("pot2_cmdshow");
+    }
+
+    if (!el) return;
+
+    // 追加显示
+    el.innerHTML = "正在执行命令:" + info + "<br>";
+
+    // 自动滚动到底部
+    el.scrollTop = el.scrollHeight;
+}
+
 
 
 function clearHistory(type){

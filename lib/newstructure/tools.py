@@ -287,9 +287,17 @@ current_positions = {
 
 
 def trace_info(info):
-
+   
     parts = info.split(",")
     cmd = parts[0].upper()
+
+    if cmd != "#RUN":
+            return
+
+    pulses = int(parts[3])
+    motorid = int(parts[2])
+    # 当前属于哪个锅
+    potid = get_pot_id(motorid)
 
     if cmd not in TRACE_CMDS:
         return
@@ -297,7 +305,8 @@ def trace_info(info):
     data = []
     data.append({
         "type": "command",
-        "info": info
+        "info": info,
+        "potid":potid
     })
 
     websocket_server.send(data)
@@ -305,12 +314,6 @@ def trace_info(info):
     if cmd == "#RUN":
 
         cordinfo = []
-
-        pulses = int(parts[3])
-        motorid = int(parts[2])
-
-        # 当前属于哪个锅
-        potid = get_pot_id(motorid)
 
         # 当前锅的位置
         pos = current_positions[potid]

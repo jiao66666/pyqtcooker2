@@ -493,3 +493,26 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
     padding: 3px 10px;
     font-size: 10px;
  }
+
+ .trajectory_panel{
+    position: relative;
+ }
+
+ .cmd_row{
+    position: absolute;
+    display: flex;
+    flex-flow:row wrap;
+    align-items: center;
+    justify-content: center;
+    border-top:none;
+    left:0;
+    top:30px;
+    width:100%;
+ }
+ .cmd_col{
+    background-color: #ccc;
+    color:#66afe9;
+    text-align: center;
+    flex:1;
+    font-size:12px;
+ }
