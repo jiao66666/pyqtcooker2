@@ -837,6 +837,12 @@ const app = createMotorStatusApp('#motor_status_1');
 // 将 WebSocket 实例提升到全局作用域
 let ws;
 
+
+const potCommands = {
+    1: [],
+    2: []
+};
+
 // WebSocket 初始化方法
 function setupWebSocket(url) {
     ws = new WebSocket(url);  // 创建 WebSocket 连接
@@ -889,13 +895,28 @@ function updatePotCommand(potid, info) {
 
     if (!el) return;
 
-    // 追加显示
-    el.innerHTML = "正在执行命令:" + info + "<br>";
 
-    // 自动滚动到底部
+    // 保存历史
+    potCommands[potid].push(info);
+
+
+    // 默认只显示最后一条
+    el.innerHTML = potCommands[potid]
+        .map(v => "正在执行命令:" + v)
+        .join("<br>");
+
+
+    // 如果没有展开，只显示最后一条
+    if (!el.classList.contains("expand")) {
+
+        el.innerHTML =
+            "正在执行命令:" +
+            potCommands[potid][potCommands[potid].length - 1];
+    }
+
+
     el.scrollTop = el.scrollHeight;
 }
-
 
 
 function clearHistory(type){
@@ -923,3 +944,51 @@ function startWebSocket() {
 
 
 
+function initCommandPanel(){
+
+    document.querySelectorAll(".cmd_col")
+    .forEach(el=>{
+
+        el.addEventListener("click",()=>{
+
+            const potid =
+                el.id === "pot1_cmdshow" ? 1 : 2;
+
+
+            el.classList.toggle("expand");
+
+
+            if(el.classList.contains("expand")){
+
+                el.innerHTML =
+                    potCommands[potid]
+                    .map(v=>"正在执行命令:"+v)
+                    .join("<br>");
+
+            }else{
+
+                if(potCommands[potid].length){
+
+                    el.innerHTML =
+                        "正在执行命令:"+
+                        potCommands[potid]
+                        [potCommands[potid].length-1];
+
+                }
+            }
+
+
+            el.scrollTop = el.scrollHeight;
+
+        });
+
+    });
+
+}
+
+
+window.onload = ()=>{
+
+    initCommandPanel();
+
+};

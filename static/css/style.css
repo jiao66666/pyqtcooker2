@@ -509,14 +509,35 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
     top:30px;
     width:100%;
  }
- .cmd_col{
-    background-color: #ccc;
+.cmd_col{
+    background-color:#ccc;
     color:#16507e;
-    text-align: center;
+    text-align:center;
     font-size:12px;
     width:95%;
-    border-radius: 5px;
- }
+    border-radius:5px;
+
+    height:18px;
+    line-height:18px;
+
+    overflow:hidden;
+    cursor:pointer;
+
+    transition:height 0.2s;
+}
+
+
+.cmd_col.expand{
+
+    height:120px;
+
+    overflow-y:auto;
+
+    text-align:left;
+
+    padding:5px;
+
+}
 
  .cmd_col_container{
     flex:1;
