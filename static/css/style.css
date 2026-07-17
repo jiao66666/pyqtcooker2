@@ -532,10 +532,11 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
 
     overflow-y:auto;
 
-    text-align:left;
+    text-align:center;
 
     padding:5px;
     overflow-y:auto;
+
 
 
 }
