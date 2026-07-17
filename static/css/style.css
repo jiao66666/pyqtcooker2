@@ -511,8 +511,16 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
  }
  .cmd_col{
     background-color: #ccc;
-    color:#66afe9;
+    color:#16507e;
     text-align: center;
-    flex:1;
     font-size:12px;
+    width:95%;
+    border-radius: 5px;
+ }
+
+ .cmd_col_container{
+    flex:1;
+    display:flex;
+    flex-flow: row nowrap;
+    justify-content: center;
  }
