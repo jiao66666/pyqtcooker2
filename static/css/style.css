@@ -498,17 +498,16 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
     position: relative;
  }
 
- .cmd_row{
-    position: absolute;
-    display: flex;
+.cmd_row{
+    position:absolute;
+    display:flex;
     flex-flow:row wrap;
-    align-items: center;
-    justify-content: center;
-    border-top:none;
+    align-items:flex-start;   /* 修改这里 */
+    justify-content:center;
     left:0;
     top:30px;
     width:100%;
- }
+}
 .cmd_col{
     background-color:#ccc;
     color:#16507e;
@@ -536,12 +535,15 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
     text-align:left;
 
     padding:5px;
+    overflow-y:auto;
+
 
 }
 
- .cmd_col_container{
+.cmd_col_container{
     flex:1;
     display:flex;
-    flex-flow: row nowrap;
-    justify-content: center;
- }
+    flex-flow:row nowrap;
+    justify-content:center;
+    align-items:flex-start;
+}
