@@ -523,6 +523,7 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
     cursor:pointer;
 
     transition:height 0.2s;
+    display:none;
 }
 
 
@@ -548,3 +549,4 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
     justify-content:center;
     align-items:flex-start;
 }
+

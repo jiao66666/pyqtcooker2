@@ -899,6 +899,7 @@ function updatePotCommand(potid, info) {
     // 保存历史
     potCommands[potid].push(info);
 
+    el.style.display = "block";
 
     // 默认只显示最后一条
     el.innerHTML = potCommands[potid]
