@@ -242,7 +242,7 @@ def run_system(system):
     system["scancycle"]=ScanCycle([
         system["pots"][1],
         system["pots"][2]
-    ])
+    ],POT_STATEMACHINE_INTERVAL)
     system["scancycle"].start()
 
 
