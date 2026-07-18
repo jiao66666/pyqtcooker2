@@ -5,11 +5,12 @@ import random
 
 class MockMotor:
 
-    def __init__(self, websocket_server):
+    def __init__(self, websocket_server,interval):
         self.websocket_server = websocket_server
         self._thread = None
         self._running = False
         self._lock = threading.Lock()
+        self.interval = interval
 
     def _worker(self):
         print("worker start")
@@ -32,7 +33,7 @@ class MockMotor:
                 for mid, pos in positions.items()
             ])
 
-            time.sleep(0.05)
+            time.sleep(self.interval)
 
         print("worker exit")
 

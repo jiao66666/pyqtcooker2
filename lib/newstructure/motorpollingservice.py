@@ -194,7 +194,6 @@ class MotorPollingService:
         self.motor_inflight.discard(motor_id)
         #测试的时候关闭
         #仅测试用       
-        #time.sleep(1)
         runtime.set_done(motor_id)
         self.bus.publish("MOTOR_DONE", {"motor_id": motor_id})
         return

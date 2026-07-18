@@ -32,7 +32,7 @@ def build_system():
 
     stepbuilder = StepBuilder(motors["stepmotor"])
 
-    motion_controller = MotionController(boards["stepmotor"])
+    motion_controller = MotionController(boards["stepmotor"],MOTION_INTERVAL)
 
     from lib.newstructure.cookservice import CookerService
 
@@ -40,8 +40,8 @@ def build_system():
     pot2 = PotStateMachine(2, bus, trackmanager, motion_controller)
 
 
-    mockmotor = MockMotor(websocket_server)
-    motorpolling = MotorPollingService(boards["stepmotor"],bus,motors["stepmotor"],mockmotor)
+    mockmotor = MockMotor(websocket_server,MOCK_INTERVAL)
+    motorpolling = MotorPollingService(boards["stepmotor"],bus,motors["stepmotor"],mockmotor,POLLING_INTERVAL)
 
     resource_manager = TaskResourceManager(bus)
     dispatcher = CommandDispatcher(resource_manager,bus)
