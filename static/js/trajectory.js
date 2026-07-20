@@ -34,7 +34,10 @@ class TrajectoryViewer {
                 lines:[],
                 points:[],
                 movingPoint:null,
-                animating:false
+                animating:false,
+                queue: [],
+                currentTarget: null,
+                animationVersion: 0
             },
 
             2:{
@@ -46,7 +49,10 @@ class TrajectoryViewer {
                 lines:[],
                 points:[],
                 movingPoint:null,
-                animating:false
+                animating:false,
+                queue: [],
+                currentTarget: null,
+                animationVersion: 0
             }
 
         };
@@ -158,16 +164,61 @@ class TrajectoryViewer {
 
         this.redraw();*/
 
-        let start = pot.lastPoint;
+        let start;
 
-        this.animateMove(
-            pot,
+        if (pot.queue.length > 0) {
+
+            // 取队列最后一个动画的终点
+            start = pot.queue[pot.queue.length - 1].end;
+
+        } else if (pot.animating) {
+
+            // 当前正在播放动画，但队列已经空了
+            // 应该从当前动画终点继续
+            start = pot.currentTarget;
+
+        } else {
+
+            // 当前没有动画
+            start = pot.lastPoint;
+        }
+
+        let end = p;
+
+        pot.queue.push({
             start,
-            p
-        );
+            end
+        });
+
+        if (!pot.animating) {
+            this.startNextAnimation(pot);
+        }
 
 
     }
+
+
+    startNextAnimation(pot){
+
+        if(pot.queue.length==0){
+
+            pot.animating=false;
+            return;
+        }
+
+        pot.animating=true;
+
+        let task=pot.queue.shift();
+
+        pot.currentTarget = task.end;
+
+        this.animateMove(
+            pot,
+            task.start,
+            task.end
+        );
+    }
+
 
     //----------------------------------------
     // 重绘
@@ -337,37 +388,47 @@ class TrajectoryViewer {
 
     animateMove(pot, start, end){
 
+        // 当前动画编号
+        pot.animationVersion++;
+
+        const version = pot.animationVersion;
+
+
         let progress = 0;
 
         const step = ()=>{
+
+            if(version !== pot.animationVersion){
+                return;
+            }
 
             progress += 0.05;
 
             if(progress >= 1){
 
-                // 动画结束
-
                 pot.movingPoint = null;
 
-                // 这时候再真正加入轨迹
-                pot.lines.push({
+                    pot.lines.push({
 
-                    x1:start.x,
-                    y1:start.y,
+                        x1:start.x,
+                        y1:start.y,
 
-                    x2:end.x,
-                    y2:end.y,
+                        x2:end.x,
+                        y2:end.y,
 
-                    color:pot.color
+                        color:pot.color
 
-                });
+                    });
 
-                // 更新当前位置
-                pot.lastPoint = end;
+                    pot.lastPoint = end;
 
-                this.redraw();
+                    pot.currentTarget = null;
 
-                return;
+                    this.redraw();
+
+                    this.startNextAnimation(pot);   // ★继续播放下一段
+
+                    return;
             }
 
             // 动画中
@@ -417,14 +478,22 @@ class TrajectoryViewer {
             let pot=this.pots[id];
 
             pot.lines=[];
-
             pot.points=[];
+
+            pot.animationVersion++;
+            pot.queue=[];
+
+            pot.animating=false;
+
+            pot.movingPoint=null;
 
             pot.lastPoint=null;
 
             pot.initialized=false;
 
             pot.colorIndex=0;
+
+            pot.currentTarget = null;
 
         }
 
