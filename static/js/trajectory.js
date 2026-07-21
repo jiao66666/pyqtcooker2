@@ -19,7 +19,7 @@ class TrajectoryViewer {
             "magenta"
         ];
 
-        this.canvas.height * 0.8 / 50;
+        this.scale = this.canvas.height * 0.8 / 50;
 
         this.offsetY=this.canvas.height/2;
 
