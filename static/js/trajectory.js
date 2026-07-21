@@ -19,7 +19,7 @@ class TrajectoryViewer {
             "magenta"
         ];
 
-        this.scale=18;
+        this.canvas.height * 0.8 / 50;
 
         this.offsetY=this.canvas.height/2;
 
@@ -456,6 +456,10 @@ class TrajectoryViewer {
         this.canvas.width=this.canvas.clientWidth;
 
         this.canvas.height=this.canvas.clientWidth;
+
+
+        this.scale =
+            this.canvas.height * 0.8 / 50;        
 
         this.offsetY=this.canvas.height/2;
 
