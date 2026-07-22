@@ -270,7 +270,7 @@ class TrajectoryViewer {
             ctx.fillStyle="black";
             ctx.fillText(
                 "锅"+id,
-                pot.centerX,
+                this.getPotLabelX(Number(id)),
                 20
             );
 
@@ -537,6 +537,15 @@ class TrajectoryViewer {
         this.updatePotCenters();
 
         this.redraw();
+
+    }
+
+
+    getPotLabelX(potId){
+
+    return potId == 1
+        ? this.canvas.width * 0.25
+        : this.canvas.width * 0.75;
 
     }
 
