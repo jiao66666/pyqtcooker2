@@ -23,10 +23,13 @@ class TrajectoryViewer {
 
         this.offsetY=this.canvas.height/2;
 
+        // 两锅初始点距离（坐标单位）
+        this.potDistance = 9.2;
+
         this.pots={
 
             1:{
-                centerX:this.canvas.width*0.25,
+                centerX:0,
                 initialized:false,
                 lastPoint:null,
                 colorIndex:0,
@@ -41,7 +44,7 @@ class TrajectoryViewer {
             },
 
             2:{
-                centerX:this.canvas.width*0.75,
+                centerX:0,
                 initialized:false,
                 lastPoint:null,
                 colorIndex:0,
@@ -56,6 +59,9 @@ class TrajectoryViewer {
             }
 
         };
+
+        // 根据距离计算中心
+        this.updatePotCenters();
 
     }
 
@@ -463,9 +469,7 @@ class TrajectoryViewer {
 
         this.offsetY=this.canvas.height/2;
 
-        this.pots[1].centerX=this.canvas.width*0.25;
-
-        this.pots[2].centerX=this.canvas.width*0.75;
+        this.updatePotCenters();
 
         this.redraw();
 
@@ -504,6 +508,38 @@ class TrajectoryViewer {
         this.redraw();
 
     }
+
+
+
+        //----------------------------------------
+    // 更新两锅中心位置
+    //----------------------------------------
+
+    updatePotCenters(){
+
+        const halfDistance = this.potDistance / 2;
+
+        this.pots[1].centerX =
+            this.canvas.width / 2 - halfDistance * this.scale;
+
+        this.pots[2].centerX =
+            this.canvas.width / 2 + halfDistance * this.scale;
+    }
+
+    //----------------------------------------
+    // 设置两锅间距
+    //----------------------------------------
+
+    setPotDistance(distance){
+
+        this.potDistance = distance;
+
+        this.updatePotCenters();
+
+        this.redraw();
+
+    }
+
 
 }
 
