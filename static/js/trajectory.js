@@ -19,7 +19,7 @@ class TrajectoryViewer {
             "magenta"
         ];
 
-        this.scale = this.canvas.height * 0.8 / 50;
+        this.scale = this.getDynamicScale();
 
         this.offsetY=this.canvas.height/2;
 
@@ -465,7 +465,7 @@ class TrajectoryViewer {
 
 
         this.scale =
-            this.canvas.height * 0.8 / 50;        
+            this.getDynamicScale();        
 
         this.offsetY=this.canvas.height/2;
 
@@ -475,6 +475,13 @@ class TrajectoryViewer {
 
     }
 
+    getDynamicScale(){
+
+        const zoom = 1.5;
+
+        return this.canvas.height*0.8/50 * zoom;
+
+    }
     //----------------------------------------
     // 清空
     //----------------------------------------
