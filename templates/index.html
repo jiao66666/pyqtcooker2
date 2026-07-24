@@ -341,6 +341,46 @@
 
 
 
+    <div id="disconnectConfirm" class="confirm_mask">
+
+        <div class="confirm_box">
+
+            <div class="confirm_title">
+                关闭炒菜机
+            </div>
+
+
+            <div class="confirm_content">
+                确定要关闭炒菜机吗？<br>
+                当前运行任务可能会被终止。
+            </div>
+
+
+            <div class="confirm_buttons">
+
+                <button 
+                    class="confirm_cancel"
+                    onclick="hideDisconnectConfirm()">
+                    取消
+                </button>
+
+
+                <button 
+                    class="confirm_ok"
+                    onclick="confirmDisconnect()">
+                    确认关闭
+                </button>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+
+
       <!-- Vue 模板 -->
     <script type="text/x-template" id="motor-status-template">
         <div class="fb_display">

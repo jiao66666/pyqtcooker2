@@ -69,28 +69,92 @@ function connect() {
 
 //断开连接炒菜机串口
 function disconnect() {
-        fetch('/disconnect', {
-            method: 'POST', 
-            headers: {
-                'Content-Type': 'application/json'  
-            },
-            body: JSON.stringify({
-              
-            })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if(data.status === "success"){
-                updateConnectStatus("未使能","connect_status");
-            }
-            addMessage(`返回信息 : ${data.message}`);  // 将收到的消息保存并显示
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            addMessage("Error starting motor.");
-        });
+        showDisconnectConfirm();
 }
 
+
+function showDisconnectConfirm(){
+
+    document.getElementById(
+        "disconnectConfirm"
+    ).style.display="flex";
+
+}
+
+
+function hideDisconnectConfirm(){
+
+    document.getElementById(
+        "disconnectConfirm"
+    ).style.display="none";
+
+}
+
+
+
+function confirmDisconnect(){
+
+
+    hideDisconnectConfirm();
+
+
+    fetch('/disconnect', {
+
+        method:'POST',
+
+        headers:{
+            'Content-Type':'application/json'
+        },
+
+        body:JSON.stringify({
+
+        })
+
+    })
+
+
+    .then(response=>response.json())
+
+
+    .then(data=>{
+
+
+        if(data.status==="success"){
+
+            updateConnectStatus(
+                "未使能",
+                "connect_status"
+            );
+
+        }
+
+
+        addMessage(
+            `返回信息 : ${data.message}`
+        );
+
+
+    })
+
+
+    .catch(error=>{
+
+
+        console.error(
+            'Error:',
+            error
+        );
+
+
+        addMessage(
+            "Error disconnect motor."
+        );
+
+
+    });
+
+
+}
 
 function testTastBoardPing() {
         fetch('/testtastboardping', {
