@@ -120,7 +120,9 @@ class PotStateMachine:
   
 
     def reset(self):
-        self.state = "IDLE"
+        self.state = "IDLE"    
+        self.running_tasks = set()
+        self.running_taskname = None
 
     def check_home(self):
         return True            

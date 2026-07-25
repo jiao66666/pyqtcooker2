@@ -91,6 +91,10 @@ def recovery_system(system):
     system["state"]["dirty"]=False
     system["state"]["mode"]="READY"
     system["mockmotor"].start()
+    system["pots"][1].reset()
+    system["pots"][2].reset()
+    system["cookservice"].resetRunning(1)
+    system["cookservice"].resetRunning(2)
     return True
 
 
