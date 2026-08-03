@@ -103,8 +103,11 @@ class MotionController:
         # --------------------------
         # 速度参数
         # --------------------------
-        MIN_SPEED = 100
-        MAX_SPEED = 300
+
+        from lib.newstructure.constant import VAR_MAX_SPEED,VAR_MIN_SPEED
+
+        MIN_SPEED = VAR_MIN_SPEED
+        MAX_SPEED = VAR_MAX_SPEED
 
         # --------------------------
         # S曲线速度
