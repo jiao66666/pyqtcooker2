@@ -23,10 +23,10 @@ class MotionPlanner:
             print("计算位移出错！！！！》》》")
             return None        
 
-        # 2️ 圈数（你的系统单位）
+        # 2️ 圈数
         circles = abs(delta)
 
-        # 3️方向（保持你原逻辑）
+        # 3️方向
         if motor.motor_id in [POT1_MOVE_MOTOR, POT1_FLIP_MOTOR]:
             direction = -1 if delta >= 0 else 1
         else:
