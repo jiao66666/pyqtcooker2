@@ -210,6 +210,7 @@ def stopall():
     success2 = system["motorsmanager"].reset_home_all()
     set_system_dirty(system,True)
     runtime.set_all_enabled(False)
+    system["mockmotor"].stop()
     system["bus"].publish(
         "ESTOP_TRIGGERED",
         {}
