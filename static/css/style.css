@@ -664,3 +664,33 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
     }
 
 }
+
+
+.toast-message{
+    position:fixed;
+    top:20px;
+    left:50%;
+    transform:translateX(-50%) translateY(-20px);
+
+    background:#333;
+    color:#fff;
+
+    padding:10px 25px;
+    border-radius:8px;
+
+    font-size:16px;
+    white-space:nowrap;
+
+    opacity:0;
+    visibility:hidden;
+
+    transition:all .3s ease;
+
+    z-index:9999;
+}
+
+.toast-message.show{
+    opacity:1;
+    visibility:visible;
+    transform:translateX(-50%) translateY(0);
+}

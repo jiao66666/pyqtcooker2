@@ -33,6 +33,51 @@ function addMessage(message) {
     const timestamp = new Date().toLocaleString();  // 获取当前时间戳
     messageHistory.unshift({ message, timestamp });  // 将新消息插入到历史记录的头部
     displayMessageHistory();  // 更新页面上显示的消息
+
+
+       // 顶部提示
+    showToast(message,3000);
+}
+
+
+
+
+let toastTimer = null;
+
+function showToast(message, duration = 2000, type = "info"){
+
+    const toast = document.getElementById("toastMessage");
+
+    toast.textContent = message;
+
+    toast.className = "toast-message";
+
+    switch(type){
+        case "success":
+            toast.style.background = "#28a745";
+            break;
+
+        case "warning":
+            toast.style.background = "#ffc107";
+            toast.style.color = "#000";
+            break;
+
+        case "error":
+            toast.style.background = "#dc3545";
+            break;
+
+        default:
+            toast.style.background = "#333";
+            toast.style.color = "#fff";
+    }
+
+    clearTimeout(toastTimer);
+
+    toast.classList.add("show");
+
+    toastTimer = setTimeout(()=>{
+        toast.classList.remove("show");
+    }, duration);
 }
 
 
