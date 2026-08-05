@@ -104,7 +104,7 @@ function connect() {
                 updateConnectStatus("已使能","connect_status_connected");
                 startWebSocket();
             }
-            addMessage(`返回信息 : ${data.message}`);  // 将收到的消息保存并显示
+            addMessage(`${data.message}`);  // 将收到的消息保存并显示
         })
         .catch(error => {
             console.error('Error:', error);
@@ -175,7 +175,7 @@ function confirmDisconnect(){
 
 
         addMessage(
-            `返回信息 : ${data.message}`
+            `${data.message}`
         );
 
 
@@ -213,7 +213,7 @@ function testTastBoardPing() {
         })
         .then(response => response.json())
         .then(data => {
-            addMessage(`返回信息 : ${data.message}`);  // 将收到的消息保存并显示
+            addMessage(`${data.message}`);  // 将收到的消息保存并显示
         })
         .catch(error => {
             console.error('Error:', error);
@@ -248,7 +248,7 @@ function runTastMotor() {
         })
         .then(response => response.json())
         .then(data => {
-            addMessage(`返回信息 : ${data.message}`);  // 将收到的消息保存并显示
+            addMessage(`${data.message}`);  // 将收到的消息保存并显示
         })
         .catch(error => {
             console.error('Error:', error);
@@ -276,7 +276,7 @@ function getTastMotorFb(mode) {
         })
         .then(response => response.json())
         .then(data => {
-            addMessage(`返回信息 : ${data.message}`);  // 将收到的消息保存并显示
+            addMessage(`${data.message}`);  // 将收到的消息保存并显示
         })
         .catch(error => {
             console.error('Error:', error);
@@ -309,9 +309,9 @@ function startMotor(potnum,directionstr) {
         .then(response => response.json())
         .then(data => {
             if(data.status === "success"){
-                addMessage(`返回信息 : ${data.message}`);  // 将收到的消息保存并显示
+                addMessage(`${data.message}`);  // 将收到的消息保存并显示
             }else{
-                addMessage(`返回信息 : ${data.message}`);  // 将收到的消息保存并显示
+                addMessage(`${data.message}`);  // 将收到的消息保存并显示
             }
             
         })
@@ -355,9 +355,9 @@ function runMotor(potnum,directionstr) {
         .then(response => response.json())
         .then(data => {
             if(data.status === "success"){
-                addMessage(`返回信息 : ${data.message}`);  // 将收到的消息保存并显示
+                addMessage(`${data.message}`);  // 将收到的消息保存并显示
             }else if(data.status === "error"){
-                addMessage(`返回信息 : ${data.message}`);  // 将收到的消息保存并显示
+                addMessage(`${data.message}`);  // 将收到的消息保存并显示
             }
             
         })
@@ -400,7 +400,7 @@ function runMotorabs(potnum,directionstr) {
         })
         .then(response => response.json())
         .then(data => {
-             addMessage(`返回信息 : ${data.message}`);  // 将收到的消息保存并显示
+             addMessage(`${data.message}`);  // 将收到的消息保存并显示
         })
         .catch(error => {
             console.error('Error:', error);
@@ -429,7 +429,7 @@ function resetMotor(potnum,directionstr) {
         })
         .then(response => response.json())
         .then(data => {
-             addMessage(`返回信息 : ${data.message}`);  // 将收到的消息保存并显示
+             addMessage(`${data.message}`);  // 将收到的消息保存并显示
         })
         .catch(error => {
             console.error('Error:', error);
@@ -458,7 +458,7 @@ function pauseMotor(potnum,directionstr) {
         .then(response => response.json())
         .then(data => {
             if(data.status === "success"){
-                addMessage(`返回信息 : ${data.message}`);  // 将收到的消息保存并显示
+                addMessage(`${data.message}`);  // 将收到的消息保存并显示
             }
             
         })
@@ -489,7 +489,7 @@ function stopMotor(potnum,directionstr) {
         .then(response => response.json())
         .then(data => {
             if(data.status === "success"){
-                addMessage(`返回信息 : ${data.message}`);  // 将收到的消息保存并显示
+                addMessage(`${data.message}`);  // 将收到的消息保存并显示
             }
             
         })
@@ -515,7 +515,7 @@ function resetMotorPot(potnum) {
         })
         .then(response => response.json())
         .then(data => {
-             addMessage(`返回信息 : ${data.message}`);  // 将收到的消息保存并显示
+             addMessage(`${data.message}`);  // 将收到的消息保存并显示
         })
         .catch(error => {
             console.error('Error:', error);
@@ -541,7 +541,7 @@ function stopall() {
         .then(response => response.json())
         .then(data => {
               updateConnectStatus("未使能","connect_status");
-              addMessage(`返回信息 : ${data.message}`);  // 将收到的消息保存并显示
+              addMessage(`${data.message}`);  // 将收到的消息保存并显示
         })
         .catch(error => {
             console.error('Error:', error);
@@ -596,7 +596,7 @@ function testMultiTaskabs() {
         })
         .then(response => response.json())
         .then(data => {
-              addMessage(`返回信息 : `+data.message);  // 将收到的消息保存并显示
+              addMessage(``+data.message);  // 将收到的消息保存并显示
         })
         .catch(error => {
             console.error('Error:', error);
@@ -653,7 +653,7 @@ function testMultiTaskabs2() {
         })
         .then(response => response.json())
         .then(data => {
-              addMessage(`返回信息 : `+data.message);  // 将收到的消息保存并显示
+              addMessage(``+data.message);  // 将收到的消息保存并显示
         })
         .catch(error => {
             console.error('Error:', error);
@@ -678,7 +678,7 @@ function goPos(potnum,postype) {
         })
         .then(response => response.json())
         .then(data => {
-              addMessage(`返回信息 : `+data.message);  // 将收到的消息保存并显示
+              addMessage(``+data.message);  // 将收到的消息保存并显示
         })
         .catch(error => {
             console.error('Error:', error);
@@ -704,7 +704,7 @@ function enableall() {
         })
         .then(response => response.json())
         .then(data => {
-              addMessage(`返回信息 : 已发送串口指令`);  // 将收到的消息保存并显示
+              addMessage(`已发送串口指令`);  // 将收到的消息保存并显示
         })
         .catch(error => {
             console.error('Error:', error);
@@ -729,7 +729,7 @@ function initall() {
         .then(response => response.json())
         .then(data => {
               updateConnectStatus("已使能","connect_status_connected");
-              addMessage(`返回信息 : `+data.message);  // 将收到的消息保存并显示
+              addMessage(``+data.message);  // 将收到的消息保存并显示
         })
         .catch(error => {
             console.error('Error:', error);
@@ -770,7 +770,7 @@ function testDC_command(command,pot,direction = 1) {
         })
         .then(response => response.json())
         .then(data => {
-             addMessage(`返回信息 : `+data.message);  // 将收到的消息保存并显示
+             addMessage(``+data.message);  // 将收到的消息保存并显示
         })
         .catch(error => {
             console.error('Error:', error);
@@ -814,7 +814,7 @@ function updateSpeed(speedval) {
         })
         .then(response => response.json())
         .then(data => {
-              addMessage(`返回信息 : `+data.message);  // 将收到的消息保存并显示
+              addMessage(``+data.message);  // 将收到的消息保存并显示
         })
         .catch(error => {
             console.error('Error:', error);
