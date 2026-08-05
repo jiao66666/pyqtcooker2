@@ -230,9 +230,9 @@ function runTastMotor() {
         }
 
         var tastMotorOvertime = document.getElementById("tastmotorovertime");
-        if(tastMotorOvertime.value == "" || isNaN(tastMotorOvertime.value)){
-            addMessage("请输入超时时间");
-            alert("请输入超时时间!");
+        if(tastMotorOvertime.value == "" || isNaN(tastMotorOvertime.value) || parseInt(tastMotorOvertime.value)<=0){
+            addMessage("请输入持续时间");
+            alert("请输入持续时间!");
             return;
         }
 
