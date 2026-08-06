@@ -486,32 +486,46 @@ class TrajectoryViewer {
     // 清空
     //----------------------------------------
 
+    //----------------------------------------
+    // 清空轨迹，恢复初始化状态
+    //----------------------------------------
+
     clear(){
 
         for(let id in this.pots){
 
             let pot=this.pots[id];
 
-            pot.lines=[];
-            pot.points=[];
+            // 清除已经绘制的轨迹
+            pot.lines = [];
 
+            // 清除坐标点
+            pot.points = [];
+
+            // 终止当前动画
             pot.animationVersion++;
-            pot.queue=[];
 
-            pot.animating=false;
+            // 清空等待动画
+            pot.queue = [];
 
-            pot.movingPoint=null;
+            // 恢复状态
+            pot.animating = false;
 
-            pot.lastPoint=null;
+            pot.movingPoint = null;
 
-            pot.initialized=false;
-
-            pot.colorIndex=0;
+            pot.lastPoint = null;
 
             pot.currentTarget = null;
 
+            // 回到未初始化状态
+            pot.initialized = false;
+
+            pot.colorIndex = 0;
+
         }
 
+
+        // 重新绘制初始化画面
         this.redraw();
 
     }

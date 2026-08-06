@@ -694,3 +694,45 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
     visibility:visible;
     transform:translateX(-50%) translateY(0);
 }
+
+.trajectory_clearcon{
+    width:100%;
+    display:flex;
+    justify-content:flex-end;   /* 按钮靠右 */
+    align-items:center;
+    padding:5px 0;
+}
+
+
+.trajectory_clearbtn{
+
+    background:#f56c6c;
+    color:white;
+
+    font-size:14px;
+
+    padding:5px 15px;
+
+    border-radius:5px;
+
+    cursor:pointer;
+
+    user-select:none;
+
+    transition:all 0.2s;
+
+}
+
+
+.trajectory_clearbtn:hover{
+
+    background:#e64b4b;
+
+}
+
+
+.trajectory_clearbtn:active{
+
+    transform:scale(0.95);
+
+}

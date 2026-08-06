@@ -1042,6 +1042,16 @@ function clearStatusHistory() {
     displayMessageHistory();
 }
 
+
+function clearTrajectory(){
+
+    if(window.trajectory){
+
+        trajectory.clear();
+
+    }
+
+}
 // 点击按钮启动 WebSocket 连接
 function startWebSocket() {
     if (!ws || ws.readyState === WebSocket.CLOSED) {
