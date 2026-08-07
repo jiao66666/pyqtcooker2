@@ -249,11 +249,20 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
     margin-right:5px;
 }
 
+.topfixed_con{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    z-index:1000;
+    background:#fff;
+}
 .connect_outframe{
     display:flex;
     flex-flow: column nowrap;
     margin-top:10px;
     border: 1px dotted #ccc;
+    margin:5px;
     padding: 10px 5px;
     border-radius: 10px;
 }

@@ -1107,6 +1107,16 @@ function initCommandPanel(){
 }
 
 
+
+window.addEventListener("load", updateHeaderSpace);
+window.addEventListener("resize", updateHeaderSpace);
+
+function updateHeaderSpace() {
+    const header = document.querySelector(".connect_outframe");
+    document.body.style.paddingTop = header.offsetHeight + "px";
+}
+
+
 window.onload = ()=>{
 
     initCommandPanel();
