@@ -1028,7 +1028,25 @@ function updatePotCommand(potid, info) {
     el.scrollTop = el.scrollHeight;
 }
 
+function clearPotCmd() {
+    // 清空命令历史
+    potCommands[1] = [];
+    potCommands[2] = [];
 
+    // 清空 pot1 显示
+    const pot1 = document.getElementById("pot1_cmdshow");
+    if (pot1) {
+        pot1.innerHTML = "";
+        pot1.style.display = "none";
+    }
+
+    // 清空 pot2 显示
+    const pot2 = document.getElementById("pot2_cmdshow");
+    if (pot2) {
+        pot2.innerHTML = "";
+        pot2.style.display = "none";
+    }
+}
 function clearHistory(type){
     if(type=="status"){
         clearStatusHistory()
@@ -1048,6 +1066,7 @@ function clearTrajectory(){
     if(window.trajectory){
 
         trajectory.clear();
+        clearPotCmd()
 
     }
 
