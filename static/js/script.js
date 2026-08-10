@@ -44,7 +44,24 @@ function addMessage(message) {
 
 let toastTimer = null;
 
-function showToast(message, duration = 2000, type = "info"){
+function showToast(message, duration = 2000, type = null){
+
+    // 如果没有手动指定type，则根据消息内容判断
+    if(type === null){
+
+        if(message.includes("错误") || message.includes("失败") || message.includes("异常")){
+            type = "error";
+        }
+        else if(message.includes("警告") || message.includes("注意")){
+            type = "warning";
+        }
+        else if(message.includes("成功") || message.includes("完成")){
+            type = "success";
+        }
+        else{
+            type = "info";
+        }
+    }
 
     const toast = document.getElementById("toastMessage");
 
