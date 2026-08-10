@@ -442,11 +442,24 @@ def start_webview():
         min_size=(width, height)
     )
 
+    window.events.closing += on_windows_closing
     window.events.closed += on_windows_close
     webview.start(gui='edgechromium')
 
 def on_windows_close():
     shutdown_system(system)
+
+
+def on_windows_closing():
+    result = webview.windows[0].create_confirmation_dialog(
+        "关闭确认",
+        "确定要关闭炒菜机控制系统吗？"
+    )
+
+    if result:
+        return True
+
+    return False    
 
 #启动炒菜机控制系统
 def start_system():
