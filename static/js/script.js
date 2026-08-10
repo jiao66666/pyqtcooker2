@@ -305,7 +305,7 @@ function getTastMotorFb(mode) {
 function startMotor(potnum,directionstr) {
        // 获取 select 元素
         var speed = getSelectedValue("speed");
-        console.log("选中速度值是:", speed);
+        //console.log("选中速度值是:", speed);
         var motorObj = getMotorInfo(potnum,directionstr);
         if(motorObj == null){
             console.log("获取电机信息失败");
@@ -343,7 +343,7 @@ function startMotor(potnum,directionstr) {
 function runMotor(potnum,directionstr) {
 
        var speed = getSelectedValue("speed");
-        console.log("选中速度值是:", speed);
+        //console.log("选中速度值是:", speed);
        // 获取 select 元素
         var circle = document.getElementById("circleval");
         console.log("选中圈数值是:", circle);
@@ -388,7 +388,7 @@ function runMotor(potnum,directionstr) {
 function runMotorabs(potnum,directionstr) {
 
        var speed = getSelectedValue("speed");
-        console.log("选中速度值是:", speed);
+       // console.log("选中速度值是:", speed);
        // 获取 select 元素
         var circle = document.getElementById("circlevalabs");
         console.log("选中圈数值是:", circle);
@@ -680,7 +680,7 @@ function testMultiTaskabs2() {
 
 function goPos(potnum,postype) {
         var speed = getSelectedValue("speed");
-        console.log("选中速度值是:", speed);
+       // console.log("选中速度值是:", speed);
      // 获取 select 元素
         fetch('/gopos', {
             method: 'POST', 
