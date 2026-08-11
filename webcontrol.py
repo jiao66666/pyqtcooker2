@@ -1,7 +1,7 @@
 # flaskcontrol.py
 from flask import Flask, render_template, jsonify,request
 from lib.newstructure.constant import *
-from lib.newstructure.tools import is_dev_mode,apply_action_speed_override,get_pot_pos,build_dc_action
+from lib.newstructure.tools import is_dev_mode,apply_action_speed_override,get_pot_pos,build_dc_action,getTestDCMsg
 import webview
 import threading
 from lib.newstructure.system import run_system,init_system,shutdown_system,set_system_dirty,recovery_system,shutdown_device
@@ -367,13 +367,15 @@ def testdc_command():
         dc_time
     )
 
+    msg = getTestDCMsg(pot,action,direction)
+
     success = system["cookservice"].run_dcmotor_cmd(motor_id,action,params)
     if success :
         print("测试成功!")
-        return jsonify({"status": "success","message": "测试成功!"})
+        return jsonify({"status": "success","message": f"{msg}测试成功!"})
     else:
         print("测试失败!")
-        return jsonify({"status": "fail","message": "测试失败!"})    
+        return jsonify({"status": "fail","message": f"{msg}测试失败!"})    
 
 @app.route('/gopos', methods=['POST'])
 def gopos():

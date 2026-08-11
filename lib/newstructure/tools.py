@@ -392,5 +392,25 @@ def build_dc_action(command, direction, dc_speed, dc_time):
             "speed": dc_speed
         }
 
-    return "dc_stop", {}     
+    return "dc_stop", {}   
+
+
+def getTestDCMsg(pot,action,direction):
+    
+    if action == "dc_longrun":
+        astr="长转"
+    elif action == "dc_run":
+        astr="正常转"
+    elif action == "dc_stop":
+        astr="停止"         
+    else:
+        astr="执行"
+
+    if direction > 0:
+        dstr="正向"
+    else:
+        dstr="负向"
+
+    return f"{pot}号锅{dstr} {astr}"        
+            
 
