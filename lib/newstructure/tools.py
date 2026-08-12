@@ -169,18 +169,22 @@ def get_pot_pos(potnum,postype):
             print("移动到外倒料口1")
             flip_pos = POT1_POS_OUTFOOD_FLIP
             level_pos = POT1_POS_OUTFOOD_LEVEL
+            msg = "移动到外倒料口1"
         elif postype == 'pos_infood':
             print("移动到内倒料口1")
             flip_pos = POT1_POS_INFOOD_FLIP
             level_pos = POT1_POS_INFOOD_LEVEL
+            msg = "移动到内倒料口1"
         elif postype == 'pos_washpot':
             print("移动到洗锅位置1")
             flip_pos = POT1_POS_WASHPOT_FLIP
             level_pos = POT1_POS_WASHPOT_LEVEL
+            msg = "移动到洗锅位置1"
         elif postype == 'pos_firepot':
             flip_pos = POT1_POS_FIREPOT_FLIP
             level_pos = POT1_POS_FIREPOT_LEVEL
-            print("移动到灶位1")        
+            print("移动到灶位1") 
+            msg = "移动到灶位1"
         else:
             print("未知位置")
             flip_pos = 0
@@ -190,24 +194,29 @@ def get_pot_pos(potnum,postype):
             print("移动到外倒料口2")
             flip_pos = POT2_POS_OUTFOOD_FLIP
             level_pos = POT2_POS_OUTFOOD_LEVEL
+            msg = "移动到外倒料口2"
         elif postype == 'pos_infood':
             print("移动到内倒料口2")
             flip_pos = POT2_POS_INFOOD_FLIP
             level_pos = POT2_POS_INFOOD_LEVEL
+            msg = "移动到内倒料口2"
         elif postype == 'pos_washpot':
             print("移动到洗锅位置2")
             flip_pos = POT2_POS_WASHPOT_FLIP
             level_pos = POT2_POS_WASHPOT_LEVEL
+            msg = "移动到洗锅位置2"
         elif postype == 'pos_firepot':
             flip_pos = POT2_POS_FIREPOT_FLIP
             level_pos = POT2_POS_FIREPOT_LEVEL
             print("移动到灶位2")        
+            msg = "移动到灶位2"
         else:
             print("未知位置")
             flip_pos = 0
             level_pos = 0
+            msg = "未知位置"
         
-    return {"flip_pos":flip_pos,"level_pos":level_pos}
+    return {"flip_pos":flip_pos,"level_pos":level_pos,"msg":msg}
 
 def is_dev_mode():
     """判断是否是测试环境"""

@@ -405,10 +405,10 @@ def gopos():
     
     if success :
         print("测试成功!")
-        return jsonify({"status": "success","message": "提交移动任务成功!"})
+        return jsonify({"status": "success","message": f"提交{potnum}号锅{pos_info['msg']}移动任务成功!"})
     else:
         print("测试失败!")
-        return jsonify({"status": "fail","message": f"提交移动任务失败!错误:{msg}"})    
+        return jsonify({"status": "fail","message": f"提交{potnum}号锅{pos_info['msg']}任务失败!错误:{msg}"})    
     
 #启动flask后端服务器WEB UI
 def run_flask():
