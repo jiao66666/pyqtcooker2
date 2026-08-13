@@ -81,6 +81,10 @@ class CookerService:
         if not OK:
             return False,msg
 
+        if action == "go":
+            print("I'm singlle run acintion set locking")
+            self.setRunning(potid)
+
         motor = self.system["motors"]["stepmotor"][motor_id]
         task_id = f"single:{motor_id}:{action}"
         def run_fn():

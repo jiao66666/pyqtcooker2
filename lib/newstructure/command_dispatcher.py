@@ -1,5 +1,6 @@
 import threading
 from lib.newstructure.runtime import runtime
+import time
 #任务型 还是 指令型 全部通过此命令器分发，防冲突
 class CommandDispatcher:
 
@@ -12,9 +13,12 @@ class CommandDispatcher:
         self.lock = threading.Lock()
 
         self.bus = bus
+        self.cookservice = None
 
         self.bus.subscribe("MOTOR_DONE", self.on_motor_done)
 
+    def set_cookservice(self,cookservice):
+        self.cookservice = cookservice
 
     def submit(self, task_id, resources, run_fn):
         """
@@ -75,5 +79,10 @@ class CommandDispatcher:
             return      
         task_id = ctx["task_id"]
         print(f"release resource>>>>>>>>>>>>>>>>>>>>,taskid:{task_id}")
-        
-        self._cleanup(task_id)            
+        self._cleanup(task_id)       
+
+        from lib.newstructure.tools import get_pot_id
+        potid = get_pot_id(motor_id)
+        time.sleep(3) #for simulating ,in real env could remove this
+        self.cookservice.resetRunning(potid)
+            
