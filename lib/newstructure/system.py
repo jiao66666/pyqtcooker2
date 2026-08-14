@@ -94,8 +94,8 @@ def recovery_system(system):
     system["mockmotor"].start()
     system["pots"][1].reset()
     system["pots"][2].reset()
-    system["cookservice"].resetRunning(1)
-    system["cookservice"].resetRunning(2)
+    system["cookservice"].resetRunning(1, force=True)
+    system["cookservice"].resetRunning(2, force=True)
     return True
 
 

@@ -24,17 +24,50 @@ class CookerService:
         }
 
         self.task_running = {
-            1: False,
-            2: False
+            1: None,
+            2: None
         }
 
 
-    def resetRunning(self, pot_id):
-        print(f"{pot_id} 重置运行状态")
-        self.task_running[pot_id] = False
+    def resetRunning(self, pot_id, task_id=None, force=False):
+        current_task = self.task_running.get(pot_id)
 
-    def setRunning(self, pot_id):
-        self.task_running[pot_id] = True 
+        print(
+            f"{pot_id} 请求重置运行状态，"
+            f"current={current_task}, request={task_id}"
+        )
+
+        # 只有锁的持有者才能释放
+        if current_task != task_id:
+            print(
+                f"{pot_id} 运行锁释放失败："
+                f"当前持有者={current_task}，"
+                f"请求释放者={task_id}"
+            )
+            return False
+
+        self.task_running[pot_id] = None
+        return True
+
+
+    def setRunning(self, pot_id, task_id):
+        current_task = self.task_running.get(pot_id)
+
+        # 已经被占用
+        if current_task is not None:
+            print(
+                f"{pot_id} 运行锁设置失败："
+                f"当前已经被 {current_task} 占用"
+            )
+            return False
+
+        self.task_running[pot_id] = task_id
+
+        print(
+            f"{pot_id} 设置运行锁：{task_id}"
+        )
+
+        return True
 
     def check_workable(self,pot_id):
         state = self.system["state"]
@@ -53,10 +86,15 @@ class CookerService:
         
 
         # 检查锅运行锁
-        print(f"%&&&&&&&&&Task running lock info:current pot is:{pot_id}")
+        current_task = self.task_running.get(pot_id)
+        print(
+            f"Task running lock info: "
+            f"pot={pot_id}, current_task={current_task}"
+        )
         print(self.task_running)
-        if self.task_running.get(pot_id, False):
-            return False, f"{pot_id} 正在执行任务"
+
+        if current_task is not None:
+            return False, f"{pot_id} 正在执行任务：{current_task}"
 
         return True,"workable OK"
 
@@ -70,8 +108,11 @@ class CookerService:
         steps = self.system["stepbuilder"].build(task_name, pot_id)
         print("printing.....steps>>>>>>>>>>>>>>>>>>>>>>")
         print(steps)
-        self.setRunning(pot_id)
-        self.system["pots"][pot_id].submit_task(task_name,steps)
+        
+        task_id = f"task:{pot_id}:{task_name}"
+        self.setRunning(pot_id,task_id)
+
+        self.system["pots"][pot_id].submit_task(task_id,steps)
         return True,"submit task OK"
 
     def run_single_action(self, motor_id, action, params):
@@ -81,12 +122,13 @@ class CookerService:
         if not OK:
             return False,msg
 
-        if action == "go":
-            print("I'm singlle run acintion set locking")
-            self.setRunning(potid)
-
         motor = self.system["motors"]["stepmotor"][motor_id]
         task_id = f"single:{motor_id}:{action}"
+
+        if action == "go":
+            print("I'm singlle run acintion set locking")
+            self.setRunning(potid,task_id)
+
         def run_fn():
             handler = self.action_map.get(action)
             if not handler:
@@ -110,12 +152,6 @@ class CookerService:
         return True,"submit task ok"
     
     def run_control_cmd(self,motor_id,action,params):
-        """ 
-        OK,msg = self.check_workable()
-        print(f"OK status:{OK}")
-        if not OK:
-            return False,msg
-        """
 
         motor = self.system["motors"]["stepmotor"][motor_id]
         def run_fn():

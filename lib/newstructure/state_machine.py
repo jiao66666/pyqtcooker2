@@ -111,7 +111,7 @@ class PotStateMachine:
             #print("ALL ACTION IS DONE!!!!!!!!!!!")
             print(f"{self.pot_id} machine state is DONE")
             #self.bus.unsubscribe("MOTOR_DONE", self.on_motor_done)
-            self.cookservice.resetRunning(self.pot_id)
+            self.cookservice.resetRunning(self.pot_id,self.running_taskname)
             self.state = "IDLE"
 
         elif self.state == "ERROR":
@@ -179,7 +179,8 @@ class PotStateMachine:
         if ctx["action"] != step["action"] or data["motor_id"] != step["motor"].motor_id:  #确保数据的一致性
             print(f"》》》检查未过关《《《{ctx['action']},{step['action']},{data['motor_id']},{step['motor'].motor_id}")
             return
-        
+
+     
         print(f"motor {motor_id} done the action {step['action']}")
         print(f"OK检查未过关OK{ctx['action']},{step['action']},{data['motor_id']},{step['motor'].motor_id}")
 
