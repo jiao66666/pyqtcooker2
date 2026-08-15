@@ -29,7 +29,7 @@ class CookerService:
         }
 
 
-    def resetRunning(self, pot_id, task_id=None, force=False):
+    def resetRunning(self, pot_id, task_id=None):
         current_task = self.task_running.get(pot_id)
 
         print(
@@ -50,6 +50,12 @@ class CookerService:
         return True
 
 
+    def initRunning(self):
+        self.task_running = {
+            1: None,
+            2: None
+        }
+        
     def setRunning(self, pot_id, task_id):
         current_task = self.task_running.get(pot_id)
 
