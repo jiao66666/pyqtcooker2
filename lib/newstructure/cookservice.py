@@ -74,7 +74,7 @@ class CookerService:
 
         # 系统脏状态
         if state["dirty"]:
-            return False,"系统被异常终止，请检查后重新初始化"
+            return False,"系统被异常终止，请检查后重新启动"
 
         # 系统模式检查
         if state["mode"] != "READY":
