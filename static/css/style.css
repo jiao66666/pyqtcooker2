@@ -274,6 +274,11 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
     justify-content: center;
     align-items: center;
 }
+.stopallbtn{
+    display:flex;
+    flex-flow: row nowrap;
+    align-items: center;
+}
 .stopallbtn button{
     background-color:#D9363E;
     color:#fff;
@@ -281,7 +286,6 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
     border-radius:5px;
     height:50px;
     width:80px;
-    margin-bottom:10px;
     font-weight:bold;
     font-size:14px;
 }
