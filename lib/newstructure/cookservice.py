@@ -125,7 +125,7 @@ class CookerService:
         motor = self.system["motors"]["stepmotor"][motor_id]
         task_id = f"single:{motor_id}:{action}"
 
-        if action == "go":
+        if action == "go" or action == "reset":
             print("I'm singlle run acintion set locking")
             self.setRunning(potid,task_id)
 
