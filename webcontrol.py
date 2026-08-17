@@ -76,7 +76,7 @@ def testtastboardping():
     success,msg =  system["cookservice"].run_tastemotor_cmd(POT1_FLAVORMOTOR1,"ping",{})
     if success :
         print("测试加料板连通性成功!")
-        return jsonify({"status": "success","message": f"运行成功"})
+        return jsonify({"status": "success","message": f"测试连通性运行成功"})
     else:
         print("测试加料板连通性失败!")
         return jsonify({"status": "fail","message": f"运转失败,错误:{msg}!"})
@@ -94,7 +94,7 @@ def runtastmotor():
     success,msg =  system["cookservice"].run_tastemotor_cmd(int(motorid),"openfeeder",{"overtime":int(overtime)})
     if success :
         print("测试加料板打开成功!")
-        return jsonify({"status": "success","message": f"运行成功"})
+        return jsonify({"status": "success","message": f"打开电机运行成功"})
     else:
         print("测试加料板打开失败!")
         return jsonify({"status": "fail","message": f"运转失败!错误:{msg}"})
@@ -110,7 +110,11 @@ def gettastmotorfb():
     success,msg = system["cookservice"].run_tastemotor_cmd(int(motorid),"getfeeder",{"mode":int(mode)})
     if success :
         print("测试加料板打开成功!")
-        return jsonify({"status": "success","message": f"运行获取反馈成功，反馈结果"})
+        if mode == 0:
+            msg = "所有电机"
+        else:
+            msg = "单电机"    
+        return jsonify({"status": "success","message": f"运行获取{msg}反馈成功，反馈结果"})
     else:
         print("测试加料板打开失败!")
         return jsonify({"status": "fail","message": f"运转失败!错误:{msg}"})
