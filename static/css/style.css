@@ -759,10 +759,10 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
     font-size: 12px;
     font-weight: 600;
 
-    color: #28a745;
-    background: #f3fff6;
+    color: #333333;
+    background: #CCCCCC;
 
-    border: 1px solid #b7e4c7;
+    border: 1px solid #ccc;
     border-radius: 4px;
 
     white-space: nowrap;
