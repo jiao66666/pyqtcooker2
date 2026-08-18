@@ -120,6 +120,8 @@ function connect() {
             if(data.status === "success"){
                 updateConnectStatus("已使能","connect_status_connected");
                 startWebSocket();
+                app.startMachineTime()
+
             }
             addMessage(`${data.message}`);  // 将收到的消息保存并显示
         })
@@ -187,7 +189,7 @@ function confirmDisconnect(){
                 "未使能",
                 "connect_status"
             );
-
+            app.resetMachineTime();
         }
 
 
@@ -912,7 +914,13 @@ function createMotorStatusApp(el) {
       motor1_flip: 0.0,
       motor1_level: 0.0,
       motor2_flip: 0.0,
-      motor2_level: 0.0
+      motor2_level: 0.0,
+      // 炒菜机运行时间
+       time_ellapse: "0天 0时 0分 0秒",
+       // 计时器
+       machineTimer: null,
+       // 开始时间
+       machineStartTime: null
     },
     methods: {
       updateMotorData(motor_id, position) {
@@ -925,7 +933,67 @@ function createMotorStatusApp(el) {
         } else if (motor_id == 4) {
           this.motor2_level = position;
         }
-      }
+      },
+ // 启动炒菜机计时
+            startMachineTime() {
+
+                // 防止重复启动
+                if (this.machineTimer !== null) {
+                    return;
+                }
+
+                this.machineStartTime = Date.now();
+
+                // 立即更新一次
+                this.updateMachineTime();
+
+                this.machineTimer = setInterval(() => {
+                    this.updateMachineTime();
+                }, 1000);
+            },
+
+
+            // 更新运行时间
+            updateMachineTime() {
+
+                if (this.machineStartTime === null) {
+                    return;
+                }
+
+                const elapsed =
+                    Math.floor((Date.now() - this.machineStartTime) / 1000);
+
+                const days = Math.floor(elapsed / 86400);
+
+                const hours =
+                    Math.floor((elapsed % 86400) / 3600);
+
+                const minutes =
+                    Math.floor((elapsed % 3600) / 60);
+
+                const seconds =
+                    elapsed % 60;
+
+                this.time_ellapse =
+                    `${days}天 ${hours}时 ${minutes}分 ${seconds}秒`;
+            },
+
+
+            // 重置炒菜机运行时间
+            resetMachineTime() {
+
+                if (this.machineTimer !== null) {
+
+                    clearInterval(this.machineTimer);
+
+                    this.machineTimer = null;
+                }
+
+                this.machineStartTime = null;
+
+                this.time_ellapse = "0天 0时 0分 0秒";
+            }
+
     }
   });
 }
@@ -1143,7 +1211,6 @@ function initCommandPanel(){
 }
 
 
-
 window.addEventListener("load", updateHeaderSpace);
 window.addEventListener("resize", updateHeaderSpace);
 
@@ -1158,3 +1225,5 @@ window.onload = ()=>{
     initCommandPanel();
 
 };
+
+

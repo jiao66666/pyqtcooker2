@@ -750,3 +750,25 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
     transform:scale(0.95);
 
 }
+
+.fb_machinetime {
+    margin-left: auto;
+
+    padding: 2px 8px;
+
+    font-size: 12px;
+    font-weight: 600;
+
+    color: #28a745;
+    background: #f3fff6;
+
+    border: 1px solid #b7e4c7;
+    border-radius: 4px;
+
+    white-space: nowrap;
+}
+
+.fb_toprow{
+    display:flex;
+    flex-flow:  row nowrap;
+}
