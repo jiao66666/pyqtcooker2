@@ -18,6 +18,7 @@ from lib.newstructure.taskresourcemanager import TaskResourceManager
 import lib.newstructure.tools as tools
 from lib.newstructure.websocket_runtime import websocket_server
 from lib.newstructure.mock import MockMotor
+import time
 
 #系统构建中心
 def build_system():
@@ -38,7 +39,6 @@ def build_system():
 
     pot1 = PotStateMachine(1, bus, trackmanager, motion_controller)
     pot2 = PotStateMachine(2, bus, trackmanager, motion_controller)
-
 
     mockmotor = MockMotor(websocket_server,MOCK_INTERVAL)
     motorpolling = MotorPollingService(boards["stepmotor"],bus,motors["stepmotor"],mockmotor,POLLING_INTERVAL)
@@ -74,7 +74,9 @@ def build_system():
     pot1.set_cookservice(cookservice)
     pot2.set_cookservice(cookservice)
     dispatcher.set_cookservice(cookservice)
-   
+    websocket_server.set_system(system)
+
+
     return system
 
 
@@ -96,6 +98,15 @@ def recovery_system(system):
     system["pots"][2].reset()
     system["cookservice"].initRunning()
     return True
+
+def start_system_state(system):
+    system["state"]["started"] = True
+    system["state"]["start_time"] = time.time()
+
+
+def stop_system_state(system):
+    system["state"]["started"] = False
+    system["state"]["start_time"] = None
 
 
 def shutdown_device(system):

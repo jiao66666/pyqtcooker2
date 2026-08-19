@@ -4,7 +4,7 @@ from lib.newstructure.constant import *
 from lib.newstructure.tools import is_dev_mode,apply_action_speed_override,get_pot_pos,build_dc_action,getTestDCMsg
 import webview
 import threading
-from lib.newstructure.system import run_system,init_system,shutdown_system,set_system_dirty,recovery_system,shutdown_device
+from lib.newstructure.system import run_system,init_system,shutdown_system,set_system_dirty,recovery_system,shutdown_device,start_system_state,stop_system_state
 from lib.newstructure.system_runtime import system
 from lib.newstructure.runtime import runtime
 from lib.newstructure.monitor import start_memory_monitor
@@ -35,6 +35,8 @@ def connect():
         runtime.set_all_enabled(True)
         #if system["state"]["dirty"]:
         recovery_system(system)
+        start_system_state(system)
+        system["websocket"].send_system_state()
         return jsonify({"status": "success","message": "使能成功!"})
     else:
         print("使能失败!")
@@ -65,6 +67,8 @@ def disconnect():
     success=shutdown_device(system)
     if success:
         print("关闭炒菜机成功!")
+        stop_system_state(system)
+        system["websocket"].send_system_state()
         return jsonify({"status": "success","message": "关闭成功!"})
     else:
         print("关闭炒菜机失败!")

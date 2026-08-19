@@ -119,9 +119,6 @@ function connect() {
         .then(data => {
             if(data.status === "success"){
                 updateConnectStatus("已使能","connect_status_connected");
-                startWebSocket();
-                app.startMachineTime()
-
             }
             addMessage(`${data.message}`);  // 将收到的消息保存并显示
         })
@@ -906,43 +903,65 @@ function showTab(tabNumber, buttonElement) {
 
 
 function createMotorStatusApp(el) {
-  return new Vue({
-    el: el,
-    delimiters: ['${', '}'],
-    template: '#motor-status-template',
-    data: {
-      motor1_flip: 0.0,
-      motor1_level: 0.0,
-      motor2_flip: 0.0,
-      motor2_level: 0.0,
-      // 炒菜机运行时间
-       time_ellapse: "0天 0时 0分 0秒",
-       // 计时器
-       machineTimer: null,
-       // 开始时间
-       machineStartTime: null
-    },
-    methods: {
-      updateMotorData(motor_id, position) {
-        if (motor_id == 1) {
-          this.motor1_flip = position;
-        } else if (motor_id == 2) {
-          this.motor1_level = position;
-        } else if (motor_id == 3) {
-          this.motor2_flip = position;
-        } else if (motor_id == 4) {
-          this.motor2_level = position;
-        }
-      },
- // 启动炒菜机计时
-            startMachineTime() {
+    return new Vue({
+        el: el,
 
-                // 防止重复启动
+        delimiters: ['${', '}'],
+
+        template: '#motor-status-template',
+
+        data: {
+            motor1_flip: 0.0,
+            motor1_level: 0.0,
+            motor2_flip: 0.0,
+            motor2_level: 0.0,
+
+            // 炒菜机运行时间
+            time_ellapse: "0天 0时 0分 0秒",
+
+            // 计时器
+            machineTimer: null,
+
+            // Python 后端提供的启动时间
+            machineStartTime: null,
+
+            // 当前系统是否启动
+            machineStarted: false
+        },
+
+        methods: {
+
+            updateMotorData(motor_id, position) {
+
+                if (motor_id == 1) {
+                    this.motor1_flip = position;
+
+                } else if (motor_id == 2) {
+                    this.motor1_level = position;
+
+                } else if (motor_id == 3) {
+                    this.motor2_flip = position;
+
+                } else if (motor_id == 4) {
+                    this.motor2_level = position;
+                }
+            },
+
+
+            // =================================================
+            // 根据 Python 后端提供的 start_time 开始计时
+            // =================================================
+            startMachineTime(startTime) {
+
+                // 保存 Python 后端提供的启动时间
+                this.machineStartTime = startTime;
+
+                this.machineStarted = true;
+
+                // 防止重复创建计时器
                 if (this.machineTimer !== null) {
                     return;
                 }
-
-                this.machineStartTime = Date.now();
 
                 // 立即更新一次
                 this.updateMachineTime();
@@ -953,15 +972,22 @@ function createMotorStatusApp(el) {
             },
 
 
+            // =================================================
             // 更新运行时间
+            // =================================================
             updateMachineTime() {
 
                 if (this.machineStartTime === null) {
                     return;
                 }
 
-                const elapsed =
-                    Math.floor((Date.now() - this.machineStartTime) / 1000);
+                // Python time.time() 是秒
+                const now = Date.now() / 1000;
+
+                const elapsed = Math.max(
+                    0,
+                    Math.floor(now - this.machineStartTime)
+                );
 
                 const days = Math.floor(elapsed / 86400);
 
@@ -979,7 +1005,9 @@ function createMotorStatusApp(el) {
             },
 
 
+            // =================================================
             // 重置炒菜机运行时间
+            // =================================================
             resetMachineTime() {
 
                 if (this.machineTimer !== null) {
@@ -991,11 +1019,13 @@ function createMotorStatusApp(el) {
 
                 this.machineStartTime = null;
 
-                this.time_ellapse = "0天 0时 0分 0秒";
-            }
+                this.machineStarted = false;
 
-    }
-  });
+                this.time_ellapse =
+                    "0天 0时 0分 0秒";
+            }
+        }
+    });
 }
 
 
@@ -1061,6 +1091,24 @@ function setupWebSocket(url) {
                     item.x,
                     item.y
                 );
+            }else if (item.type == "system_state") {
+
+                if (item.started) {
+                    updateConnectStatus(
+                        "已使能",
+                        "connect_status_connected"
+                    );
+                    app.startMachineTime(
+                        item.start_time
+                    );
+
+                } else {
+                    updateConnectStatus(
+                        "未使能",
+                        "connect_status"
+                    );
+                    app.resetMachineTime();
+                }
             }
         }
     };
@@ -1221,6 +1269,8 @@ function updateHeaderSpace() {
 
 
 window.onload = ()=>{
+
+    startWebSocket();
 
     initCommandPanel();
 
