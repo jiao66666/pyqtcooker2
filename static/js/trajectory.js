@@ -471,9 +471,65 @@ class TrajectoryViewer {
 
         this.updatePotCenters();
 
+        // 重新计算历史轨迹的显示坐标
+        this.recalculateTrajectory();
+
         this.redraw();
 
     }
+
+
+    recalculateTrajectory(){
+
+        for(let id in this.pots){
+
+            let pot = this.pots[id];
+
+
+            // =========================
+            // 重新计算 points
+            // =========================
+
+            for(let point of pot.points){
+
+                const p = this.transform(
+                    Number(id),
+                    point.x,
+                    point.y
+                );
+
+                point.px = p.x;
+                point.py = p.y;
+            }
+
+
+            // =========================
+            // 重新计算 lines
+            // =========================
+
+            for(let line of pot.lines){
+
+                const p1 = this.transform(
+                    Number(id),
+                    line.x1,
+                    line.y1
+                );
+
+                const p2 = this.transform(
+                    Number(id),
+                    line.x2,
+                    line.y2
+                );
+
+                line.px1 = p1.x;
+                line.py1 = p1.y;
+
+                line.px2 = p2.x;
+                line.py2 = p2.y;
+            }
+        }
+    }
+
 
     getDynamicScale(){
 
