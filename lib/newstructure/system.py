@@ -112,9 +112,12 @@ def stop_system_state(system):
 def shutdown_device(system):
     motors = system["motorsmanager"]
     motors.stop_all_motors()
+    system["pots"][1].reset()
+    system["pots"][2].reset()
     system["state"]["mode"] = "OFF"
     system["state"]["dirty"] = True
     system["mockmotor"].stop()
+    
     return True
 
 def shutdown_system(system):

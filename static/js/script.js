@@ -187,6 +187,7 @@ function confirmDisconnect(){
                 "connect_status"
             );
             app.resetMachineTime();
+            clearTrajectory()
         }
 
 
