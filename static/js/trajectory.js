@@ -147,28 +147,6 @@ class TrajectoryViewer {
 
         });
 
-        /*
-        if(pot.lastPoint){
-
-            pot.lines.push({
-
-                x1:pot.lastPoint.x,
-                y1:pot.lastPoint.y,
-
-                x2:p.x,
-                y2:p.y,
-
-                color:pot.color
-
-            });
-
-            pot.colorIndex++;
-
-        }
-
-        pot.lastPoint=p;
-
-        this.redraw();*/
 
         let start;
 
