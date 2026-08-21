@@ -4,7 +4,7 @@ from lib.newstructure.constant import *
 from lib.newstructure.tools import is_dev_mode,apply_action_speed_override,get_pot_pos,build_dc_action,getTestDCMsg
 import webview
 import threading
-from lib.newstructure.system import run_system,init_system,shutdown_system,set_system_dirty,recovery_system,shutdown_device,start_system_state,stop_system_state
+from lib.newstructure.system import run_system,init_system,shutdown_system,set_system_dirty,recovery_system,shutdown_device,start_system_state,stop_system_state,set_system_state
 from lib.newstructure.system_runtime import system
 from lib.newstructure.runtime import runtime
 from lib.newstructure.monitor import start_memory_monitor
@@ -220,6 +220,7 @@ def stopall():
     success1 = system["motorsmanager"].stop_all_motors()
     success2 = system["motorsmanager"].reset_home_all()
     set_system_dirty(system,True)
+    set_system_state(system,"EMERGENCY")
     runtime.set_all_enabled(False)
     system["mockmotor"].stop()
     system["bus"].publish(
