@@ -48,7 +48,7 @@ def build_system():
   
     system = {
         "state": {
-            "mode": "READY",   # READY / EMERGENCY / RECOVERING / ERROR
+            "mode": "INIT",   # READY / EMERGENCY / RECOVERING / ERROR
             "dirty": False     # 是否需要恢复重新初始化
         },
 

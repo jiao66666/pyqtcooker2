@@ -29,6 +29,9 @@ def index():
 @app.route('/connect', methods=['POST'])
 def connect():
     print("start Enable Power")
+    if system["state"]["mode"] == "READY":
+        return jsonify({"status": "success","message": "已使能，请勿重复提交!"})
+
     success,msg=system["motorsmanager"].enable_all_motors()
     if success:
         print("使能成功!")
