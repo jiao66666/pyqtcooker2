@@ -713,37 +713,140 @@ class TrajectoryViewer {
 
     resize(){
 
-        this.canvas.width = this.canvas.clientWidth;
+        //----------------------------------------
+        // 记录 resize 前的逻辑状态
+        //----------------------------------------
 
+        const states = {};
+
+        for(let id in this.pots){
+
+            const pot = this.pots[id];
+
+            states[id] = {
+
+                // 当前真实位置
+                lastPoint: pot.lastPoint
+                    ? this.canvasToLogic(
+                        Number(id),
+                        pot.lastPoint
+                    )
+                    : null,
+
+                // 当前动画点
+                movingPoint: pot.movingPoint
+                    ? this.canvasToLogic(
+                        Number(id),
+                        pot.movingPoint
+                    )
+                    : null,
+
+                // 当前动画目标
+                currentTarget: pot.currentTarget
+                    ? this.canvasToLogic(
+                        Number(id),
+                        pot.currentTarget
+                    )
+                    : null,
+
+                // 动画队列
+                queue: pot.queue.map(task => ({
+                    start: this.canvasToLogic(
+                        Number(id),
+                        task.start
+                    ),
+                    end: this.canvasToLogic(
+                        Number(id),
+                        task.end
+                    )
+                }))
+            };
+        }
+
+
+        //----------------------------------------
+        // 重新设置 Canvas 尺寸
+        //----------------------------------------
+
+        this.canvas.width = this.canvas.clientWidth;
         this.canvas.height = this.canvas.clientWidth;
 
 
         //----------------------------------------
-        // 重新计算缩放比例
+        // 重新计算坐标系
         //----------------------------------------
 
         this.scale = this.getDynamicScale();
 
-
-        //----------------------------------------
-        // 重新计算 Y 轴中心
-        //----------------------------------------
-
         this.offsetY = this.canvas.height / 2;
-
-
-        //----------------------------------------
-        // 重新计算两个锅的位置
-        //----------------------------------------
 
         this.updatePotCenters();
 
 
         //----------------------------------------
-        // 重新计算历史轨迹显示坐标
+        // 重新计算历史轨迹
         //----------------------------------------
 
         this.recalculateTrajectory();
+
+
+        //----------------------------------------
+        // 恢复动画状态
+        //----------------------------------------
+
+        for(let id in this.pots){
+
+            const pot = this.pots[id];
+
+            const state = states[id];
+
+            if(state.lastPoint){
+
+                pot.lastPoint = this.transform(
+                    Number(id),
+                    state.lastPoint.x,
+                    state.lastPoint.y
+                );
+
+            }
+
+            if(state.movingPoint){
+
+                pot.movingPoint = this.transform(
+                    Number(id),
+                    state.movingPoint.x,
+                    state.movingPoint.y
+                );
+
+            }
+
+            if(state.currentTarget){
+
+                pot.currentTarget = this.transform(
+                    Number(id),
+                    state.currentTarget.x,
+                    state.currentTarget.y
+                );
+
+            }
+
+            pot.queue = state.queue.map(task => ({
+
+                start: this.transform(
+                    Number(id),
+                    task.start.x,
+                    task.start.y
+                ),
+
+                end: this.transform(
+                    Number(id),
+                    task.end.x,
+                    task.end.y
+                )
+
+            }));
+
+        }
 
 
         //----------------------------------------
@@ -751,9 +854,20 @@ class TrajectoryViewer {
         //----------------------------------------
 
         this.redraw();
-
     }
 
+    canvasToLogic(potId, px, py){
+
+        const pot = this.pots[potId];
+
+        return {
+
+            x: (px.x - pot.centerX) / this.scale,
+
+            y: (this.offsetY - px.y) / this.scale
+
+        };
+    }
 
     //----------------------------------------
     // 根据当前 scale 重新计算轨迹
