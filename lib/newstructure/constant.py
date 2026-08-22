@@ -111,6 +111,8 @@ ACTION_PARAMS_KEYLIST = {
        ("v","flip_in_tofirefood")
     ],
     "take_fire_pour":[
+        ("h", "move_in_tofirefood"),
+        ("v", "flip_in_tofirefood"),
         ("v", "flip_out_togetfood"),
         ("h", "move_out_togetfood", [
             ("h", "move_to_wait"),
