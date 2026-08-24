@@ -230,21 +230,21 @@ def get_boardlist():
                 "name":"stepmotor",
                 "port":"COM2",
                 "baudrate":19200,
-                "timeout":1.0,
+                "timeout":BOARD_TIMEOUT,
                 "board_id":BOARDTYPE_FIVE_AXIS
             },
             {
                 "name":"feedermotor",
                 "port":"COM3",
                 "baudrate":19200,
-                "timeout":1.0,
+                "timeout":BOARD_TIMEOUT,
                 "board_id":BOARDTYPE_FEEDER
             },
             {
                 "name":"spinmotor",
                 "port":"COM4",
                 "baudrate":19200,
-                "timeout":1.0,
+                "timeout":BOARD_TIMEOUT,
                 "board_id":BOARDTYPE_DC
             }
         ]
@@ -254,21 +254,21 @@ def get_boardlist():
                 "name":"stepmotor",
                 "port":"COM6",
                 "baudrate":19200,
-                "timeout":1.0,
+                "timeout":BOARD_TIMEOUT,
                 "board_id":BOARDTYPE_FIVE_AXIS
             },
             {
                 "name":"feedermotor",
                 "port":"COM7",
                 "baudrate":19200,
-                "timeout":1.0,
+                "timeout":BOARD_TIMEOUT,
                 "board_id":BOARDTYPE_FEEDER
             },
             {
                 "name":"spinmotor",
                 "port":"COM10",
                 "baudrate":19200,
-                "timeout":1.0,
+                "timeout":BOARD_TIMEOUT,
                 "board_id":BOARDTYPE_DC
             }
         ]
