@@ -59,20 +59,14 @@ class RuntimeContext:
             ]
 
 
-
-    # ==================================================
-    # 设置动作参数覆盖
-    # ==================================================
     def set_action_override(self, key, params):
+        if params is None:
+            params = {}
+
         with self._lock:
-            if key not in self.action_params:
-                self.action_params[key] = {}
+            self.action_params[key] = params.copy()
 
-            self.action_params[key].update(params)
 
-    # ==================================================
-    # 获取动作参数覆盖
-    # ==================================================
     def get_action_override(self, key):
         with self._lock:
             return self.action_params.get(key, {}).copy()

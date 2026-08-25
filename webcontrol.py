@@ -302,13 +302,13 @@ def testmultitaskabs():
     flip_speed = max(360, min(flip_speed, 3600))
 
     ####### 动态修改固定动作参数 #######
-    """
+    
     apply_action_speed_override(
         "take_fire_pour",
         move_speed,
         flip_speed
     )
-    """
+    
     action_param = "take_fire_pour"
     pot_param = 1
     print("simulate click....")
@@ -338,13 +338,13 @@ def testmultitaskabs2():
     flip_speed = max(360, min(flip_speed, 3600))
 
     ####### 动态修改固定动作参数 #######
-    """
+    
     apply_action_speed_override(
         "take_fire_pour",
         move_speed,
         flip_speed
     )
-    """
+    
 
     action_param = "take_fire_pour"
     pot_param = 2
@@ -409,7 +409,7 @@ def gopos():
     pos_info = get_pot_pos(potnum,postype)
     ####### 动态修改固定动作参数 #######
     
-    """
+    
     apply_action_speed_override(
         "go_to_potpos",
         speed,
@@ -417,7 +417,7 @@ def gopos():
         pos_info["level_pos"],
         pos_info["flip_pos"]
     )
-    """
+    
 
     action_param = "go_to_potpos"
     pot_param = potnum
