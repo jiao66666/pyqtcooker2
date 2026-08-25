@@ -403,13 +403,15 @@ def gopos():
     success = False
     pos_info = get_pot_pos(potnum,postype)
     ####### 动态修改固定动作参数 #######
+    
     apply_action_speed_override(
-        "take_fire_pour",
+        "go_to_potpos",
         speed,
         speed,
         pos_info["level_pos"],
         pos_info["flip_pos"]
     )
+    
 
     action_param = "go_to_potpos"
     pot_param = potnum

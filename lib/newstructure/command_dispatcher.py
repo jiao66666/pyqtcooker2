@@ -79,11 +79,12 @@ class CommandDispatcher:
             return      
         task_id = ctx["task_id"]
         print(f"release resource>>>>>>>>>>>>>>>>>>>>,taskid:{task_id}")
-        self._cleanup(task_id)       
-
-        from lib.newstructure.tools import get_pot_id
-        potid = get_pot_id(motor_id)
-        taskid= runtime.get_taskid(motor_id)
+            
         time.sleep(3) #for simulating ,in real env could remove this
-        self.cookservice.resetRunning(potid,taskid)
+
+        if task_id and task_id.startswith("single:"):
+            from lib.newstructure.tools import get_pot_id
+            potid = get_pot_id(motor_id)
+            self.cookservice.resetRunning(potid,task_id)
+            self._cleanup(task_id)  
             
