@@ -127,6 +127,10 @@ def apply_action_speed_override(
         for item in current_template:
             action_name = item[1]
 
+             # safepos 动作不进行参数覆盖
+            if "safepos" in action_name:
+                continue
+
             override_data = None
 
             # move 开头动作
