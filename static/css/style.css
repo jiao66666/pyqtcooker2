@@ -772,3 +772,28 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
     display:flex;
     flex-flow:  row nowrap;
 }
+
+.trajectory_leftcon{
+    display:flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    margin-right:auto;
+}
+
+.trajectory_lbtn{
+    background:#ccc;
+    color:#000;
+
+    font-size:12px;
+
+    padding:5px;
+
+    border-radius:5px;
+
+    cursor:pointer;
+
+    user-select:none;
+
+    transition:all 0.2s;
+    margin: 0 5px;
+}

@@ -1181,6 +1181,27 @@ function clearPotCmd() {
         pot2.style.display = "none";
     }
 }
+
+function clearPotCmdTop(pot){
+   if(pot==1){
+        potCommands[1] = [];
+        // 清空 pot1 显示
+        const pot1 = document.getElementById("pot1_cmdshow");
+        if (pot1) {
+            pot1.innerHTML = "";
+            pot1.style.display = "none";
+        }
+   }else{
+        potCommands[2] = [];
+        // 清空 pot2 显示
+        const pot2 = document.getElementById("pot2_cmdshow");
+        if (pot2) {
+            pot2.innerHTML = "";
+            pot2.style.display = "none";
+        }
+   }
+}
+
 function clearHistory(type){
     if(type=="status"){
         clearStatusHistory()
