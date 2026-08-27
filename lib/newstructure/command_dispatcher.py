@@ -80,7 +80,7 @@ class CommandDispatcher:
         task_id = ctx["task_id"]
         print(f"release resource>>>>>>>>>>>>>>>>>>>>,taskid:{task_id}")
             
-        time.sleep(3) #for simulating ,in real env could remove this
+        #time.sleep(3) #for simulating ,in real env could remove this ,could be used as controlling the speed of moving
 
         if task_id and task_id.startswith("single:"):
             from lib.newstructure.tools import get_pot_id
