@@ -152,7 +152,8 @@ class PotStateMachine:
     def need_track_release(self, action):
 
         release_actions = [
-            "move_in_tofirefood"
+            "move_in_tofirefood",
+            "flip_in_firepot"
         ]
 
         return any(

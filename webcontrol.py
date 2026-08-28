@@ -409,17 +409,13 @@ def gopos():
     pos_info = get_pot_pos(potnum,postype)
     ####### 动态修改固定动作参数 #######
     
-    
+    action_param = f"go_to_{postype}"
     apply_action_speed_override(
-        "go_to_potpos",
+        action_param,
         speed,
-        speed,
-        pos_info["level_pos"],
-        pos_info["flip_pos"]
+        speed
     )
     
-
-    action_param = "go_to_potpos"
     pot_param = potnum
     success,msg = system["cookservice"].run_task(action_param,pot_param)
     

@@ -131,10 +131,37 @@ ACTION_PARAMS_KEYLIST = {
         ("h", "move_in_tofirefood"),
         ("v", "flip_in_tofirefood")
     ],
-    "go_to_potpos":[
+    "go_to_pos_outfood":[
         ("v","flip_to_safepos"),
-        ("h","move_in_tofirefood"),
-        ("v","flip_in_tofirefood")
+        ("h","move_out_togetfood", [
+            ("h", "move_to_wait"),
+            ("h", "move_to_track"),
+        ]),
+        ("v","flip_to_outfood")
+    ],
+    "go_to_pos_infood":[
+        ("v","flip_to_safepos"),
+        ("h","move_out_togetfood", [
+            ("h", "move_to_wait"),
+            ("h", "move_to_track"),
+        ]),
+        ("v","flip_to_infood")
+    ],
+    "go_to_pos_washpot":[
+        ("v","flip_to_safepos"),
+        ("h","move_out_togetfood", [
+            ("h", "move_to_wait"),
+            ("h", "move_to_track"),
+        ]),
+        ("v","flip_to_washpot")
+    ],
+    "go_to_pos_firepot":[
+        ("v","flip_to_safepos"),
+        ("h","move_in_tofirefood", [
+            ("h", "move_to_wait"),
+            ("h", "move_to_track"),
+        ]),
+        ("v","flip_in_firepot")
     ]
 }
 
@@ -199,10 +226,40 @@ ACTION_PARAMS_CONFIG = {
         "target":4.6,
         "varspeed":False,
         "quitinadvance":0
+    },
+
+    "flip_to_outfood":{
+        "speed": 1000,
+        "target":10,
+        "varspeed":False,
+        "quitinadvance":0
+    },
+    "flip_to_infood":{
+        "speed": 1000,
+        "target":4.16,
+        "varspeed":False,
+        "quitinadvance":0
+    },
+    "flip_to_washpot":{
+        "speed": 1000,
+        "target":-11.5,
+        "varspeed":False,
+        "quitinadvance":0
+    },
+    "flip_in_firepot":{
+        "speed": 1000,
+        "target":0,
+        "varspeed":False,
+        "quitinadvance":0
     }
 }
 
 
+# 不允许进行参数覆盖的动作白名单
+ACTION_OVERRIDE_WHITE_LIST = {
+    "move_to_wait",
+    "move_to_track",
+}
 
 
 TIMEOUT = 6000 #电机单步动作超时

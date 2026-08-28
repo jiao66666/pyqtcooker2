@@ -103,18 +103,16 @@ def pulses_to_circles(
 def apply_action_speed_override(
     template_name,
     move_speed=None,
-    flip_speed=None,
-    move_target=None,
-    flip_target=None
+    flip_speed=None
 ):
     """
-    根据动作模板，动态覆盖动作参数
+    根据动作模板，动态覆盖speed参数
 
     参数:
         move_speed   : move动作 speed
         flip_speed   : flip动作 speed
-        move_target  : move动作 target
-        flip_target  : flip动作 target
+
+    注：此方法可继续扩展更多参数 依据pot1,pot2实际情况相应调整    
     """
 
     template = ACTION_PARAMS_KEYLIST[template_name]
@@ -127,10 +125,6 @@ def apply_action_speed_override(
         for item in current_template:
             action_name = item[1]
 
-             # safepos 动作不进行参数覆盖
-            if "safepos" in action_name:
-                continue
-
             override_data = None
 
             # move 开头动作
@@ -141,9 +135,6 @@ def apply_action_speed_override(
                 if move_speed is not None:
                     override_data["speed"] = move_speed
 
-                if move_target is not None:
-                    override_data["target"] = move_target
-
             # flip 开头动作
             elif action_name.startswith("flip"):
 
@@ -151,9 +142,6 @@ def apply_action_speed_override(
 
                 if flip_speed is not None:
                     override_data["speed"] = flip_speed
-
-                if flip_target is not None:
-                    override_data["target"] = flip_target
 
             # 存在有效覆盖数据才更新
             if override_data:
