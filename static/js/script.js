@@ -385,8 +385,14 @@ function runMotor(potnum,directionstr) {
 }
 
 
-function runMotorabs(potnum,directionstr) {
-
+function runMotorabs(directionstr) {
+      
+        var potnum = document.getElementById("cur_potnum");
+        if(potnum.value == "" || isNaN(potnum.value)){
+            addMessage("请选择锅号");
+            return;
+        }
+        potnum = potnum.value
        var speed = getSelectedValue("speed");
        // console.log("选中速度值是:", speed);
        // 获取 select 元素
@@ -678,7 +684,15 @@ function testMultiTaskabs2() {
         });
 }
 
-function goPos(potnum,postype) {
+function goPos(postype) {
+
+        var potnum = document.getElementById("cur_potnum");
+        if(potnum.value == "" || isNaN(potnum.value)){
+            addMessage("请选择锅号");
+            return;
+        }
+        potnum = potnum.value
+
         var speed = getSelectedValue("speed");
        // console.log("选中速度值是:", speed);
      // 获取 select 元素
@@ -888,7 +902,7 @@ function showTab(tabNumber, buttonElement) {
     // ============================
     // 轨迹页面特殊处理
     // ============================
-    if(tabNumber === 3){
+    if(tabNumber === 2){
 
         if(window.trajectory){
 

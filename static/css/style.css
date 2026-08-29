@@ -797,3 +797,70 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
     transition:all 0.2s;
     margin: 0 5px;
 }
+.tab2_container{
+    display:flex;
+    flex-flow: column nowrap;
+}
+.tab2_row{
+    display:flex;
+    flex-flow: row nowrap;
+}
+.tab2_col{
+    flex:1;
+}
+
+.new_input_container{
+    display:flex;
+    flex-flow: column nowrap;
+}
+
+.new_function_container{
+    display:flex;
+    flex-flow:column wrap;
+    align-items: center;
+    padding:5px;
+    border-top:none;
+}
+
+.new_function_container button{
+    margin-right:5px;
+    margin-top:5px;
+    height: 35px;
+    width:100%;
+    border: none;
+    border-radius: 5px;
+    display:flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    justify-content: center;
+    
+}
+
+.put_bottom{
+    margin-top: auto!important;
+}
+
+
+.new_input_circle{
+    display: flex;
+    flex-flow:column nowrap;
+    align-items: start;
+    padding-top:15px;
+    padding-left:10px;
+}
+.new_input_circle label{
+    font-size:12px;
+    margin-right:5px;
+}
+
+.new_input_circle .input_tag{
+    margin-left:0px;
+}
+
+.w60{
+    width: 80%!important;
+}
+
+.bl{
+    border-left:1px dashed #ccc!important;
+}
