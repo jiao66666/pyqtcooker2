@@ -166,11 +166,15 @@
                         <div class="tab2_col">
                                 <div class="new_input_container">
                                     <div class="tastmotorid_select_row">
-                                        <label for="cur_potnum">锅号:</label>
-                                        <select id="cur_potnum" name="cur_potnum">
-                                            <option value="1">1</option>
-                                            <option value="2">2</option>
-                                        </select>
+                                        <div class="potnum_containter">
+                                            <label id="potnum" data-potnum="1">锅号:</label>
+                                            <div class="potnum_circle" onclick="setPotnum(this,1)">
+                                                1
+                                            </div>
+                                            <div class="potnum_circle" onclick="setPotnum(this,2)">
+                                                2
+                                            </div>
+                                        </div>
                                     </div>
                                     <hr style="border: 1px solid #ccc; width: 100%; margin: 2px auto;">
                                     <div class="new_input_circle">

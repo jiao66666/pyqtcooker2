@@ -165,14 +165,18 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
     border-radius:5px;
 }
 
-.speed_container{
+.speed_container, .potnum_containter{
     display:flex;
     flex-flow:row nowrap;
     align-items: center;
     justify-content: center;
     padding-top:15px;
 }
-.speed_circle{
+
+.jl{
+   justify-content: start!important;
+}
+.speed_circle, .potnum_circle{
     width:25px;
     height:25px;
     display:flex;
@@ -184,7 +188,7 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
     margin:0 5px;
 }
 
-.speed_selected{
+.speed_selected, .potnum_selected{
     background-color:#4B4F56!important;
     color:#fff!important;
 }

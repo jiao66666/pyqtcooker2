@@ -387,12 +387,12 @@ function runMotor(potnum,directionstr) {
 
 function runMotorabs(directionstr) {
       
-        var potnum = document.getElementById("cur_potnum");
-        if(potnum.value == "" || isNaN(potnum.value)){
+        var potnum = getSelectedValue("potnum");
+        if(potnum == "" || isNaN(potnum)){
             addMessage("请选择锅号");
             return;
         }
-        potnum = potnum.value
+
        var speed = getSelectedValue("speed");
        // console.log("选中速度值是:", speed);
        // 获取 select 元素
@@ -686,12 +686,11 @@ function testMultiTaskabs2() {
 
 function goPos(postype) {
 
-        var potnum = document.getElementById("cur_potnum");
-        if(potnum.value == "" || isNaN(potnum.value)){
+        var potnum = getSelectedValue("potnum");
+        if(potnum == "" || isNaN(potnum)){
             addMessage("请选择锅号");
             return;
         }
-        potnum = potnum.value
 
         var speed = getSelectedValue("speed");
        // console.log("选中速度值是:", speed);
@@ -821,13 +820,26 @@ function getSelectedValue(name) {
 function setSpeed(el,speedvalue){
     const box = document.getElementById("speed");
     box.dataset.value = speedvalue;
-    console.log("setting value"+speedvalue);
+    console.log("setting speed value"+speedvalue);
 
     document.querySelectorAll('.speed_circle').forEach(item => {
         item.classList.remove('speed_selected');
     });
 
     el.classList.add('speed_selected');
+    //updateSpeed(parseInt(speedvalue))
+}
+
+function setPotnum(el,potnum){
+    const box = document.getElementById("potnum");
+    box.dataset.value = potnum;
+    console.log("setting potnum value"+potnum);
+
+    document.querySelectorAll('.potnum_circle').forEach(item => {
+        item.classList.remove('potnum_selected');
+    });
+
+    el.classList.add('potnum_selected');
     //updateSpeed(parseInt(speedvalue))
 }
 
@@ -860,6 +872,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (first) {
         setSpeed(first, first.innerText);
+    }
+
+    const firstel = document.querySelector('.potnum_circle'); //  就是第一个
+
+    if (firstel) {
+        setPotnum(firstel, firstel.innerText);
     }
 });
 //转换为具体电机和方向
