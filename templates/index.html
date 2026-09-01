@@ -163,6 +163,12 @@
     <div id="tab2" class="tab-content" >
         <div class="tab2_container">
                 <div class="tab2_row">
+                    <div class="toptitlecon">
+                          <div class="toptitleblock">手动测试区</div>
+                          <div class="toptitleblock bl">自动测试区</div>
+                    </div>
+                </div>
+                <div class="tab2_row">
                         <div class="tab2_col">
                                 <div class="new_input_container">
                                     <div class="tastmotorid_select_row">
@@ -179,7 +185,7 @@
                                     <hr style="border: 1px solid #ccc; width: 100%; margin: 2px auto;">
                                     <div class="new_input_circle">
                                         <label for="circles" class="input_tag">目标位置:</label>
-                                        <input class="input-classic" type="number" id="circlevalabs" placeholder="请输入目标的绝对位置数值" />
+                                        <input class="input-classic w60" type="number" id="circlevalabs" placeholder="请输入目标的绝对位置数值" />
                                     </div>
                                     <div class="new_function_container">
                                         <button onclick="runMotorabs('left')">锅水平绝对移动</button>
@@ -195,6 +201,7 @@
                                 </div>
                         </div>
                         <div class="tab2_col bl">
+                            <div class="auto_container">
                                 <div class="new_input_circle">
                                     <label for="circles" class="input_tag">水平速度(角度/秒):</label>
                                     <input class="input-classic w60" type="number" id="speed_level" placeholder="请输入水平移动速度" value="2160"/>
@@ -215,6 +222,7 @@
                                     <button onclick="testMultiTaskabs()">1号锅洗锅倒菜程序</button>
                                     <button onclick="testMultiTaskabs2()">2号锅洗锅倒菜程序</button>
                                 </div>
+                            </div>
                         </div>
                 </div>
                 <div>

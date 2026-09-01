@@ -810,7 +810,10 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
     flex-flow: row nowrap;
 }
 .tab2_col{
-    flex:1;
+    width:50%;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: end;
 }
 
 .new_input_container{
@@ -862,9 +865,24 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
 }
 
 .w60{
-    width: 80%!important;
+    width: 95%!important;
 }
 
 .bl{
     border-left:1px dashed #ccc!important;
+}
+
+.toptitlecon{
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    width:100%;
+    margin-top:10px;
+}
+.toptitleblock{
+    width:50%;
+    color:#666;
+    font-size:14px;
+    justify-content: center;
+    text-align: center;
 }
