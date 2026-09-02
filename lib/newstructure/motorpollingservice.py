@@ -7,7 +7,7 @@ import random
 
 class MotorPollingService:
 
-    def __init__(self, rs485, bus, motors, mockmotor,interval=0.2):
+    def __init__(self, rs485, bus, motors, mockmotor,websocket_server,interval=0.2):
         self.rs485 = rs485
         self.bus = bus
         self.interval = interval
@@ -16,6 +16,7 @@ class MotorPollingService:
         self.motor_inflight = set()
         self.mock_started = False
         self.mockmotor = mockmotor
+        self.websocket_server = websocket_server
 
     # =========================
     # 启动 / 停止
@@ -35,7 +36,7 @@ class MotorPollingService:
         tick = 0   #降频使用
 
         while self.running:
-            self._check_all_motors_byonce()  #for each motor效率太低，必须改成一次性查询所有电机的状态
+            self._check_all_motors_status()  #for each motor效率太低，必须改成一次性查询所有电机的状态
             self._check_all_position()
 
             tick += 1
@@ -94,7 +95,7 @@ class MotorPollingService:
             #print("QUEUE SIZE:", self.rs485.queue.qsize())
 
     #为最大化查询效率可考虑替换此方法
-    def _check_all_motors_byonce(self):
+    def _check_all_motors_status(self):
 
         self.rs485.execute_command_async(
             "ALLRunStatus",
@@ -269,12 +270,13 @@ class MotorPollingService:
 
             # 🔥 同步给前端
             ws_data.append({
+                "type": "cordinate",
                 "motor_id": motor_id,
                 "position": pos
             })
 
         # 一次性推送（关键）
-        system["websocket"].send(ws_data)
+        self.websocket_server.send(ws_data)
 
         print(f"反馈成功，返回数据为: {pos_all}")
 
