@@ -397,7 +397,7 @@ function runMotorabs(directionstr) {
        // console.log("选中速度值是:", speed);
        // 获取 select 元素
         var circle = document.getElementById("circlevalabs");
-        console.log("选中圈数值是:", circle);
+        console.log("选中圈数值是:", circle.value);
 
         if(circle.value == "" || isNaN(circle.value)){
             alert("请输入有效的绝对位置值！");
