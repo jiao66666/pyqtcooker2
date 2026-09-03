@@ -333,122 +333,131 @@
         </div>
     </div>
 
+    
     <div id="tab5" class="tab-content">
 
-        <div class="command-panel">
+        <div id="command_debug" class="command-panel">
 
-            <!-- 左侧：指令操作区 -->
+            <!-- =========================
+                左侧：指令发送
+                ========================= -->
             <div class="command-left">
 
-                <!-- 第一行：指令输入 -->
+                <!-- 第一行：输入框 -->
                 <div class="command-input-row">
+
                     <input
                         type="text"
-                        id="commandInput"
                         class="command-input"
-                        placeholder="请输入主板指令..."
+                        v-model="commandInput"
+                        placeholder="请输入步进电机主板指令..."
+                        @keyup.enter="sendCommand"
                     >
+
                 </div>
+
 
                 <!-- 第二行：发送按钮 -->
                 <div class="command-button-row">
+
                     <button
-                        id="sendCommandBtn"
                         class="send-command-btn"
+                        @click="sendCommand"
                     >
                         发送指令
                     </button>
+
                 </div>
 
             </div>
 
 
-            <!-- 右侧：通信返回区 -->
+            <!-- =========================
+                右侧：通信历史
+                ========================= -->
             <div class="command-right">
 
                 <div class="command-log">
 
-                    <!-- 示例通信记录 -->
-                    <div class="communication-item">
-
-                        <!-- 发送 -->
-                        <div class="communication-message send-message">
-
-                            <div class="message-header">
-                                <span class="message-type send-type">
-                                    发送
-                                </span>
-
-                                <span class="message-time">
-                                    09:58:21.235
-                                </span>
-                            </div>
-
-                            <div class="message-content">
-                                01 03 00 00 00 02 C4 0B
-                            </div>
-
-                        </div>
-
-
-                        <!-- 接收 -->
-                        <div class="communication-message receive-message">
-
-                            <div class="message-header">
-                                <span class="message-type receive-type">
-                                    收到
-                                </span>
-
-                                <span class="message-time">
-                                    09:58:21.248
-                                </span>
-                            </div>
-
-                            <div class="message-content">
-                                01 03 04 00 00 00 01 3B F3
-                            </div>
-
-                        </div>
-
+                    <!-- 没有记录 -->
+                    <div
+                        v-if="communicationHistory.length === 0"
+                        class="command-empty"
+                    >
+                        暂无通信记录
                     </div>
 
 
-                    <!-- 第二组通信记录 -->
-                    <div class="communication-item">
+                    <!-- 通信记录 -->
+                    <div
+                        v-for="item in communicationHistory"
+                        :key="item.id"
+                        class="communication-item"
+                    >
 
+                        <!-- =====================
+                            发送
+                            ===================== -->
                         <div class="communication-message send-message">
 
                             <div class="message-header">
+
                                 <span class="message-type send-type">
                                     发送
                                 </span>
 
                                 <span class="message-time">
-                                    09:58:25.102
+                                    ${ item.send.timestamp }
                                 </span>
+
                             </div>
 
                             <div class="message-content">
-                                01 06 00 01 00 10 D8 0C
+                                ${ item.send.message }
                             </div>
 
                         </div>
 
 
+                        <!-- =====================
+                            接收
+                            ===================== -->
                         <div class="communication-message receive-message">
 
                             <div class="message-header">
+
                                 <span class="message-type receive-type">
                                     收到
                                 </span>
 
-                                <span class="message-time">
-                                    09:58:25.116
+                                <span
+                                    v-if="item.receive"
+                                    class="message-time"
+                                >
+                                    ${ item.receive.timestamp }
                                 </span>
+
+                                <span
+                                    v-else
+                                    class="message-time waiting"
+                                >
+                                    等待返回...
+                                </span>
+
                             </div>
 
-                            <div class="message-content">
-                                01 06 00 01 00 10 D8 0C
+                            <div
+                                v-if="item.receive"
+                                class="message-content"
+                            >
+                                ${ item.receive.message }
+                            </div>
+
+                            <div
+                                v-else
+                                class="message-content waiting-content"
+                            >
+                                等待主板返回...
                             </div>
 
                         </div>
@@ -462,6 +471,7 @@
         </div>
 
     </div>
+
 
 
 

@@ -425,7 +425,34 @@ def gopos():
     else:
         print("测试失败!")
         return jsonify({"status": "fail","message": f"提交{potnum}号锅{pos_info['msg']}任务失败!错误:{msg}"})    
-    
+
+
+@app.route('/testdata', methods=['POST'])
+def testdata():
+    print("数据测试")
+    data = request.get_json()
+    cmd = data.get('cmd')
+   
+    success = False
+    success,msg = system["boards"]["stepmotor"].send_directcommand(cmd)
+
+    #模拟成功
+    success = True
+    if success :
+        print("测试成功!")
+        senddata = []
+        returndata = {
+            "type": "testdata",
+            "msg": msg
+        }
+        senddata.append(returndata)
+        system["websocket"].send(senddata)
+        return jsonify({"status": "success","message": f"提交数据测试成功!"})
+    else:
+        print("测试失败!")
+        return jsonify({"status": "fail","message": f"提交数据测试失败！错误:{msg}"})    
+
+
 #启动flask后端服务器WEB UI
 def run_flask():
     app.run(

@@ -329,3 +329,46 @@
 
     word-break: break-all;
 }
+
+
+
+/* =========================================================
+   暂无通信记录
+   ========================================================= */
+
+#command_debug .command-empty {
+
+    width: 100%;
+
+    padding: 40px 0;
+
+    text-align: center;
+
+    color: #999999;
+
+    font-size: 13px;
+
+}
+
+
+/* =========================================================
+   等待主板返回
+   ========================================================= */
+
+#command_debug .waiting {
+
+    color: #999999;
+
+}
+
+
+#command_debug .waiting-content {
+
+    color: #999999;
+
+    background: #fafafa;
+
+    font-style: italic;
+
+}
+

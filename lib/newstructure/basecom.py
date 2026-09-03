@@ -168,3 +168,26 @@ class RS485Communication:
 
         return result["data"]
 
+
+    def send_directcommand(self,command:str)-> Tuple[bool, List[str]]:
+
+        print(f"发送指令{command}中....")
+        self.serial_conn.write(command.encode('utf-8'))
+        self.serial_conn.flush()
+
+
+        print("主板返回消息>>>>>>")
+        res = self.serial_conn.readline().decode('utf-8').strip()
+        print(res)
+
+        print("解析消息>>>>>>>")
+        print("当前队列数量:", self.queue.qsize())
+        success, resp_cmd, resp_result = self.protocol.parse_response(command, res)
+
+        if not success:
+            return False, resp_result
+
+        if resp_cmd != command:
+            return False, [f"响应类型不匹配，期望: {command}，实际: {resp_cmd}"]
+
+        return True, resp_result

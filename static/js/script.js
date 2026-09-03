@@ -1087,6 +1087,199 @@ const commandApp = new Vue({
     }
 });
 
+
+const commandDebugApp = new Vue({
+
+    el: "#command_debug",
+
+    delimiters: ['${', '}'],
+
+    data: {
+
+        // 当前输入框中的指令
+        commandInput: "",
+
+        // 通信历史
+        // 最新的记录放在最前面
+        communicationHistory: [],
+
+        // 通信记录ID
+        nextId: 1,
+
+        // 最多保存多少条
+        maxHistory: 500
+
+    },
+
+
+    methods: {
+
+        /**
+         * 发送指令
+         */
+        sendCommand() {
+
+            const command = this.commandInput.trim();
+
+            // 空指令不发送
+            if (!command) {
+                return;
+            }
+
+
+            // 创建一条通信记录
+            const item = {
+
+                id: this.nextId++,
+
+                send: {
+                    timestamp: this.getTimestamp(),
+                    message: command
+                },
+
+                // 主板还没有返回
+                receive: null
+
+            };
+
+
+            // 最新记录放到最前面
+            this.communicationHistory.unshift(item);
+
+
+            // 限制历史数量
+            if (this.communicationHistory.length > this.maxHistory) {
+
+                this.communicationHistory.pop();
+
+            }
+
+
+            // 清空输入框
+            this.commandInput = "";
+
+            fetch('/testdata', {
+                method: 'POST', 
+                headers: {
+                    'Content-Type': 'application/json'  
+                },
+                body: JSON.stringify({
+                    cmd: command
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                addMessage(``+data.message);  // 将收到的消息保存并显示
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                addMessage("Error starting motor.");
+            });
+
+        },
+
+
+        /**
+         * 添加主板返回消息
+         *
+         * 后面 WebSocket 收到主板数据以后，
+         * 调用这个方法即可。
+         *
+         * @param message 主板返回的数据
+         */
+        addReceive(message) {
+
+            if (message === undefined || message === null) {
+                return;
+            }
+
+
+            /*
+             * 找到最近的一条还没有收到返回的记录
+             */
+            const item = this.communicationHistory.find(
+                item => item.receive === null
+            );
+
+
+            if (!item) {
+
+                /*
+                 * 如果没有对应的发送记录，
+                 * 也可以单独保存一条“收到”的记录。
+                 *
+                 * 暂时这里直接忽略。
+                 */
+                console.warn(
+                    "收到主板消息，但没有找到对应的发送记录:",
+                    message
+                );
+
+                return;
+            }
+
+
+            // 更新返回数据
+            item.receive = {
+
+                timestamp: this.getTimestamp(),
+
+                message: message
+
+            };
+
+        },
+
+
+        /**
+         * 获取当前时间
+         *
+         * 格式：
+         * 09:58:21.235
+         */
+        getTimestamp() {
+
+            const now = new Date();
+
+            const h = String(
+                now.getHours()
+            ).padStart(2, "0");
+
+            const m = String(
+                now.getMinutes()
+            ).padStart(2, "0");
+
+            const s = String(
+                now.getSeconds()
+            ).padStart(2, "0");
+
+            const ms = String(
+                now.getMilliseconds()
+            ).padStart(3, "0");
+
+
+            return `${h}:${m}:${s}.${ms}`;
+
+        },
+
+
+        /**
+         * 清空通信历史
+         */
+        clearHistory() {
+
+            this.communicationHistory = [];
+
+        }
+
+    }
+
+});
+
+
+
+
+
 // 创建两个实例（变量互不影响）
 const app = createMotorStatusApp('#motor_status_1');
 
@@ -1142,6 +1335,8 @@ function setupWebSocket(url) {
                     );
                     app.resetMachineTime();
                 }
+            }else if (item.type == "testdata"){
+                commandDebugApp.addReceive(item.msg)
             }
         }
     };
