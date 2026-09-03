@@ -53,6 +53,7 @@
         <button onclick="showTab(2, this)">步进电机板</button>
         <button onclick="showTab(3, this)">DC锅旋转板</button>
         <button onclick="showTab(4, this)">加料板</button>
+        <button onclick="showTab(5, this)">数据测试区</button>
     </div>
 
     <div id="tab1" class="tab-content" style="display:block;">
@@ -332,10 +333,139 @@
         </div>
     </div>
 
+    <div id="tab5" class="tab-content">
+
+        <div class="command-panel">
+
+            <!-- 左侧：指令操作区 -->
+            <div class="command-left">
+
+                <!-- 第一行：指令输入 -->
+                <div class="command-input-row">
+                    <input
+                        type="text"
+                        id="commandInput"
+                        class="command-input"
+                        placeholder="请输入主板指令..."
+                    >
+                </div>
+
+                <!-- 第二行：发送按钮 -->
+                <div class="command-button-row">
+                    <button
+                        id="sendCommandBtn"
+                        class="send-command-btn"
+                    >
+                        发送指令
+                    </button>
+                </div>
+
+            </div>
+
+
+            <!-- 右侧：通信返回区 -->
+            <div class="command-right">
+
+                <div class="command-log">
+
+                    <!-- 示例通信记录 -->
+                    <div class="communication-item">
+
+                        <!-- 发送 -->
+                        <div class="communication-message send-message">
+
+                            <div class="message-header">
+                                <span class="message-type send-type">
+                                    发送
+                                </span>
+
+                                <span class="message-time">
+                                    09:58:21.235
+                                </span>
+                            </div>
+
+                            <div class="message-content">
+                                01 03 00 00 00 02 C4 0B
+                            </div>
+
+                        </div>
+
+
+                        <!-- 接收 -->
+                        <div class="communication-message receive-message">
+
+                            <div class="message-header">
+                                <span class="message-type receive-type">
+                                    收到
+                                </span>
+
+                                <span class="message-time">
+                                    09:58:21.248
+                                </span>
+                            </div>
+
+                            <div class="message-content">
+                                01 03 04 00 00 00 01 3B F3
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- 第二组通信记录 -->
+                    <div class="communication-item">
+
+                        <div class="communication-message send-message">
+
+                            <div class="message-header">
+                                <span class="message-type send-type">
+                                    发送
+                                </span>
+
+                                <span class="message-time">
+                                    09:58:25.102
+                                </span>
+                            </div>
+
+                            <div class="message-content">
+                                01 06 00 01 00 10 D8 0C
+                            </div>
+
+                        </div>
+
+
+                        <div class="communication-message receive-message">
+
+                            <div class="message-header">
+                                <span class="message-type receive-type">
+                                    收到
+                                </span>
+
+                                <span class="message-time">
+                                    09:58:25.116
+                                </span>
+                            </div>
+
+                            <div class="message-content">
+                                01 06 00 01 00 10 D8 0C
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
     
-
-
-
     <div class="prompt">控制台消息</div>
     <div class="history_con">
         <div class="clear_row">

@@ -51,3 +51,281 @@
   background: #fff;
   border-top:none;
 }
+
+
+/* =========================================================
+   Tab5：主板指令调试页面
+   ========================================================= */
+
+#tab5 {
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   左右两栏
+   ========================================================= */
+
+#tab5 .command-panel {
+    display: flex;
+
+    width: 100%;
+    height: 100%;
+
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   左侧 50%
+   ========================================================= */
+
+#tab5 .command-left {
+    width: 50%;
+
+    padding: 20px;
+
+    box-sizing: border-box;
+
+    border-right: 1px solid #dddddd;
+
+    display: flex;
+    flex-direction: column;
+}
+
+
+/* =========================================================
+   第一行：输入框
+   ========================================================= */
+
+#tab5 .command-input-row {
+    width: 100%;
+}
+
+
+#tab5 .command-input {
+    width: 100%;
+    height: 42px;
+
+    padding: 0 12px;
+
+    box-sizing: border-box;
+
+    font-size: 14px;
+
+    border: 1px solid #cccccc;
+    border-radius: 5px;
+
+    outline: none;
+
+    transition: border-color 0.2s;
+}
+
+
+#tab5 .command-input:focus {
+    border-color: #409eff;
+}
+
+
+#tab5 .command-input::placeholder {
+    color: #999999;
+}
+
+
+/* =========================================================
+   第二行：发送按钮
+   ========================================================= */
+
+#tab5 .command-button-row {
+    margin-top: 15px;
+
+    width: 100%;
+}
+
+
+#tab5 .send-command-btn {
+    width: 100%;
+    height: 42px;
+
+    border: none;
+    border-radius: 5px;
+
+    background: #409eff;
+    color: #ffffff;
+
+    font-size: 14px;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s,
+        transform 0.05s;
+}
+
+
+#tab5 .send-command-btn:hover {
+    background: #337ecc;
+}
+
+
+#tab5 .send-command-btn:active {
+    transform: scale(0.99);
+}
+
+
+/* =========================================================
+   右侧 50%
+   ========================================================= */
+
+#tab5 .command-right {
+    width: 50%;
+
+    padding: 20px;
+
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   通信日志
+   ========================================================= */
+
+#tab5 .command-log {
+    width: 100%;
+    height: 100%;
+
+    box-sizing: border-box;
+
+    padding: 10px;
+
+    background: #f7f7f7;
+
+    border: 1px solid #dddddd;
+    border-radius: 6px;
+
+    overflow-y: auto;
+}
+
+
+/* =========================================================
+   一组通信记录
+   ========================================================= */
+
+#tab5 .communication-item {
+    margin-bottom: 12px;
+
+    padding: 10px;
+
+    background: #ffffff;
+
+    border: 1px solid #e5e5e5;
+    border-radius: 5px;
+
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   单条消息
+   ========================================================= */
+
+#tab5 .communication-message {
+    width: 100%;
+}
+
+
+#tab5 .communication-message + .communication-message {
+    margin-top: 8px;
+
+    padding-top: 8px;
+
+    border-top: 1px dashed #dddddd;
+}
+
+
+/* =========================================================
+   消息头部
+   ========================================================= */
+
+#tab5 .message-header {
+    display: flex;
+
+    align-items: center;
+
+    margin-bottom: 5px;
+}
+
+
+/* =========================================================
+   发送 / 收到 标签
+   ========================================================= */
+
+#tab5 .message-type {
+    display: inline-block;
+
+    min-width: 42px;
+
+    padding: 2px 6px;
+
+    margin-right: 8px;
+
+    border-radius: 3px;
+
+    font-size: 12px;
+
+    text-align: center;
+}
+
+
+#tab5 .send-type {
+    color: #ffffff;
+    background: #409eff;
+}
+
+
+#tab5 .receive-type {
+    color: #ffffff;
+    background: #67c23a;
+}
+
+
+/* =========================================================
+   时间
+   ========================================================= */
+
+#tab5 .message-time {
+    font-size: 12px;
+
+    color: #999999;
+
+    font-family: Consolas, Monaco, monospace;
+}
+
+
+/* =========================================================
+   指令内容
+   ========================================================= */
+
+#tab5 .message-content {
+    padding: 7px 10px;
+
+    background: #f5f5f5;
+
+    border-radius: 4px;
+
+    font-size: 13px;
+
+    line-height: 1.5;
+
+    color: #333333;
+
+    font-family:
+        Consolas,
+        Monaco,
+        "Courier New",
+        monospace;
+
+    word-break: break-all;
+}
