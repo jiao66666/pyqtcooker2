@@ -813,7 +813,7 @@ function testDC_command(command,pot,direction = 1) {
 
 function getSelectedValue(name) {
     const box = document.getElementById(name);
-    console.log("reading speed value"+box.dataset.value)
+    console.log("reading value"+box.dataset.value)
     return box.dataset.value;
 }
 
@@ -1119,6 +1119,13 @@ const commandDebugApp = new Vue({
          */
         sendCommand() {
 
+            var boardtype = document.getElementById("boardtype");
+            if (boardtype.value === "") {
+                addMessage("请选择主板类型");
+                return;
+            }
+            console.log("boardtype:", boardtype.value);
+            
             const command = this.commandInput.trim();
 
             // 空指令不发送
@@ -1164,7 +1171,8 @@ const commandDebugApp = new Vue({
                     'Content-Type': 'application/json'  
                 },
                 body: JSON.stringify({
-                    cmd: command
+                    cmd: command,
+                    boardtype:boardtype.value
                 })
             })
             .then(response => response.json())

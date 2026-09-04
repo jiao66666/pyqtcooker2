@@ -432,9 +432,13 @@ def testdata():
     print("数据测试")
     data = request.get_json()
     cmd = data.get('cmd')
-   
+    boardtype= data.get('boardtype')
+    if boardtype not in ["stepmotor","feedermotor","spinmotor"]:
+        print("测试失败!")
+        return jsonify({"status": "fail","message": f"提交数据测试失败！错误主板类型:{boardtype}"})    
+    
     success = False
-    success,msg = system["boards"]["stepmotor"].send_directcommand(cmd)
+    success,msg = system["boards"][boardtype].send_directcommand(cmd)
 
     #模拟成功
     success = True
