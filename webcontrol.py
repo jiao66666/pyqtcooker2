@@ -1,7 +1,7 @@
 # flaskcontrol.py
 from flask import Flask, render_template, jsonify,request
 from lib.newstructure.constant import *
-from lib.newstructure.tools import is_dev_mode,apply_action_speed_override,get_pot_pos,build_dc_action,getTestDCMsg
+from lib.newstructure.tools import is_dev_mode,apply_action_speed_override,get_pot_pos,build_dc_action,getTestDCMsg,validate_board_command
 import webview
 import threading
 from lib.newstructure.system import run_system,init_system,shutdown_system,set_system_dirty,recovery_system,shutdown_device,start_system_state,stop_system_state,set_system_state
@@ -436,7 +436,11 @@ def testdata():
     if boardtype not in ["stepmotor","feedermotor","spinmotor"]:
         print("测试失败!")
         return jsonify({"status": "fail","message": f"提交数据测试失败！错误主板类型:{boardtype}"})    
-    
+
+    if not validate_board_command(boardtype,cmd):
+        print("测试失败!")
+        return jsonify({"status": "fail","message": f"提交数据测试失败！命令格式错误，错误主板类型:{boardtype}"})  
+
     success = False
     success,msg = system["boards"][boardtype].send_directcommand(cmd)
 
