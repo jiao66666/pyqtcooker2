@@ -1178,6 +1178,9 @@ const commandDebugApp = new Vue({
             .then(response => response.json())
             .then(data => {
                 addMessage(``+data.message);  // 将收到的消息保存并显示
+                if(data.status == "fail"){
+                    commandDebugApp.addReceive(data.message)
+                }
             })
             .catch(error => {
                 console.error('Error:', error);
