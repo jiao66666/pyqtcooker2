@@ -1130,6 +1130,7 @@ const commandDebugApp = new Vue({
 
             // 空指令不发送
             if (!command) {
+                addMessage("请先输入命令内容");
                 return;
             }
 
