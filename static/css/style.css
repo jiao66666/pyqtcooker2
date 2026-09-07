@@ -387,7 +387,7 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
     .tastmotorid_select_row label {
         font-size: 14px;
         color: #333;
-        margin-right: 10px;
+        margin-right: 6px;
     }
 
     .tastmotorid_select_row select {
@@ -888,4 +888,8 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
     font-size:14px;
     justify-content: center;
     text-align: center;
+}
+
+.fixwidth_label120{
+    width:120px!important;
 }
