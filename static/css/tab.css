@@ -280,8 +280,9 @@
 
 
 #tab5 .send-type {
-    color: #ffffff;
-    background: #409eff;
+    color: #333;
+    background: #CCC;
+    font-weight: 500;
 }
 
 
