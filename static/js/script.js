@@ -1134,6 +1134,11 @@ const commandDebugApp = new Vue({
                 return;
             }
 
+            const boardTypeName = {
+                stepmotor: "步进板",
+                feedermotor: "加料板",
+                spinmotor: "DC板"
+            };
 
             // 创建一条通信记录
             const item = {
@@ -1146,7 +1151,9 @@ const commandDebugApp = new Vue({
                 },
 
                 // 主板还没有返回
-                receive: null
+                receive: null,
+
+                boardtype:boardTypeName[boardtype.value] || "未知主板"
 
             };
 
