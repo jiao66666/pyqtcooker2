@@ -1297,8 +1297,6 @@ const commandDebugApp = new Vue({
 
 
 
-
-
 // 创建两个实例（变量互不影响）
 const app = createMotorStatusApp('#motor_status_1');
 
@@ -1370,6 +1368,11 @@ function setupWebSocket(url) {
         console.log('WebSocket connection closed');
     };
 }
+
+function onClearTestCmd(){
+    commandDebugApp.clearHistory()
+}
+
 
 
 function updatePotCommand(potid, info) {
