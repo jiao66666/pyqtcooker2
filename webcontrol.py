@@ -1,4 +1,5 @@
 # flaskcontrol.py
+from functools import wraps
 from flask import Flask, render_template, jsonify,request
 from lib.newstructure.constant import *
 from lib.newstructure.tools import is_dev_mode,apply_action_speed_override,get_pot_pos,build_dc_action,getTestDCMsg,validate_board_command
@@ -19,6 +20,28 @@ if is_dev_mode():
 else:
     print("当前环境: 生产环境，使用生产端口")
     port = 5000
+
+#添加接口前置判断条件
+def require_enabled(func):
+    """
+    系统必须已经使能
+    """
+
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+
+        if system["state"]["mode"] != "READY":
+
+            return jsonify({
+                "status": "fail",
+                "message": "错误！系统未使能，请先使能设备"
+            }), 400
+
+        return func(*args, **kwargs)
+
+    return wrapper
+
+
 
 # 渲染前端的 HTML 页面
 @app.route('/')
@@ -78,6 +101,7 @@ def disconnect():
         return jsonify({"status": "fail","message": f"关闭失败!"})
     
 @app.route('/testtastboardping', methods=['POST'])
+@require_enabled
 def testtastboardping():
     print("测试加料板连通性")
     success,msg =  system["cookservice"].run_tastemotor_cmd(POT1_FLAVORMOTOR1,"ping",{})
@@ -90,6 +114,7 @@ def testtastboardping():
 
 
 @app.route('/runtastmotor', methods=['POST'])
+@require_enabled
 def runtastmotor():
     print("测试加料板运行")
     data = request.get_json()
@@ -107,6 +132,7 @@ def runtastmotor():
         return jsonify({"status": "fail","message": f"运转失败!错误:{msg}"})
 
 @app.route('/gettastmotorfb', methods=['POST'])
+@require_enabled
 def gettastmotorfb():
     print("测试加料板获取结果运行")
     data = request.get_json()
@@ -127,6 +153,7 @@ def gettastmotorfb():
         return jsonify({"status": "fail","message": f"运转失败!错误:{msg}"})
     
 @app.route('/runlong', methods=['POST'])
+@require_enabled
 def runlong():
     print("运行电机长运转")
     data = request.get_json()
@@ -144,6 +171,7 @@ def runlong():
         return jsonify({"status": "fail","message": f"长运转失败!错误:{msg}"})
     
 @app.route('/run', methods=['POST'])
+@require_enabled
 def run():
     print("运行电机单次运转")
     data = request.get_json()
@@ -163,6 +191,7 @@ def run():
         return jsonify({"status": "fail","message": f"单运转失败!错误:{msg}"})
 
 @app.route('/runabs', methods=['POST'])
+@require_enabled
 def runabs():
     print("运行电机单次运转绝对值坐标")
     data = request.get_json()
@@ -183,6 +212,7 @@ def runabs():
         return jsonify({"status": "fail","message": f"运转失败!错误:{msg}"})
 
 @app.route('/pause', methods=['POST'])
+@require_enabled
 def pause():
     print("暂停电机运转")
     data = request.get_json()
@@ -359,6 +389,7 @@ def testmultitaskabs2():
         return jsonify({"status": "fail","message": f"测试失败!错误：{msg}"})  
 
 @app.route('/testdc_command', methods=['POST'])
+@require_enabled
 def testdc_command():
     print("-------测试DC板开始------- ")
     data = request.get_json()
@@ -428,6 +459,7 @@ def gopos():
 
 
 @app.route('/testdata', methods=['POST'])
+@require_enabled
 def testdata():
     print("数据测试")
     data = request.get_json()
