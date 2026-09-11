@@ -253,6 +253,12 @@ function runTastMotor() {
             return;
         }
 
+        if(tastMotorOvertime.value>40000){
+            addMessage("超出最大有效持续时间");
+            alert("请重新输入有效持续时间!");
+            return;
+        }
+
         fetch('/runtastmotor', {
             method: 'POST', 
             headers: {
@@ -403,6 +409,12 @@ function runMotorabs(directionstr) {
             alert("请输入有效的绝对位置值！");
             return;
         }
+
+        if(circle.value>8){
+            alert("绝对位置值不合法！");
+            return;
+        }
+
         var motorObj = getMotorInfo(potnum,directionstr);
         if(motorObj == null){
             console.log("获取电机信息失败");
@@ -779,6 +791,11 @@ function testDC_command(command,pot,direction = 1) {
             alert("请输入有效的持续时间！");
             return;
         }
+
+       if(dc_speed.value>100){
+           alert("超出最大有效速度！");
+           return;
+       }
 
       console.log("选中速度值是:", dc_speed.value);
       console.log("选中持续时间是:", dc_time.value);
