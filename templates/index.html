@@ -376,6 +376,51 @@
 
                 </div>
 
+
+                <div class="companel_con">
+                     <div class="companel_top">手动通讯测试</div>
+
+                     <div class="companel_row">
+                        <label for="comport">端口:</label>
+                        <select id="comport" name="comport">
+                            <option value="COM1">COM1</option>
+                            <option value="COM2">COM2</option>
+                            <option value="COM3">COM3</option>
+                            <option value="COM4">COM4</option>
+                            <option value="COM5">COM5</option>
+                            <option value="COM6">COM6</option>
+                            <option value="COM7">COM7</option>
+                            <option value="COM8">COM8</option>
+                            <option value="COM9">COM9</option>
+                            <option value="COM10">COM10</option>
+                            <option value="COM11">COM11</option>
+                            <option value="COM12">COM12</option>
+                        </select>
+
+                        <label for="baut">波特率:</label>
+                        <select id="baut" name="baut">
+                            <option value="9600">9600</option>
+                            <option value="19200">19200</option>
+                            <option value="115200">115200</option>
+                        </select>
+
+                        <button class="send-command-btn mt10" onclick="openCom()">
+                               打开
+                        </button>
+                         <button class="send-command-btn mt10" onclick="closeCom()">
+                               断开
+                        </button>
+                     </div>
+                     <div class="companel_input">
+                        <input class="input-classic force100" type="string" id="com_command" placeholder="请输入发送指令" />
+                     </div>
+                     <div class="companel_btn">
+                        <button class="send-command-btn mt10" onclick="sendCom()">
+                               发送
+                        </button>
+                     </div>
+                </div>
+
             </div>
 
 

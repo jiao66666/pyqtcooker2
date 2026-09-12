@@ -893,3 +893,44 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
 .fixwidth_label120{
     width:120px!important;
 }
+
+
+
+.companel_con{
+    display: flex;
+    flex-flow: column nowrap;
+    border:1px dashed #ccc;
+    padding:5px;
+    margin-top:25px;
+}
+
+.companel_row{
+    display: flex;
+    flex-flow: column nowrap;
+}
+
+.companel_row select {
+    width: 150px;
+    padding: 8px 12px;
+    font-size: 14px;
+    border-radius: 4px;
+    background-color: #f9f9f9;
+    color: #333;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.force100{
+    width:100%!important;
+}
+
+.companel_input{
+    margin-top:10px;
+}
+
+.mt10{
+    margin-top:10px;
+}
+.companel_top{
+    text-align: center;
+}

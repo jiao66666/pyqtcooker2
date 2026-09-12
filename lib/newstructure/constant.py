@@ -3,6 +3,12 @@ BOARDTYPE_FEEDER = 1     # 加料板
 BOARDTYPE_FIVE_AXIS = 2  # 五轴板
 BOARDTYPE_DC = 3         # 直流板
 
+BOARD_NAME_MAP={
+    "stepmotor":BOARDTYPE_FIVE_AXIS,
+    "feedmotor":BOARDTYPE_FEEDER,
+    "spinmotor":BOARDTYPE_DC
+}
+
 ########锅设置########
 POT1 = 1
 POT2 = 2

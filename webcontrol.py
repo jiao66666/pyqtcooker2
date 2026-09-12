@@ -9,9 +9,14 @@ from lib.newstructure.system import run_system,init_system,shutdown_system,set_s
 from lib.newstructure.system_runtime import system
 from lib.newstructure.runtime import runtime
 from lib.newstructure.monitor import start_memory_monitor
+from lib.newstructure.basecom import RS485Communication
+
 
 #  2.0版本Flask Control WEB 后端服务控制程序
 app = Flask(__name__)
+
+#  仅供测试连接存储 
+test_connections = {}
 
 # 根据传入的命令行参数设置端口,方便测试和生产环境使用不同的端口
 if is_dev_mode():
@@ -491,6 +496,97 @@ def testdata():
     else:
         print("测试失败!")
         return jsonify({"status": "fail","message": f"提交数据测试失败！错误:{msg}"})    
+
+
+
+@app.route('/openCom', methods=['POST'])
+def openCom():
+    print("打开串口")
+    data = request.get_json()
+    port = data.get('port')
+    baut = data.get('baut')
+    boardtype = data.get("boardtype")
+    boardid = BOARD_NAME_MAP[boardtype] 
+    success = False
+    conn = RS485Communication(
+        port=port,
+        baudrate=baut,
+        timeout=1.0,
+        board_id=boardid
+    )
+    success=conn.connect()
+
+    #模拟成功
+    if success :
+        print("测试成功!")
+           # 保存实例
+        test_connections[boardtype] = conn
+        return jsonify({"status": "success","message": f"打开端口{port}成功!"})
+    else:
+        print("测试失败!")
+        return jsonify({"status": "fail","message": f"错误，打开端口{port}失败"})    
+
+
+@app.route('/closeCom', methods=['POST'])
+def closeCom():
+    print("关闭串口")
+    data = request.get_json()
+    boardtype = data.get("boardtype")
+ # 获取之前保存的实例
+    conn = test_connections.get(boardtype)
+
+    if conn is None:
+        return jsonify({
+            "status": "fail",
+            "message": f"{boardtype}没有打开的测试串口"
+        })
+    
+    try:
+        conn.disconnect()
+        # 关闭成功后删除实例
+        del test_connections[boardtype]
+
+        return jsonify({
+            "status": "success",
+            "message": f"{boardtype}测试串口关闭成功"
+        })
+
+    except Exception as e:
+        print("关闭测试串口异常:", e)
+        return jsonify({
+            "status": "fail",
+            "message": f"关闭失败: {str(e)}"
+        })
+
+
+@app.route('/sendCom', methods=['POST'])
+def sendCom():
+    print("发送指令")
+    data = request.get_json()
+    boardtype = data.get("boardtype")
+    command   = data.get("command")
+ # 获取之前保存的实例
+    conn = test_connections.get(boardtype)
+
+    if conn is None:
+        return jsonify({
+            "status": "fail",
+            "message": f"{boardtype}没有打开的测试串口"
+        })
+    
+    success = False
+
+    success,resp = conn.send_directcommand(command)
+    if success:
+        return jsonify({
+            "status": "success",
+            "message": f"{boardtype}发送指令{command}成功"
+        })
+    else:
+        return jsonify({
+            "status": "fail",
+            "message": f"{boardtype}发送指令{command}失败"
+        })
 
 
 #启动flask后端服务器WEB UI

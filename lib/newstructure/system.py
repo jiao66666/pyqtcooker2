@@ -200,6 +200,9 @@ def buildboards():
         boards[item["name"]] = conn
     return boards
 
+#rs485连接
+
+
 #电机创建
 def buildmotors(bus,boards):
     return {

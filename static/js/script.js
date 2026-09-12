@@ -134,6 +134,97 @@ function disconnect() {
 }
 
 
+//打开串口
+function openCom() {
+
+        var port= document.getElementById("comport");
+        var baut= document.getElementById("baut");
+        var boardtype = document.getElementById("boardtype");  
+        console.log("port:"+port.value+"||baut:"+baut.value+"||boardtype:"+boardtype.value)
+ 
+        fetch('/openCom', {
+            method: 'POST', 
+            headers: {
+                'Content-Type': 'application/json'  
+            },
+            body: JSON.stringify({
+                port:port.value,
+                baut:baut.value,
+                boardtype:boardtype.value
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            addMessage(`${data.message}`);  // 将收到的消息保存并显示
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            addMessage("抛出异常");
+        });
+}
+
+
+//断开串口
+function closeCom() {
+        var port= document.getElementById("comport");
+        var baut= document.getElementById("baut");
+        var boardtype = document.getElementById("boardtype");  
+        console.log("port:"+port.value+"||baut:"+baut.value+"||boardtype:"+boardtype.value)
+ 
+        fetch('/closeCom', {
+            method: 'POST', 
+            headers: {
+                'Content-Type': 'application/json'  
+            },
+            body: JSON.stringify({
+                port:port.value,
+                baut:baut.value,
+                boardtype:boardtype.value
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            addMessage(`${data.message}`);  // 将收到的消息保存并显示
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            addMessage("抛出异常");
+        });
+}
+
+
+//发送串口指令
+function sendCom() {
+        var command = document.getElementById("com_command");
+        var boardtype = document.getElementById("boardtype");  
+        console.log("command:"+command.value+"||boardtype:"+boardtype.value)
+
+        if (command.value === "") {
+            addMessage("请输入串口指令");
+            return;
+        }
+
+        fetch('/sendCom', {
+            method: 'POST', 
+            headers: {
+                'Content-Type': 'application/json'  
+            },
+            body: JSON.stringify({
+                boardtype:boardtype.value,
+                command:command.value
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            addMessage(`${data.message}`);  // 将收到的消息保存并显示
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            addMessage("抛出异常");
+        });
+}
+
+
 function showDisconnectConfirm(){
 
     document.getElementById(
