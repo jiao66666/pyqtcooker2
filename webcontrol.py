@@ -612,7 +612,7 @@ def sendCom():
     if success:
         return jsonify({
             "status": "success",
-            "message": f"{boardtype}发送指令{command}成功"
+            "message": f"{boardtype}发送指令{command}成功,返回为{resp[0]}"
         })
     else:
         return jsonify({
