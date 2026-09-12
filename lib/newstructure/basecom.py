@@ -53,6 +53,33 @@ class RS485Communication:
             print(f"连接串口失败: {e}")
             return False
 
+        
+    def test_connect(self) -> bool:
+        """测试模式连接：只打开串口，不启动Worker"""
+
+        try:
+            self.serial_conn = serial.Serial(
+                port=self.port,
+                baudrate=self.baudrate,
+                bytesize=serial.EIGHTBITS,
+                parity=serial.PARITY_NONE,
+                stopbits=serial.STOPBITS_ONE,
+                timeout=self.timeout
+            )
+
+            print(f"测试串口{self.port}已成功打开")
+
+            self.connected = True
+
+            # 注意：不启动 Worker
+            return True
+
+        except Exception as e:
+            print(f"测试连接串口失败: {e}")
+            return False
+
+        
+
     def disconnect(self):
         if self.serial_conn and self.serial_conn.is_open:
             self.running = False
@@ -169,25 +196,66 @@ class RS485Communication:
         return result["data"]
 
 
-    def send_directcommand(self,command:str)-> Tuple[bool, List[str]]:
+    def send_directcommand(self, command: str) -> Tuple[bool, List[str]]:
 
-        print(f"发送指令{command}中....")
-        self.serial_conn.write(command.encode('utf-8'))
-        self.serial_conn.flush()
+        
+        # =========================
+        # 检查串口状态
+        # =========================
 
+        if not self.serial_conn or not self.serial_conn.is_open:
+            print("串口未连接")
+            return False, ["串口未连接"]
 
-        print("主板返回消息>>>>>>")
-        res = self.serial_conn.readline().decode('utf-8').strip()
-        print(res)
+        try:
 
-        print("解析消息>>>>>>>")
-        print("当前队列数量:", self.queue.qsize())
-        success, resp_cmd, resp_result = self.protocol.parse_response(command, res)
+            # =========================
+            # 发送原始指令
+            # =========================
 
-        if not success:
-            return False, resp_result
+            print(f"发送测试指令 {command} 中....")
 
-        if resp_cmd != command:
-            return False, [f"响应类型不匹配，期望: {command}，实际: {resp_cmd}"]
+            self.serial_conn.write(command.encode('utf-8'))
+            self.serial_conn.flush()
 
-        return True, resp_result
+            print("发送完成")
+
+            # =========================
+            # 等待主板返回
+            # =========================
+
+            print("主板返回消息>>>>>>")
+
+            res_bytes = self.serial_conn.readline()
+
+            print("原始返回数据:", repr(res_bytes))
+
+            # 解码
+            res = res_bytes.decode(
+                'utf-8',
+                errors='ignore'
+            ).strip()
+
+            print("解析后的返回数据:", repr(res))
+
+            # =========================
+            # 判断是否收到数据
+            # =========================
+
+            if not res:
+                print("主板没有返回数据或读取超时")
+
+                return False, ["主板没有返回数据"]
+
+            # =========================
+            # 测试模式直接返回原始数据
+            # =========================
+
+            return True, [res]
+
+        except Exception as e:
+
+            print(f"发送测试指令失败: {e}")
+
+            return False, [str(e)]
+    

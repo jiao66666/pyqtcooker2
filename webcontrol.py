@@ -514,13 +514,22 @@ def openCom():
         timeout=1.0,
         board_id=boardid
     )
-    success=conn.connect()
+    success=conn.test_connect()
 
     #模拟成功
     if success :
         print("测试成功!")
            # 保存实例
         test_connections[boardtype] = conn
+
+        print("========== 保存测试连接 ==========")
+        print("boardtype:", boardtype)
+        print("port:", conn.port)
+        print("conn id:", id(conn))
+        print("serial_conn id:", id(conn.serial_conn))
+        print("class:", conn.__class__)
+        print("================================")
+
         return jsonify({"status": "success","message": f"打开端口{port}成功!"})
     else:
         print("测试失败!")
@@ -566,17 +575,40 @@ def sendCom():
     boardtype = data.get("boardtype")
     command   = data.get("command")
  # 获取之前保存的实例
+
+
     conn = test_connections.get(boardtype)
+
+    print("boardtype:", boardtype)
+    print("command:", command)
+
+    print("获取 conn:", conn)
 
     if conn is None:
         return jsonify({
             "status": "fail",
             "message": f"{boardtype}没有打开的测试串口"
         })
+
+    print("conn id:", id(conn))
+    print("conn.port:", conn.port)
+    print("conn.connected:", conn.connected)
+    print("conn.serial_conn:", conn.serial_conn)
+
+    if conn.serial_conn:
+        print("serial port:", conn.serial_conn.port)
+        print("serial is_open:", conn.serial_conn.is_open)
     
     success = False
 
+    print("AAAA：准备调用 send_directcommand")
+
     success,resp = conn.send_directcommand(command)
+
+    print("BBBB：send_directcommand 返回")
+    print("result:", resp)
+
+    print("========== sendCom 结束 ==========")
     if success:
         return jsonify({
             "status": "success",
