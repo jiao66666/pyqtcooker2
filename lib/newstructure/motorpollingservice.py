@@ -134,7 +134,7 @@ class MotorPollingService:
 
         self.rs485.execute_command_async(
             "ALLRunStatus",
-            ["1","0"],
+            [str(self.rs485.board_id),"0"],
             callback=self._on_motor_status_all
         )
 

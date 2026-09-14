@@ -5,6 +5,7 @@ from typing import Optional, List, Tuple, Callable, Any
 from lib.newstructure.constant import *
 from lib.newstructure.protocols import ProtocolFactory
 from lib.newstructure.tools import trace_info
+import time
 
 
 class RS485Communication:
@@ -98,6 +99,7 @@ class RS485Communication:
 
                 print(">>> Worker取出命令:", item["command"])
                 print(">>> 取出后队列:", self.queue.qsize())
+                start = time.perf_counter()
 
                 command = item["command"]
                 params = item["params"]
@@ -105,8 +107,16 @@ class RS485Communication:
 
                 success, resp = self._execute_command_sync(command, params)
 
+                elapsed = time.perf_counter() - start
+
+
                 print("<<< Worker完成命令:", command)
                 print("<<< 完成后队列:", self.queue.qsize())
+                print(
+                    f"消费 {command} "
+                    f"耗时={elapsed:.3f}s "
+                    f"队列={self.queue.qsize()}"
+                 )
 
                 if callback:
                     try:
