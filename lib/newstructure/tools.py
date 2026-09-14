@@ -266,10 +266,9 @@ def get_boardlist():
             }
         ]
     
-TRACE_CMDS = {
-    "#RUN",
-    "#SPEED",
-    "#ORGRST"
+BLACK_CMDS_LIST = {
+    "#ALLRUNSTATUS",
+    "#ALLPULSE"
 }
 
 # 两个锅各自维护自己的当前位置
@@ -293,16 +292,16 @@ def trace_info(info):
     parts = info.split(",")
     cmd = parts[0].upper()
 
-    if cmd != "#RUN":
-            return
-
-    pulses = int(parts[3])
-    motorid = int(parts[2])
-    # 当前属于哪个锅
-    potid = get_pot_id(motorid)
-
-    if cmd not in TRACE_CMDS:
+    if cmd in BLACK_CMDS_LIST:
         return
+
+    if cmd == "#RUN":
+        pulses = int(parts[3])
+        motorid = int(parts[2])
+        # 当前属于哪个锅
+        potid = get_pot_id(motorid)
+    else:
+        potid = 0    
 
     data = []
     data.append({
