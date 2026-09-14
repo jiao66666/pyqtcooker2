@@ -259,7 +259,7 @@ def get_boardlist():
             },
             {
                 "name":"spinmotor",
-                "port":"COM10",
+                "port":"COM8",
                 "baudrate":19200,
                 "timeout":BOARD_TIMEOUT,
                 "board_id":BOARDTYPE_DC
