@@ -174,86 +174,86 @@ ACTION_PARAMS_KEYLIST = {
 #子动作参数KEY->命令参数 映射
 ACTION_PARAMS_CONFIG = {
     "flip_out_togetfood": {
-        "speed": 200,
+        "speed": 360,
         "target": 4.6,
         "varspeed":False,
         "quitinadvance":0
     },
     "move_out_togetfood": {
-        "speed": 1000,
+        "speed": 360,
         "target":4.16,
         "varspeed":False,
         "quitinadvance":0
     },
     "move_to_wait": {
-        "speed": 1000,
+        "speed": 360,
         "target":3,
         "varspeed":False,
         "quitinadvance":0
     },
     "move_to_track": {
-        "speed": 1000,
+        "speed": 360,
         "target":4.16,
         "varspeed":False,
         "quitinadvance":0
     },
     "move_in_tofirefood": {
-        "speed": 1000,
+        "speed": 360,
         "target":0,
         "varspeed":False,
         "quitinadvance":0
     },
     "flip_in_tofirefood": {
-        "speed": 1000,
+        "speed": 360,
         "target":0,
         "varspeed":False,
         "quitinadvance":0
     },
     "flip_out_pour": {
-        "speed": 1000,
+        "speed": 360,
         "target":20.2,
         "varspeed":False,
         "quitinadvance":0
     },
     "flip_in_wash": {
-        "speed": 1000,
+        "speed": 360,
         "target":-11.5,
         "varspeed":False,
         "quitinadvance":0
     },
     "flip_out_getfood": {
-        "speed": 1000,
+        "speed": 360,
         "target":4.6,
         "varspeed":False,
         "quitinadvance":0
     },
     "flip_to_safepos":{
-        "speed": 1000,
+        "speed": 360,
         "target":4.6,
         "varspeed":False,
         "quitinadvance":0
     },
 
     "flip_to_outfood":{
-        "speed": 1000,
+        "speed": 360,
         "target":10,
         "varspeed":False,
         "quitinadvance":0
     },
     "flip_to_infood":{
-        "speed": 1000,
+        "speed": 360,
         "target":4.16,
         "varspeed":False,
         "quitinadvance":0
     },
     "flip_to_washpot":{
-        "speed": 1000,
+        "speed": 360,
         "target":-11.5,
         "varspeed":False,
         "quitinadvance":0
     },
     "flip_in_firepot":{
-        "speed": 1000,
+        "speed": 360,
         "target":0,
         "varspeed":False,
         "quitinadvance":0

@@ -167,7 +167,8 @@ def runlong():
     speed = data.get('speed')  
     success = False
     print("收到参数 :", motorid, direction,speed)
-    success,msg =  system["cookservice"].run_single_action(motorid,"runlong",{"speed":int(int(speed)*360),"direction":int(direction)})
+    multipy_nums = 36 #临时改小为36，作为初次测试用  生产环境请使用 360
+    success,msg =  system["cookservice"].run_single_action(motorid,"runlong",{"speed":int(int(speed)*multipy_nums),"direction":int(direction)})
     if success :
         print("电机长运转成功!")
         return jsonify({"status": "success","message": f"长运行成功!电机：{motorid}，方向：{direction}，速度：{speed}"})
