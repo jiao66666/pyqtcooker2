@@ -399,7 +399,23 @@ function getTastMotorFb(mode) {
 }
 
 
+let motorPressed = {};
+
+
 function startMotor(potnum,directionstr) {
+
+        const key = `${potnum}_${directionstr}`;
+
+        // 已经按下了，不重复启动
+        if (motorPressed[key]) {
+            console.log("不用重复触发")
+            return;
+        }
+
+        motorPressed[key] = true;
+
+
+
        // 获取 select 元素
         var speed = getSelectedValue("speed");
         //console.log("选中速度值是:", speed);
@@ -425,6 +441,48 @@ function startMotor(potnum,directionstr) {
             if(data.status === "success"){
                 addMessage(`${data.message}`);  // 将收到的消息保存并显示
             }else{
+                addMessage(`${data.message}`);  // 将收到的消息保存并显示
+            }
+            
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            addMessage("Error starting motor.");
+        });
+}
+
+
+// 停止电机
+function pauseMotor(potnum,directionstr) {
+     // 获取 select 元素
+        const key = `${potnum}_${directionstr}`;
+
+        // 已经按下了，不重复启动
+        if (!motorPressed[key]) {
+            console.log("不用重复触发")
+            return;
+        }
+
+        motorPressed[key] = false;
+
+        var motorObj = getMotorInfo(potnum,directionstr);
+        if(motorObj == null){
+            console.log("获取电机信息失败");
+            return;
+        }
+        fetch('/pause', {
+            method: 'POST', 
+            headers: {
+                'Content-Type': 'application/json'  
+            },
+            body: JSON.stringify({
+                boardtype: '1',  // 五轴板
+                motorid: motorObj.motor
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if(data.status === "success"){
                 addMessage(`${data.message}`);  // 将收到的消息保存并显示
             }
             
@@ -562,37 +620,7 @@ function resetMotor(potnum,directionstr) {
             addMessage("Error starting motor.");
         });
 }
-// 停止电机
-function pauseMotor(potnum,directionstr) {
-     // 获取 select 元素
 
-        var motorObj = getMotorInfo(potnum,directionstr);
-        if(motorObj == null){
-            console.log("获取电机信息失败");
-            return;
-        }
-        fetch('/pause', {
-            method: 'POST', 
-            headers: {
-                'Content-Type': 'application/json'  
-            },
-            body: JSON.stringify({
-                boardtype: '1',  // 五轴板
-                motorid: motorObj.motor
-            })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if(data.status === "success"){
-                addMessage(`${data.message}`);  // 将收到的消息保存并显示
-            }
-            
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            addMessage("Error starting motor.");
-        });
-}
 
 function stopMotor(potnum,directionstr) {
      // 获取 select 元素
