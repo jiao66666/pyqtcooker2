@@ -144,8 +144,8 @@ class MotorPollingService:
     # =========================
     def _on_motor_status_all(self, command, success, resp):
 
-        #self.dev_handle_motorstatus_all()
-        #return
+        self.dev_handle_motorstatus_all()
+        return
 
         print("电机状态回调中>>>>>>>>>>")
 
@@ -405,8 +405,8 @@ class MotorPollingService:
     # =========================
     def _on_all_position(self, command, success, resp):
 
-        #self.dev_handle_all_position()
-        #return
+        self.dev_handle_all_position()
+        return
 
         if not success:
             print(f"查询所有电机位置失败: {resp}")
