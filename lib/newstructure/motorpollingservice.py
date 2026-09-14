@@ -3,7 +3,7 @@ import time
 from lib.newstructure.constant import *
 from lib.newstructure.runtime import runtime
 import random
-
+from lib.newstructure.tools import is_dev_mode
 
 class MotorPollingService:
 
@@ -144,9 +144,11 @@ class MotorPollingService:
     # =========================
     def _on_motor_status_all(self, command, success, resp):
 
-        self.dev_handle_motorstatus_all()
-        return
-
+        if is_dev_mode():
+            print("执行开发模式电机状态模拟。。。")
+            self.dev_handle_motorstatus_all()
+            return
+        print("执行生产环境电机状态查询。。。")
         print("电机状态回调中>>>>>>>>>>")
 
         if not success:
@@ -405,9 +407,12 @@ class MotorPollingService:
     # =========================
     def _on_all_position(self, command, success, resp):
 
-        self.dev_handle_all_position()
-        return
-
+        if is_dev_mode():
+            print("执行开发模式电机位置更新模拟")
+            self.dev_handle_all_position()
+            return
+        
+        print("执行生成环境位置更新。。。")
         if not success:
             print(f"查询所有电机位置失败: {resp}")
             return
