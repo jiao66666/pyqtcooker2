@@ -96,11 +96,17 @@ class RS485Communication:
             try:
                 priority, _, item = self.queue.get()
 
+                print(">>> Worker取出命令:", item["command"])
+                print(">>> 取出后队列:", self.queue.qsize())
+
                 command = item["command"]
                 params = item["params"]
                 callback = item["callback"]
 
                 success, resp = self._execute_command_sync(command, params)
+
+                print("<<< Worker完成命令:", command)
+                print("<<< 完成后队列:", self.queue.qsize())
 
                 if callback:
                     try:
