@@ -222,21 +222,21 @@ def get_boardlist():
             {
                 "name":"stepmotor",
                 "port":"COM2",
-                "baudrate":COM_BAUT_RATE,
+                "baudrate":STEP_BAUT_RATE,
                 "timeout":BOARD_TIMEOUT,
                 "board_id":BOARDTYPE_FIVE_AXIS
             },
             {
                 "name":"feedermotor",
                 "port":"COM3",
-                "baudrate":COM_BAUT_RATE,
+                "baudrate":STEP_BAUT_RATE,
                 "timeout":BOARD_TIMEOUT,
                 "board_id":BOARDTYPE_FEEDER
             },
             {
                 "name":"spinmotor",
                 "port":"COM4",
-                "baudrate":COM_BAUT_RATE,
+                "baudrate":STEP_BAUT_RATE,
                 "timeout":BOARD_TIMEOUT,
                 "board_id":BOARDTYPE_DC
             }
@@ -245,22 +245,22 @@ def get_boardlist():
         return [
             {
                 "name":"stepmotor",
-                "port":"COM6",
-                "baudrate":COM_BAUT_RATE,
+                "port":STEP_PORT,
+                "baudrate":STEP_BAUT_RATE,
                 "timeout":BOARD_TIMEOUT,
                 "board_id":BOARDTYPE_FIVE_AXIS
             },
             {
                 "name":"feedermotor",
-                "port":"COM7",
-                "baudrate":COM_BAUT_RATE,
+                "port":FEED_PORT,
+                "baudrate":FEED_BAUT_RATE,
                 "timeout":BOARD_TIMEOUT,
                 "board_id":BOARDTYPE_FEEDER
             },
             {
                 "name":"spinmotor",
-                "port":"COM8",
-                "baudrate":COM_BAUT_RATE,
+                "port":SPINDC_PORT,
+                "baudrate":STEP_BAUT_RATE,
                 "timeout":BOARD_TIMEOUT,
                 "board_id":BOARDTYPE_DC
             }
