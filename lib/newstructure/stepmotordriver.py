@@ -251,3 +251,5 @@ class StepMotor:
         self.homed = True
     
         return True,[f"电机{self.name}复位成功"]
+
+    #def reset_allpulses(self)-> Tuple[bool, List[str]]:

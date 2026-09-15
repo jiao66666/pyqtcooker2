@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from typing import List,Tuple,Type
 from lib.newstructure.constant import BOARDTYPE_FEEDER,BOARDTYPE_FIVE_AXIS,BOARDTYPE_DC
 from lib.newstructure.tools import CRCUtil
-from lib.newstructure.tools import parse_motor_pulses,parse_motor_status
+from lib.newstructure.tools import parse_motor_pulses,parse_motor_status,parse_all_motor_pulses,parse_all_motor_status
 
 
 class ProtocolBase(ABC):
@@ -113,12 +113,22 @@ class SpinerProtocol(ProtocolBase):
              status = parse_motor_status(response)
              if status is None:
                  print("电机状态解析失败")
-                 return False, "ERROR",["电机状态解析失败","Fail"]
-         elif command == "ALLPulse" or command == "Pulse":   
+                 return False, "ERROR",["单电机状态解析失败","Fail"]
+         elif command == "Pulse":   
              status = parse_motor_pulses(response)
              if status is None:
                  print("电机脉冲数解析失败")
-                 return False,"ERROR", ["电机状态解析失败","Fail"] 
+                 return False,"ERROR", ["单电机状态解析失败","Fail"] 
+         elif command == "ALLPulse":
+              status = parse_all_motor_pulses(response)
+              if status is None:
+                 print("电机脉冲数解析失败")
+                 return False,"ERROR", ["所有电机状态解析失败","Fail"] 
+         elif command == "ALLRunStatus":
+              status = parse_all_motor_status(response)
+              if status is None:
+                 print("电机脉冲数解析失败")
+                 return False,"ERROR", ["所有电机状态解析失败","Fail"]     
          else:
              # 检查是否是成功响应
              if response.endswith("OK"):

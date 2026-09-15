@@ -57,6 +57,84 @@ def parse_motor_pulses(response: str):
     else:
         return None   
 
+
+def parse_all_motor_status(response: str):
+    """
+    解析所有电机状态响应。
+
+    示例：
+        #ALLRunStatus,2,0*11111*B8
+
+    返回：
+        "11111"
+
+    其中每一位对应一个电机：
+        0 -> STOPING
+        1 -> PAUSEING
+        2 -> ORGING
+        3 -> RUNING
+        4 -> ERROR
+    """
+
+    parts = response.split('*')
+
+    # 正常格式：
+    # [协议内容, 状态数据, CRC]
+    if len(parts) != 3:
+        return None
+
+    status = parts[1].strip()
+
+    # ALLRunStatus 应该返回5路电机状态
+    if len(status) != 5:
+        return None
+
+    # 每一位都应该是 0~4
+    if not all(char in "01234" for char in status):
+        return None
+
+    return status
+
+
+def parse_all_motor_pulses(response: str):
+    """
+    解析所有电机脉冲数响应。
+
+    示例：
+        #ALLPulse,2,0*-1,-122163,-40762,+141152,+111803*5F
+
+    返回：
+        "-1,-122163,-40762,+141152,+111803"
+    """
+
+    parts = response.split('*')
+
+    # 正常格式：
+    # [协议内容, 脉冲数据, CRC]
+    if len(parts) != 3:
+        return None
+
+    pulse_data = parts[1].strip()
+
+    if not pulse_data:
+        return None
+
+    items = pulse_data.split(',')
+
+    # ALLPulse 应该返回5路电机脉冲
+    if len(items) != 5:
+        return None
+
+    # 验证每个数据确实是整数
+    try:
+        for item in items:
+            int(item.strip())
+    except ValueError:
+        return None
+
+    return pulse_data
+
+
 def circles_to_pulses(circles, step_angle = 1.8, microsteps = MICRO_STEP):
     # 每圈的步数 = 360 / 步距角
     steps_per_revolution = 360 / step_angle
