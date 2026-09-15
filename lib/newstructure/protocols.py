@@ -65,8 +65,7 @@ class FiveAxisProtocol(ProtocolBase):
                 return False, cmd, params
         
         # 如果不是 OK 或 NG，返回 INVALID
-        return False, "INVALID", []
-                
+        return True, command, [status]                
 
 
 class FeederProtocol(ProtocolBase):

@@ -175,7 +175,7 @@ class MotorPollingService:
             # index 4 -> 电机4
             # ==================================================
 
-            status_data = resp[1].strip()
+            status_data = resp[0].strip()
 
             if not status_data:
                 print("电机状态数据为空")
@@ -421,7 +421,7 @@ class MotorPollingService:
 
             print(f"ALLPulse返回数据: {resp}")
 
-            pulse_data = resp[1].strip()
+            pulse_data = resp[0].strip()
 
             if not pulse_data:
                 print("错误：所有电机脉冲数据为空")
