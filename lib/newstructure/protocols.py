@@ -28,12 +28,23 @@ class FiveAxisProtocol(ProtocolBase):
             status = parse_motor_status(response)
             if status is None:
                 print("电机状态解析失败")
-                return False, "ERROR",["电机状态解析失败","Fail"]
-        elif command == "ALLPulse" or command == "Pulse":   
+                return False, "ERROR",["单电机状态解析失败","Fail"]
+        elif command == "Pulse":   
             status = parse_motor_pulses(response)
             if status is None:
                 print("电机脉冲数解析失败")
-                return False,"ERROR", ["电机状态解析失败","Fail"] 
+                return False,"ERROR", ["单电机状态解析失败","Fail"] 
+        elif command == "ALLPulse":
+            status = parse_all_motor_pulses(response)
+            if status is None:
+                print("电机脉冲数解析失败")
+                return False,"ERROR", ["所有电机状态解析失败","Fail"] 
+        elif command == "ALLRunStatus":
+            status = parse_all_motor_status(response)
+            if status is None:
+                print("电机脉冲数解析失败")
+                return False,"ERROR", ["所有电机状态解析失败","Fail"]     
+
         else:
             # 检查是否是成功响应
             if response.endswith("OK"):
