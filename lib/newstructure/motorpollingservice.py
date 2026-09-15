@@ -204,8 +204,7 @@ class MotorPollingService:
                 # 当前电机运行参数
                 # ------------------------------------------------
 
-                step_params = runtime.get_params(motor_id)
-
+                step_params = runtime.get_params(motor_id).get("params")
                 # ==================================================
                 # 状态 0
                 #
@@ -459,10 +458,7 @@ class MotorPollingService:
                 )
 
                 # 更新 runtime
-                runtime.set_position({
-                    "motor_id": motor_id,
-                    "position": pos
-                })
+                runtime.set_position(motor_id, pos)
 
                 # 前端数据
                 ws_data.append({
