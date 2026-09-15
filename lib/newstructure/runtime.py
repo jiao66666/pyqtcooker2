@@ -104,8 +104,7 @@ class RuntimeContext:
 
     def get_params(self,motor_id:int):
         with self._lock:
-            return self.motors[motor_id]["params"]           
-
+             return self.motors[motor_id].get("params", {})
     def set_done(self, motor_id: int):
         with self._lock:
             if motor_id in self.motors:

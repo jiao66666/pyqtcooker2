@@ -204,7 +204,7 @@ class MotorPollingService:
                 # 当前电机运行参数
                 # ------------------------------------------------
 
-                step_params = runtime.get_params(motor_id).get("params")
+                step_params = runtime.get_params(motor_id)
                 # ==================================================
                 # 状态 0
                 #
