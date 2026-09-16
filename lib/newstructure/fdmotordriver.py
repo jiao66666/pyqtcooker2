@@ -33,7 +33,7 @@ class FeederMotor:
          # 发送运行命令,默认使用模式0（按持续时间开锁），锁开启后反馈为高电平(1)
         self.com.execute_command_async(
             "OPENLOCK", 
-            [str(self.board_id), str(self.motor_id),str(overtime),"0","1"]
+            [str(self.board_id), str(self.motor_id),str(overtime)]
         )
 
         return True
