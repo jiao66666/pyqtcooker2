@@ -142,6 +142,7 @@ class RS485Communication:
         try:
             cmd_str = self.protocol.build_command(command, params)
 
+            print(f"[RS485] 发送命令 -> 板号:{self.board_id},串口: {self.port}, 波特率: {self.baudrate}, 命令: {command}")
             print(f"发送指令{cmd_str}中....")
             self.serial_conn.write(cmd_str.encode('utf-8'))
             self.serial_conn.flush()

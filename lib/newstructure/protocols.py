@@ -76,7 +76,10 @@ class FeederProtocol(ProtocolBase):
 
         crc = CRCUtil.crc16(cmd_str)
         cmd_str += f"*{crc}"
-        print(f"将构建命令串(带上CRC):{cmd_str}")    
+
+        # YT_LOCKER24 协议要求以 CRLF 结尾
+        cmd_str += "\r\n"
+        print(f"将构建命令串(带CRC和结束符): {repr(cmd_str)}")
         return cmd_str
     
     def parse_response(self, command:str, response: str) -> Tuple[bool, str, List[str]]:
