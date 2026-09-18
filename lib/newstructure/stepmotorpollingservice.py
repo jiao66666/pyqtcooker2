@@ -5,7 +5,8 @@ from lib.newstructure.runtime import runtime
 import random
 from lib.newstructure.tools import is_dev_mode
 
-class MotorPollingService:
+# 此文档为步进电机轮询实现代码
+class StepMotorPollingService:
 
     def __init__(self, rs485, bus, motors, mockmotor,websocket_server,interval=0.2):
         self.rs485 = rs485

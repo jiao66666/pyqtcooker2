@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from typing import List,Tuple,Type
-from lib.newstructure.constant import BOARDTYPE_FEEDER,BOARDTYPE_FIVE_AXIS,BOARDTYPE_DC
+from lib.newstructure.constant import BOARDTYPE_FEEDER,BOARDTYPE_FIVE_AXIS,BOARDTYPE_SPIN
 from lib.newstructure.tools import CRCUtil
 from lib.newstructure.tools import parse_motor_pulses,parse_motor_status,parse_all_motor_pulses,parse_all_motor_status
 
@@ -127,21 +127,6 @@ class SpinerProtocol(ProtocolBase):
              if status is None:
                  print("电机状态解析失败")
                  return False, "ERROR",["单电机状态解析失败","Fail"]
-         elif command == "Pulse":   
-             status = parse_motor_pulses(response)
-             if status is None:
-                 print("电机脉冲数解析失败")
-                 return False,"ERROR", ["单电机状态解析失败","Fail"] 
-         elif command == "ALLPulse":
-              status = parse_all_motor_pulses(response)
-              if status is None:
-                 print("电机脉冲数解析失败")
-                 return False,"ERROR", ["所有电机状态解析失败","Fail"] 
-         elif command == "ALLRunStatus":
-              status = parse_all_motor_status(response)
-              if status is None:
-                 print("电机脉冲数解析失败")
-                 return False,"ERROR", ["所有电机状态解析失败","Fail"]     
          else:
              # 检查是否是成功响应
              if response.endswith("OK"):
@@ -188,4 +173,4 @@ class ProtocolFactory:
     
 ProtocolFactory.register(BOARDTYPE_FEEDER, FeederProtocol)
 ProtocolFactory.register(BOARDTYPE_FIVE_AXIS, FiveAxisProtocol)    
-ProtocolFactory.register(BOARDTYPE_DC, SpinerProtocol)    
+ProtocolFactory.register(BOARDTYPE_SPIN, SpinerProtocol)    

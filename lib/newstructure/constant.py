@@ -1,12 +1,12 @@
 ########电路板通用配置#########
 BOARDTYPE_FEEDER = 1     # 加料板
 BOARDTYPE_FIVE_AXIS = 2  # 五轴板
-BOARDTYPE_DC = 3         # 直流板
+BOARDTYPE_SPIN = 3       # 旋转DC板
 
 BOARD_NAME_MAP={
     "stepmotor":BOARDTYPE_FIVE_AXIS,
     "feedmotor":BOARDTYPE_FEEDER,
-    "spinmotor":BOARDTYPE_DC
+    "spinmotor":BOARDTYPE_SPIN
 }
 
 ########锅设置########
@@ -283,7 +283,7 @@ STEP_BAUT_RATE = 115200
 FEED_BAUT_RATE = 9600
 STEP_PORT   = "COM6"
 FEED_PORT   = "COM7"
-SPINDC_PORT = "COM8"
+SPIN_PORT = "COM8"
 
 POT_STATEMACHINE_INTERVAL = 0.05  #锅状态机主循环频率
 BOARD_TIMEOUT = 1.0  # 生产环境可修改为1.0

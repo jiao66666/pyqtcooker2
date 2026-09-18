@@ -316,7 +316,7 @@ def get_boardlist():
                 "port":"COM4",
                 "baudrate":STEP_BAUT_RATE,
                 "timeout":BOARD_TIMEOUT,
-                "board_id":BOARDTYPE_DC
+                "board_id":BOARDTYPE_SPIN
             }
         ]
     else:
@@ -337,16 +337,17 @@ def get_boardlist():
             },
             {
                 "name":"spinmotor",
-                "port":SPINDC_PORT,
+                "port":SPIN_PORT,
                 "baudrate":STEP_BAUT_RATE,
                 "timeout":BOARD_TIMEOUT,
-                "board_id":BOARDTYPE_DC
+                "board_id":BOARDTYPE_SPIN
             }
         ]
     
 BLACK_CMDS_LIST = {
     "#ALLRUNSTATUS",
-    "#ALLPULSE"
+    "#ALLPULSE",
+    "#RUNSTATUS"
 }
 
 # 两个锅各自维护自己的当前位置

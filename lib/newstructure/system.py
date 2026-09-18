@@ -1,6 +1,6 @@
 from lib.newstructure.eventbus import EventBus
 from lib.newstructure.stepmotordriver import StepMotor
-from lib.newstructure.dcmotordriver import DCMotor
+from lib.newstructure.dcmotordriver import SpinMotor
 from lib.newstructure.fdmotordriver import FeederMotor
 from lib.newstructure.state_machine import PotStateMachine
 from lib.newstructure.scancycle import ScanCycle
@@ -10,7 +10,9 @@ from lib.newstructure.stepbuilder import StepBuilder
 from lib.newstructure.basecom import RS485Communication
 import threading
 from lib.newstructure.runtime import runtime
-from lib.newstructure.motorpollingservice import MotorPollingService
+from lib.newstructure.stepmotorpollingservice import StepMotorPollingService
+from lib.newstructure.spinmotorpollingservice import SpinMotorPollingService
+
 from lib.newstructure.motioncontroller import MotionController
 from lib.newstructure.stepmotor_manager import StepMotorManager
 from lib.newstructure.command_dispatcher import CommandDispatcher
@@ -41,8 +43,9 @@ def build_system():
     pot2 = PotStateMachine(2, bus, trackmanager, motion_controller)
 
     mockmotor = MockMotor(websocket_server,MOCK_INTERVAL)
-    motorpolling = MotorPollingService(boards["stepmotor"],bus,motors["stepmotor"],mockmotor,websocket_server,POLLING_INTERVAL)
-
+    stepmotorpolling = StepMotorPollingService(boards["stepmotor"],bus,motors["stepmotor"],mockmotor,websocket_server,POLLING_INTERVAL)
+    spinmotorpolling = SpinMotorPollingService(boards["spinmotor"],bus,motors["spinmotor"],websocket_server,POLLING_INTERVAL)
+    
     resource_manager = TaskResourceManager(bus)
     dispatcher = CommandDispatcher(resource_manager,bus)
   
@@ -59,7 +62,8 @@ def build_system():
             1: pot1,
             2: pot2
         },
-        "motorpolling": motorpolling,
+        "stepmotorpolling": stepmotorpolling,
+        "spinmotorpolling":spinmotorpolling,
         "motioncontroller":motion_controller,
         "boards":boards,
         "websocket":websocket_server,
@@ -149,8 +153,11 @@ def shutdown_system(system):
         print(f"runtime清理失败: {e}")
 
     # 2. 停止循环类组件
-    if "motorpolling" in system:
-        system["motorpolling"].stop()
+    if "stepmotorpolling" in system:
+        system["stepmotorpolling"].stop()
+
+    if "spinmotorpolling" in system:
+        system["spinmotorpolling"].stop()    
 
     if "scancycle" in system:
         system["scancycle"].stop()
@@ -241,8 +248,8 @@ def buildmotors(bus,boards):
             POT2_FLAVORMOTOR24: FeederMotor("pot2_flavor_motor12", 24, bus, boards["feedermotor"])
         },
         "spinmotor":{
-            POT1_SPIN_MOTOR:DCMotor("pot1_spin_motor", 0, bus, boards["spinmotor"]),
-            POT2_SPIN_MOTOR:DCMotor("pot2_spin_motor", 1, bus, boards["spinmotor"])
+            POT1_SPIN_MOTOR:SpinMotor("pot1_spin_motor", 0, bus, boards["spinmotor"]),
+            POT2_SPIN_MOTOR:SpinMotor("pot2_spin_motor", 1, bus, boards["spinmotor"])
         }
     }
 
@@ -257,7 +264,8 @@ def init_system():
 
 #启动主TICK循环
 def run_system(system):
-    system["motorpolling"].start()
+    system["stepmotorpolling"].start()
+    system["spinmotorpolling"].start()
     system["motioncontroller"].start()
     system["websocket"].start()
     system["scancycle"]=ScanCycle([
