@@ -347,7 +347,8 @@ def get_boardlist():
 BLACK_CMDS_LIST = {
     "#ALLRUNSTATUS",
     "#ALLPULSE",
-    "#RUNSTATUS"
+    "#RUNSTATUS",
+    "YT+GETFB=1"
 }
 
 # 两个锅各自维护自己的当前位置
@@ -371,6 +372,7 @@ def trace_info(info):
     parts = info.split(",")
     cmd = parts[0].upper()
 
+    print(f"trace cmd is:{cmd}")
     if cmd in BLACK_CMDS_LIST:
         return
 
