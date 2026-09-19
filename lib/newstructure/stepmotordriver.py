@@ -226,7 +226,7 @@ class StepMotor:
         pulses = RESET_PULSES
 
         # 复位方向
-        if self.motor_id in [1,2]:  # 1号锅
+        if self.motor_id in [POT1_MOVE_MOTOR,POT1_FLIP_MOTOR]:  # 1号锅
             direction = 1
         else:
             direction = -1     
