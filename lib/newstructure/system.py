@@ -12,6 +12,7 @@ import threading
 from lib.newstructure.runtime import runtime
 from lib.newstructure.stepmotorpollingservice import StepMotorPollingService
 from lib.newstructure.spinmotorpollingservice import SpinMotorPollingService
+from lib.newstructure.feedermotorpollingservice import FeederMotorPollingService
 
 from lib.newstructure.motioncontroller import MotionController
 from lib.newstructure.stepmotor_manager import StepMotorManager
@@ -45,7 +46,8 @@ def build_system():
     mockmotor = MockMotor(websocket_server,MOCK_INTERVAL)
     stepmotorpolling = StepMotorPollingService(boards["stepmotor"],bus,motors["stepmotor"],mockmotor,websocket_server,POLLING_INTERVAL)
     spinmotorpolling = SpinMotorPollingService(boards["spinmotor"],bus,motors["spinmotor"],websocket_server,POLLING_INTERVAL)
-    
+    feedermotorpolling = FeederMotorPollingService(boards["feedermotor"],bus,motors["feedermotor"],websocket_server,POLLING_INTERVAL)
+
     resource_manager = TaskResourceManager(bus)
     dispatcher = CommandDispatcher(resource_manager,bus)
   
@@ -64,6 +66,7 @@ def build_system():
         },
         "stepmotorpolling": stepmotorpolling,
         "spinmotorpolling":spinmotorpolling,
+        "feedermotorpolling":feedermotorpolling,
         "motioncontroller":motion_controller,
         "boards":boards,
         "websocket":websocket_server,
@@ -157,7 +160,10 @@ def shutdown_system(system):
         system["stepmotorpolling"].stop()
 
     if "spinmotorpolling" in system:
-        system["spinmotorpolling"].stop()    
+        system["spinmotorpolling"].stop()   
+
+    if "feedermotorpolling" in system:
+        system["feedermotorpolling"].stop()         
 
     if "scancycle" in system:
         system["scancycle"].stop()
@@ -266,6 +272,7 @@ def init_system():
 def run_system(system):
     system["stepmotorpolling"].start()
     system["spinmotorpolling"].start()
+    system["feedermotorpolling"].start()
     system["motioncontroller"].start()
     system["websocket"].start()
     system["scancycle"]=ScanCycle([

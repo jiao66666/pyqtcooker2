@@ -82,32 +82,69 @@ class FeederProtocol(ProtocolBase):
         print(f"将构建命令串(带CRC和结束符): {repr(cmd_str)}")
         return cmd_str
     
-    def parse_response(self, command:str, response: str) -> Tuple[bool, str, List[str]]:
-             # 检查是否是正确响应
-        if response.startswith("+") and ":" in response:
-            # 分割指令名和参数部分
-            cmd_with_params = response[1:].split(":", 1)
-            cmd = cmd_with_params[0]  # 指令名
-            params_with_crc = cmd_with_params[1]  # 参数和可能的 CRC
+    def parse_response(
+            self,
+            command: str,
+            response: str
+        ) -> Tuple[bool, str, List[str]]:
 
-            # 如果有 CRC16 校验值，则分离出来
+        # 去除串口返回数据末尾的 CRLF / 空白字符
+        response = response.strip()
+
+        # ==================================================
+        # 正常响应
+        #
+        # 例如：
+        #
+        # +GETFB:1,111111111111111111111111
+        #
+        # 解析结果：
+        #
+        # success = True
+        # cmd     = GETFB
+        # params  = ["1", "111111111111111111111111"]
+        # ==================================================
+        if response.startswith("+") and ":" in response:
+
+            cmd, params_with_crc = response[1:].split(":", 1)
+
+            # 去除可能存在的 CRC
             if "*" in params_with_crc:
                 params_part, crc = params_with_crc.split("*", 1)
-                params = params_part.split(",")  # 分割参数
             else:
-                params = params_with_crc.split(",")  # 没有 CRC 时直接分割参数
+                params_part = params_with_crc
+
+            params = [
+                param.strip()
+                for param in params_part.split(",")
+            ]
 
             return True, cmd, params
-        # 检查是否是错误响应
+
+        # ==================================================
+        # 错误响应
+        #
+        # 例如：
+        #
+        # +ERRORxxx:xxxx
+        # ==================================================
         if response.startswith("+ERROR") and ":" in response:
-            # 分割错误响应部分
+
             error_with_params = response[7:].split(":", 1)
-            error_code = error_with_params[0]  # 错误码
-            error_message = error_with_params[1]  # 错误信息
-            return False, "ERROR", [error_code, error_message]        
+
+            error_code = error_with_params[0].strip()
+            error_message = error_with_params[1].strip()
+
+            return False, "ERROR", [
+                error_code,
+                error_message
+            ]
+
+        # ==================================================
+        # 无法识别的响应
+        # ==================================================
 
         return False, "INVALID", []
-
 
 class SpinerProtocol(ProtocolBase):
     
