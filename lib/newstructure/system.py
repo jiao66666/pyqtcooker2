@@ -1,6 +1,6 @@
 from lib.newstructure.eventbus import EventBus
 from lib.newstructure.stepmotordriver import StepMotor
-from lib.newstructure.dcmotordriver import SpinMotor
+from lib.newstructure.spinmotordriver import SpinMotor
 from lib.newstructure.fdmotordriver import FeederMotor
 from lib.newstructure.state_machine import PotStateMachine
 from lib.newstructure.scancycle import ScanCycle
