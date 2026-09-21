@@ -181,6 +181,7 @@ class RS485Communication:
         callback: Optional[Callable[[bool, List[str]], Any]] = None,
         priority: int = PRIORITY_NORMAL
     ):
+        #print(f"rs485 :execute_command_async...current command:{command}")
         if params is None:
             params = []
 
@@ -191,6 +192,7 @@ class RS485Communication:
         }
 
         self.counter += 1
+       # print(f"rs485:commit to the queue...port:{self.port},baut:{self.baudrate},boardid:{self.board_id}")
         self.queue.put((priority,self.counter, item))
         return True
 

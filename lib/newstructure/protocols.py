@@ -24,6 +24,7 @@ class FiveAxisProtocol(ProtocolBase):
         print(f"将构建命令串(带上LRC): {cmd_str}")
         return cmd_str
     def parse_response(self, command:str, response: str) -> Tuple[bool, str, List[str]]:
+        status = None
         if command == "RunStatus":
             status = parse_motor_status(response)
             if status is None:

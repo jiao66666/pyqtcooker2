@@ -423,6 +423,8 @@ def testdc_command():
 
     msg = getTestDCMsg(pot,action,direction)
 
+    print("action:",action)
+    print("params:",params)
     success = system["cookservice"].run_dcmotor_cmd(motor_id,action,params)
     if success :
         print("测试成功!")

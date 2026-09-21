@@ -21,7 +21,8 @@ class SpinMotor:
          # 发送运行命令
         self.com.execute_command_async(
             "STOP", 
-            [str(self.board_id), str(self.motor_id)]
+            [str(self.board_id), str(self.motor_id)],
+            priority = PRIORITY_CONTROL
         )
         
         return True 
@@ -35,7 +36,8 @@ class SpinMotor:
          # 发送运行命令
         self.com.execute_command_async(
             "LONG", 
-            [str(self.board_id), str(self.motor_id),str(direction),str(speed)]
+            [str(self.board_id), str(self.motor_id),str(direction),str(speed)],
+            priority = PRIORITY_CONTROL
         )
        
         return True 
@@ -55,7 +57,8 @@ class SpinMotor:
          # 发送运行命令
         self.com.execute_command_async(
             "RUN", 
-            [str(self.board_id), str(self.motor_id),str(time),str(speed)]
+            [str(self.board_id), str(self.motor_id),str(time),str(speed)],
+            priority = PRIORITY_CONTROL
         )
         
         return True 
@@ -70,7 +73,8 @@ class SpinMotor:
          # 发送运行命令
         self.com.execute_command_async(
             "SPEED", 
-            [str(self.board_id), str(self.motor_id),str(speed)]
+            [str(self.board_id), str(self.motor_id),str(speed)],
+            priority = PRIORITY_CONTROL
         )
       
         return True         
