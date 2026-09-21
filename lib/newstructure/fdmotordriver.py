@@ -21,7 +21,8 @@ class FeederMotor:
         print("测试加料板连通性....")
         self.com.execute_command_async(
             "PING", 
-            [str(self.board_id)]
+            [str(self.board_id)],
+            priority = PRIORITY_CONTROL
         )
        
         return True      
@@ -33,7 +34,8 @@ class FeederMotor:
          # 发送运行命令,默认使用模式0（按持续时间开锁），锁开启后反馈为高电平(1)
         self.com.execute_command_async(
             "OPENLOCK", 
-            [str(self.board_id), str(self.motor_id),str(overtime)]
+            [str(self.board_id), str(self.motor_id),str(overtime)],
+            priority = PRIORITY_CONTROL
         )
 
         return True
