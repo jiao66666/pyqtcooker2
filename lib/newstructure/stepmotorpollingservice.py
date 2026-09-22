@@ -245,8 +245,8 @@ class StepMotorPollingService:
                         f"电机 {motor_id} 状态：PAUSEING（完成/暂停）"
                     )
 
-                    # 只有当前存在运行任务时才处理完成
-                    if not step_params:
+                    # 只有当前电机存在运行任务时才处理完成
+                    if not runtime.is_busy(motor_id):
                         continue
 
                     runtime.set_done(motor_id)
