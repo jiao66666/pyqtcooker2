@@ -214,7 +214,9 @@ class StepMotor:
         )
 
         return True      
-    
+
+
+    #   水平垂直复位
     def reset_zero(self)-> Tuple[bool, List[str]]:
         """复位单个电机"""
         if self.cmd_running :
@@ -237,7 +239,7 @@ class StepMotor:
             pulses = -abs(pulses)   
 
         #复位速度
-        anglespeed = 360      
+        anglespeed = 90   #生产标准速度360，测试使用90      
          # 发送运行命令
         self.set_cmd_running("ORGRST")
         self.com.execute_command_async(
