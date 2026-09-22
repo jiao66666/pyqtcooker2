@@ -50,7 +50,7 @@ class CookerService:
         return True
 
 
-    def initRunning(self):
+    def reset(self):
         self.task_running = {
             1: None,
             2: None

@@ -1,7 +1,7 @@
 import threading
 from lib.newstructure.runtime import runtime
 import time
-#任务型 还是 指令型 全部通过此命令器分发，防冲突
+#任务型 还是 指令型 全部通过此命令器分发，防冲突 ,锁控制
 class CommandDispatcher:
 
     def __init__(self, resource_manager,bus):
