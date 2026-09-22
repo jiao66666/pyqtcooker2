@@ -118,6 +118,7 @@ class CommandDispatcher:
         #time.sleep(3) #for simulating ,in real env could remove this ,could be used as controlling the speed of moving
 
         if task_id and task_id.startswith("single:"):
+            print("处理关闭任务指令锁中》》》》》》》")
             from lib.newstructure.tools import get_pot_id
             potid = get_pot_id(motor_id)
             self.cookservice.resetRunning(potid,task_id)
