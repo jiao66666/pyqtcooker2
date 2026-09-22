@@ -70,6 +70,41 @@ class CommandDispatcher:
             self.rm.release_task_resources(task_id)
 
 
+    def reset(self):
+        """
+        急停恢复后的全量重置。
+
+        不依赖 task_id：
+        1. 清空所有 active_tasks
+        2. 释放当前所有任务占用的资源
+        """
+
+        with self.lock:
+
+            print("[Dispatcher] reset start")
+
+            # 保存当前任务，用于释放资源
+            task_ids = list(self.active_tasks)
+
+            # 清空 Dispatcher 当前任务
+            self.active_tasks.clear()
+
+            # 释放所有任务资源
+            for task_id in task_ids:
+                try:
+                    self.rm.release_task_resources(task_id)
+                except Exception as e:
+                    print(
+                        f"[Dispatcher] reset release failed: "
+                        f"{task_id} -> {e}"
+                    )
+
+            print(
+                f"[Dispatcher] reset complete, "
+                f"released {len(task_ids)} tasks"
+            )
+
+
     def on_motor_done(self, data):
         print("电机完成运动@@@@@@@@@@@@@@@@@@@@@@@@---disptcher")
         motor_id = data["motor_id"]    

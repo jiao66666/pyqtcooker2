@@ -104,6 +104,7 @@ def recovery_system(system):
     system["pots"][1].reset()
     system["pots"][2].reset()
     system["cookservice"].initRunning()
+    system["dispatcher"].reset()
     return True
 
 def start_system_state(system):
@@ -271,8 +272,8 @@ def init_system():
 #启动主TICK循环
 def run_system(system):
     system["stepmotorpolling"].start()
-    system["spinmotorpolling"].start()
-    system["feedermotorpolling"].start()
+    #system["spinmotorpolling"].start()
+    #system["feedermotorpolling"].start()
     system["motioncontroller"].start()
     system["websocket"].start()
     system["scancycle"]=ScanCycle([
