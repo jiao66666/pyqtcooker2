@@ -289,7 +289,7 @@ POT_STATEMACHINE_INTERVAL = 0.05  #锅状态机主循环频率
 BOARD_TIMEOUT = 1.0  # 生产环境可修改为1.0
 MOTION_INTERVAL = 0.05  #动态调速度等参数控制器
 MOCK_INTERVAL = 0.05   #模拟频率
-POLLING_INTERVAL = 0.2 #查询轮询时间间隔 测试环境先调整成为0.2 极限值 是0.02
+POLLING_INTERVAL = 0.1 #查询轮询时间间隔 测试环境先调整成为0.2 极限值 是0.02
 
 VAR_MIN_SPEED = 100
 VAR_MAX_SPEED = 300
