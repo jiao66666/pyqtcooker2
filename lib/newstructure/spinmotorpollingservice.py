@@ -33,6 +33,8 @@ class SpinMotorPollingService:
 
         while self.running:
             self._check_all_motors_status() 
+            #for motorid in SPIN_MOTOR_LIST:
+            #   self._check_motor_rpm(motorid)
 
             time.sleep(self.interval)
 
@@ -46,6 +48,7 @@ class SpinMotorPollingService:
             callback=self._on_motor_status_all
         )
 
+        
     # =========================
     # 回调：所有电机状态
     # =========================
@@ -137,6 +140,54 @@ class SpinMotorPollingService:
                         f"电机 {motor_id} 未知状态：{status_code}"
                     )
 
+                # TODO:
+                # 后期可以在这里通过 WebSocket
+                # 实时推送当前电机状态到前端，
+                # 例如：
+                #
+                # {
+                #     "type": "motor_status",
+                #     "motor_id": motor_id,
+                #     "status": "停止/运行/故障"
+                # }
+
+        except Exception as e:
+
+            print(
+                "处理所有电机状态异常:",
+                e
+            )
+
+    def _check_motor_rpm(self,motor_id):
+        self.rs485.execute_command_async(
+            "RPM",
+            [str(self.rs485.board_id),str(motor_id)],
+            callback=self._on_motor_rpm
+        )
+
+    # =========================
+    # 回调：所有电机RPM旋转值
+    # =========================
+    def _on_motor_rpm(self, command, success, resp):
+
+        print("执行生产环境电机状态查询。。。")
+        print("电机RPM回调中>>>>>>>>>>")
+
+        if not success:
+            print("查询所有电机状态失败")
+            return
+
+        print("RPM查询返回:", resp)
+
+        try:
+
+            rpm_data = resp[0].strip()
+
+            if not rpm_data:
+                print("电机状态数据为空")
+                return
+
+            print(f"current rpm is :{rpm_data}")
                 # TODO:
                 # 后期可以在这里通过 WebSocket
                 # 实时推送当前电机状态到前端，
