@@ -44,9 +44,9 @@ def build_system():
     pot2 = PotStateMachine(2, bus, trackmanager, motion_controller)
 
     mockmotor = MockMotor(websocket_server,MOCK_INTERVAL)
-    stepmotorpolling = StepMotorPollingService(boards["stepmotor"],bus,motors["stepmotor"],mockmotor,websocket_server,POLLING_INTERVAL)
-    spinmotorpolling = SpinMotorPollingService(boards["spinmotor"],bus,motors["spinmotor"],websocket_server,POLLING_INTERVAL)
-    feedermotorpolling = FeederMotorPollingService(boards["feedermotor"],bus,motors["feedermotor"],websocket_server,POLLING_INTERVAL)
+    stepmotorpolling = StepMotorPollingService(boards["stepmotor"],bus,motors["stepmotor"],mockmotor,websocket_server,STEP_POLLING_INTERVAL)
+    spinmotorpolling = SpinMotorPollingService(boards["spinmotor"],bus,motors["spinmotor"],websocket_server,SPIN_POLLING_INTERVAL)
+    feedermotorpolling = FeederMotorPollingService(boards["feedermotor"],bus,motors["feedermotor"],websocket_server,FEEDER_POLLING_INTERVAL)
 
     resource_manager = TaskResourceManager(bus)
     dispatcher = CommandDispatcher(resource_manager,bus)
