@@ -473,7 +473,11 @@ def build_dc_action(command, direction, dc_speed, dc_time):
             "time": dc_time,
             "speed": dc_speed
         }
-
+    if command == "speed":
+        return "dc_speed", {
+            "speed": dc_speed
+        }
+    
     return "dc_stop", {}   
 
 
@@ -484,7 +488,9 @@ def getTestDCMsg(pot,action,direction):
     elif action == "dc_run":
         astr="正常转"
     elif action == "dc_stop":
-        astr="停止"         
+        astr="停止"  
+    elif action == "dc_speed":
+        astr="速度"           
     else:
         astr="执行"
 

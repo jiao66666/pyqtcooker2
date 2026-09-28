@@ -20,7 +20,8 @@ class CookerService:
             "getfeeder":self._getfeedermotor_action,
             "dc_longrun":self._dclongrun_action,
             "dc_run":self._dcrun_action,
-            "dc_stop":self._dcstop_action
+            "dc_stop":self._dcstop_action,
+            "dc_speed":self._dcspeed_action
         }
 
         self.task_running = {
@@ -242,6 +243,9 @@ class CookerService:
         motor.run(params["direction"],params["time"],params["speed"])
 
     def _dcstop_action(self,motor,params):
-        motor.stop()       
+        motor.stop()    
+
+    def _dcspeed_action(self,motor,params):
+        motor.setspeed(params["speed"])       
                             
 
