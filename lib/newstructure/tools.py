@@ -477,6 +477,11 @@ def build_dc_action(command, direction, dc_speed, dc_time):
         return "dc_speed", {
             "speed": dc_speed
         }
+
+    if command == "speedall":
+        return "dc_speedall", {
+            "speed": dc_speed
+        }
     
     return "dc_stop", {}   
 
@@ -490,7 +495,9 @@ def getTestDCMsg(pot,action,direction):
     elif action == "dc_stop":
         astr="停止"  
     elif action == "dc_speed":
-        astr="速度"           
+        astr="速度"  
+    elif action == "dc_speedall":
+        astr="批量速度"
     else:
         astr="执行"
 
