@@ -343,12 +343,13 @@ def get_boardlist():
                 "board_id":BOARDTYPE_SPIN
             }
         ]
-    
+
+#不在前端显示的命令（频率太高，没有必要）    
 BLACK_CMDS_LIST = {
-    "#ALLRUNSTATUS",
-    "#ALLPULSE",
-    "#RUNSTATUS",
-    "YT+GETFB=1"
+    "#ALLRUNSTATUS",#步进电机轮询
+    "#ALLPULSE",    #步进电机轮询
+    "#RUNSTATUS",   #旋转电机轮询
+    "YT+GETFB=1"    #加料电机轮询
 }
 
 # 两个锅各自维护自己的当前位置

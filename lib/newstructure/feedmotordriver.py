@@ -52,7 +52,8 @@ class FeederMotor:
 
         self.com.execute_command_async(
             "GETFB", 
-            [str(self.board_id), motors,"0","1"]
+            [str(self.board_id), motors,"0","1"],
+            priority = PRIORITY_CONTROL
         )
 
         return True
