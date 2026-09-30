@@ -269,7 +269,7 @@ ACTION_OVERRIDE_WHITE_LIST = {
 }
 
 
-TIMEOUT = 6000 #电机单步动作超时
+TIMEOUT = 60 #电机单步动作超时,单位秒
 
 # 优先级定义（越小越优先）
 PRIORITY_EMERGENCY = 0
