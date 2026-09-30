@@ -11,7 +11,7 @@ import time
 class RS485Communication:
     """RS485通信类（队列化 + 异步 + 同步兼容）"""
 
-    def __init__(self, port: str, baudrate: int = 115200, timeout: float = 1.0, board_id: int = BOARDTYPE_FIVE_AXIS):
+    def __init__(self, port: str, baudrate: int = 115200, timeout: float = 1.0, board_id: int = BOARDTYPE_STEP):
         self.port = port
         self.baudrate = baudrate
         self.timeout = timeout

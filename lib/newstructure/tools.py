@@ -302,7 +302,7 @@ def get_boardlist():
                 "port":"COM2",
                 "baudrate":STEP_BAUT_RATE,
                 "timeout":BOARD_TIMEOUT,
-                "board_id":BOARDTYPE_FIVE_AXIS
+                "board_id":BOARDTYPE_STEP
             },
             {
                 "name":"feedermotor",
@@ -326,7 +326,7 @@ def get_boardlist():
                 "port":STEP_PORT,
                 "baudrate":STEP_BAUT_RATE,
                 "timeout":BOARD_TIMEOUT,
-                "board_id":BOARDTYPE_FIVE_AXIS
+                "board_id":BOARDTYPE_STEP
             },
             {
                 "name":"feedermotor",

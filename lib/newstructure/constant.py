@@ -1,10 +1,10 @@
 ########电路板通用配置#########
 BOARDTYPE_FEEDER = 1     # 加料板
-BOARDTYPE_FIVE_AXIS = 2  # 五轴板
-BOARDTYPE_SPIN = 3       # 旋转DC板
+BOARDTYPE_STEP = 2       # 步进板
+BOARDTYPE_SPIN = 3       # 旋转板
 
 BOARD_NAME_MAP={
-    "stepmotor":BOARDTYPE_FIVE_AXIS,
+    "stepmotor":BOARDTYPE_STEP,
     "feedmotor":BOARDTYPE_FEEDER,
     "spinmotor":BOARDTYPE_SPIN
 }

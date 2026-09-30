@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from typing import List,Tuple,Type
-from lib.newstructure.constant import BOARDTYPE_FEEDER,BOARDTYPE_FIVE_AXIS,BOARDTYPE_SPIN
+from lib.newstructure.constant import BOARDTYPE_FEEDER,BOARDTYPE_STEP,BOARDTYPE_SPIN
 from lib.newstructure.tools import CRCUtil
 from lib.newstructure.tools import parse_motor_pulses,parse_motor_status,parse_all_motor_pulses,parse_all_motor_status
 
@@ -12,7 +12,7 @@ class ProtocolBase(ABC):
     def parse_response(self, command:str,response: str) -> Tuple[bool, str, List[str]]:
         pass
 
-class FiveAxisProtocol(ProtocolBase):
+class StepProtocol(ProtocolBase):
     def build_command(self, command: str, params: List[str] = None) -> str:
         cmd_str = f"#{command}"
         if params:
@@ -210,5 +210,5 @@ class ProtocolFactory:
         return protocol_cls()
     
 ProtocolFactory.register(BOARDTYPE_FEEDER, FeederProtocol)
-ProtocolFactory.register(BOARDTYPE_FIVE_AXIS, FiveAxisProtocol)    
+ProtocolFactory.register(BOARDTYPE_STEP, StepProtocol)    
 ProtocolFactory.register(BOARDTYPE_SPIN, SpinerProtocol)    
