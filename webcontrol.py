@@ -136,6 +136,22 @@ def runtastmotor():
         print("测试加料板打开失败!")
         return jsonify({"status": "fail","message": f"运转失败!错误:{msg}"})
 
+
+@app.route('/reboottastmotor', methods=['POST'])
+@require_enabled
+def reboottastmotor():
+    print("测试加料板重启")
+    data = request.get_json()
+    success = False
+  
+    success,msg =  system["cookservice"].run_tastemotor_cmd(int(POT1_FLAVORMOTOR1),"rebootfeeder",{})
+    if success :
+        print("测试加料板打开成功!")
+        return jsonify({"status": "success","message": f"重启电机运行成功"})
+    else:
+        print("测试加料板打开失败!")
+        return jsonify({"status": "fail","message": f"运转失败!错误:{msg}"})    
+
 @app.route('/gettastmotorfb', methods=['POST'])
 @require_enabled
 def gettastmotorfb():

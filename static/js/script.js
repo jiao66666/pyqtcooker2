@@ -370,6 +370,26 @@ function runTastMotor() {
         });
 }
 
+function rebootTastMotor() {
+        fetch('/reboottastmotor', {
+            method: 'POST', 
+            headers: {
+                'Content-Type': 'application/json'  
+            },
+            body: JSON.stringify({
+               
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            addMessage(`${data.message}`);  // 将收到的消息保存并显示
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            addMessage("Error starting motor.");
+        });
+}
+
 
 function getTastMotorFb(mode) {
         var tastMotorIDSelect = document.getElementById("tastmotorid");

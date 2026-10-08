@@ -59,5 +59,15 @@ class FeederMotor:
         return True
 
 
+    def reboot(self):
+        """重启加料电机"""  ##相对运动
+        print("####重启加料电机####")
+        self.com.execute_command_async(
+            "REBOOT", 
+            [str(self.board_id)],
+            priority = PRIORITY_CONTROL
+        )
+
+        return True
 
 

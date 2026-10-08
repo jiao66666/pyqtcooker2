@@ -18,6 +18,7 @@ class CookerService:
             "ping":self._ping_action,
             "openfeeder":self._openfeedermotor_action,
             "getfeeder":self._getfeedermotor_action,
+            "rebootfeeder":self._rebootfeedermotors_action,
             "dc_longrun":self._dclongrun_action,
             "dc_run":self._dcrun_action,
             "dc_stop":self._dcstop_action,
@@ -232,6 +233,9 @@ class CookerService:
 
     def _openfeedermotor_action(self,motor,params):
         motor.run(params["overtime"])
+
+    def _rebootfeedermotors_action(self,motor,params):
+        motor.reboot()        
 
     def _getfeedermotor_action(self,motor,params):
         motor.getfb(params["mode"])  
