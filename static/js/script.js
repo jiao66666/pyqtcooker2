@@ -425,7 +425,7 @@ let motorPressed = {};
 function startMotor(potnum,directionstr) {
 
         const key = `${potnum}_${directionstr}`;
-
+        console.log("start current key:"+key)
         // 已经按下了，不重复启动
         if (motorPressed[key]) {
             console.log("不用重复触发")
@@ -476,7 +476,7 @@ function startMotor(potnum,directionstr) {
 function pauseMotor(potnum,directionstr) {
      // 获取 select 元素
         const key = `${potnum}_${directionstr}`;
-
+        console.log("【pause current key】:"+key)
         // 已经按下了，不重复启动
         if (!motorPressed[key]) {
             console.log("不用重复触发")
@@ -969,7 +969,7 @@ function testDC_command(command,pot,direction = 1) {
 
 function getSelectedValue(name) {
     const box = document.getElementById(name);
-    console.log("reading value"+box.dataset.value)
+    //console.log("reading value"+box.dataset.value)
     return box.dataset.value;
 }
 
