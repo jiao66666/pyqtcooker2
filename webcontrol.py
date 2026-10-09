@@ -60,7 +60,7 @@ def connect():
     if system["state"]["mode"] == "READY":
         return jsonify({"status": "success","message": "已使能，请勿重复提交!"})
 
-    success,msg=system["motorsmanager"].enable_all_motors()
+    success,msg=system["stepmotorsmanager"].enable_all_motors()
     if success:
         print("使能成功!")
         runtime.set_all_enabled(True)
@@ -83,7 +83,7 @@ def dynamicSpeed():
     print("dynamic speed")
     data = request.get_json()
     speed = data.get('speed')
-    success=system["motorsmanager"].speed_all(speed*360)
+    success=system["stepmotorsmanager"].speed_all(speed*360)
     if success:
         print("动态修改速度成功!")
         return jsonify({"status": "success","message": "动态修改速度成功!"})
@@ -269,8 +269,8 @@ def stop():
 @app.route('/stopall', methods=['POST'])
 def stopall():
     print("所有电机急停")
-    success1 = system["motorsmanager"].stop_all_motors()
-    success2 = system["motorsmanager"].reset_home_all()
+    success1 = system["stepmotorsmanager"].stop_all_motors()
+    success2 = system["stepmotorsmanager"].reset_home_all()
     set_system_dirty(system,True)
     set_system_state(system,"EMERGENCY")
     runtime.set_all_enabled(False)
@@ -291,7 +291,7 @@ def stopall():
 def initall():
     print("所有电机恢复")
     success = recovery_system(system)
-    success2,msg = system["motorsmanager"].enable_all_motors()
+    success2,msg = system["stepmotorsmanager"].enable_all_motors()
     if success and success2:
         print("测试成功!")
         runtime.set_all_enabled(True)

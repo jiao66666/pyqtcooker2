@@ -78,21 +78,7 @@ class SpinMotor:
         )
       
         return True         
-
-
-    def setspeedall(self,speed):
-        """批量设置电机速度"""
-        print("####批量设置电机速度####")
-        print(f"[{self.name}] ID:{self.motor_id} 设置DC电机速度... 主板类型:{self.board_id}")
-      
-         # 发送运行命令
-        self.com.execute_command_async(
-            "SPEED", 
-            [str(self.board_id), "0",str(speed),str(speed)],
-            priority = PRIORITY_CONTROL
-        )
-      
-        return True         
+ 
 
 
         

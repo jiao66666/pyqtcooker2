@@ -235,10 +235,13 @@ class CookerService:
         motor.run(params["overtime"])
 
     def _rebootfeedermotors_action(self,motor,params):
-        motor.reboot()        
+        self.system["feedermotorsmanager"].reboot()        
 
     def _getfeedermotor_action(self,motor,params):
-        motor.getfb(params["mode"])  
+        if params["mode"]==0:
+          self.system["feedermotorsmanager"].getfball()
+        else:
+          motor.getfb()  
 
 
     def _dclongrun_action(self,motor,params):
@@ -254,7 +257,7 @@ class CookerService:
         motor.setspeed(params["speed"])     
 
     def _dcspeedall_action(self,motor,params):
-        motor.setspeedall(params["speed"])    
+        self.system["spinmotorsmanager"].setspeedall(params["speed"])    
 
                             
 

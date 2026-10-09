@@ -40,34 +40,18 @@ class FeederMotor:
 
         return True
 
-    def getfb(self,mode:int)-> Tuple[bool, List[str]]:
+    def getfb(self)-> Tuple[bool, List[str]]:
         """获取加料电机反馈""" 
-        print("####获取加料电机反馈####")
-        if mode == 0:
-            print("获取所有加料电机反馈")
-            motors = "1-24"
-        else:
-            print("获取指定加料电机反馈")
-            motors = str(self.motor_id)
-
+        print("获取指定加料电机反馈")
+        motors = str(self.motor_id)
         self.com.execute_command_async(
             "GETFB", 
             [str(self.board_id), motors,"0","1"],
             priority = PRIORITY_CONTROL
         )
-
         return True
 
 
-    def reboot(self):
-        """重启加料电机"""  ##相对运动
-        print("####重启加料电机####")
-        self.com.execute_command_async(
-            "REBOOT", 
-            [str(self.board_id)],
-            priority = PRIORITY_CONTROL
-        )
 
-        return True
 
 

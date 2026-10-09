@@ -100,7 +100,7 @@ class PotStateMachine:
                 print("motor time out !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
                 step = self.steps[self.current_step]
                 #system = get_system()
-                #system["motorsmanager"].stop_all_motors()
+                #system["stepmotorsmanager"].stop_all_motors()
                 self.state = "ERROR"
                 self.error_info = {
                     "step": self.current_step,

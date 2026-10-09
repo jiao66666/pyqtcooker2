@@ -16,6 +16,9 @@ from lib.newstructure.feedermotorpollingservice import FeederMotorPollingService
 
 from lib.newstructure.motioncontroller import MotionController
 from lib.newstructure.stepmotor_manager import StepMotorManager
+from lib.newstructure.feedermotor_manager import FeederMotorManager
+from lib.newstructure.spinmotor_manager import SpinMotorManager
+
 from lib.newstructure.command_dispatcher import CommandDispatcher
 from lib.newstructure.taskresourcemanager import TaskResourceManager
 import lib.newstructure.tools as tools
@@ -32,7 +35,7 @@ def build_system():
 
     motors = buildmotors(bus,boards)
 
-    motors_manager = buildmotors_manager(bus,boards,motors)
+    motors_manager = build_motors_manager(bus,boards,motors)
 
     stepbuilder = StepBuilder(motors["stepmotor"])
 
@@ -71,7 +74,9 @@ def build_system():
         "boards":boards,
         "websocket":websocket_server,
         "motors":motors,
-        "motorsmanager":motors_manager,
+        "stepmotorsmanager":motors_manager["step"],
+        "feedermotorsmanager":motors_manager["feeder"],
+        "spinmotorsmanager":motors_manager["spin"],
         "dispatcher":dispatcher,
         "mockmotor":mockmotor,
     }
@@ -118,7 +123,7 @@ def stop_system_state(system):
 
 
 def shutdown_device(system):
-    motors = system["motorsmanager"]
+    motors = system["stepmotorsmanager"]
     motors.stop_all_motors()
     system["pots"][1].reset()
     system["pots"][2].reset()
@@ -138,10 +143,10 @@ def shutdown_system(system):
     # 0. 先安全停止所有电机（新增）
     # =========================
     try:
-        if "motorsmanager" in system:
+        if "stepmotorsmanager" in system:
             print("停止所有电机...")
-            system["motorsmanager"].stop_all_motors()
-            system["motorsmanager"].reset_home_all()
+            system["stepmotorsmanager"].stop_all_motors()
+            system["stepmotorsmanager"].reset_home_all()
     except Exception as e:
         print(f"停止电机失败: {e}")
 
@@ -261,8 +266,12 @@ def buildmotors(bus,boards):
     }
 
 #电机管理器创建
-def buildmotors_manager(bus,boards,motors):
-    return StepMotorManager(boards["stepmotor"].board_id,motors["stepmotor"],boards["stepmotor"])
+def build_motors_manager(bus,boards,motors):
+    return {
+        "step":StepMotorManager(boards["stepmotor"].board_id,motors["stepmotor"],boards["stepmotor"]),
+        "feeder":FeederMotorManager(boards["feedermotor"].board_id,motors["feedermotor"],boards["feedermotor"]),
+        "spin":SpinMotorManager(boards["spinmotor"].board_id,motors["spinmotor"],boards["spinmotor"])
+        }
 
 #初始化轮询状态
 def init_system():
