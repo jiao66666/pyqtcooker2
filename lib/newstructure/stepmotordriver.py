@@ -187,7 +187,7 @@ class StepMotor:
 
     def pause(self):
         """暂停电机"""       
-        print("####暂停电机####")
+        print("####暂停电机####")   #目前runlong和pause存在 不匹配，因为两个指令加锁不同，暂时不影响 实际运行，如果影响实际运行，考虑改结构解决
         print(f"[{self.name}] ID:{self.motor_id} 暂停中... 主板类型:{self.board_id}")
       
          # 发送运行命令
