@@ -499,6 +499,7 @@ def getTestDCMsg(pot,action,direction):
         astr="速度"  
     elif action == "dc_speedall":
         astr="批量速度"
+        pot="1-2"
     else:
         astr="执行"
 
