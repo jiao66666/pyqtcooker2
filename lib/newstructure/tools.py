@@ -299,21 +299,21 @@ def get_boardlist():
         return [
             {
                 "name":"stepmotor",
-                "port":"COM2",
+                "port":DEV_STEP_PORT,
                 "baudrate":STEP_BAUT_RATE,
                 "timeout":BOARD_TIMEOUT,
                 "board_id":BOARDTYPE_STEP
             },
             {
                 "name":"feedermotor",
-                "port":"COM3",
+                "port":DEV_FEED_PORT,
                 "baudrate":STEP_BAUT_RATE,
                 "timeout":BOARD_TIMEOUT,
                 "board_id":BOARDTYPE_FEEDER
             },
             {
                 "name":"spinmotor",
-                "port":"COM4",
+                "port":DEV_SPIN_PORT,
                 "baudrate":STEP_BAUT_RATE,
                 "timeout":BOARD_TIMEOUT,
                 "board_id":BOARDTYPE_SPIN
