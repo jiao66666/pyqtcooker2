@@ -15,7 +15,7 @@ POT2 = 2
 
 
 #######步进板配置######
-POT_BACKUP_MOTOR= 0  # 1号锅移动电机编号
+POT_BACKUP_MOTOR= 0  # 空位
 POT1_MOVE_MOTOR = 2  # 1号锅移动电机编号
 POT1_FLIP_MOTOR = 1  # 1号锅翻转电机编号
 POT2_MOVE_MOTOR = 4  # 2号锅移动电机编号
