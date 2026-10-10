@@ -18,6 +18,9 @@ app = Flask(__name__)
 #  仅供测试连接存储 
 test_connections = {}
 
+#  全局window实例
+window = None
+
 # 根据传入的命令行参数设置端口,方便测试和生产环境使用不同的端口
 if is_dev_mode():
     print("当前环境: 开发环境，使用测试端口")
@@ -100,6 +103,8 @@ def disconnect():
         print("关闭炒菜机成功!")
         stop_system_state(system)
         system["websocket"].send_system_state()
+        shutdown_system(system)
+        window.destroy()
         return jsonify({"status": "success","message": "关闭成功!"})
     else:
         print("关闭炒菜机失败!")
@@ -656,6 +661,8 @@ def start_server():
 
 #启动webview的Windows窗口控制UI
 def start_webview():
+    global window  # 关键：声明使用全局变量
+
     url = f"http://127.0.0.1:{port}"
 
     screen = webview.screens[0]
@@ -671,10 +678,11 @@ def start_webview():
         height=height,
         x=x,
         y=y,
-        min_size=(width, height)
+        min_size=(width, height),
+        frameless=True
     )
 
-    window.events.closing += on_windows_closing
+    #window.events.closing += on_windows_closing
     window.events.closed += on_windows_close
     webview.start(gui='edgechromium')
 
