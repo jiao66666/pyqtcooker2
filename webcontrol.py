@@ -103,8 +103,6 @@ def disconnect():
         print("关闭炒菜机成功!")
         stop_system_state(system)
         system["websocket"].send_system_state()
-        shutdown_system(system)
-        window.destroy()
         return jsonify({"status": "success","message": "关闭成功!"})
     else:
         print("关闭炒菜机失败!")
