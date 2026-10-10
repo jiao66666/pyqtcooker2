@@ -1727,7 +1727,7 @@ window.onload = ()=>{
 
 window.addEventListener('pywebviewready', function () {
     document.querySelectorAll('.webview-only').forEach(function (el) {
-        el.style.display = 'flex';
+        el.style.display = 'block';
     });
 });
 

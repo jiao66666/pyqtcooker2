@@ -949,12 +949,15 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
 }
 
 .webview-only{
-    display:none; 
-    flex-flow: row nowrap;
-    align-items: center;
+   /*display:none;*/
+   position:absolute;
+   right:0;
+   top:0;
 }
 
 .closebtn{
-    margin-left:auto;
+    border:none;
     border-radius: 50%;
+    width:25px;
+    height:25px;
 }
