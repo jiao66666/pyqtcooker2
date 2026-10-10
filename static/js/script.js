@@ -953,7 +953,7 @@ function testDC_command(command,pot,direction = 1) {
             return;
         }
 
-       if(dc_speed.value>1000){
+       if(dc_speed.value>3000){
            alert("超出最大有效速度！");
            return;
        }
