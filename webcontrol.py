@@ -679,7 +679,8 @@ def start_webview():
         x=x,
         y=y,
         min_size=(width, height),
-        frameless=True
+        frameless=True,
+        easy_drag=False  # 禁止通过网页任意位置拖动窗口
     )
 
     #window.events.closing += on_windows_closing
