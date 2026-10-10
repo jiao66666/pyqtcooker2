@@ -939,3 +939,11 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
     background-color: #eee!important;
     color:#333!important;
 }
+.toptitle_con{
+    display: flex;
+    flex-flow:row nowrap;
+    align-items: center;
+    justify-content: center;
+    color:#333;
+    font-size:16px;
+}
