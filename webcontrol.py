@@ -643,6 +643,31 @@ def sendCom():
         })
 
 
+
+@app.route('/closeWebview', methods=['POST'])
+def closeWebview():
+    print("关闭窗口")
+    data = request.get_json()
+
+    result = webview.windows[0].create_confirmation_dialog(
+        "关闭确认",
+        "确定要关闭炒菜机控制系统吗？"
+    )
+
+    if result:
+        shutdown_system(system)
+        window.destroy()
+
+        return jsonify({
+            "status": "success",
+            "message": f"关闭成功"
+        })
+    else:
+        return jsonify({
+            "status": "success",
+            "message": f"用户取消"
+        })
+
 #启动flask后端服务器WEB UI
 def run_flask():
     app.run(

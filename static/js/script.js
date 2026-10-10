@@ -674,6 +674,28 @@ function stopMotor(potnum,directionstr) {
 }
 
 
+function closeWebview(){
+        fetch('/closeWebview', {
+            method: 'POST', 
+            headers: {
+                'Content-Type': 'application/json'  
+            },
+            body: JSON.stringify({
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if(data.status === "success"){
+                addMessage(`${data.message}`);  // 将收到的消息保存并显示
+            }
+            
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            addMessage("Error starting motor.");
+        });
+}
+
 
 
 function resetMotorPot(potnum) {
@@ -1703,4 +1725,9 @@ window.onload = ()=>{
 
 };
 
+window.addEventListener('pywebviewready', function () {
+    document.querySelectorAll('.webview-only').forEach(function (el) {
+        el.style.display = 'flex';
+    });
+});
 

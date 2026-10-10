@@ -947,3 +947,14 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
     color:#333;
     font-size:16px;
 }
+
+.webview-only{
+    display:none; 
+    flex-flow: row nowrap;
+    align-items: center;
+}
+
+.closebtn{
+    margin-left:auto;
+    border-radius: 50%;
+}
