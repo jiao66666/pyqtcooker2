@@ -683,8 +683,7 @@ def testaction():
     action_param = action
     pot_param = pot
     success,msg = system["cookservice"].run_task(action_param,pot_param)
-    #模拟成功
-    success = True
+    
     if success :
         print("测试成功!")
         return jsonify({"status": "success","message": f"提交数据测试成功!"})
