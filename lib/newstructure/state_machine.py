@@ -183,7 +183,7 @@ class PotStateMachine:
 
      
         print(f"motor {motor_id} done the action {step['action']}")
-        print(f"OK检查未过关OK{ctx['action']},{step['action']},{data['motor_id']},{step['motor'].motor_id}")
+        print(f"OK检查过关OK{ctx['action']},{step['action']},{data['motor_id']},{step['motor'].motor_id}")
 
         if self.need_track_release(step["action"]):  #如果需要跨动作释放，则加变量self.track_accuired 进行保存跨多个动作判断
             self.track.release(self.pot_id)
