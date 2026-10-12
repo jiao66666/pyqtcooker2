@@ -987,7 +987,27 @@ function testDC_command(command,pot,direction = 1) {
 }
 
 
-
+function testaction(pot,action) {
+        console.log("获取参数pot:"+pot+"|action:"+action)
+        fetch('/testaction', {
+            method: 'POST', 
+            headers: {
+                'Content-Type': 'application/json'  
+            },
+            body: JSON.stringify({
+                pot:pot,
+                action:action
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+             addMessage(``+data.message);  // 将收到的消息保存并显示
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            addMessage("Error starting motor.");
+        });
+}
 
 function getSelectedValue(name) {
     const box = document.getElementById(name);

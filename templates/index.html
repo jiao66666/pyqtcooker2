@@ -57,9 +57,10 @@
     <div class="tab-buttons">
         <button class="active" onclick="showTab(1, this)">手动操控区</button>
         <button onclick="showTab(2, this)">步进电机板</button>
-        <button onclick="showTab(3, this)">DC锅旋转板</button>
-        <button onclick="showTab(4, this)">加料板</button>
+        <button onclick="showTab(3, this)">锅旋转板</button>
+        <button onclick="showTab(4, this)">加料电机板</button>
         <button onclick="showTab(5, this)">数据测试区</button>
+        <button onclick="showTab(6, this)">动作测试区</button>
     </div>
 
     <div id="tab1" class="tab-content" style="display:block;">
@@ -352,40 +353,43 @@
                 左侧：指令发送
                 ========================= -->
             <div class="command-left">
-                <div class="tastmotorid_select_row">
-                    <label for="boardtype">主板类型:</label>
-                    <select id="boardtype" name="boardtype">
-                        <option value="stepmotor">步进电机板</option>
-                        <option value="spinmotor">DC锅旋转板</option>
-                        <option value="feedermotor">加料板</option>
-                    </select>
+                <div class="companel_con">
+                  <div class="companel_top">指令发送测试</div>   
+
+                    <div class="tastmotorid_select_row">
+                        <label for="boardtype">主板类型:</label>
+                        <select id="boardtype" name="boardtype">
+                            <option value="stepmotor">步进电机板</option>
+                            <option value="spinmotor">DC锅旋转板</option>
+                            <option value="feedermotor">加料板</option>
+                        </select>
+                    </div>
+                    <!-- 第一行：输入框 -->
+                    <div class="command-input-row">
+
+                        <input
+                            type="text"
+                            class="command-input"
+                            v-model="commandInput"
+                            placeholder="请输入步进电机主板指令..."
+                            @keyup.enter="sendCommand"
+                        >
+
+                    </div>
+
+
+                    <!-- 第二行：发送按钮 -->
+                    <div class="command-button-row">
+
+                        <button
+                            class="send-command-btn"
+                            @click="sendCommand"
+                        >
+                            发送指令
+                        </button>
+
+                    </div>
                 </div>
-                <!-- 第一行：输入框 -->
-                <div class="command-input-row">
-
-                    <input
-                        type="text"
-                        class="command-input"
-                        v-model="commandInput"
-                        placeholder="请输入步进电机主板指令..."
-                        @keyup.enter="sendCommand"
-                    >
-
-                </div>
-
-
-                <!-- 第二行：发送按钮 -->
-                <div class="command-button-row">
-
-                    <button
-                        class="send-command-btn"
-                        @click="sendCommand"
-                    >
-                        发送指令
-                    </button>
-
-                </div>
-
 
                 <div class="companel_con">
                      <div class="companel_top">手动通讯测试</div>
@@ -539,6 +543,17 @@
 
 
 
+     <div id="tab6" class="tab-content">
+         <div class="actionpanel_con">
+              <div class="actionpanel_title">电机动作测试区</div>
+              <div class="actionpanel_btnarea">
+                  <div class="actionpanel_btn" onclick="testaction(1,'test_movemove')">1号锅【移动-移动】</div>
+                  <div class="actionpanel_btn" onclick="testaction(2,'test_movemove')">2号锅【移动-移动】</div>
+                  <div class="actionpanel_btn" onclick="testaction(1,'test_moveflip')">1号锅【移动-反转】</div>
+                  <div class="actionpanel_btn" onclick="testaction(2,'test_moveflip')">2号锅【移动-反转】</div>
+              </div>
+         </div>
+     </div>
 
     
     <div class="prompt">控制台消息</div>

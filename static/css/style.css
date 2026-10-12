@@ -961,3 +961,39 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
     width:25px;
     height:25px;
 }
+
+.actionpanel_con{
+    display:flex;
+    flex-flow: column nowrap;
+    border:1px dashed #ccc;
+    padding:10px;
+}
+
+.actionpanel_title{
+    display:flex;
+    flex-flow:row nowrap;
+    align-items: center;
+    justify-content: center;
+    color:#333;
+    font-size:16px;
+}
+
+.actionpanel_btnarea{
+    display:flex;
+    flex-flow: row wrap;
+}
+
+.actionpanel_btn{
+    background-color: #efefef;
+    color:#333;
+    display: flex;
+    flex-flow:row nowrap;
+    align-items: center;
+    justify-content: center;
+    flex:1 1 40%;
+    border-radius:10px;
+    padding:10px;
+    margin-right:10px;
+    margin-top:10px;
+}
+

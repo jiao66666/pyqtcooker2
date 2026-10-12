@@ -169,7 +169,15 @@ ACTION_PARAMS_KEYLIST = {
             ("h", "move_to_track"),
         ]),
         ("v","flip_in_firepot")
-    ]
+    ],
+    "test_movemove":[
+        ("h","move_right"),
+        ("h","move_left")
+    ],
+    "test_moveflip":[
+        ("h","move_right"),
+        ("v","flip_in")
+    ],
 }
 
 #子动作参数KEY->命令参数 映射
@@ -254,6 +262,30 @@ ACTION_PARAMS_CONFIG = {
         "quitinadvance":0
     },
     "flip_in_firepot":{
+        "speed": 360,
+        "target":0,
+        "varspeed":False,
+        "quitinadvance":0
+    },
+    "move_right":{
+        "speed": 360,
+        "target":1,
+        "varspeed":False,
+        "quitinadvance":0
+    },
+    "move_left":{
+        "speed": 360,
+        "target":0,
+        "varspeed":False,
+        "quitinadvance":0
+    },
+    "flip_in":{
+        "speed": 360,
+        "target":1,
+        "varspeed":False,
+        "quitinadvance":0
+    },
+    "flip_out":{
         "speed": 360,
         "target":0,
         "varspeed":False,

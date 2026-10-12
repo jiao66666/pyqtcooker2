@@ -668,6 +668,31 @@ def closeWebview():
             "message": f"用户取消"
         })
 
+
+
+@app.route('/testaction', methods=['POST'])
+@require_enabled
+def testaction():
+    print("动作测试")
+    data = request.get_json()
+    pot = data.get('pot')
+    action= data.get('action')
+
+    print(f"pot:{pot},action:{action}")
+    success = False
+    action_param = action
+    pot_param = pot
+    success,msg = system["cookservice"].run_task(action_param,pot_param)
+    #模拟成功
+    success = True
+    if success :
+        print("测试成功!")
+        return jsonify({"status": "success","message": f"提交数据测试成功!"})
+    else:
+        print("测试失败!")
+        return jsonify({"status": "fail","message": f"提交数据测试失败！错误:{msg}"})    
+
+
 #启动flask后端服务器WEB UI
 def run_flask():
     app.run(
