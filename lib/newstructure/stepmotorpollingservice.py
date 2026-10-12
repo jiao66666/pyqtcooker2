@@ -383,6 +383,7 @@ class StepMotorPollingService:
 
         runtime.set_done(motor_id)
 
+        #time.sleep(2.0)
         self.bus.publish(
             "MOTOR_DONE",
             {"motor_id": motor_id}

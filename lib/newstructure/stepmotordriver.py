@@ -136,7 +136,7 @@ class StepMotor:
         """异步运行电机（基于通信队列，无线程）"""
         print("####运行电机####")
         if self.cmd_running :
-            print("命令还在运行中")
+            print("run命令还在运行中")
             return False
 
         print(f"[{self.name}] ID:{self.motor_id} 运行 {circles} 圈, 角速度 {anglespeed}")
