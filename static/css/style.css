@@ -82,7 +82,8 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
     flex-flow: row nowrap;
     align-items: center;
     justify-content: space-between;
-    margin-top:15px;
+    margin-top:35px;
+    margin-bottom:35px;
 }
 
 .motor_container .motor{
