@@ -1061,7 +1061,7 @@ function stopIceMotor() {
 
 function getSelectedValue(name) {
     const box = document.getElementById(name);
-    //console.log("reading value"+box.dataset.value)
+    console.log("getSelectedValue ,reading value is:"+box.dataset.value)
     return box.dataset.value;
 }
 
@@ -1082,7 +1082,9 @@ function setSpeed(el,speedvalue){
 function setIceMotor(el,value){
     const box = document.getElementById("icemotor");
     box.dataset.value = value;
-    console.log("setting icemotor value"+value);
+    console.log("setting icemotor value:"+value);
+    console.log("原始值:", JSON.stringify(value));
+    console.log("数据值:", JSON.stringify(box.dataset.value));
 
     document.querySelectorAll('.ice_circle').forEach(item => {
         item.classList.remove('ice_selected');
@@ -1133,18 +1135,18 @@ document.addEventListener("DOMContentLoaded", () => {
     const first = document.querySelector('.speed_circle'); //  就是第一个
     
     if (first) {
-        setSpeed(first, first.innerText);
+        setSpeed(first, first.innerText.trim());
     }
 
     const firstel = document.querySelector('.potnum_circle'); //  就是第一个
 
     if (firstel) {
-        setPotnum(firstel, firstel.innerText);
+        setPotnum(firstel, firstel.innerText.trim());
     }
 
     const firstice = document.querySelector('.ice_circle'); //  就是第一个
     if (firstice) {
-        setIceMotor(firstice, firstice.innerText);
+        setIceMotor(firstice, firstice.innerText.trim());
     }
 });
 //转换为具体电机和方向
