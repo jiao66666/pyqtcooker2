@@ -47,7 +47,7 @@ class StepMotorManager:
 
         if self.cmd_running:
             print("命令还在执行中")
-            return False
+            return False,["命令还在运行中"]
 
         self.cmd_running = True
 
@@ -58,7 +58,7 @@ class StepMotorManager:
             priority=PRIORITY_CONTROL
         )
 
-        return True  
+        return True,["执行成功"]  
     
     def reset_home_all(self):
         for motor in self.motors.values():

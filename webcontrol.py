@@ -63,18 +63,18 @@ def connect():
     if system["state"]["mode"] == "READY":
         return jsonify({"status": "success","message": "已使能，请勿重复提交!"})
 
-    success,msg=system["stepmotorsmanager"].enable_all_motors()
-    if success:
+    success1,msg1=system["stepmotorsmanager"].enable_all_motors()
+    success2,msg2=system["icemotorsmanager"].enable_all_motors()
+    if success1 and success2:
         print("使能成功!")
         runtime.set_all_enabled(True)
-        #if system["state"]["dirty"]:
         recovery_system(system)
         start_system_state(system)
         system["websocket"].send_system_state()
         return jsonify({"status": "success","message": "使能成功!"})
     else:
         print("使能失败!")
-        return jsonify({"status": "fail","message": msg})
+        return jsonify({"status": "fail","message": f"potstep:{msg1},icestep:{msg2}"})
     
 
 
@@ -690,6 +690,45 @@ def testaction():
     else:
         print("测试失败!")
         return jsonify({"status": "fail","message": f"提交数据测试失败！错误:{msg}"})    
+
+
+
+@app.route('/resetIceMotor', methods=['POST'])
+@require_enabled
+def resetIceMotor():
+    print("动作测试")
+    data = request.get_json()
+    positive = data.get('positive')
+    motorid = data.get('motorid')
+    print(f"positive:{positive},motorid:{motorid}")
+    success = False
+    
+    success,msg = system["motors"]["icemotor"][int(motorid)].reset_zero_both(int(positive))
+    
+    if success :
+        print("测试成功!")
+        return jsonify({"status": "success","message": f"提交数据测试成功!"})
+    else:
+        print("测试失败!")
+        return jsonify({"status": "fail","message": f"提交数据测试失败！错误:{msg}"})    
+    
+
+@app.route('/stopIceMotor', methods=['POST'])
+@require_enabled
+def stopIceMotor():
+    print("动作测试")
+    data = request.get_json()
+    success = False
+    success,msg = system["icemotorsmanager"].stop_all_motors()
+    
+    if success :
+        print("测试成功!")
+        return jsonify({"status": "success","message": f"提交数据测试成功!"})
+    else:
+        print("测试失败!")
+        return jsonify({"status": "fail","message": f"提交数据测试失败！错误:{msg}"}) 
+
+
 
 
 #启动flask后端服务器WEB UI

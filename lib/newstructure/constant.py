@@ -1,12 +1,14 @@
 ########电路板通用配置#########
 BOARDTYPE_FEEDER = 1     # 加料板
-BOARDTYPE_STEP = 2       # 步进板
+BOARDTYPE_STEP = 2       # 锅步进板
 BOARDTYPE_SPIN = 3       # 旋转板
+BOARDTYPE_ICE  = 4       # 冰柜步进板
 
 BOARD_NAME_MAP={
     "stepmotor":BOARDTYPE_STEP,
     "feedmotor":BOARDTYPE_FEEDER,
-    "spinmotor":BOARDTYPE_SPIN
+    "spinmotor":BOARDTYPE_SPIN,
+    "icemotor":BOARDTYPE_ICE
 }
 
 ########锅设置########
@@ -14,12 +16,12 @@ POT1 = 1
 POT2 = 2
 
 
-#######步进板配置######
-POT_BACKUP_MOTOR= 0  # 空位
-POT1_MOVE_MOTOR = 2  # 1号锅移动电机编号
-POT1_FLIP_MOTOR = 1  # 1号锅翻转电机编号
-POT2_MOVE_MOTOR = 4  # 2号锅移动电机编号
-POT2_FLIP_MOTOR = 3  # 2号锅翻转电机编号
+#######锅，冰柜步进板配置######
+POT_BACKUP_MOTOR= ICE_MOTOR_0 = 0  # 空位
+POT1_MOVE_MOTOR = ICE_MOTOR_2 = 2  # 1号锅移动电机编号
+POT1_FLIP_MOTOR = ICE_MOTOR_1 = 1  # 1号锅翻转电机编号
+POT2_MOVE_MOTOR = ICE_MOTOR_4 = 4  # 2号锅移动电机编号
+POT2_FLIP_MOTOR = ICE_MOTOR_3 = 3  # 2号锅翻转电机编号
 
 MOTOR_LIST = [POT_BACKUP_MOTOR,POT1_MOVE_MOTOR,POT1_FLIP_MOTOR,POT2_MOVE_MOTOR,POT2_FLIP_MOTOR]
 
@@ -315,6 +317,7 @@ MAX_CMD_NUMS = 2000
 DEV_STEP_PORT = "COM2"
 DEV_FEED_PORT = "COM3"
 DEV_SPIN_PORT = "COM4"
+DEV_ICE_PORT  = "COM5"
 
 
 #生产环境端口波动率设置
@@ -323,6 +326,7 @@ FEED_BAUT_RATE = 9600
 STEP_PORT   = "COM6"
 FEED_PORT   = "COM7"
 SPIN_PORT   = "COM8"
+ICE_PORT    = "COM11"
 
 POT_STATEMACHINE_INTERVAL = 0.05  #锅状态机主循环频率
 BOARD_TIMEOUT = 1.0  # 生产环境可修改为1.0

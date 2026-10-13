@@ -1009,6 +1009,56 @@ function testaction(pot,action) {
         });
 }
 
+
+function resetIceMotor(positive) {
+          // 获取 select 元素
+        var motorid = getSelectedValue("icemotor");
+        console.log("motorid",motorid)
+        //console.log("选中速度值是:", speed);
+        console.log("获取参数positive:"+positive+"motorid:"+motorid)
+        fetch('/resetIceMotor', {
+            method: 'POST', 
+            headers: {
+                'Content-Type': 'application/json'  
+            },
+            body: JSON.stringify({
+                positive:positive,
+                motorid:motorid
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+             addMessage(``+data.message);  // 将收到的消息保存并显示
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            addMessage("Error starting motor.");
+        });
+}
+
+
+function stopIceMotor() {
+      
+        fetch('/stopIceMotor', {
+            method: 'POST', 
+            headers: {
+                'Content-Type': 'application/json'  
+            },
+            body: JSON.stringify({
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+             addMessage(``+data.message);  // 将收到的消息保存并显示
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            addMessage("Error starting motor.");
+        });
+}
+
+
+
 function getSelectedValue(name) {
     const box = document.getElementById(name);
     //console.log("reading value"+box.dataset.value)
@@ -1025,6 +1075,20 @@ function setSpeed(el,speedvalue){
     });
 
     el.classList.add('speed_selected');
+    //updateSpeed(parseInt(speedvalue))
+}
+
+
+function setIceMotor(el,value){
+    const box = document.getElementById("icemotor");
+    box.dataset.value = value;
+    console.log("setting icemotor value"+value);
+
+    document.querySelectorAll('.ice_circle').forEach(item => {
+        item.classList.remove('ice_selected');
+    });
+
+    el.classList.add('ice_selected');
     //updateSpeed(parseInt(speedvalue))
 }
 
@@ -1067,7 +1131,7 @@ function updateSpeed(speedval) {
 //初始化速度 
 document.addEventListener("DOMContentLoaded", () => {
     const first = document.querySelector('.speed_circle'); //  就是第一个
-
+    
     if (first) {
         setSpeed(first, first.innerText);
     }
@@ -1076,6 +1140,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (firstel) {
         setPotnum(firstel, firstel.innerText);
+    }
+
+    const firstice = document.querySelector('.ice_circle'); //  就是第一个
+    if (firstice) {
+        setIceMotor(firstice, firstice.innerText);
     }
 });
 //转换为具体电机和方向

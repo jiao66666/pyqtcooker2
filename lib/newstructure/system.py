@@ -77,6 +77,7 @@ def build_system():
         "stepmotorsmanager":motors_manager["step"],
         "feedermotorsmanager":motors_manager["feeder"],
         "spinmotorsmanager":motors_manager["spin"],
+        "icemotorsmanager":motors_manager["ice"],
         "dispatcher":dispatcher,
         "mockmotor":mockmotor,
     }
@@ -262,6 +263,13 @@ def buildmotors(bus,boards):
         "spinmotor":{
             POT1_SPIN_MOTOR:SpinMotor("pot1_spin_motor", 0, bus, boards["spinmotor"]),
             POT2_SPIN_MOTOR:SpinMotor("pot2_spin_motor", 1, bus, boards["spinmotor"])
+        },
+        "icemotor":{
+            ICE_MOTOR_0: StepMotor("ice_motor0", 0, bus, boards["icemotor"]),
+            ICE_MOTOR_1: StepMotor("ice_motor1", 1, bus, boards["icemotor"]),
+            ICE_MOTOR_2: StepMotor("ice_motor2", 2, bus, boards["icemotor"]),
+            ICE_MOTOR_3: StepMotor("ice_motor3", 3, bus, boards["icemotor"]),
+            ICE_MOTOR_4: StepMotor("ice_motor4", 4, bus, boards["icemotor"])
         }
     }
 
@@ -270,7 +278,8 @@ def build_motors_manager(bus,boards,motors):
     return {
         "step":StepMotorManager(boards["stepmotor"].board_id,motors["stepmotor"],boards["stepmotor"]),
         "feeder":FeederMotorManager(boards["feedermotor"].board_id,motors["feedermotor"],boards["feedermotor"]),
-        "spin":SpinMotorManager(boards["spinmotor"].board_id,motors["spinmotor"],boards["spinmotor"])
+        "spin":SpinMotorManager(boards["spinmotor"].board_id,motors["spinmotor"],boards["spinmotor"]),
+        "ice":StepMotorManager(boards["icemotor"].board_id,motors["icemotor"],boards["icemotor"])
         }
 
 #初始化轮询状态

@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from typing import List,Tuple,Type
-from lib.newstructure.constant import BOARDTYPE_FEEDER,BOARDTYPE_STEP,BOARDTYPE_SPIN
+from lib.newstructure.constant import *
 from lib.newstructure.tools import CRCUtil
 from lib.newstructure.tools import parse_motor_pulses,parse_motor_status,parse_all_motor_pulses,parse_all_motor_status
 
@@ -212,3 +212,4 @@ class ProtocolFactory:
 ProtocolFactory.register(BOARDTYPE_FEEDER, FeederProtocol)
 ProtocolFactory.register(BOARDTYPE_STEP, StepProtocol)    
 ProtocolFactory.register(BOARDTYPE_SPIN, SpinerProtocol)    
+ProtocolFactory.register(BOARDTYPE_ICE, StepProtocol)    

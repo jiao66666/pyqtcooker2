@@ -165,7 +165,7 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
     border-radius:5px;
 }
 
-.speed_container, .potnum_containter{
+.speed_container, .potnum_containter, .ice_container{
     display:flex;
     flex-flow:row nowrap;
     align-items: center;
@@ -176,7 +176,7 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
 .jl{
    justify-content: start!important;
 }
-.speed_circle, .potnum_circle{
+.speed_circle, .potnum_circle, .ice_circle{
     width:25px;
     height:25px;
     display:flex;
@@ -188,7 +188,7 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
     margin:0 5px;
 }
 
-.speed_selected, .potnum_selected{
+.speed_selected, .potnum_selected, .ice_selected{
     background-color:#4B4F56!important;
     color:#fff!important;
 }
@@ -999,4 +999,23 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
 
 .dashsplit{
     border-bottom: 1px dashed #ccc!important;
+}
+
+.ice_btncon{
+    display:flex;
+    flex-flow: row wrap;
+    margin-top:15px;
+}
+
+.ice_btn{
+    padding:5px;
+    display:flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    justify-content: center;
+    flex:1 1 40%;
+    color:#333;
+    background-color: #efefef;
+    border-radius: 10px;
+    margin:5px;
 }

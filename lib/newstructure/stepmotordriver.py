@@ -213,7 +213,7 @@ class StepMotor:
             priority = PRIORITY_EMERGENCY
         )
 
-        return True      
+        return True ,["执行成功"]    
 
 
     #   水平垂直复位
@@ -221,12 +221,11 @@ class StepMotor:
         """复位单个电机"""
         if self.cmd_running :
             print("命令还在运行中")
-            return False
+            return False,["命令还在运行中"]
         print("####复位电机####")
         print(f"[{self.name}] ID:{self.motor_id} 运行 复位电机【{self.name}】, 主板类型:{self.board_id}")
         # 复位脉冲数
-        pulses = RESET_PULSES
-
+        pulses = RESET_PULSES 
         # 复位方向
         if self.motor_id in [POT1_MOVE_MOTOR,POT1_FLIP_MOTOR]:  # 1号锅
             direction = 1
@@ -254,4 +253,27 @@ class StepMotor:
     
         return True,[f"电机{self.name}复位成功"]
 
-    #def reset_allpulses(self)-> Tuple[bool, List[str]]:
+
+    #   水平垂直复位
+    def reset_zero_both(self,positive: int = 1)-> Tuple[bool, List[str]]:
+        """复位单个电机"""
+
+        print(f"[{self.name}] ID:{self.motor_id} 运行 复位电机【{self.name}】, 主板类型:{self.board_id}")
+        # 复位脉冲数
+        pulses = RESET_PULSES if positive == 1 else -RESET_PULSES
+       
+        #复位速度
+        anglespeed = 360   #生产标准速度360，测试使用90      
+         # 发送运行命令
+        self.set_cmd_running("ORGRST")
+        self.com.execute_command_async(
+            "ORGRST", 
+            [str(self.board_id), str(self.motor_id), str(pulses), "0",str(anglespeed)],
+            callback=self._on_run_done,
+            priority = PRIORITY_CONTROL
+        )
+ 
+        self.current_position = 0
+        self.homed = True
+    
+        return True,[f"电机{self.name}复位成功"]

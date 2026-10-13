@@ -317,6 +317,13 @@ def get_boardlist():
                 "baudrate":STEP_BAUT_RATE,
                 "timeout":BOARD_TIMEOUT,
                 "board_id":BOARDTYPE_SPIN
+            },
+            {
+                "name":"icemotor",
+                "port":DEV_ICE_PORT,
+                "baudrate":STEP_BAUT_RATE,
+                "timeout":BOARD_TIMEOUT,
+                "board_id":BOARDTYPE_ICE
             }
         ]
     else:
@@ -341,6 +348,13 @@ def get_boardlist():
                 "baudrate":STEP_BAUT_RATE,
                 "timeout":BOARD_TIMEOUT,
                 "board_id":BOARDTYPE_SPIN
+            },
+            {
+                "name":"icemotor",
+                "port":ICE_PORT,
+                "baudrate":STEP_BAUT_RATE,
+                "timeout":BOARD_TIMEOUT,
+                "board_id":BOARDTYPE_ICE
             }
         ]
 
