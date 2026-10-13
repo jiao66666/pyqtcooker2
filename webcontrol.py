@@ -771,7 +771,7 @@ def start_webview():
 
     #window.events.closing += on_windows_closing
     window.events.closed += on_windows_close
-    webview.start(gui='edgechromium', debug=True)
+    webview.start(gui='edgechromium')
 
 def on_windows_close():
     shutdown_system(system)
