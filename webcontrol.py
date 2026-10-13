@@ -74,7 +74,7 @@ def connect():
         return jsonify({"status": "success","message": "使能成功!"})
     else:
         print("使能失败!")
-        return jsonify({"status": "fail","message": f"potstep:{msg1},icestep:{msg2}"})
+        return jsonify({"status": "fail","message": f"请稍后再试"})
     
 
 
