@@ -1822,3 +1822,35 @@ window.addEventListener('pywebviewready', function () {
     });
 });
 
+
+//针对webview的滚动修复
+document.querySelectorAll('.tab-buttons').forEach(container => {
+    let isDown = false;
+    let startX = 0;
+    let startScrollLeft = 0;
+
+    container.addEventListener('mousedown', event => {
+        if (event.button !== 0) return;
+
+        isDown = true;
+        startX = event.clientX;
+        startScrollLeft = container.scrollLeft;
+
+        event.preventDefault();
+    });
+
+    document.addEventListener('mousemove', event => {
+        if (!isDown) return;
+
+        const distance = event.clientX - startX;
+        container.scrollLeft = startScrollLeft - distance;
+    });
+
+    document.addEventListener('mouseup', () => {
+        isDown = false;
+    });
+
+    container.addEventListener('mouseleave', () => {
+        // 不在这里取消拖动，允许鼠标拖出容器后继续滚动
+    });
+});
