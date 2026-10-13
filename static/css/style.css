@@ -991,8 +991,9 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
     align-items: center;
     justify-content: center;
     flex:1 1 40%;
-    border-radius:10px;
-    padding:10px;
+    border-radius:5px;
+    padding:5px;
+    font-size:14px;
     margin-right:10px;
     margin-top:10px;
 }
@@ -1016,6 +1017,8 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
     flex:1 1 40%;
     color:#333;
     background-color: #efefef;
-    border-radius: 10px;
+    border-radius: 5px;
     margin:5px;
+    padding:5px;
+    font-size:14px;
 }
