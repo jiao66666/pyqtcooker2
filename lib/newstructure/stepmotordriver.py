@@ -263,7 +263,7 @@ class StepMotor:
         pulses = RESET_PULSES if positive == 1 else -RESET_PULSES
        
         #复位速度
-        anglespeed = 360   #生产标准速度360，测试使用90      
+        anglespeed = 90   #生产标准速度360，测试使用90      
          # 发送运行命令
         self.set_cmd_running("ORGRST")
         self.com.execute_command_async(
