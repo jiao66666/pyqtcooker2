@@ -27,26 +27,26 @@ MOTOR_LIST = [POT_BACKUP_MOTOR,POT1_MOVE_MOTOR,POT1_FLIP_MOTOR,POT2_MOVE_MOTOR,P
 
 
 POT1_POS_OUTFOOD_FLIP  = 10  # 1号锅外倒菜位,翻转位
-POT1_POS_OUTFOOD_LEVEL = 4.16  # 1号锅外倒菜位，水平位
+POT1_POS_OUTFOOD_LEVEL = 4.1  # 1号锅外倒菜位，水平位
 POT1_POS_INFOOD_FLIP  = 4.60  # 1号锅内倒菜位,翻转位
-POT1_POS_INFOOD_LEVEL = 4.16  # 1号锅内倒菜位，水平位
+POT1_POS_INFOOD_LEVEL = 4.1  # 1号锅内倒菜位，水平位
 POT1_POS_WASHPOT_FLIP  = -11.5  # 1号锅洗锅位,翻转位
-POT1_POS_WASHPOT_LEVEL = 4.16  # 1号锅洗锅位，水平位
+POT1_POS_WASHPOT_LEVEL = 4.1  # 1号锅洗锅位，水平位
 POT1_POS_FIREPOT_FLIP  = 0  # 1号锅烧菜位,翻转位
 POT1_POS_FIREPOT_LEVEL = 0  # 1号锅烧菜位，水平位
 POT1_POS_DROPFOOD_FLIP  = 20.2 # 号锅最终倒菜位置
-POT_POS_SAFE_FLIP1 = 4.60  # 锅移动安全位,翻转位
+POT_POS_SAFE_FLIP1 = 4.5  # 锅移动安全位,翻转位
 
 POT2_POS_OUTFOOD_FLIP  = 10  # 2号锅外倒菜位,翻转位
-POT2_POS_OUTFOOD_LEVEL = 4.14  # 2号锅外倒菜位，水平位
-POT2_POS_INFOOD_FLIP  = 5.03  # 2号锅内倒菜位,翻转位
-POT2_POS_INFOOD_LEVEL = 4.14  # 2号锅内倒菜位，水平位
+POT2_POS_OUTFOOD_LEVEL = 3.8  # 2号锅外倒菜位，水平位
+POT2_POS_INFOOD_FLIP  = 5.0  # 2号锅内倒菜位,翻转位
+POT2_POS_INFOOD_LEVEL = 3.8  # 2号锅内倒菜位，水平位
 POT2_POS_WASHPOT_FLIP  = -10.9  # 2号锅洗锅位,翻转位
-POT2_POS_WASHPOT_LEVEL = 4.14  # 2号锅洗锅位，水平位
+POT2_POS_WASHPOT_LEVEL = 3.8  # 2号锅洗锅位，水平位
 POT2_POS_FIREPOT_FLIP  = 0  # 2号锅烧菜位,翻转位
 POT2_POS_FIREPOT_LEVEL = 0  # 2号锅烧菜位，水平位
 POT2_POS_DROPFOOD_FLIP  = 20.2 # 号锅最终倒菜位置
-POT_POS_SAFE_FLIP2 = 5.03  # 锅移动安全位,翻转位
+POT_POS_SAFE_FLIP2 = 5.0  # 锅移动安全位,翻转位
 
 
 #######加料板配置###########
@@ -296,7 +296,13 @@ ACTION_PARAMS_CONFIG = {
     },
     "flip_out":{
         "speed": BASE_SPEED,
-        "target":1,
+        "target":6,
+        "varspeed":False,
+        "quitinadvance":0
+    },
+    "flip_zero":{
+        "speed": BASE_SPEED,
+        "target":0,
         "varspeed":False,
         "quitinadvance":0,
         "pot_params": {
@@ -304,15 +310,9 @@ ACTION_PARAMS_CONFIG = {
                 "target": 4.5
             },
             2: {
-                "target": 4.5
+                "target": 5
             }
         }
-    },
-    "flip_zero":{
-        "speed": BASE_SPEED,
-        "target":0,
-        "varspeed":False,
-        "quitinadvance":0
     }
 }
 
