@@ -462,6 +462,9 @@ class StepMotorPollingService:
                 # 更新 runtime
                 runtime.set_position(motor_id, pos)
 
+                # 更新 电机位置 信息
+                self.motors[motor_id].update_current_pos(pos)
+
                 # 前端数据
                 ws_data.append({
                     "type": "cordinate",

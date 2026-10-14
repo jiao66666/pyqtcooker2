@@ -1,5 +1,5 @@
 import threading
-from lib.newstructure.tools import circles_to_pulses
+from lib.newstructure.tools import circles_to_pulses,is_dev_mode
 from lib.newstructure.constant import *
 from lib.newstructure.motionplaner import MotionPlanner
 from typing import  List, Tuple
@@ -29,7 +29,7 @@ class StepMotor:
         self.last_result = (success, resp)
         print(f"{cmd} is executed done ,ready to set cmd_running false<<<<<<<")
         self.cmd_running = False
-        self.update_current_pos(self.current_target)
+      
         if not success:
             print(f"[{cmd}] 执行失败: {resp}")
             self.bus.publish(
@@ -41,6 +41,9 @@ class StepMotor:
             )
 
         else:
+            if is_dev_mode():
+                self.update_current_pos(self.current_target)
+                
             print(f"[{cmd}] ACK成功")
             self.bus.publish(
                 "command_ack",
