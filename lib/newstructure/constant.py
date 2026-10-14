@@ -277,7 +277,15 @@ ACTION_PARAMS_CONFIG = {
         "speed": 90,
         "target":1,
         "varspeed":False,
-        "quitinadvance":0
+        "quitinadvance":0,
+        "pot_params": {
+            1: {
+                "target": 4.1
+            },
+            2: {
+                "target": 3.8
+            }
+        }
     },
     "move_zero":{
         "speed": 90,
@@ -289,7 +297,15 @@ ACTION_PARAMS_CONFIG = {
         "speed": 90,
         "target":1,
         "varspeed":False,
-        "quitinadvance":0
+        "quitinadvance":0,
+        "pot_params": {
+            1: {
+                "target": 4.5
+            },
+            2: {
+                "target": 4.5
+            }
+        }
     },
     "flip_zero":{
         "speed": 90,

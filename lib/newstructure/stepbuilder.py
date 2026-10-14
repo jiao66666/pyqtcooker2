@@ -40,6 +40,16 @@ class StepBuilder:
             action_key = f"{action_name}"
 
             default_params = ACTION_PARAMS_CONFIG[action_key]
+
+            # 获取当前锅的专属参数
+            pot_params = default_params.get("pot_params", {}).get(pot_id, {})
+
+            # 合并参数：锅专属参数覆盖公共参数
+            default_params = {
+                **{k: v for k, v in default_params.items() if k != "pot_params"},
+                **pot_params
+            }
+
             final_params = runtime.get_final_action_params(   #动态修改固定动作，合并处
                 action_key,
                 default_params
