@@ -965,7 +965,6 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
 .actionpanel_con{
     display:flex;
     flex-flow: column nowrap;
-    border:1px dashed #ccc;
     padding:10px;
 }
 
