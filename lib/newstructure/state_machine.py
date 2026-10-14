@@ -80,8 +80,24 @@ class PotStateMachine:
                 task_id=f"{self.running_taskname}"
             )
 
-            step["motor"].go_action(step["action"],step["params"])
-            
+            success,resp = step["motor"].go_action(step["action"],step["params"])
+
+            if not success:
+                if resp[0] == "RETRY":
+                    print(
+                        f"Pot {self.pot_id}: "
+                        f"动作 {step['action']} 提交失败，暂不进入 WAITING"
+                    )
+                    return
+
+                if resp[0] == "NO_MOVE":
+                    print(
+                        f"Pot {self.pot_id}: "
+                        f"动作 {step['action']} 无需运动"
+                    )
+
+                    # 在这里调用你现有的正常步骤完成/推进逻辑
+                   
             #可选动态调速
             if step["params"]["varspeed"] == True:
                 startpos = runtime.get_position(step["motor"].motor_id)

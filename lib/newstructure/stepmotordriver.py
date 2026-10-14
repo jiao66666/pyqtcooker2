@@ -59,7 +59,7 @@ class StepMotor:
     def update_current_pos(self,pos):
         self.current_position =  pos
     #绝对值坐标运动
-    def go_action(self, action, params):
+    def go_action(self, action, params)-> Tuple[bool, List[str]]:
         print(f"[{self.name}] start {action}")
         target = params["target"]
         anglespeed = params["speed"]
@@ -76,7 +76,7 @@ class StepMotor:
 
         if params is None:
             print("no movement needed")
-            return False
+            return False,["NO_MOVE","没有可用参数"]
 
 
         # 发送运行命令
@@ -87,13 +87,13 @@ class StepMotor:
         )
         if not success:
             print(f"错误: 运行命令失败")
-            return False
+            return False,["RETRY","命令执行失败"]
 
         self.current_target = target
 
         print("执行成功")
         print(f"执行完后当前位置:{self.current_position}")
-        return True  
+        return True,["SUBMITTED","提交成功"]  
     
         
     def go(self, target: float, anglespeed: int):  # 回零后进行绝对运动，水平离开0点位置 为正值，翻转离开0点 逆时针为正值 ，顺时值为负值
