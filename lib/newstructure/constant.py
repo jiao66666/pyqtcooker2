@@ -28,7 +28,7 @@ MOTOR_LIST = [POT_BACKUP_MOTOR,POT1_MOVE_MOTOR,POT1_FLIP_MOTOR,POT2_MOVE_MOTOR,P
 
 POT1_POS_OUTFOOD_FLIP  = 10  # 1号锅外倒菜位,翻转位
 POT1_POS_OUTFOOD_LEVEL = 4.1  # 1号锅外倒菜位，水平位
-POT1_POS_INFOOD_FLIP  = 4.60  # 1号锅内倒菜位,翻转位
+POT1_POS_INFOOD_FLIP  = 4.5  # 1号锅内倒菜位,翻转位
 POT1_POS_INFOOD_LEVEL = 4.1  # 1号锅内倒菜位，水平位
 POT1_POS_WASHPOT_FLIP  = -10  # 1号锅洗锅位,翻转位
 POT1_POS_WASHPOT_LEVEL = 4.1  # 1号锅洗锅位，水平位
@@ -199,7 +199,17 @@ ACTION_PARAMS_KEYLIST = {
     ]
 }
 
+
+#连续自动动作参数配置
 BASE_SPEED = 360  
+POT1_VSAFE_POS = 4.5
+POT2_VSAFE_POS = 5.0
+POT1_HSAFE_POS = 4.1
+POT2_HSAFE_POS = 3.9
+POT_TAKE_POS   = 20
+POT_WASH_POS   = -10
+POT_RESET_POS  = 0
+
 #子动作参数KEY->命令参数 映射
 ACTION_PARAMS_CONFIG = {
     "flip_out_togetfood": {
@@ -294,48 +304,48 @@ ACTION_PARAMS_CONFIG = {
         "quitinadvance":0,
         "pot_params": {
             1: {
-                "target": 4.1
+                "target": POT1_HSAFE_POS
             },
             2: {
-                "target": 3.9
+                "target": POT2_HSAFE_POS
             }
         }
     },
     "move_zero":{
         "speed": BASE_SPEED,
-        "target":0,
+        "target":POT_RESET_POS,
         "varspeed":False,
         "quitinadvance":0
     },
     "flip_out":{
         "speed": BASE_SPEED,
-        "target":1,
+        "target":POT_RESET_POS,
         "varspeed":False,
         "quitinadvance":0,
         "pot_params": {
             1: {
-                "target": 4.5
+                "target": POT1_VSAFE_POS
             },
             2: {
-                "target": 5
+                "target": POT2_VSAFE_POS
             }
         }
     },
     "flip_zero":{
         "speed": BASE_SPEED,
-        "target":0,
+        "target":POT_RESET_POS,
         "varspeed":False,
         "quitinadvance":0
     },
     "flip_dish":{
         "speed": BASE_SPEED,
-        "target":20,
+        "target":POT_TAKE_POS,
         "varspeed":False,
         "quitinadvance":0
     },
     "flip_wash":{
         "speed": BASE_SPEED,
-        "target":-10,
+        "target":POT_WASH_POS,
         "varspeed":False,
         "quitinadvance":0
     }
