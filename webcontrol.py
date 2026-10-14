@@ -353,8 +353,8 @@ def testmultitaskabs():
     print("**************************************1号锅测试水平翻转任务开始******************************")
     move_speed = int(speed_level)   
     flip_speed = int(speed_flip)    
-    move_speed = max(360, min(move_speed, 3600))
-    flip_speed = max(360, min(flip_speed, 3600))
+    move_speed = max(90, min(move_speed, 1080))
+    flip_speed = max(90, min(flip_speed, 1080))
 
     ####### 动态修改固定动作参数 #######
     
@@ -389,8 +389,8 @@ def testmultitaskabs2():
     print("**************************************2号锅测试水平翻转任务开始******************************")
     move_speed = int(speed_level)   #2160  tested
     flip_speed = int(speed_flip)   #2520  tested 
-    move_speed = max(360, min(move_speed, 3600))
-    flip_speed = max(360, min(flip_speed, 3600))
+    move_speed = max(90, min(move_speed, 1080))
+    flip_speed = max(90, min(flip_speed, 1080))
 
     ####### 动态修改固定动作参数 #######
     
