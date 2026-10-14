@@ -186,95 +186,96 @@ ACTION_PARAMS_KEYLIST = {
     ]
 }
 
+BASE_SPEED = 90  
 #子动作参数KEY->命令参数 映射
 ACTION_PARAMS_CONFIG = {
     "flip_out_togetfood": {
-        "speed": 360,
+        "speed": BASE_SPEED,
         "target": 4.6,
         "varspeed":False,
         "quitinadvance":0
     },
     "move_out_togetfood": {
-        "speed": 360,
+        "speed": BASE_SPEED,
         "target":4.16,
         "varspeed":False,
         "quitinadvance":0
     },
     "move_to_wait": {
-        "speed": 360,
+        "speed": BASE_SPEED,
         "target":3,
         "varspeed":False,
         "quitinadvance":0
     },
     "move_to_track": {
-        "speed": 360,
+        "speed": BASE_SPEED,
         "target":4.16,
         "varspeed":False,
         "quitinadvance":0
     },
     "move_in_tofirefood": {
-        "speed": 360,
+        "speed": BASE_SPEED,
         "target":0,
         "varspeed":False,
         "quitinadvance":0
     },
     "flip_in_tofirefood": {
-        "speed": 360,
+        "speed": BASE_SPEED,
         "target":0,
         "varspeed":False,
         "quitinadvance":0
     },
     "flip_out_pour": {
-        "speed": 360,
+        "speed": BASE_SPEED,
         "target":20.2,
         "varspeed":False,
         "quitinadvance":0
     },
     "flip_in_wash": {
-        "speed": 360,
+        "speed": BASE_SPEED,
         "target":-11.5,
         "varspeed":False,
         "quitinadvance":0
     },
     "flip_out_getfood": {
-        "speed": 360,
+        "speed": BASE_SPEED,
         "target":4.6,
         "varspeed":False,
         "quitinadvance":0
     },
     "flip_to_safepos":{
-        "speed": 360,
+        "speed": BASE_SPEED,
         "target":4.6,
         "varspeed":False,
         "quitinadvance":0
     },
 
     "flip_to_outfood":{
-        "speed": 360,
+        "speed": BASE_SPEED,
         "target":10,
         "varspeed":False,
         "quitinadvance":0
     },
     "flip_to_infood":{
-        "speed": 360,
+        "speed": BASE_SPEED,
         "target":4.16,
         "varspeed":False,
         "quitinadvance":0
     },
     "flip_to_washpot":{
-        "speed": 360,
+        "speed": BASE_SPEED,
         "target":-11.5,
         "varspeed":False,
         "quitinadvance":0
     },
     "flip_in_firepot":{
-        "speed": 360,
+        "speed": BASE_SPEED,
         "target":0,
         "varspeed":False,
         "quitinadvance":0
     },
     "move_out":{
-        "speed": 90,
+        "speed": BASE_SPEED,
         "target":1,
         "varspeed":False,
         "quitinadvance":0,
@@ -288,13 +289,13 @@ ACTION_PARAMS_CONFIG = {
         }
     },
     "move_zero":{
-        "speed": 90,
+        "speed": BASE_SPEED,
         "target":0,
         "varspeed":False,
         "quitinadvance":0
     },
     "flip_out":{
-        "speed": 90,
+        "speed": BASE_SPEED,
         "target":1,
         "varspeed":False,
         "quitinadvance":0,
@@ -308,7 +309,7 @@ ACTION_PARAMS_CONFIG = {
         }
     },
     "flip_zero":{
-        "speed": 90,
+        "speed": BASE_SPEED,
         "target":0,
         "varspeed":False,
         "quitinadvance":0
