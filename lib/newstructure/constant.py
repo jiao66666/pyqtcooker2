@@ -206,100 +206,159 @@ POT1_VSAFE_POS = 4.5
 POT2_VSAFE_POS = 5.0
 POT1_HSAFE_POS = 4.1
 POT2_HSAFE_POS = 3.9
+POT1_WAIT_POS  = 1.5
+POT2_WAIT_POS  = 1
 POT_POUR_POS   = 20
 POT_WASH_POS   = -10
 POT_RESET_POS  = 0
+POT_TAKE_POS   = 10
 
 #子动作参数KEY->命令参数 映射
 ACTION_PARAMS_CONFIG = {
     "flip_out_togetfood": {
         "speed": BASE_SPEED,
-        "target": 4.6,
+        "target": POT_RESET_POS,
         "varspeed":False,
-        "quitinadvance":0
+        "quitinadvance":0,
+        "pot_params": {
+            1: {
+                "target": POT1_VSAFE_POS
+            },
+            2: {
+                "target": POT2_VSAFE_POS
+            }
+        }
     },
     "move_out_togetfood": {
         "speed": BASE_SPEED,
-        "target":4.16,
+        "target":POT_RESET_POS,
         "varspeed":False,
-        "quitinadvance":0
+        "quitinadvance":0,
+        "pot_params": {
+            1: {
+                "target": POT1_HSAFE_POS
+            },
+            2: {
+                "target": POT2_HSAFE_POS
+            }
+        }
     },
     "move_to_wait": {
         "speed": BASE_SPEED,
-        "target":3,
+        "target":POT_RESET_POS,
         "varspeed":False,
-        "quitinadvance":0
+        "quitinadvance":0,
+        "pot_params": {
+            1: {
+                "target": POT1_HSAFE_POS
+            },
+            2: {
+                "target": POT2_HSAFE_POS
+            }
+        }
     },
     "move_to_track": {
         "speed": BASE_SPEED,
-        "target":4.16,
+        "target":POT_RESET_POS,
         "varspeed":False,
-        "quitinadvance":0
+        "quitinadvance":0,
+        "pot_params": {
+            1: {
+                "target": POT1_HSAFE_POS
+            },
+            2: {
+                "target": POT2_HSAFE_POS
+            }
+        }
     },
     "move_in_tofirefood": {
         "speed": BASE_SPEED,
-        "target":0,
+        "target":POT_RESET_POS,
         "varspeed":False,
         "quitinadvance":0
     },
     "flip_in_tofirefood": {
         "speed": BASE_SPEED,
-        "target":0,
+        "target":POT_RESET_POS,
         "varspeed":False,
         "quitinadvance":0
     },
     "flip_out_pour": {
         "speed": BASE_SPEED,
-        "target":20.2,
+        "target":POT_POUR_POS,
         "varspeed":False,
         "quitinadvance":0
     },
     "flip_in_wash": {
         "speed": BASE_SPEED,
-        "target":-11.5,
+        "target":POT_WASH_POS,
         "varspeed":False,
         "quitinadvance":0
     },
     "flip_out_getfood": {
         "speed": BASE_SPEED,
-        "target":4.6,
+        "target":POT_RESET_POS,
         "varspeed":False,
-        "quitinadvance":0
+        "quitinadvance":0,
+        "pot_params": {
+            1: {
+                "target": POT1_VSAFE_POS
+            },
+            2: {
+                "target": POT2_VSAFE_POS
+            }
+        }
     },
     "flip_to_safepos":{
         "speed": BASE_SPEED,
-        "target":4.6,
+        "target":POT_RESET_POS,
         "varspeed":False,
-        "quitinadvance":0
+        "quitinadvance":0,
+        "pot_params": {
+            1: {
+                "target": POT1_VSAFE_POS
+            },
+            2: {
+                "target": POT2_VSAFE_POS
+            }
+        }
     },
 
     "flip_to_outfood":{
         "speed": BASE_SPEED,
-        "target":10,
+        "target":POT_TAKE_POS,
         "varspeed":False,
         "quitinadvance":0
     },
     "flip_to_infood":{
         "speed": BASE_SPEED,
-        "target":4.16,
+        "target":POT_RESET_POS,
         "varspeed":False,
-        "quitinadvance":0
+        "quitinadvance":0,
+        "pot_params": {
+            1: {
+                "target": POT1_VSAFE_POS
+            },
+            2: {
+                "target": POT2_VSAFE_POS
+            }
+        }
     },
     "flip_to_washpot":{
         "speed": BASE_SPEED,
-        "target":-11.5,
+        "target":POT_WASH_POS,
         "varspeed":False,
         "quitinadvance":0
     },
     "flip_in_firepot":{
         "speed": BASE_SPEED,
-        "target":0,
+        "target":POT_RESET_POS,
         "varspeed":False,
         "quitinadvance":0
     },
     "move_out":{
         "speed": BASE_SPEED,
-        "target":1,
+        "target":POT_RESET_POS,
         "varspeed":False,
         "quitinadvance":0,
         "pot_params": {
