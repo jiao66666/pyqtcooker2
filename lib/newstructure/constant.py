@@ -191,7 +191,7 @@ ACTION_PARAMS_KEYLIST = {
         ("v","flip_zero"),
         ("v","flip_out"),
         ("h","move_out"),
-        ("v","flip_dish"),
+        ("v","flip_pour"),
         ("v","flip_wash"),
         ("v","flip_out"),
         ("h","move_zero"),
@@ -206,7 +206,7 @@ POT1_VSAFE_POS = 4.5
 POT2_VSAFE_POS = 5.0
 POT1_HSAFE_POS = 4.1
 POT2_HSAFE_POS = 3.9
-POT_TAKE_POS   = 20
+POT_POUR_POS   = 20
 POT_WASH_POS   = -10
 POT_RESET_POS  = 0
 
@@ -337,9 +337,9 @@ ACTION_PARAMS_CONFIG = {
         "varspeed":False,
         "quitinadvance":0
     },
-    "flip_dish":{
+    "flip_pour":{
         "speed": BASE_SPEED,
-        "target":POT_TAKE_POS,
+        "target":POT_POUR_POS,
         "varspeed":False,
         "quitinadvance":0
     },
