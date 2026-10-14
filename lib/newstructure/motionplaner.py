@@ -12,6 +12,7 @@ class MotionPlanner:
         电机绝对值目标为移动
         """
 
+        print(f"当前位置:{current_position},目标位置:{target}")
         # 1 计算位移
         delta = target - current_position
 
@@ -35,6 +36,11 @@ class MotionPlanner:
         # 4️ 转 pulses
         circles = abs(delta)
 
+
+        if circles == 0:
+            print("转动圈数为0")
+            return None
+        
         return {
             "circles": circles,
             "speed": speed,
