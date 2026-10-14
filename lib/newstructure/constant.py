@@ -274,25 +274,25 @@ ACTION_PARAMS_CONFIG = {
         "quitinadvance":0
     },
     "move_out":{
-        "speed": 360,
+        "speed": 90,
         "target":1,
         "varspeed":False,
         "quitinadvance":0
     },
     "move_zero":{
-        "speed": 360,
+        "speed": 90,
         "target":0,
         "varspeed":False,
         "quitinadvance":0
     },
     "flip_out":{
-        "speed": 360,
+        "speed": 90,
         "target":1,
         "varspeed":False,
         "quitinadvance":0
     },
     "flip_zero":{
-        "speed": 360,
+        "speed": 90,
         "target":0,
         "varspeed":False,
         "quitinadvance":0
