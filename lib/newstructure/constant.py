@@ -199,7 +199,7 @@ ACTION_PARAMS_KEYLIST = {
     ]
 }
 
-BASE_SPEED = 90  
+BASE_SPEED = 360  
 #子动作参数KEY->命令参数 映射
 ACTION_PARAMS_CONFIG = {
     "flip_out_togetfood": {
