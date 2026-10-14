@@ -211,7 +211,7 @@ POT2_WAIT_POS  = 1
 POT_POUR_POS   = 20
 POT_WASH_POS   = -10
 POT_RESET_POS  = 0
-POT_TAKE_POS   = 10
+POT_INTAKE_POS   = 10
 
 #子动作参数KEY->命令参数 映射
 ACTION_PARAMS_CONFIG = {
@@ -250,10 +250,10 @@ ACTION_PARAMS_CONFIG = {
         "quitinadvance":0,
         "pot_params": {
             1: {
-                "target": POT1_HSAFE_POS
+                "target": POT1_WAIT_POS
             },
             2: {
-                "target": POT2_HSAFE_POS
+                "target": POT2_WAIT_POS
             }
         }
     },
@@ -326,23 +326,15 @@ ACTION_PARAMS_CONFIG = {
 
     "flip_to_outfood":{
         "speed": BASE_SPEED,
-        "target":POT_TAKE_POS,
+        "target":POT_POUR_POS,
         "varspeed":False,
         "quitinadvance":0
     },
     "flip_to_infood":{
         "speed": BASE_SPEED,
-        "target":POT_RESET_POS,
+        "target":POT_INTAKE_POS,
         "varspeed":False,
-        "quitinadvance":0,
-        "pot_params": {
-            1: {
-                "target": POT1_VSAFE_POS
-            },
-            2: {
-                "target": POT2_VSAFE_POS
-            }
-        }
+        "quitinadvance":0
     },
     "flip_to_washpot":{
         "speed": BASE_SPEED,
