@@ -15,16 +15,18 @@ class StepBuilder:
 
         return self._build_steps(ACTION_PARAMS_KEYLIST[action], pot_id, motor_map)
 
-    def _get_motor_map(self, pot_id):
+    def _get_motor_map(self, pot_id):   #依据需要对电机进行扩展，后续还有feedermotor,icemotors，可依据功能来命名，确保唯一即可
         if pot_id == 1:
             return {
-                "v": self.motors[POT1_FLIP_MOTOR],
-                "h": self.motors[POT1_MOVE_MOTOR],
+                "v": self.motors["stepmotor"][POT1_FLIP_MOTOR],
+                "h": self.motors["stepmotor"][POT1_MOVE_MOTOR],
+                "s": self.motors["spinmotor"][POT1_SPIN_MOTOR]
             }
         elif pot_id == 2:
             return {
-                "v": self.motors[POT2_FLIP_MOTOR],
-                "h": self.motors[POT2_MOVE_MOTOR],
+                "v": self.motors["stepmotor"][POT2_FLIP_MOTOR],
+                "h": self.motors["stepmotor"][POT2_MOVE_MOTOR],
+                "s": self.motors["spinmotor"][POT2_SPIN_MOTOR]
             }
         else:
             raise ValueError(f"Invalid pot_id: {pot_id}")
@@ -56,6 +58,7 @@ class StepBuilder:
             )
 
             step = {
+                "type" : self._get_motor_type(motor_key),
                 "motor": motor_map[motor_key],
                 "action": action_key,
                 "params": final_params
@@ -68,3 +71,14 @@ class StepBuilder:
             steps.append(step)
 
         return steps
+
+    #标记电机类型以方便状态机进行相应动作选择
+    def _get_motor_type(self,motor_key):
+          if motor_key == "v" or motor_key == "h":
+              return "step_pot"
+          elif motor_key == "s":
+              return "spin_pot"
+          elif motor_key == "f":
+              return "feeder_pot"
+          else:
+              return "unknown"

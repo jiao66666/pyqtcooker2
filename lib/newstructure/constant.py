@@ -11,6 +11,14 @@ BOARD_NAME_MAP={
     "icemotor":BOARDTYPE_ICE
 }
 
+# 电机类型 -> 控制板 ID
+MOTOR_TYPE_BOARD_MAP = {
+    "step_pot": BOARDTYPE_STEP,
+    "spin_pot": BOARDTYPE_SPIN,
+    "feeder_pot": BOARDTYPE_FEEDER,
+    "ice_pot": BOARDTYPE_ICE,
+}
+
 ########锅设置########
 POT1 = 1
 POT2 = 2
@@ -78,6 +86,34 @@ POT2_FLAVORMOTOR23 = 23
 POT2_FLAVORMOTOR24 = 24
 
 
+FEED_MOTOR_LIST = [
+    POT1_FLAVORMOTOR1,
+    POT1_FLAVORMOTOR2,
+    POT1_FLAVORMOTOR3,
+    POT1_FLAVORMOTOR4,
+    POT1_FLAVORMOTOR5,
+    POT1_FLAVORMOTOR6,
+    POT1_FLAVORMOTOR7,
+    POT1_FLAVORMOTOR8,
+    POT1_FLAVORMOTOR9,
+    POT1_FLAVORMOTOR10,
+    POT1_FLAVORMOTOR11,
+    POT1_FLAVORMOTOR12,
+
+    POT2_FLAVORMOTOR13,
+    POT2_FLAVORMOTOR14,
+    POT2_FLAVORMOTOR15,
+    POT2_FLAVORMOTOR16,
+    POT2_FLAVORMOTOR17,
+    POT2_FLAVORMOTOR18,
+    POT2_FLAVORMOTOR19,
+    POT2_FLAVORMOTOR20,
+    POT2_FLAVORMOTOR21,
+    POT2_FLAVORMOTOR22,
+    POT2_FLAVORMOTOR23,
+    POT2_FLAVORMOTOR24,
+]
+
 
 ########DC旋转板配置######
 POT1_SPIN_MOTOR = 0  # 1号锅旋转DC电机编号
@@ -104,7 +140,7 @@ POT1_WAIT_LEVEL = 3.0  #1号锅阻塞时等待水平位置
 POT2_WAIT_LEVEL = 3.0  #2号锅阻塞时等待水平位置
 
 
-#动作组->子动作参数Key 映射 
+#动作组->子动作参数Key 映射  【参数说明】"h":水平步进电机，"v":垂直步进电机, "s":旋转DC电机 ，"f":加料电机
 ACTION_PARAMS_KEYLIST = {
     "takefood_fire": [
         ("v", "flip_out_togetfood"),
@@ -196,6 +232,11 @@ ACTION_PARAMS_KEYLIST = {
         ("v","flip_out"),
         ("h","move_zero"),
         ("v","flip_zero")
+    ],
+    "test_move_spin":[
+        ("h","move_out"),
+        ("s","spin_for_wash"),
+        ("h","move_zero")
     ]
 }
 
@@ -399,6 +440,16 @@ ACTION_PARAMS_CONFIG = {
         "target":POT_WASH_POS,
         "varspeed":False,
         "quitinadvance":0
+    },
+    "spin_for_wash":{
+        "duration": 10,
+        "speed": 1000,
+        "direction":1
+    },
+    "spin_for_fire":{
+        "duration":100,
+        "speed": 500,
+        "direction":-1
     }
 }
 

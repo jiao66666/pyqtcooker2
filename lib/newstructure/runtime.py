@@ -1,4 +1,5 @@
 import threading
+from lib.newstructure.constant import *
 
 
 class RuntimeContext:
@@ -35,26 +36,42 @@ class RuntimeContext:
     # ---------------------------
     # 初始化
     # ---------------------------
-    def init_motor(self, motor_id: int):
+    def init_motor(
+        self,
+        board_id: int,
+        motor_id: int,
+        motor_type: str,
+        pot_id: int = None
+    ):
+        key = (board_id, motor_id)
+
         with self._lock:
-            self.motors[motor_id] = {
+            self.motors[key] = {
+                # 通用字段
+                "board_id": board_id,
+                "motor_id": motor_id,
+                "type": motor_type,
                 "state": "IDLE",
                 "enabled": False,
                 "action": None,
-                "pot_id": None,
-                "position": 0    
-            }
+                "task_id": None,
+                "params": {},
 
+                # 所属锅：非锅所属电机可以为 None
+                "pot_id": pot_id,
+
+                # 位置反馈：尚未获取时为 None
+                "position": None
+            }
 
     # ==================================================
     # 获取所有运行中的电机
     # ==================================================
     def get_running_motors(self):
         with self._lock:
-
             return [
-                motor_id
-                for motor_id, info in self.motors.items()
+                key
+                for key, info in self.motors.items()
                 if info["state"] == "RUNNING"
             ]
 
@@ -84,83 +101,95 @@ class RuntimeContext:
     # ---------------------------
     # 状态变更
     # ---------------------------
-    def set_running(self, motor_id: int, action: str, pot_id: int = None,params:dict = None,task_id=None):
+    def set_running(self, motor_id: int, action: str, pot_id: int = None,params:dict = None,task_id=None ,board_id:int = BOARDTYPE_STEP):
         if params is None:
             params = {}
+
+        key = (board_id, motor_id)
         with self._lock:
-            self.motors[motor_id]["state"] = "RUNNING"
-            self.motors[motor_id]["action"] = action
-            self.motors[motor_id]["pot_id"] = pot_id
-            self.motors[motor_id]["params"] = params
-            self.motors[motor_id]["task_id"] = task_id
+            self.motors[key]["state"] = "RUNNING"
+            self.motors[key]["action"] = action
+                    # 仅在明确传入 pot_id 时更新归属
+            if pot_id is not None:
+                self.motors[key]["pot_id"] = pot_id
+            
+            self.motors[key]["params"] = params.copy()
+            self.motors[key]["task_id"] = task_id
 
-    def set_position(self, motor_id: int, pos: float):
+    def set_position(self, motor_id: int, pos: float,board_id:int = BOARDTYPE_STEP):
+        key = (board_id, motor_id)
         with self._lock:
-            self.motors[motor_id]["position"] = pos
+            self.motors[key]["position"] = pos
 
-    def get_position(self,motor_id: int):
+    def get_position(self,motor_id: int,board_id:int = BOARDTYPE_STEP):
+        key = (board_id, motor_id)
         with self._lock:
-            return self.motors[motor_id]["position"]   
+            return self.motors[key]["position"]   
 
-    def get_params(self,motor_id:int):
+    def get_params(self,motor_id:int,board_id:int = BOARDTYPE_STEP):
+        key = (board_id, motor_id)
         with self._lock:
-             return self.motors[motor_id].get("params", {})
-    def set_done(self, motor_id: int):
+             return self.motors[key].get("params", {})
+    def set_done(self, motor_id: int,board_id:int = BOARDTYPE_STEP):
+        key = (board_id, motor_id)
         with self._lock:
-            if motor_id in self.motors:
-                self.motors[motor_id]["state"] = "DONE"
+            if key in self.motors:
+                self.motors[key]["state"] = "DONE"
 
-    def get_taskid(self,motor_id:int):
+    def get_taskid(self,motor_id:int,board_id:int = BOARDTYPE_STEP):
+        key = (board_id, motor_id)
         with self._lock:
-            return self.motors[motor_id]["task_id"]
+            return self.motors[key]["task_id"]
 
-    def set_error(self, motor_id: int):
+    def set_error(self, motor_id: int,board_id:int = BOARDTYPE_STEP):
+        key = (board_id, motor_id)
         with self._lock:
-            if motor_id in self.motors:
-                self.motors[motor_id]["state"] = "ERROR"
+            if key in self.motors:
+                self.motors[key]["state"] = "ERROR"
 
-    def set_idle(self, motor_id: int):
-
+    def set_idle(self, motor_id: int,board_id:int = BOARDTYPE_STEP):
+        key = (board_id, motor_id)
         with self._lock:
-
-            if motor_id in self.motors:
-
+            if key in self.motors:
                 self._reset_motor_info(
-                    self.motors[motor_id]
+                    self.motors[key]
                 )
-
     # ---------------------------
     # 查询
     # ---------------------------
-    def get(self, motor_id: int):
+    def get(self, motor_id: int,board_id:int = BOARDTYPE_STEP):
+        key = (board_id, motor_id)
         with self._lock:
-            return self.motors.get(motor_id)
+            return self.motors.get(key)
 
-    def get_state(self, motor_id: int):
+    def get_state(self, motor_id: int,board_id:int = BOARDTYPE_STEP):
+        key = (board_id, motor_id)
         with self._lock:
-            m = self.motors.get(motor_id)
+            m = self.motors.get(key)
             return m["state"] if m else None
 
-    def is_busy(self, motor_id: int) -> bool:
+    def is_busy(self, motor_id: int,board_id:int = BOARDTYPE_STEP) -> bool:
+        key = (board_id, motor_id)
         with self._lock:
-            m = self.motors.get(motor_id)
+            m = self.motors.get(key)
             return bool(m and m["state"] == "RUNNING")
 
     def set_all_enabled(self, enabled):
-
         with self._lock:
             for motor in self.motors.values():
                 motor["enabled"] = enabled
 
 
-    def set_enabled(self, motor_id, enabled):
+    def set_enabled(self, motor_id, enabled,board_id:int = BOARDTYPE_STEP):
+        key = (board_id, motor_id)
         with self._lock:
-            self.motors[motor_id]["enabled"] = enabled
+            self.motors[key]["enabled"] = enabled
 
 
-    def is_enabled(self, motor_id):
+    def is_enabled(self, motor_id,board_id:int = BOARDTYPE_STEP):
+        key = (board_id, motor_id)
         with self._lock:
-            return self.motors[motor_id].get("enabled", False)            
+            return self.motors[key].get("enabled", False)            
 
 
     def is_all_enabled(self):
@@ -178,7 +207,6 @@ class RuntimeContext:
         info["state"] = "IDLE"
         info["enabled"] = False
         info["action"] = None
-        info["pot_id"] = None
         info["params"] = {}
         info["task_id"] = None        
 

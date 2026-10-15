@@ -113,6 +113,13 @@ class SpinMotorPollingService:
                         f"电机 {motor_id} 状态：停止"
                     )
 
+                    self.bus.publish(
+                        "SPIN_DONE",
+                        {
+                            "motor_id": motor_id
+                        }
+                    )
+
                 # ------------------------------------------------
                 # 3：运行
                 # ------------------------------------------------

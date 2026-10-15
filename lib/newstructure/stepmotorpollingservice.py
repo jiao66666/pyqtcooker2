@@ -379,9 +379,9 @@ class StepMotorPollingService:
             return
 
         # 从运行中的电机中随机选择一个
-        motor_id = random.choice(running_motors)
+        board_id,motor_id = random.choice(running_motors)
 
-        runtime.set_done(motor_id)
+        runtime.set_done(motor_id,board_id=board_id)
 
         #time.sleep(2.0)
         self.bus.publish(

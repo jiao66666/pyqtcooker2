@@ -2,6 +2,7 @@ import threading
 from lib.newstructure.system import get_system
 from lib.newstructure.runtime import runtime
 from lib.newstructure.tools import get_pot_id
+from lib.newstructure.constant import *
 class CookerService:
     def __init__(self,system):
         self.system = system
@@ -124,6 +125,7 @@ class CookerService:
         self.system["pots"][pot_id].submit_task(task_id,steps)
         return True,"submit task OK"
 
+    #  锅步进单动作执行
     def run_single_action(self, motor_id, action, params):
         potid = get_pot_id(motor_id)
         OK,msg = self.check_workable(potid)
@@ -145,6 +147,7 @@ class CookerService:
             handler(motor, params)
 
         runtime.set_running(
+            board_id=BOARDTYPE_STEP,
             motor_id=motor_id,
             action=action,
             pot_id=potid,

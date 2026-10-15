@@ -1,7 +1,7 @@
 import queue
 from lib.newstructure.runtime import runtime
 import time
-from lib.newstructure.constant import TIMEOUT
+from lib.newstructure.constant import *
 
 
 class PotStateMachine:
@@ -23,6 +23,7 @@ class PotStateMachine:
         
         # 订阅电机完成事件
         self.bus.subscribe("MOTOR_DONE", self.on_motor_done)
+        self.bus.subscribe("SPIN_DONE", self.on_spin_done)
         self.bus.subscribe("ESTOP_TRIGGERED", self.on_estop)
         self.bus.subscribe("MOTOR_ERROR", self.on_motor_error)
 
@@ -65,50 +66,55 @@ class PotStateMachine:
         elif self.state == "RUNNING":
             print(f"{self.pot_id} machine state is RUNNING")
             step = self.steps[self.current_step]
-            
-            if self.need_track_acquire(step["action"]) and not self.track.try_acquire(self.pot_id):
-                print(f"Pot {self.pot_id} waiting track")
-                if "on_block" in step:
-                   self.insert_steps(step["on_block"])
-                return
-            
-            runtime.set_running(
-                motor_id=step["motor"].motor_id,
-                action=step["action"],
-                pot_id=self.pot_id,
-                params=step["params"],
-                task_id=f"{self.running_taskname}"
-            )
-
-            success,resp = step["motor"].go_action(step["action"],step["params"])
-
-            if not success:
-                if resp[0] == "RETRY":
-                    print(
-                        f"Pot {self.pot_id}: "
-                        f"动作 {step['action']} 提交失败，暂不进入 WAITING"
-                    )
+            if step["type"] == "step_pot": 
+                if self.need_track_acquire(step["action"]) and not self.track.try_acquire(self.pot_id):
+                    print(f"Pot {self.pot_id} waiting track")
+                    if "on_block" in step:
+                        self.insert_steps(step["on_block"])
                     return
-
-                if resp[0] == "NO_MOVE":
-                    print(
-                        f"Pot {self.pot_id}: "
-                        f"动作 {step['action']} 无需运动"
-                    )
-
-                    # 在这里调用你现有的正常步骤完成/推进逻辑
-                   
-            #可选动态调速
-            if step["params"]["varspeed"] == True:
-                startpos = runtime.get_position(step["motor"].motor_id)
-                self.motioncontroller.add_task(
+                
+                runtime.set_running(
+                    board_id=BOARDTYPE_STEP,
                     motor_id=step["motor"].motor_id,
-                    start=startpos,
-                    end=step["params"]["target"]
+                    action=step["action"],
+                    pot_id=self.pot_id,
+                    params=step["params"],
+                    task_id=f"{self.running_taskname}"
                 )
 
-            self.state = "WAITING"
-            self.wait_start_time = time.time()
+                success,resp = step["motor"].go_action(step["action"],step["params"])
+
+                if not success:
+                    if resp[0] == "RETRY":
+                        print(
+                            f"Pot {self.pot_id}: "
+                            f"动作 {step['action']} 提交失败，暂不进入 WAITING"
+                        )
+                        return
+
+                    if resp[0] == "NO_MOVE":
+                        print(
+                            f"Pot {self.pot_id}: "
+                            f"动作 {step['action']} 无需运动"
+                        )
+                        # 在这里调用你现有的正常步骤完成/推进逻辑
+                    
+                #可选动态调速
+                if step["params"]["varspeed"] == True:
+                    startpos = runtime.get_position(step["motor"].motor_id)
+                    self.motioncontroller.add_task(
+                        motor_id=step["motor"].motor_id,
+                        start=startpos,
+                        end=step["params"]["target"]
+                    )
+
+                self.state = "WAITING"
+                self.wait_start_time = time.time()
+
+            elif step["type"] == "spin_pot":
+                print(f"spin motor运行参数如下:{step['params']['direction']}，{step['params']['duration']}，{step['params']['speed']}")
+                step["motor"].run(step["params"]["direction"],step["params"]["duration"],step["params"]["speed"])
+
    
         elif self.state == "WAITING":
             #print(f"{self.pot_id} machine state is WAITING")
@@ -179,7 +185,7 @@ class PotStateMachine:
 
 
     def on_motor_done(self, data):
-        print("电机完成运动@@@@@@@@@@@@@@@@@@@@@@@@----statemachine")
+        print("锅步进电机完成运动@@@@@@@@@@@@@@@@@@@@@@@@----statemachine")
         print(f"subscribe data:",data)
         #self.state = "DONE"  #only for test
         motor_id = data["motor_id"]    
@@ -211,6 +217,10 @@ class PotStateMachine:
         else:
             self.state = "DONE"                   #动作组完成，变更状态
             self.running_tasks.remove(self.running_taskname)
+
+    def on_spin_done(self, data):
+        print("DC旋转电机完成运动@@@@@@@@@@@@@@@@@@@@@@@@----statemachine")
+        print(f"subscribe data:",data)
 
 
     def on_estop(self, data=None):
