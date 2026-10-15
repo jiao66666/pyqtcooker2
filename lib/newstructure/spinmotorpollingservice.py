@@ -54,6 +54,11 @@ class SpinMotorPollingService:
     # =========================
     def _on_motor_status_all(self, command, success, resp):
 
+        if is_dev_mode():
+            print("执行开发模式旋转电机完成模拟")
+            self.dev_spin_motor_status_all()
+            return
+
         print("执行生产环境电机状态查询。。。")
         print("电机状态回调中>>>>>>>>>>")
 
@@ -164,6 +169,15 @@ class SpinMotorPollingService:
                 "处理所有电机状态异常:",
                 e
             )
+
+    def dev_spin_motor_status_all(self):
+        print("模拟spin完成")
+        self.bus.publish(
+            "SPIN_DONE",
+            {
+                "motor_id": 0
+            }
+        )        
 
     def _check_motor_rpm(self,motor_id):
         self.rs485.execute_command_async(

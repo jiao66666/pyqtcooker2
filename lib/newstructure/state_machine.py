@@ -222,6 +222,16 @@ class PotStateMachine:
         print("DC旋转电机完成运动@@@@@@@@@@@@@@@@@@@@@@@@----statemachine")
         print(f"subscribe data:",data)
 
+        step = self.steps[self.current_step]
+
+        self.current_step += 1
+
+        if self.current_step < len(self.steps):
+            self.state = "RUNNING"                #继续取下一个动作执行
+        else:
+            self.state = "DONE"                   #动作组完成，变更状态
+            self.running_tasks.remove(self.running_taskname)
+
 
     def on_estop(self, data=None):
         print(f"[Pot {self.pot_id}] ESTOP triggered!")
