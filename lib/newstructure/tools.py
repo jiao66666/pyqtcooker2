@@ -386,16 +386,23 @@ def trace_info(info):
    
     parts = info.split(",")
     cmd = parts[0].upper()
+    board_id= int(parts[1])
 
     print(f"trace cmd is:{cmd}")
     if cmd in BLACK_CMDS_LIST:
         return
 
-    if cmd == "#RUN":
+    if cmd == "#RUN" and board_id == BOARDTYPE_STEP:
         pulses = int(parts[3])
         motorid = int(parts[2])
         # 当前属于哪个锅
         potid = get_pot_id(motorid)
+    elif cmd == "#RUN" and board_id == BOARDTYPE_SPIN:
+        motorid = int(parts[2])
+        if motorid == POT1_SPIN_MOTOR:
+            potid = 1
+        elif motorid == POT2_SPIN_MOTOR:
+            potid = 2         
     else:
         potid = 0    
 
@@ -408,7 +415,7 @@ def trace_info(info):
 
     websocket_server.send(data)
 
-    if cmd == "#RUN":
+    if cmd == "#RUN" and board_id == BOARDTYPE_STEP:
 
         cordinfo = []
 
