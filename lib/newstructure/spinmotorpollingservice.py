@@ -66,7 +66,7 @@ class SpinMotorPollingService:
             print("查询所有电机状态失败")
             return
 
-        print("ALLRunStatus返回:", resp)
+        print("SPIN motor ,RunStatus返回:", resp)
 
         try:
 
@@ -84,7 +84,7 @@ class SpinMotorPollingService:
             # 4 -> 故障
             # ==================================================
 
-            status_data = resp[0].strip()
+            status_data = resp[1].strip()
 
             if not status_data:
                 print("电机状态数据为空")
@@ -96,6 +96,7 @@ class SpinMotorPollingService:
                     f"电机数量={len(self.motors)}，"
                     f"返回状态数量={len(status_data)}"
                 )
+                return
 
             # ==================================================
             # 遍历所有电机状态
