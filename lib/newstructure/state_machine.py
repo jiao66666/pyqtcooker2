@@ -107,14 +107,14 @@ class PotStateMachine:
                         start=startpos,
                         end=step["params"]["target"]
                     )
-
-                self.state = "WAITING"
-                self.wait_start_time = time.time()
-
+         
             elif step["type"] == "spin_pot":
                 print(f"spin motor运行参数如下:{step['params']['direction']}，{step['params']['duration']}，{step['params']['speed']}")
                 step["motor"].run(step["params"]["direction"],step["params"]["duration"],step["params"]["speed"])
 
+
+            self.state = "WAITING"
+            self.wait_start_time = time.time()
    
         elif self.state == "WAITING":
             #print(f"{self.pot_id} machine state is WAITING")
