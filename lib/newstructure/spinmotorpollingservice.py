@@ -84,7 +84,7 @@ class SpinMotorPollingService:
             # 4 -> 故障
             # ==================================================
 
-            status_data = resp[1].strip()
+            status_data = resp[0].strip()
 
             if not status_data:
                 print("电机状态数据为空")

@@ -165,6 +165,8 @@ class SpinerProtocol(ProtocolBase):
              if status is None:
                  print("电机状态解析失败")
                  return False, "ERROR",["单电机状态解析失败","Fail"]
+             
+             return True, command, [status]
          else:
              # 检查是否是成功响应
              if response.endswith("OK"):
