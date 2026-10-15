@@ -64,7 +64,7 @@ class PotStateMachine:
             return
 
         elif self.state == "RUNNING":
-            print(f"{self.pot_id} machine state is RUNNING")
+            print(f"pot {self.pot_id} machine state is RUNNING,current step is:{self.steps[self.current_step]}")
             step = self.steps[self.current_step]
             if step["type"] == "step_pot": 
                 if self.need_track_acquire(step["action"]) and not self.track.try_acquire(self.pot_id):
@@ -109,6 +109,7 @@ class PotStateMachine:
                     )
          
             elif step["type"] == "spin_pot":
+                print(f"<<<<<<<<<<<current action is {step['action']}>>>>>>>>>>>>")
                 print(f"spin motor运行参数如下:{step['params']['direction']}，{step['params']['duration']}，{step['params']['speed']}")
                 
                 runtime.set_running(
