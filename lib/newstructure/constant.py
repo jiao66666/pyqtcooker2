@@ -442,12 +442,12 @@ ACTION_PARAMS_CONFIG = {
         "quitinadvance":0
     },
     "spin_for_wash":{
-        "duration": 10,
+        "duration": 10000,
         "speed": 1000,
         "direction":1
     },
     "spin_for_fire":{
-        "duration":100,
+        "duration":100000,
         "speed": 500,
         "direction":-1
     }
