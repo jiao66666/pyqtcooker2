@@ -172,12 +172,27 @@ class SpinMotorPollingService:
 
     def dev_spin_motor_status_all(self):
         print("模拟spin完成")
+         # 获取所有正在运行的电机
+        running_motors = runtime.get_running_motors_byboardid(BOARDTYPE_SPIN)
+
+        # 没有运行中的电机，直接返回
+        if not running_motors:
+            print("当前没有运行中的电机")
+            return
+
+        # 从运行中的电机中随机选择一个
+        motor_id = random.choice(running_motors)
+        print(f"done spin motorid:{motor_id}")
+        
+        runtime.set_done(motor_id,board_id=BOARDTYPE_SPIN)
         self.bus.publish(
             "SPIN_DONE",
             {
-                "motor_id": 0
+                "motor_id": motor_id
             }
         )        
+
+        return
 
     def _check_motor_rpm(self,motor_id):
         self.rs485.execute_command_async(

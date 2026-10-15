@@ -75,6 +75,16 @@ class RuntimeContext:
                 if info["state"] == "RUNNING"
             ]
 
+    # ==================================================
+    # 获取指定控制板中所有运行中的电机
+    # ==================================================
+    def get_running_motors_byboardid(self, board_id: int):
+        with self._lock:
+            return [
+                motor_id
+                for (bid, motor_id), info in self.motors.items()
+                if bid == board_id and info["state"] == "RUNNING"
+            ]
 
     def set_action_override(self, key, params):
         if params is None:

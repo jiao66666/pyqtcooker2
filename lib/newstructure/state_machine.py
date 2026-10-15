@@ -110,6 +110,16 @@ class PotStateMachine:
          
             elif step["type"] == "spin_pot":
                 print(f"spin motor运行参数如下:{step['params']['direction']}，{step['params']['duration']}，{step['params']['speed']}")
+                
+                runtime.set_running(
+                    board_id=BOARDTYPE_SPIN,
+                    motor_id=step["motor"].motor_id,
+                    action=step["action"],
+                    pot_id=self.pot_id,
+                    params=step["params"],
+                    task_id=f"{self.running_taskname}"
+                )
+                
                 step["motor"].run(step["params"]["direction"],step["params"]["duration"],step["params"]["speed"])
 
 
