@@ -274,6 +274,7 @@ def stopall():
     print("所有电机急停")
     success1 = system["stepmotorsmanager"].stop_all_motors()
     success2 = system["stepmotorsmanager"].reset_home_all()
+    success3 = system["spinmotorsmanager"].stop_all_motors()
     set_system_dirty(system,True)
     set_system_state(system,"EMERGENCY")
     runtime.set_all_enabled(False)
@@ -282,7 +283,7 @@ def stopall():
         "ESTOP_TRIGGERED",
         {}
     )
-    if success1 and success2 :
+    if success1 and success2 and success3 :
         print("测试成功!")
         return jsonify({"status": "success","message": "急停所有电机成功!"})
     else:

@@ -35,3 +35,16 @@ class SpinMotorManager:
         )
       
         return True        
+
+    def stop_all_motors(self):
+        """批量停止电机"""
+        print("####批量停止电机####")
+      
+         # 发送运行命令
+        self.com.execute_command_async(
+            "STOP", 
+            [str(self.board_id), "0","11"],
+            priority = PRIORITY_CONTROL
+        )
+      
+        return True  
