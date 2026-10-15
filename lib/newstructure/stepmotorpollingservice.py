@@ -340,14 +340,14 @@ class StepMotorPollingService:
                         f"电机 {motor_id} 状态：ERROR（故障）"
                     )
                     #暂时不发消息
-                    """
+                    
                     self.bus.publish(
                         "MOTOR_ERROR",
                         {
                             "motor_id": motor_id
                         }
                     ) 
-                    """
+                    
                 # ==================================================
                 # 未知状态
                 # ==================================================
