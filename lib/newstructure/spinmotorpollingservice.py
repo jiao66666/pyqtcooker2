@@ -115,7 +115,7 @@ class SpinMotorPollingService:
                 if status_code == "0":
 
                     print(
-                        f"电机 {motor_id} 状态：停止"
+                        f"SPIN电机 {motor_id} 状态：停止"
                     )
 
                     self.bus.publish(
@@ -131,7 +131,7 @@ class SpinMotorPollingService:
                 elif status_code == "3":
 
                     print(
-                        f"电机 {motor_id} 状态：运行"
+                        f"SPIN电机 {motor_id} 状态：运行"
                     )
 
                 # ------------------------------------------------
@@ -140,7 +140,7 @@ class SpinMotorPollingService:
                 elif status_code == "4":
 
                     print(
-                        f"电机 {motor_id} 状态：故障"
+                        f"SPIN电机 {motor_id} 状态：故障"
                     )
 
                 # ------------------------------------------------
@@ -149,7 +149,7 @@ class SpinMotorPollingService:
                 else:
 
                     print(
-                        f"电机 {motor_id} 未知状态：{status_code}"
+                        f"SPIN电机 {motor_id} 未知状态：{status_code}"
                     )
 
                 # TODO:
@@ -183,7 +183,7 @@ class SpinMotorPollingService:
         # 从运行中的电机中随机选择一个
         motor_id = random.choice(running_motors)
         print(f"done spin motorid:{motor_id}")
-        
+
         runtime.set_done(motor_id,board_id=BOARDTYPE_SPIN)
         self.bus.publish(
             "SPIN_DONE",
