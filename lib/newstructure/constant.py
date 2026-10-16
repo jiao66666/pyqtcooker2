@@ -253,6 +253,9 @@ POT_RESET_POS  = 0
 POT_INTAKE_POS   = 10
 
 #子动作参数KEY->命令参数 映射
+#varspeed 决定是否需要变速运行
+#quitinadvance决定动作是否需要同时运行，而非串行运行（默认）
+#pot_params决定1，2锅具体参数的覆盖
 ACTION_PARAMS_CONFIG = {
     "flip_out_togetfood": {
         "speed": BASE_SPEED,
