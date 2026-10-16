@@ -196,7 +196,7 @@ class StepMotor:
             priority = PRIORITY_CONTROL
         )
 
-        return True    
+        return True,["执行成功"]    
     
     def stop(self):
         """急停电机"""
@@ -253,7 +253,7 @@ class StepMotor:
 
 
     #   水平垂直复位
-    def reset_zero_both(self,positive: int = 1)-> Tuple[bool, List[str]]:
+    def reset_zero_both(self,positive: int = 1,speed:int = 90)-> Tuple[bool, List[str]]:
         """复位单个电机"""
 
         print(f"[{self.name}] ID:{self.motor_id} 运行 复位电机【{self.name}】, 主板类型:{self.board_id}")
@@ -261,7 +261,7 @@ class StepMotor:
         pulses = RESET_PULSES if positive == 1 else -RESET_PULSES
        
         #复位速度
-        anglespeed = 90   #生产标准速度360，测试使用90      
+        anglespeed = speed   #生产标准速度360，测试使用90      
          # 发送运行命令
         self.set_cmd_running("ORGRST")
         self.com.execute_command_async(
