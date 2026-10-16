@@ -584,8 +584,8 @@
             <div class="ice_btn" onclick="stopIceMotor()">紧急停止</div>
             <div class="ice_btn" onclick="runlongIceMotor(1)">正转长运行</div>
             <div class="ice_btn" onclick="runlongIceMotor(-1)">反转长运行</div>
-            <div class="ice_btn" onclick="runlongoldIceMotor(1)">正转长运行【老板0号】</div>
-            <div class="ice_btn" onclick="runlongoldIceMotor(-1)">反转长运行【老板0号】</div>
+            <div class="ice_btn" onpointerdown="runlongoldIceMotor(1)" onpointerup="pauseoldIceMotor()">正转长运行【老板0号】</div>
+            <div class="ice_btn" onpointerdown="runlongoldIceMotor(-1)" onpointerup="pauseoldIceMotor()">反转长运行【老板0号】</div>
         </div>
     </div> 
 

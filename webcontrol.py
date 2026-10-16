@@ -757,6 +757,30 @@ def runlongoldIceMotor():
         return jsonify({"status": "fail","message": f"提交数据测试失败！错误:{msg}"})   
 
 
+@app.route('/pauseoldIceMotor', methods=['POST'])
+@require_enabled
+def pauseoldIceMotor():
+    print("动作测试")
+    data = request.get_json()
+    positive = data.get('positive')
+    motorid = data.get('motorid')
+    speed =   data.get('speed')
+    print(f"positive:{positive},motorid:{motorid}")
+    success = False
+    
+    success,msg = system["motors"]["stepmotor"][int(0)].pause()
+    
+    if success :
+        print("测试成功!")
+        return jsonify({"status": "success","message": f"提交数据测试成功!"})
+    else:
+        print("测试失败!")
+        return jsonify({"status": "fail","message": f"提交数据测试失败！错误:{msg}"})   
+
+
+
+
+
 
 @app.route('/stopIceMotor', methods=['POST'])
 @require_enabled
