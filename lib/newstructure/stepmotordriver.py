@@ -167,7 +167,7 @@ class StepMotor:
         """长运转电机"""
         if self.cmd_running :
             print("命令还在运行中")
-            return False
+            return False,["命令还在运行"]
         print("####运行电机####")
         print(f"[{self.name}] ID:{self.motor_id} 连续运行, 角速度 {anglespeed}, 主板类型:{self.board_id}")
 
@@ -180,7 +180,7 @@ class StepMotor:
             priority = PRIORITY_CONTROL
         )
 
-        return True
+        return True,["执行成功"]
     
 
     def pause(self):

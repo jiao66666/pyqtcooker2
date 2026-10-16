@@ -726,7 +726,7 @@ def runlongIceMotor():
     print(f"positive:{positive},motorid:{motorid}")
     success = False
     
-    success,msg = system["motors"]["icemotor"][int(motorid)].runlong(int(int(speed)*90),int(positive))
+    success,msg = system["motors"]["icemotor"][int(motorid)].runlong(int(int(speed)*360),int(positive))
     
     if success :
         print("测试成功!")
