@@ -1018,6 +1018,6 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
     background-color: #efefef;
     border-radius: 5px;
     margin:5px;
-    padding:5px;
+    padding:8px;
     font-size:14px;
 }

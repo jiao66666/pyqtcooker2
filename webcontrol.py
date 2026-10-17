@@ -275,6 +275,7 @@ def stopall():
     success1 = system["stepmotorsmanager"].stop_all_motors()
     success2 = system["stepmotorsmanager"].reset_home_all()
     success3 = system["spinmotorsmanager"].stop_all_motors()
+    success4 = system["icemotorsmanager"].stop_all_motors()
     set_system_dirty(system,True)
     set_system_state(system,"EMERGENCY")
     runtime.set_all_enabled(False)
@@ -283,7 +284,7 @@ def stopall():
         "ESTOP_TRIGGERED",
         {}
     )
-    if success1 and success2 and success3 :
+    if success1 and success2 and success3 and success4 :
         print("测试成功!")
         return jsonify({"status": "success","message": "急停所有电机成功!"})
     else:
@@ -755,6 +756,33 @@ def runlongoldIceMotor():
     else:
         print("测试失败!")
         return jsonify({"status": "fail","message": f"提交数据测试失败！错误:{msg}"})   
+
+
+
+@app.route('/runIceMotor', methods=['POST'])
+@require_enabled
+def runIceMotor():
+    print("运行电机单次运转绝对值坐标")
+    data = request.get_json()
+    motorid = data.get('motorid')  
+    direction = data.get('direction')  
+    speed = data.get('speed')  
+    circles = data.get('circle') 
+    success = False
+    print("收到参数 :", motorid, direction,speed)
+    target = float(circles) if direction > 0 else -float(circles)
+      
+    success,msg =  system["motors"]["icemotor"][int(motorid)].go(target,int(int(speed)*360))
+    currentpos = system["motors"]["icemotor"][int(motorid)].get_current_pos()
+    if success :
+        print("电机单次运转成功!")
+        return jsonify({"status": "success","message": f"运行电机成功!电机号：{motorid}，速度：{speed}，当前位置：{currentpos}"})
+    else:
+        print("电机单次运转失败!")
+        return jsonify({"status": "fail","message": f"运转失败!错误:{msg}"})
+
+
+
 
 
 @app.route('/pauseoldIceMotor', methods=['POST'])

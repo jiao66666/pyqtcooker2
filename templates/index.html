@@ -545,11 +545,6 @@
               <div class="actionpanel_btnarea">
                   <div class="actionpanel_btn" onclick="testaction(1,'test_movemove')">1号锅【移动-移动】</div>
                   <div class="actionpanel_btn" onclick="testaction(2,'test_movemove')">2号锅【移动-移动】</div>
-                   <!---<div class="actionpanel_btn" onclick="testaction(1,'test_moveflip')">1号锅【移动-反转】</div>
-                  <div class="actionpanel_btn" onclick="testaction(2,'test_moveflip')">2号锅【移动-反转】</div>
-                  <div class="actionpanel_btn" onclick="testaction(1,'test_moveflip_reset')">1号锅【移动反转归零】</div>
-                  <div class="actionpanel_btn" onclick="testaction(2,'test_moveflip_reset')">2号锅【移动反转归零】</div>
-                   -->
                   <div class="actionpanel_btn" onclick="testaction(1,'test_all')">1号锅【全流程】</div>
                   <div class="actionpanel_btn" onclick="testaction(2,'test_all')">2号锅【全流程】</div>
                   <div class="actionpanel_btn" onclick="testaction(1,'test_move_spin')">1号锅【移动-旋转】</div>
@@ -577,15 +572,20 @@
                 4
             </div>
         </div>
+        <div class="new_input_circle">
+            <label for="circle_ice" class="input_tag">目标位置:</label>
+            <input class="input-classic w60" type="number" id="circleice_valabs" placeholder="请输入目标的绝对位置数值" />
+        </div>
         <div class="ice_btncon">
             <div class="ice_btn" onclick="resetIceMotor(1)">正转限位启动</div>
             <div class="ice_btn" onclick="resetIceMotor(-1)">反转限位启动</div>
-            <div class="ice_btn" onclick="pauseIceMotor()">暂停运行</div>
-            <div class="ice_btn" onclick="stopIceMotor()">紧急停止</div>
+            <div class="ice_btn" onclick="runIceMotor(1)">正转绝对值运行</div>
+            <div class="ice_btn" onclick="runIceMotor(-1)">反转绝对值运行</div>
             <div class="ice_btn" onclick="runlongIceMotor(1)">正转长运行</div>
             <div class="ice_btn" onclick="runlongIceMotor(-1)">反转长运行</div>
             <div class="ice_btn" onpointerdown="runlongoldIceMotor(1)" onpointerup="pauseoldIceMotor()">正转长运行【老板0号】</div>
             <div class="ice_btn" onpointerdown="runlongoldIceMotor(-1)" onpointerup="pauseoldIceMotor()">反转长运行【老板0号】</div>
+            <div class="ice_btn" onclick="pauseIceMotor()">暂停运行</div>
         </div>
     </div> 
 

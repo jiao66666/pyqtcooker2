@@ -115,7 +115,7 @@ class StepMotor:
 
         if params is None:
             print("no movement needed")
-            return False  
+            return False,["没有参数"]  
          # 发送运行命令
         # 发送运行命令
         success = self.run(
@@ -125,10 +125,10 @@ class StepMotor:
         )
         if not success:
             print(f"错误: 运行命令失败")
-            return False
+            return False,["运行命令失败"]
         
         print("执行成功")
-        return True    
+        return True,["执行成功"]    
       
     def run(self, circles: float, anglespeed: int, direction: int):
         """异步运行电机（基于通信队列，无线程）"""

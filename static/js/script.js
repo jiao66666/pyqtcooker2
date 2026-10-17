@@ -1180,6 +1180,53 @@ function pauseIceMotor() {
 }
 
 
+
+function runIceMotor(direction) {
+      
+       var motorid = getSelectedValue("icemotor");
+       console.log("current motorid is:"+motorid)
+
+       var speed = getSelectedValue("speed");
+
+        var circle = document.getElementById("circleice_valabs");
+        console.log("选中圈数值是:", circle.value);
+
+        if(circle.value == "" || isNaN(circle.value)){
+            alert("请输入有效的绝对位置值！");
+            return;
+        }
+
+        if(circle.value>8){
+            alert("绝对位置值不合法！");
+            return;
+        }
+
+       
+        fetch('/runIceMotor', {
+            method: 'POST', 
+            headers: {
+                'Content-Type': 'application/json'  
+            },
+            body: JSON.stringify({
+                motorid: motorid,
+                direction: direction,
+                circle: circle.value,
+                speed: speed
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+             addMessage(`${data.message}`);  // 将收到的消息保存并显示
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            addMessage("Error starting motor.");
+        });
+}
+
+
+
+
 function getSelectedValue(name) {
     const box = document.getElementById(name);
     console.log("getSelectedValue ,reading value is:"+box.dataset.value)
