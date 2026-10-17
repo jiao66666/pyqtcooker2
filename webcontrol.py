@@ -737,27 +737,6 @@ def runlongIceMotor():
         return jsonify({"status": "fail","message": f"提交数据测试失败！错误:{msg}"})   
 
 
-@app.route('/runlongoldIceMotor', methods=['POST'])
-@require_enabled
-def runlongoldIceMotor():
-    print("动作测试")
-    data = request.get_json()
-    positive = data.get('positive')
-    motorid = data.get('motorid')
-    speed =   data.get('speed')
-    print(f"positive:{positive},motorid:{motorid}")
-    success = False
-    
-    success,msg = system["motors"]["stepmotor"][int(0)].runlong(int(int(speed)*360),int(positive))
-    
-    if success :
-        print("测试成功!")
-        return jsonify({"status": "success","message": f"提交数据测试成功!"})
-    else:
-        print("测试失败!")
-        return jsonify({"status": "fail","message": f"提交数据测试失败！错误:{msg}"})   
-
-
 
 @app.route('/runIceMotor', methods=['POST'])
 @require_enabled
@@ -781,6 +760,26 @@ def runIceMotor():
         print("电机单次运转失败!")
         return jsonify({"status": "fail","message": f"运转失败!错误:{msg}"})
 
+
+@app.route('/runlongoldIceMotor', methods=['POST'])
+@require_enabled
+def runlongoldIceMotor():
+    print("动作测试")
+    data = request.get_json()
+    positive = data.get('positive')
+    motorid = data.get('motorid')
+    speed =   data.get('speed')
+    print(f"positive:{positive},motorid:{motorid}")
+    success = False
+    
+    success,msg = system["motors"]["stepmotor"][int(0)].runlong(int(int(speed)*360),int(positive))
+    
+    if success :
+        print("测试成功!")
+        return jsonify({"status": "success","message": f"提交数据测试成功!"})
+    else:
+        print("测试失败!")
+        return jsonify({"status": "fail","message": f"提交数据测试失败！错误:{msg}"})   
 
 
 
@@ -808,6 +807,25 @@ def pauseoldIceMotor():
 
 
 
+@app.route('/resetoldIceMotor', methods=['POST'])
+@require_enabled
+def resetoldIceMotor():
+    print("动作测试")
+    data = request.get_json()
+    positive = data.get('positive')
+    motorid = data.get('motorid')
+    speed =   data.get('speed')
+    print(f"positive:{positive},motorid:{motorid}")
+    success = False
+    
+    success,msg = system["motors"]["stepmotor"][int(0)].reset_zero_both(int(positive),int(int(speed)*90))
+    
+    if success :
+        print("测试成功!")
+        return jsonify({"status": "success","message": f"提交数据测试成功!"})
+    else:
+        print("测试失败!")
+        return jsonify({"status": "fail","message": f"提交数据测试失败！错误:{msg}"})    
 
 
 @app.route('/stopIceMotor', methods=['POST'])

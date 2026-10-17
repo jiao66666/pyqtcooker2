@@ -1041,6 +1041,37 @@ function resetIceMotor(positive) {
 }
 
 
+function resetoldIceMotor(positive) {
+          // 获取 select 元素
+        var motorid = getSelectedValue("icemotor");
+        console.log("motorid",motorid)
+
+         // 获取 select 元素
+        var speed = getSelectedValue("speed");
+        console.log("选中速度值是:", speed);
+        console.log("获取参数positive:"+positive+"motorid:"+motorid)
+        fetch('/resetoldIceMotor', {
+            method: 'POST', 
+            headers: {
+                'Content-Type': 'application/json'  
+            },
+            body: JSON.stringify({
+                positive:positive,
+                motorid:motorid,
+                speed:speed
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+             addMessage(``+data.message);  // 将收到的消息保存并显示
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            addMessage("Error starting motor.");
+        });
+}
+
+
 function runlongIceMotor(positive) {
           // 获取 select 元素
         var motorid = getSelectedValue("icemotor");
