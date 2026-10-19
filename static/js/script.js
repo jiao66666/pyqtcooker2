@@ -1437,6 +1437,7 @@ function createMotorStatusApp(el) {
             icemotor_x:0.0,
             icemotor_y:0.0,
             icemotor_z:0.0,
+            icemotor_door:0.0,
 
             // 炒菜机运行时间
             time_ellapse: "0天 0时 0分 0秒",
@@ -1474,6 +1475,8 @@ function createMotorStatusApp(el) {
                         this.icemotor_y = position
                     }else if (motor_id == 3){
                         this.icemotor_z = position
+                    }else if (motor_id == 1){
+                        this.icemotor_door = position
                     }
                }
             },
