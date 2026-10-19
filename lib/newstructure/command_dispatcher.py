@@ -15,7 +15,7 @@ class CommandDispatcher:
         self.bus = bus
         self.cookservice = None
 
-        self.bus.subscribe("MOTOR_DONE", self.on_motor_done)
+        self.bus.subscribe("POT_MOTOR_DONE", self.on_potmotor_done)
 
     def set_cookservice(self,cookservice):
         self.cookservice = cookservice
@@ -105,8 +105,8 @@ class CommandDispatcher:
             )
 
 
-    def on_motor_done(self, data):
-        print("电机完成运动@@@@@@@@@@@@@@@@@@@@@@@@---disptcher")
+    def on_potmotor_done(self, data):
+        print("锅电机完成运动@@@@@@@@@@@@@@@@@@@@@@@@---disptcher")
         motor_id = data["motor_id"]    
         ctx = runtime.get(motor_id)
         if not ctx:

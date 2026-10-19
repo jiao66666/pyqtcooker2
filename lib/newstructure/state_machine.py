@@ -22,7 +22,8 @@ class PotStateMachine:
 
         
         # 订阅电机完成事件
-        self.bus.subscribe("MOTOR_DONE", self.on_motor_done)
+        self.bus.subscribe("POT_MOTOR_DONE", self.on_potmotor_done)
+        self.bus.subscribe("ICE_MOTOR_DONE", self.on_icemotor_done)
         self.bus.subscribe("SPIN_DONE", self.on_spin_done)
         self.bus.subscribe("ESTOP_TRIGGERED", self.on_estop)
         self.bus.subscribe("MOTOR_ERROR", self.on_motor_error)
@@ -143,7 +144,6 @@ class PotStateMachine:
         elif self.state == "DONE":
             #print("ALL ACTION IS DONE!!!!!!!!!!!")
             print(f"{self.pot_id} machine state is DONE")
-            #self.bus.unsubscribe("MOTOR_DONE", self.on_motor_done)
             self.cookservice.resetRunning(self.pot_id,self.running_taskname)
             self.state = "IDLE"
 
@@ -202,7 +202,7 @@ class PotStateMachine:
         print("now reset the step to 0")
         self.current_step = 0    
 
-    def on_motor_done(self, data):
+    def on_potmotor_done(self, data):
         print("锅步进电机完成运动@@@@@@@@@@@@@@@@@@@@@@@@----statemachine")
         print(f"subscribe data:",data)
         #self.state = "DONE"  #only for test
@@ -228,7 +228,43 @@ class PotStateMachine:
         if self.need_track_release(step["action"]):  #如果需要跨动作释放，则加变量self.track_accuired 进行保存跨多个动作判断
             self.track.release(self.pot_id)
 
-        self.go_next_step("on_motor_done")
+        self.go_next_step("on_potmotor_done")
+
+        if self.current_step < len(self.steps):
+            print(f"current step is:{self.current_step},small than total{len(self.steps)},continue state running...")
+            self.state = "RUNNING"                #继续取下一个动作执行
+        else:
+            print(f"current step is:{self.current_step},equal bigger than total{len(self.steps)},set state done!")
+            self.state = "DONE"                   #动作组完成，变更状态
+            self.running_tasks.remove(self.running_taskname)
+
+    def on_icemotor_done(self, data):
+        print("冰柜步进电机完成运动@@@@@@@@@@@@@@@@@@@@@@@@----statemachine")
+        print(f"subscribe data:",data)
+        #self.state = "DONE"  #only for test
+        motor_id = data["motor_id"]    
+        ctx = runtime.get(motor_id)
+        if not ctx:
+            print("》》》没有ctx《《《《")
+            return      
+
+        if self.state != "WAITING":
+            print("》》》状态不对《《《")
+            return          
+
+        step = self.steps[self.current_step]
+        if ctx["action"] != step["action"] or data["motor_id"] != step["motor"].motor_id:  #确保数据的一致性
+            print(f"》》》检查未过关《《《{ctx['action']},{step['action']},{data['motor_id']},{step['motor'].motor_id}")
+            return
+
+     
+        print(f"motor {motor_id} done the action {step['action']}")
+        print(f"OK检查过关OK{ctx['action']},{step['action']},{data['motor_id']},{step['motor'].motor_id}")
+
+        if self.need_track_release(step["action"]):  #如果需要跨动作释放，则加变量self.track_accuired 进行保存跨多个动作判断
+            self.track.release(self.pot_id)
+
+        self.go_next_step("on_icemotor_done")
 
         if self.current_step < len(self.steps):
             print(f"current step is:{self.current_step},small than total{len(self.steps)},continue state running...")
@@ -297,7 +333,8 @@ class PotStateMachine:
 
 
     def destroy(self):
-        self.bus.unsubscribe("MOTOR_DONE", self.on_motor_done)
+        self.bus.unsubscribe("POT_MOTOR_DONE", self.on_potmotor_done)
+        self.bus.unsubscribe("ICE_MOTOR_DONE", self.on_icemotor_done)
         self.bus.unsubscribe("SPIN_DONE", self.on_spin_done)
         self.bus.unsubscribe("ESTOP_TRIGGERED", self.on_estop)
         self.bus.unsubscribe("MOTOR_ERROR", self.on_motor_error)     

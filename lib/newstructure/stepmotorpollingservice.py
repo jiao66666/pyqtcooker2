@@ -11,6 +11,7 @@ class StepMotorPollingService:
     def __init__(self, rs485, bus, motors, mockmotor,websocket_server,interval=0.2):
         self.rs485 = rs485
         self.bus = bus
+        self.board_id = rs485.board_id
         self.interval = interval
         self.running = False
         self.motors = motors
@@ -46,96 +47,12 @@ class StepMotorPollingService:
 
             time.sleep(self.interval)
 
-
-    """
-    #检测所有电机是否有错误
-    def _check_all_errors(self):
-        self.rs485.execute_command_async(
-            "Error_Value",
-            ["1","0"],
-            callback=self._on_motor_error_handler
-        )
-
-    #处理检查到的错误
-    def _on_motor_error_handler(self, command,success, resp):
-        print("process error here if checked ")
-        if not success:
-            return
-        items = resp[1].split(",")
-
-        # 假设：0~4号电机
-        motor_ids = range(len(items))
-
-        if len(items) != len(self.motors):
-            print("警告：电机数量与返回不一致")
-
-        for motor_id, status in enumerate(items):
-            runtime.set_error(motor_id)
-            self.bus.publish(
-                "MOTOR_ERROR",
-                {"motor_id": motor_id}
-            )
-    
-    # =========================
-    # 电机状态查询（异步化）
-    # =========================
-    def _check_all_motors(self):
-
-        for motor_id in self.motors:
-
-            if motor_id in self.motor_inflight:
-                        continue
-
-            self.motor_inflight.add(motor_id)
-
-            self.rs485.execute_command_async(
-                "RunStatus",
-                [str(motor_id)],
-                callback=lambda c,s, r, mid=motor_id: self._on_motor_status(mid, s, r ,c)
-            )
-
-            #print("QUEUE SIZE:", self.rs485.queue.qsize())
-
-            
-    def _on_motor_status(self, motor_id, success, response ,command):
-
-        print("电机状态回调中》》》》》》》")
-        self.motor_inflight.discard(motor_id)
-        #测试的时候关闭
-        #仅测试用       
-        runtime.set_done(motor_id)
-        self.bus.publish("MOTOR_DONE", {"motor_id": motor_id})
-        return
-        
-        
-        if not success:
-            return
-
-        status = response[1]
-        print(f"[Polling] motor {motor_id} status: {status}")
-        
-        #多电机同时运行情况
-        quitInAdvance = False
-        step_params = runtime.get_params(motor_id)
-        if step_params["quitinadvance"] > 0:
-           curpos = runtime.get_position(motor_id)
-           if curpos > step_params["quitinadvance"]:
-               quitInAdvance = True
-
-        if status == "PAUSEING" or quitInAdvance:
-            runtime.set_done(motor_id)
-            self.bus.publish("MOTOR_DONE", {"motor_id": motor_id})
-
-        elif status == "ERROR":
-            self.bus.publish("MOTOR_ERROR", {"motor_id": motor_id})            
-
-    """
     #为最大化查询效率可考虑替换此方法
     def _check_all_motors_status(self):
 
         self.rs485.execute_command_async(
             "ALLRunStatus",
-            [str(self.rs485.board_id),"0"],
+            [str(self.board_id),"0"],
             callback=self._on_motor_status_all
         )
 
@@ -250,13 +167,8 @@ class StepMotorPollingService:
                         continue
 
                     runtime.set_done(motor_id)
+                    self.notify_done(motor_id)
 
-                    self.bus.publish(
-                        "MOTOR_DONE",
-                        {
-                            "motor_id": motor_id
-                        }
-                    )
 
                 # ==================================================
                 # 状态 2
@@ -320,12 +232,8 @@ class StepMotorPollingService:
                                 motor_id
                             )
 
-                            self.bus.publish(
-                                "MOTOR_DONE",
-                                {
-                                    "motor_id": motor_id
-                                }
-                            )
+                            self.notify_done(motor_id)
+
 
                 # ==================================================
                 # 状态 4
@@ -384,11 +292,7 @@ class StepMotorPollingService:
 
         runtime.set_done(motor_id,board_id=board_id)
 
-        self.bus.publish(
-            "MOTOR_DONE",
-            {"motor_id": motor_id}
-        )
-
+        self.notify_done(motor_id)
         return
 
     # =========================
@@ -398,7 +302,7 @@ class StepMotorPollingService:
 
         self.rs485.execute_command_async(
             "ALLPulse",
-            [str(self.rs485.board_id), "0"],
+            [str(self.board_id), "0"],
             callback=self._on_all_position
         )
 
@@ -512,3 +416,19 @@ class StepMotorPollingService:
             circles = pulses / (MICRO_STEP * 200)
 
         return round(circles, 2)
+
+    def notify_done(self,motorid):
+        if self.board_id == BOARDTYPE_STEP:
+            self.bus.publish(
+                "POT_MOTOR_DONE",
+                {
+                    "motor_id": motorid
+                }
+            )
+        elif self.board_id == BOARDTYPE_ICE:
+            self.bus.publish(
+                "ICE_MOTOR_DONE",
+                {
+                    "motor_id": motorid
+                }
+            ) 

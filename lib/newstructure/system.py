@@ -50,6 +50,7 @@ def build_system():
     stepmotorpolling = StepMotorPollingService(boards["stepmotor"],bus,motors["stepmotor"],mockmotor,websocket_server,STEP_POLLING_INTERVAL)
     spinmotorpolling = SpinMotorPollingService(boards["spinmotor"],bus,motors["spinmotor"],websocket_server,SPIN_POLLING_INTERVAL)
     feedermotorpolling = FeederMotorPollingService(boards["feedermotor"],bus,motors["feedermotor"],websocket_server,FEEDER_POLLING_INTERVAL)
+    icemotorpolling = StepMotorPollingService(boards["icemotor"],bus,motors["icemotor"],mockmotor,websocket_server,ICE_POLLING_INTERVAL)
 
     resource_manager = TaskResourceManager(bus)
     dispatcher = CommandDispatcher(resource_manager,bus)
@@ -70,6 +71,7 @@ def build_system():
         "stepmotorpolling": stepmotorpolling,
         "spinmotorpolling":spinmotorpolling,
         "feedermotorpolling":feedermotorpolling,
+        "icemotorpolling":icemotorpolling,
         "motioncontroller":motion_controller,
         "boards":boards,
         "websocket":websocket_server,

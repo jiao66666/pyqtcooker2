@@ -19,7 +19,7 @@ class TaskResourceManager:
         self.bus = bus
 
         self.lock = threading.Lock()
-        self.bus.subscribe("MOTOR_DONE", self.on_motor_done)
+        self.bus.subscribe("POT_MOTOR_DONE", self.on_potmotor_done)
 
     # =====================================
     # 申请资源
@@ -105,7 +105,7 @@ class TaskResourceManager:
             return task_id in self.task_resources
         
 
-    def on_motor_done(self, data):
+    def on_potmotor_done(self, data):
         print("电机完成运动@@@@@@@@@@@@@@@@@@@@@@@@")
 
         motor_id = data["motor_id"]    
