@@ -1791,7 +1791,7 @@ function setupWebSocket(url) {
     ws.onmessage = (event) => {
         const arr = JSON.parse(event.data); // [{motor_id, position}, ...]
         for (const item of arr) {
-            if(item.type=="cordinate"){
+            if(item.type=="potcordinate"){
                 app.updateMotorData(item.motor_id, item.position);
             }else if(item.type=="command"){
                 commandApp.addCommand(item.info);

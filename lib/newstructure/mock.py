@@ -26,7 +26,7 @@ class MockMotor:
 
             self.websocket_server.send([
                 {
-                    "type": "cordinate",
+                    "type": "potcordinate",
                     "motor_id": mid,
                     "position": pos
                 }

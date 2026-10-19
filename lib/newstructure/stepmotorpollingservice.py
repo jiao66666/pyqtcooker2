@@ -365,11 +365,18 @@ class StepMotorPollingService:
                 self.motors[motor_id].update_current_pos(pos)
 
                 # 前端数据
-                ws_data.append({
-                    "type": "cordinate",
-                    "motor_id": motor_id,
-                    "position": pos
-                })
+                if self.board_id == BOARDTYPE_STEP:
+                    ws_data.append({
+                        "type": "potcordinate",
+                        "motor_id": motor_id,
+                        "position": pos
+                    })
+                elif self.board_id == BOARDTYPE_ICE:
+                    ws_data.append({
+                        "type": "icecordinate",
+                        "motor_id": motor_id,
+                        "position": pos
+                    })  
 
             # 一次性发送
             if ws_data:
