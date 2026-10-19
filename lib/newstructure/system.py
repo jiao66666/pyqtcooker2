@@ -150,6 +150,9 @@ def shutdown_system(system):
             print("停止所有电机...")
             system["stepmotorsmanager"].stop_all_motors()
             system["stepmotorsmanager"].reset_home_all()
+        if "icemotorsmanager" in system:    
+            system["icemotorsmanager"].stop_all_motors()
+            system["icemotorsmanager"].reset_home_all()
     except Exception as e:
         print(f"停止电机失败: {e}")
 
