@@ -720,7 +720,7 @@ def resetIceMotor():
 @app.route('/runlongIceMotor', methods=['POST'])
 @require_enabled
 def runlongIceMotor():
-    print("动作测试")1
+    print("动作测试")
     data = request.get_json()
     positive = data.get('positive')
     motorid = data.get('motorid')
