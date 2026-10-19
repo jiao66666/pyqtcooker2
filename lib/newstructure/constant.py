@@ -35,7 +35,7 @@ POT_MOTOR_LIST = [POT_BACKUP_MOTOR,POT1_MOVE_MOTOR,POT1_FLIP_MOTOR,POT2_MOVE_MOT
 
 ########冰柜步进配置#######
 ICE_MOTOR_0 = 0     #冰柜x   正转向右
-ICE_MOTOR_1 = 1    
+ICE_MOTOR_1 = 1     #冰柜门  
 ICE_MOTOR_2 = 2     #冰柜y   正转向左
 ICE_MOTOR_3 = 3     #冰柜z   正转向右
 ICE_MOTOR_4 = 4 
