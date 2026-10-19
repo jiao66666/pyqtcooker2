@@ -172,7 +172,10 @@ def shutdown_system(system):
         system["spinmotorpolling"].stop()   
 
     if "feedermotorpolling" in system:
-        system["feedermotorpolling"].stop()         
+        system["feedermotorpolling"].stop()      
+
+    if "icemotorpolling"  in system:
+        system["icemotorpolling"].stop()      
 
     if "scancycle" in system:
         system["scancycle"].stop()
@@ -286,17 +289,20 @@ def build_motors_manager(bus,boards,motors):
 
 #初始化轮询状态
 def init_system():
-    for motor_id in MOTOR_LIST:
+    for motor_id in POT_MOTOR_LIST:
         runtime.init_motor(BOARDTYPE_STEP,motor_id,"step_pot")
     for motor_id in SPIN_MOTOR_LIST:
         runtime.init_motor(BOARDTYPE_SPIN,motor_id,"spin_pot")
     for motor_id in FEED_MOTOR_LIST:
-        runtime.init_motor(BOARDTYPE_FEEDER,motor_id,"feeder_pot")        
+        runtime.init_motor(BOARDTYPE_FEEDER,motor_id,"feeder_pot")
+    for motor_id in ICE_MOTOR_LIST:
+        runtime.init_motor(BOARDTYPE_ICE,motor_id,"step_ice")            
 
 #启动主TICK循环
 def run_system(system):
     system["stepmotorpolling"].start()
     system["spinmotorpolling"].start()
+    system["icemotorpolling"].start()
     #system["feedermotorpolling"].start()
     system["motioncontroller"].start()
     system["websocket"].start()
