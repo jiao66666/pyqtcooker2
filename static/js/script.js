@@ -1417,6 +1417,10 @@ function createMotorStatusApp(el) {
             motor2_flip: 0.0,
             motor2_level: 0.0,
 
+            icemotor_x:0.0,
+            icemotor_y:0.0,
+            icemotor_z:0.0,
+
             // 炒菜机运行时间
             time_ellapse: "0天 0时 0分 0秒",
 
@@ -1432,20 +1436,23 @@ function createMotorStatusApp(el) {
 
         methods: {
 
-            updateMotorData(motor_id, position) {
+            updateMotorData(motortype,motor_id, position) {
+               if(motortype=="potcordinate"){
+                    if (motor_id == 1) {
+                        this.motor1_flip = position;
 
-                if (motor_id == 1) {
-                    this.motor1_flip = position;
+                    } else if (motor_id == 2) {
+                        this.motor1_level = position;
 
-                } else if (motor_id == 2) {
-                    this.motor1_level = position;
+                    } else if (motor_id == 3) {
+                        this.motor2_flip = position;
 
-                } else if (motor_id == 3) {
-                    this.motor2_flip = position;
+                    } else if (motor_id == 4) {
+                        this.motor2_level = position;
+                    }
+               }else if(motortype=="icecordinate"){
 
-                } else if (motor_id == 4) {
-                    this.motor2_level = position;
-                }
+               }
             },
 
 
@@ -1791,8 +1798,8 @@ function setupWebSocket(url) {
     ws.onmessage = (event) => {
         const arr = JSON.parse(event.data); // [{motor_id, position}, ...]
         for (const item of arr) {
-            if(item.type=="potcordinate"){
-                app.updateMotorData(item.motor_id, item.position);
+            if(item.type=="potcordinate"||item.type=="icecordinate"){
+                app.updateMotorData(item.type,item.motor_id, item.position);
             }else if(item.type=="command"){
                 commandApp.addCommand(item.info);
                 updatePotCommand(item.potid,item.info)
