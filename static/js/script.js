@@ -1081,6 +1081,22 @@ function runlongIceMotor(positive) {
         var speed = getSelectedValue("speed");
         console.log("选中速度值是:", speed);
         console.log("获取参数positive:"+positive+"motorid:"+motorid)
+
+        var constant = document.getElementById("circleice_speedconstant");
+        console.log("选中圈数值是:", constant.value);
+
+        if(constant.value == "" || isNaN(constant.value)){
+            alert("请输入有效的绝对位置值！");
+            return;
+        }
+
+        if(constant.value>1080 || constant.value<=0){
+            alert("绝对位置值不合法！");
+            return;
+        }
+
+
+
         fetch('/runlongIceMotor', {
             method: 'POST', 
             headers: {
@@ -1089,7 +1105,8 @@ function runlongIceMotor(positive) {
             body: JSON.stringify({
                 positive:positive,
                 motorid:motorid,
-                speed:speed
+                speed:speed,
+                speedconstant:constant.value
             })
         })
         .then(response => response.json())

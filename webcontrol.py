@@ -720,15 +720,19 @@ def resetIceMotor():
 @app.route('/runlongIceMotor', methods=['POST'])
 @require_enabled
 def runlongIceMotor():
-    print("动作测试")
+    print("动作测试")1
     data = request.get_json()
     positive = data.get('positive')
     motorid = data.get('motorid')
     speed =   data.get('speed')
+    speedconstant = data.get('speedconstant')
     print(f"positive:{positive},motorid:{motorid}")
     success = False
-    
-    success,msg = system["motors"]["icemotor"][int(motorid)].runlong(int(int(speed)*360),int(positive))
+
+    if int(speedconstant)<=0 or int(speedconstant)>1080:
+        print("测试失败!")
+        return jsonify({"status": "fail","message": f"提交数据测试失败！错误:速度参数异常"})   
+    success,msg = system["motors"]["icemotor"][int(motorid)].runlong(int(int(speed)*int(speedconstant)),int(positive))
     
     if success :
         print("测试成功!")
