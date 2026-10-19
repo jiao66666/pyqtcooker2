@@ -279,7 +279,8 @@ def stopall():
     set_system_dirty(system,True)
     set_system_state(system,"EMERGENCY")
     runtime.set_all_enabled(False)
-    system["mockmotor"].stop()
+    system["potmockmotor"].stop()
+    system["icemockmotor"].stop()
     system["bus"].publish(
         "ESTOP_TRIGGERED",
         {}

@@ -46,11 +46,12 @@ def build_system():
     pot1 = PotStateMachine(1, bus, trackmanager, motion_controller)
     pot2 = PotStateMachine(2, bus, trackmanager, motion_controller)
 
-    mockmotor = MockMotor(websocket_server,MOCK_INTERVAL)
-    stepmotorpolling = StepMotorPollingService(boards["stepmotor"],bus,motors["stepmotor"],mockmotor,websocket_server,STEP_POLLING_INTERVAL)
+    potmockmotor = MockMotor(BOARDTYPE_STEP,websocket_server,MOCK_INTERVAL)
+    icemockmotor = MockMotor(BOARDTYPE_ICE,websocket_server,MOCK_INTERVAL)
+    stepmotorpolling = StepMotorPollingService(boards["stepmotor"],bus,motors["stepmotor"],potmockmotor,websocket_server,STEP_POLLING_INTERVAL)
     spinmotorpolling = SpinMotorPollingService(boards["spinmotor"],bus,motors["spinmotor"],websocket_server,SPIN_POLLING_INTERVAL)
     feedermotorpolling = FeederMotorPollingService(boards["feedermotor"],bus,motors["feedermotor"],websocket_server,FEEDER_POLLING_INTERVAL)
-    icemotorpolling = StepMotorPollingService(boards["icemotor"],bus,motors["icemotor"],mockmotor,websocket_server,ICE_POLLING_INTERVAL)
+    icemotorpolling = StepMotorPollingService(boards["icemotor"],bus,motors["icemotor"],icemockmotor,websocket_server,ICE_POLLING_INTERVAL)
 
     resource_manager = TaskResourceManager(bus)
     dispatcher = CommandDispatcher(resource_manager,bus)
@@ -81,7 +82,8 @@ def build_system():
         "spinmotorsmanager":motors_manager["spin"],
         "icemotorsmanager":motors_manager["ice"],
         "dispatcher":dispatcher,
-        "mockmotor":mockmotor,
+        "potmockmotor":potmockmotor,
+        "icemockmotor":icemockmotor
     }
 
     cookservice = CookerService(system)
@@ -108,7 +110,6 @@ def recovery_system(system):
     print("recovery system .....")
     system["state"]["dirty"]=False
     system["state"]["mode"]="READY"
-    #system["mockmotor"].start()
     system["pots"][1].reset()
     system["pots"][2].reset()
     system["cookservice"].reset()
@@ -133,15 +134,17 @@ def shutdown_device(system):
     system["pots"][2].reset()
     system["state"]["mode"] = "OFF"
     system["state"]["dirty"] = True
-    system["mockmotor"].stop()
-    
+    system["potmockmotor"].stop()
+    system["icemockmotor"].stop()
+
     return True
 
 def shutdown_system(system):
     print("系统关闭中...")
 
     # A. 关闭模拟数据
-    system["mockmotor"].stop()
+    system["potmockmotor"].stop()
+    system["icemockmotor"].stop()
 
     # =========================
     # 0. 先安全停止所有电机（新增）
