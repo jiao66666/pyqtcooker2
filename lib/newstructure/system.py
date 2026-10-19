@@ -306,7 +306,7 @@ def init_system():
 def run_system(system):
     system["stepmotorpolling"].start()
     system["spinmotorpolling"].start()
-    system["icemotorpolling"].start()
+    #system["icemotorpolling"].start()
     #system["feedermotorpolling"].start()
     system["motioncontroller"].start()
     system["websocket"].start()

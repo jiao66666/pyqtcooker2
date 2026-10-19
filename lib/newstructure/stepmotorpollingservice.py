@@ -35,15 +35,10 @@ class StepMotorPollingService:
     # =========================
     def _loop(self):
 
-        #tick = 0   #降频使用
-
         while self.running:
             self._check_all_motors_status()  #for each motor效率太低，必须改成一次性查询所有电机的状态
             self._check_all_position()
 
-            #tick += 1
-            #if tick % 10 == 0:
-            #    self._check_all_errors()
 
             time.sleep(self.interval)
 
