@@ -1451,7 +1451,13 @@ function createMotorStatusApp(el) {
                         this.motor2_level = position;
                     }
                }else if(motortype=="icecordinate"){
-
+                    if (motor_id == 0){
+                        this.icemotor_x = position
+                    }else if (motor_id == 2){
+                        this.icemotor_y = position
+                    }else if (motor_id == 3){
+                        this.icemotor_z = position
+                    }
                }
             },
 
