@@ -126,8 +126,9 @@ def stop_system_state(system):
 
 
 def shutdown_device(system):
-    motors = system["stepmotorsmanager"]
-    motors.stop_all_motors()
+    system["stepmotorsmanager"].stop_all_motors()
+    system["icemotorsmanager"].stop_all_motors()
+    system["spinmotorsmanager"].stop_all_motors()
     system["pots"][1].reset()
     system["pots"][2].reset()
     system["state"]["mode"] = "OFF"
