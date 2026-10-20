@@ -64,9 +64,7 @@ class StepMotor:
         print(f"[{self.name}] start {action}")
         target = params["target"]
         anglespeed = params["speed"]
-        #if not self.homed:
-        #    print("not zero ,can't go move")
-        #    return False
+
         params = MotionPlanner.plan_abs_move(
             motor=self,
             target=target,
@@ -101,11 +99,8 @@ class StepMotor:
         """单次运转电机"""  ##绝对运动
         print("####运行电机####")
         print(f"[{self.name}] ID:{self.motor_id} 运行到位置{target}, 角速度 {anglespeed}, 主板类型:{self.board_id}")
-        #if not self.homed:
-        #   print("错误: 电机未回零，无法进行绝对运动")
-        #   return False
-        # 计算脉冲数
 
+        # 计算脉冲数
         params = MotionPlanner.plan_abs_move(
             motor=self,
             target=target,
@@ -222,21 +217,22 @@ class StepMotor:
             return False,["命令还在运行中"]
         print("####复位电机####")
         print(f"[{self.name}] ID:{self.motor_id} 运行 复位电机【{self.name}】, 主板类型:{self.board_id}")
-        # 复位脉冲数
-        pulses = RESET_PULSES 
-        # 复位方向
-        if self.motor_id in [POT1_MOVE_MOTOR,POT1_FLIP_MOTOR]:  # 1号锅
-            direction = 1
-        else:
-            direction = -1     
+        # 计算脉冲数
+        params = MotionPlanner.plan_orgset_move(
+            motor=self
+        )
 
-        if direction >=0:
-            pulses = abs(pulses)
+        if params is None:
+            print("no movement needed")
+            return False,["没有参数"]   
+
+        if params["direction"] >=0:
+            pulses = abs(params["pulses"])
         else:
-            pulses = -abs(pulses)   
+            pulses = -abs(params["pulses"])   
 
         #复位速度
-        anglespeed = 90   #生产标准速度360，测试使用90      
+        anglespeed = params["speed"]   #生产标准速度360，测试使用90      
          # 发送运行命令
         self.set_cmd_running("ORGRST")
         self.com.execute_command_async(

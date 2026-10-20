@@ -11,31 +11,43 @@ class MotionPlanner:
         """
         电机绝对值目标为移动
         """
+        # 0 预处理
+        #if not motor.homed:
+        #    print("没有归零")
+        #    return False
 
         print(f"当前位置:{current_position},目标位置:{target}")
         # 1 计算位移
         delta = target - current_position
 
-        #测试时暂时关闭此判断
-        #if delta == 0:
-        #    return None  # 不需要动
-        
-        if motor.motor_id in [POT1_MOVE_MOTOR,POT2_MOVE_MOTOR] and target < 0:
+        if motor.board_id == BOARDTYPE_STEP and motor.motor_id in [POT1_MOVE_MOTOR,POT2_MOVE_MOTOR] and target < 0:
             print("计算位移出错！！！！》》》")
             return None        
 
+        if motor.board_id == BOARDTYPE_ICE and target < 0:
+            print("目标值非法")
+            return None
+        
         # 2️ 圈数
         circles = abs(delta)
 
         # 3️方向
-        if motor.motor_id in [POT1_MOVE_MOTOR, POT1_FLIP_MOTOR]:
-            direction = -1 if delta >= 0 else 1
+        if motor.board_id == BOARDTYPE_STEP:
+            if motor.motor_id in [POT1_MOVE_MOTOR, POT1_FLIP_MOTOR]:
+                direction = -1 if delta >= 0 else 1
+            else:
+                direction = 1 if delta >= 0 else -1
+        elif motor.board_id == BOARDTYPE_ICE:
+            if motor.motor_id in [ICE_MOTOR_0,ICE_MOTOR_3]:
+                direction = 1 if delta >=0 else 1
+            else:
+                direction = -1 if delta >=0 else 1    
         else:
-            direction = 1 if delta >= 0 else -1
+            print("方向异常")
+            return None            
 
         # 4️ 转 pulses
         circles = abs(delta)
-
 
         if circles == 0:
             print("转动圈数为0")
@@ -43,6 +55,37 @@ class MotionPlanner:
         
         return {
             "circles": circles,
+            "speed": speed,
+            "direction": direction
+        }
+
+
+    @staticmethod
+    def plan_orgset_move(motor):
+        """
+        电机回零运动
+        """
+        pulses = RESET_PULSES 
+        speed = 90
+        if motor.board_id == BOARDTYPE_STEP:
+            if motor.motor_id in [POT1_MOVE_MOTOR,POT1_FLIP_MOTOR]:
+                direction = 1 
+            else:
+                direction = -1 
+        elif motor.board_id == BOARDTYPE_ICE:
+            if motor.motor_id in [ICE_MOTOR_0,ICE_MOTOR_3]:
+                direction = -1 
+            else:
+                direction = 1  
+
+            if motor.motor_id == ICE_MOTOR_3:  #由于移动慢，可加速回零
+                speed = 360     
+        else:
+            print("方向异常")
+            return None 
+
+        return {
+            "pulses": pulses,
             "speed": speed,
             "direction": direction
         }
