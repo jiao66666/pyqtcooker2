@@ -41,6 +41,8 @@
 ## build package command
 pyinstaller --onefile --add-data "templates;templates" --add-data "static;static" webcontrol.py
 
+## more fast package
+pyinstaller -y --onedir --add-data "templates;templates" --add-data "static;static" webcontrol.py
 
 
 
