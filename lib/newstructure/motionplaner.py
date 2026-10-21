@@ -89,3 +89,40 @@ class MotionPlanner:
             "speed": speed,
             "direction": direction
         }
+
+    @staticmethod
+    def plan_inout_move(motor,directionstr):
+        """
+        电机回零运动
+        """
+
+        if motor.board_id == BOARDTYPE_STEP:
+            if directionstr == "out":
+                if motor.motor_id in [POT1_MOVE_MOTOR,POT1_FLIP_MOTOR]:
+                    direction = -1 
+                else:
+                    direction = 1 
+            else:        
+                if motor.motor_id in [POT1_MOVE_MOTOR,POT1_FLIP_MOTOR]:
+                    direction = 1 
+                else:
+                    direction = -1 
+        elif motor.board_id == BOARDTYPE_ICE:
+            if directionstr == "out":
+                if motor.motor_id in [ICE_MOTOR_0,ICE_MOTOR_3]:
+                    direction = 1 
+                else:
+                    direction = -1 
+            else:
+                if motor.motor_id in [ICE_MOTOR_0,ICE_MOTOR_3]:
+                    direction = -1 
+                else:
+                    direction = 1         
+        else:
+            print("方向异常")
+            return None 
+
+        return {
+            "direction": direction
+        }
+    

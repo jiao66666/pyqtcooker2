@@ -157,6 +157,37 @@ class StepMotor:
 
         return True
     
+    # dir = in or out
+    def go_InOut(self, anglespeed: int, dir: str):
+        """长运转电机"""
+        if self.cmd_running :
+            print("命令还在运行中")
+            return False,["命令还在运行"]
+        print("####运行电机####")
+        print(f"[{self.name}] ID:{self.motor_id} 连续运行, 角速度 {anglespeed}, 主板类型:{self.board_id},")
+
+        params = MotionPlanner.plan_inout_move(
+            motor = self,
+            directionstr=dir
+        )
+
+        if params is None:
+            print("no movement needed")
+            return False,["没有参数"] 
+             
+            # 发送运行命令  优先级CONTROL 1
+        self.set_cmd_running("go_InOut")
+        self.com.execute_command_async(
+            "LONG", 
+            [str(self.board_id), str(self.motor_id), str(params["direction"]), str(anglespeed)],
+            callback=self._on_run_done,
+            priority = PRIORITY_CONTROL
+        )
+
+        return True,["执行成功"]
+
+
+
 
     def runlong(self, anglespeed: int, direction: int):
         """长运转电机"""

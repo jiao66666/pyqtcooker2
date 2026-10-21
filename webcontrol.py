@@ -763,6 +763,33 @@ def runlongIceMotor():
 
 
 
+@app.route('/goInOutIceMotor', methods=['POST'])
+@require_enabled
+def goInOutIceMotor():
+    print("动作测试")
+    data = request.get_json()
+    directionstr = data.get('directionstr')
+    motorid = data.get('motorid')
+    speed =   data.get('speed')
+    speedconstant = data.get('speedconstant')
+    print(f"positive:{directionstr},motorid:{motorid}")
+    success = False
+
+    if int(speedconstant)<=0 or int(speedconstant)>1080:
+        print("测试失败!")
+        return jsonify({"status": "fail","message": f"提交数据测试失败！错误:速度参数异常"})   
+    
+    success,msg = system["motors"]["icemotor"][int(motorid)].go_InOut(int(int(speed)*int(speedconstant)),directionstr)
+    
+    if success :
+        print("测试成功!")
+        return jsonify({"status": "success","message": f"提交数据测试成功!"})
+    else:
+        print("测试失败!")
+        return jsonify({"status": "fail","message": f"提交数据测试失败！错误:{msg}"})  
+
+
+
 @app.route('/runIceMotor', methods=['POST'])
 @require_enabled
 def runIceMotor():
