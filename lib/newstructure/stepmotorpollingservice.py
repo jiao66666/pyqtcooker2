@@ -117,7 +117,7 @@ class StepMotorPollingService:
                 # 当前电机运行参数
                 # ------------------------------------------------
 
-                step_params = runtime.get_params(motor_id)
+                step_params = runtime.get_params(motor_id,board_id=self.board_id)
                 # ==================================================
                 # 状态 0
                 #
@@ -158,10 +158,10 @@ class StepMotorPollingService:
                     )
 
                     # 只有当前电机存在运行任务时才处理完成
-                    if not runtime.is_busy(motor_id):
+                    if not runtime.is_busy(motor_id,board_id=self.board_id):
                         continue
 
-                    runtime.set_done(motor_id)
+                    runtime.set_done(motor_id,board_id=self.board_id)
                     self.notify_done(motor_id)
 
 
@@ -211,7 +211,7 @@ class StepMotorPollingService:
                     if quit_in_advance > 0:
 
                         curpos = runtime.get_position(
-                            motor_id
+                            motor_id,board_id=self.board_id
                         )
 
                         # 达到提前退出位置
@@ -224,7 +224,7 @@ class StepMotorPollingService:
                             )
 
                             runtime.set_done(
-                                motor_id
+                                motor_id,board_id=self.board_id
                             )
 
                             self.notify_done(motor_id)
@@ -275,8 +275,11 @@ class StepMotorPollingService:
         print("电机状态回调中》》》》》》》")
         
         # 获取所有正在运行的电机
-        running_motors = runtime.get_running_motors()
-
+        running_motors = [
+            (board_id, motor_id)
+            for board_id, motor_id in runtime.get_running_motors()
+            if board_id == self.board_id
+        ]
         # 没有运行中的电机，直接返回
         if not running_motors:
             print("当前没有运行中的电机")
@@ -421,6 +424,7 @@ class StepMotorPollingService:
 
     def notify_done(self,motorid):
         if self.board_id == BOARDTYPE_STEP:
+            print("广播锅电机动作完成消息POT_MOTOR_DONE")
             self.bus.publish(
                 "POT_MOTOR_DONE",
                 {
@@ -428,6 +432,7 @@ class StepMotorPollingService:
                 }
             )
         elif self.board_id == BOARDTYPE_ICE:
+            print("广播冰柜电机动作完成消息ICE_MOTOR_DONE")
             self.bus.publish(
                 "ICE_MOTOR_DONE",
                 {
