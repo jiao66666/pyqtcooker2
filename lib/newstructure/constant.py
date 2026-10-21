@@ -42,6 +42,8 @@ ICE_MOTOR_4 = 4     #空位
 
 ICE_MOTOR_LIST = [ICE_MOTOR_0,ICE_MOTOR_1,ICE_MOTOR_2,ICE_MOTOR_3,ICE_MOTOR_4]
 
+ICE_MOTOR_DOOR_TARGET_SPEED = 360   #冰柜门关门转速
+ICE_MOTOR_DOOR_TARGET_POS   = 3.28  #冰柜门关门绝对值坐标
 
 
 #########锅位置配置############
