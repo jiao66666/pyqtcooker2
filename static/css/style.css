@@ -176,7 +176,7 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
 .jl{
    justify-content: start!important;
 }
-.speed_circle, .potnum_circle, .ice_circle{
+.speed_circle, .potnum_circle, .ice_circle, .ice_circle_name{
     width:25px;
     height:25px;
     display:flex;
@@ -188,7 +188,7 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
     margin:0 5px;
 }
 
-.speed_selected, .potnum_selected, .ice_selected{
+.speed_selected, .potnum_selected, .ice_selected, .ice_name_selected{
     background-color:#4B4F56!important;
     color:#fff!important;
 }

@@ -595,25 +595,29 @@
         </div>
         <hr style="border: 1px dotted #ccc; width: 100%; margin: 5px auto;">
 
-        <div class="ice_btncon">
-            <div class="ice_btn" onclick="zeroIceMotor(0)">冰柜x电机限位</div>
-            <div class="ice_btn" onclick="zeroIceMotor(2)">冰柜y电机限位</div>
-            <div class="ice_btn" onclick="zeroIceMotor(3)">冰柜z电机限位</div>
-            <div class="ice_btn" onclick="zeroIceMotor(1)">冰柜门限位</div>
-        </div>    
-
-        <hr style="border: 1px dotted #ccc; width: 100%; margin: 5px auto;">
-
-        <div class="ice_btncon">
-            <div class="ice_btn" onpointerdown="goInOutIceMotor(0,'in')"  onpointerup="pauseIceMotorByid(0)">冰柜x电机回</div>
-            <div class="ice_btn" onpointerdown="goInOutIceMotor(0,'out')" onpointerup="pauseIceMotorByid(0)">冰柜x电机出</div>
-            <div class="ice_btn" onpointerdown="goInOutIceMotor(2,'in')"  onpointerup="pauseIceMotorByid(2)">冰柜y电机回</div> 
-            <div class="ice_btn" onpointerdown="goInOutIceMotor(2,'out')" onpointerup="pauseIceMotorByid(2)">冰柜y电机出</div>
-            <div class="ice_btn" onpointerdown="goInOutIceMotor(3,'in')"  onpointerup="pauseIceMotorByid(3)">冰柜z电机回</div> 
-            <div class="ice_btn" onpointerdown="goInOutIceMotor(3,'out')" onpointerup="pauseIceMotorByid(3)">冰柜z电机出</div>
-            <div class="ice_btn" onpointerdown="goInOutIceMotor(1,'in')"  onpointerup="pauseIceMotorByid(1)">冰柜门电机回</div>
-            <div class="ice_btn" onpointerdown="goInOutIceMotor(1,'out')" onpointerup="pauseIceMotorByid(1)">冰柜门电机出</div>
+        <div class="ice_container">
+                <label id="icemotor_name" data-motorid="0">电机:</label>
+                <div class="ice_circle_name" onclick="setIceMotorName(this,0)">
+                    X
+                </div>
+                <div class="ice_circle_name" onclick="setIceMotorName(this,2)">
+                    Y
+                </div>
+                <div class="ice_circle_name" onclick="setIceMotorName(this,3)">
+                    Z
+                </div>
+                <div class="ice_circle_name" onclick="setIceMotorName(this,1)">
+                    门
+                </div>
+                <!---<div class="ice_circle_name" onclick="setIceMotorName(this,4)">
+                    空
+                </div>-->
         </div>
+        <div class="ice_btncon">
+            <div class="ice_btn" onpointerdown="goInOutIceMotor('in')"  onpointerup="pauseIceMotorByid()">冰柜电机回</div>
+            <div class="ice_btn" onpointerdown="goInOutIceMotor('out')" onpointerup="pauseIceMotorByid()">冰柜电机出</div>
+             <div class="ice_btn" onclick="zeroIceMotor()">冰柜电机限位运行</div>
+        </div>    
 
     </div> 
 

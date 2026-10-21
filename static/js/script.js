@@ -1121,9 +1121,11 @@ function runlongIceMotor(positive) {
 
 
 
-function goInOutIceMotor(motorid,directionstr) {
+function goInOutIceMotor(directionstr) {
 
          // 获取 select 元素
+        var motorid = getSelectedValue("icemotor_name");
+
         var speed = getSelectedValue("speed");
         console.log("选中速度值是:", speed);
         console.log("motorid:"+motorid)
@@ -1227,9 +1229,10 @@ function pauseoldIceMotor() {
 }
 
 
-function zeroIceMotor(motorid) {
+function zeroIceMotor() {
           // 获取 select 元素
-        
+        var motorid = getSelectedValue("icemotor_name");
+
         fetch('/zeroIceMotor', {
             method: 'POST', 
             headers: {
@@ -1297,7 +1300,8 @@ function pauseIceMotor() {
         });
 }
 
-function pauseIceMotorByid(motorid) {
+function pauseIceMotorByid() {
+        var motorid = getSelectedValue("icemotor_name");
 
         fetch('/pauseIceMotor', {
             method: 'POST', 
@@ -1401,6 +1405,22 @@ function setIceMotor(el,value){
     //updateSpeed(parseInt(speedvalue))
 }
 
+
+function setIceMotorName(el,value){
+    const box = document.getElementById("icemotor_name");
+    box.dataset.value = value;
+    console.log("setting icemotor value:"+value);
+    console.log("原始值:", JSON.stringify(value));
+    console.log("数据值:", JSON.stringify(box.dataset.value));
+
+    document.querySelectorAll('.ice_circle_name').forEach(item => {
+        item.classList.remove('ice_name_selected');
+    });
+
+    el.classList.add('ice_name_selected');
+    //updateSpeed(parseInt(speedvalue))
+}
+
 function setPotnum(el,potnum){
     const box = document.getElementById("potnum");
     box.dataset.value = potnum;
@@ -1455,6 +1475,13 @@ document.addEventListener("DOMContentLoaded", () => {
     if (firstice) {
         setIceMotor(firstice, firstice.innerText.trim());
     }
+
+    const firsticename = document.querySelector('.ice_circle_name'); //  就是第一个
+    if (firsticename) {
+        setIceMotorName(firsticename, "0");
+    }
+
+
 });
 //转换为具体电机和方向
 function getMotorInfo(potnum, directionstr){
