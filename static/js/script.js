@@ -1180,6 +1180,29 @@ function pauseoldIceMotor() {
 }
 
 
+function zeroIceMotor(motorid) {
+          // 获取 select 元素
+        
+        fetch('/zeroIceMotor', {
+            method: 'POST', 
+            headers: {
+                'Content-Type': 'application/json'  
+            },
+            body: JSON.stringify({
+                motorid:motorid
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+             addMessage(``+data.message);  // 将收到的消息保存并显示
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            addMessage("Error starting motor.");
+        });
+}
+
+
 
 
 

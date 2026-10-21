@@ -717,6 +717,26 @@ def resetIceMotor():
         return jsonify({"status": "fail","message": f"提交数据测试失败！错误:{msg}"})    
 
 
+@app.route('/zeroIceMotor', methods=['POST'])
+@require_enabled
+def zeroIceMotor():
+    print("动作测试")
+    data = request.get_json()
+    motorid = data.get('motorid')
+    print(f"motorid:{motorid}")
+    success = False
+    
+    success,msg = system["motors"]["icemotor"][int(motorid)].reset_zero()
+    
+    if success :
+        print("测试成功!")
+        return jsonify({"status": "success","message": f"提交数据测试成功!"})
+    else:
+        print("测试失败!")
+        return jsonify({"status": "fail","message": f"提交数据测试失败！错误:{msg}"})    
+
+
+
 @app.route('/runlongIceMotor', methods=['POST'])
 @require_enabled
 def runlongIceMotor():
