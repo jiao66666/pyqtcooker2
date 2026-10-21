@@ -35,9 +35,16 @@ class StepBuilder:
         steps = []
 
         for item in template:
+            # 统一要求：电机标识、动作名称、动作类型
+            if len(item) < 3:
+                raise ValueError(
+                    f"动作配置缺少 doing_type，配置内容：{item}"
+                )
+
             motor_key = item[0]
             action_name = item[1]
-            sub_template = item[2] if len(item) > 2 else None
+            doing_type =  item[2]
+            sub_template = item[3] if len(item) > 3 else None
 
             action_key = f"{action_name}"
 
@@ -60,6 +67,7 @@ class StepBuilder:
             step = {
                 "type" : self._get_motor_type(motor_key),
                 "motor": motor_map[motor_key],
+                "doing_type":doing_type,
                 "action": action_key,
                 "params": final_params
             }

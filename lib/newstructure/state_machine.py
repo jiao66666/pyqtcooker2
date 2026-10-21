@@ -83,26 +83,35 @@ class PotStateMachine:
                     task_id=f"{self.running_taskname}"
                 )
 
-                success,resp = step["motor"].go_action(step["action"],step["params"])
+                if step["doing_type"] == "go":
+                    success,resp = step["motor"].go_action(step["action"],step["params"])
 
-                if not success:
-                    if resp[0] == "RETRY":
-                        print(
-                            f"Pot {self.pot_id}: "
-                            f"动作 {step['action']} 提交失败，暂不进入 WAITING"
-                        )
-                        return
+                    if not success:
+                        if resp[0] == "RETRY":
+                            print(
+                                f"Pot {self.pot_id}: "
+                                f"动作 {step['action']} 提交失败，暂不进入 WAITING"
+                            )
+                            return
 
-                    if resp[0] == "NO_MOVE":
-                        print(
-                            f"Pot {self.pot_id}: "
-                            f"动作 {step['action']} 无需运动"
-                        )
-                        # 在这里调用你现有的正常步骤完成/推进逻辑
+                        if resp[0] == "NO_MOVE":
+                            print(
+                                f"Pot {self.pot_id}: "
+                                f"动作 {step['action']} 无需运动"
+                            )
+                            # 在这里调用你现有的正常步骤完成/推进逻辑
+                else:
+                    self.state = "ERROR"
+                    print(
+                        f"Pot {self.pot_id}: "
+                        f"未知动作类型 {step['doing_type']}，"
+                        f"动作名称：{step['action']}"
+                    )
+                    return            
                     
                 #可选动态调速
                 if step["params"]["varspeed"] == True:
-                    startpos = runtime.get_position(step["motor"].motor_id)
+                    startpos = runtime.get_position(step["motor"].motor_id,board_id=BOARDTYPE_STEP)
                     self.motioncontroller.add_task(
                         motor_id=step["motor"].motor_id,
                         start=startpos,

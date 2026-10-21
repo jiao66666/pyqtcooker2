@@ -230,8 +230,8 @@ def apply_action_speed_override(
                 )
 
             # 子动作树
-            if len(item) > 2:
-                stack.append(item[2])
+            if len(item) > 3 and item[3]:
+                stack.append(item[3])
 
 
 def get_pot_pos(potnum,postype):

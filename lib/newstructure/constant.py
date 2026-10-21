@@ -151,103 +151,103 @@ FLIP_EXITPOS2 = 4.0 #洗锅翻转退出位置
 
 
 
-#动作组->子动作参数Key 映射  【参数说明】"h":水平步进电机，"v":垂直步进电机, "s":旋转DC电机 ，"f":加料电机
+#动作组->子动作参数Key 映射  【参数说明】 [0]:"h":水平步进电机，"v":垂直步进电机, "s":旋转DC电机 ，"f":加料电机 [1]:动作名，关联参数表映射 [2]:"go","reset"关联具体电机动作 [3]:阻塞时的动作
 ACTION_PARAMS_KEYLIST = {
     "takefood_fire": [
-        ("v", "flip_out_togetfood"),
-        ("h", "move_out_togetfood", [
-            ("h", "move_to_wait"),
-            ("h", "move_to_track"),
+        ("v", "flip_out_togetfood","go"),
+        ("h", "move_out_togetfood","go", [
+            ("h", "move_to_wait","go"),
+            ("h", "move_to_track","go"),
         ]),
-        ("h", "move_in_tofirefood"),
-        ("v", "flip_in_tofirefood"),
+        ("h", "move_in_tofirefood","go"),
+        ("v", "flip_in_tofirefood","go"),
     ],
     "resetzero":[
-       ("h","move_in_tofirefood"),
-       ("v","flip_in_tofirefood")
+       ("h","move_in_tofirefood","go"),
+       ("v","flip_in_tofirefood","go")
     ],
     "take_fire_pour":[
-        ("h", "move_in_tofirefood"),
-        ("v", "flip_in_tofirefood"),
-        ("v", "flip_out_togetfood"),
-        ("h", "move_out_togetfood", [
-            ("h", "move_to_wait"),
-            ("h", "move_to_track"),
+        ("h", "move_in_tofirefood","go"),
+        ("v", "flip_in_tofirefood","go"),
+        ("v", "flip_out_togetfood","go"),
+        ("h", "move_out_togetfood","go", [
+            ("h", "move_to_wait","go"),
+            ("h", "move_to_track","go"),
         ]),
-        ("h", "move_in_tofirefood"),
-        ("v", "flip_in_tofirefood"),
-        ("v", "flip_out_togetfood"),
-        ("h", "move_out_togetfood", [
-            ("h", "move_to_wait"),
-            ("h", "move_to_track"),
+        ("h", "move_in_tofirefood","go"),
+        ("v", "flip_in_tofirefood","go"),
+        ("v", "flip_out_togetfood","go"),
+        ("h", "move_out_togetfood","go", [
+            ("h", "move_to_wait","go"),
+            ("h", "move_to_track","go"),
         ]),
-        ("v", "flip_out_pour"),
-        ("v", "flip_in_wash"),
-        ("v", "flip_out_getfood"),
-        ("h", "move_in_tofirefood"),
-        ("v", "flip_in_tofirefood")
+        ("v", "flip_out_pour","go"),
+        ("v", "flip_in_wash","go"),
+        ("v", "flip_out_getfood","go"),
+        ("h", "move_in_tofirefood","go"),
+        ("v", "flip_in_tofirefood","go")
     ],
     "go_to_pos_outfood":[
-        ("v","flip_to_safepos"),
-        ("h","move_out_togetfood", [
-            ("h", "move_to_wait"),
-            ("h", "move_to_track"),
+        ("v","flip_to_safepos","go"),
+        ("h","move_out_togetfood","go", [
+            ("h", "move_to_wait","go"),
+            ("h", "move_to_track","go"),
         ]),
-        ("v","flip_to_outfood")
+        ("v","flip_to_outfood","go")
     ],
     "go_to_pos_infood":[
-        ("v","flip_to_safepos"),
-        ("h","move_out_togetfood", [
-            ("h", "move_to_wait"),
-            ("h", "move_to_track"),
+        ("v","flip_to_safepos","go"),
+        ("h","move_out_togetfood","go", [
+            ("h", "move_to_wait","go"),
+            ("h", "move_to_track","go"),
         ]),
-        ("v","flip_to_infood")
+        ("v","flip_to_infood","go")
     ],
     "go_to_pos_washpot":[
-        ("v","flip_to_safepos"),
-        ("h","move_out_togetfood", [
-            ("h", "move_to_wait"),
-            ("h", "move_to_track"),
+        ("v","flip_to_safepos","go"),
+        ("h","move_out_togetfood","go", [
+            ("h", "move_to_wait","go"),
+            ("h", "move_to_track","go"),
         ]),
-        ("v","flip_to_washpot")
+        ("v","flip_to_washpot","go")
     ],
     "go_to_pos_firepot":[
-        ("v","flip_to_safepos"),
-        ("h","move_in_tofirefood", [
-            ("h", "move_to_wait"),
-            ("h", "move_to_track"),
+        ("v","flip_to_safepos","go"),
+        ("h","move_in_tofirefood","go", [
+            ("h", "move_to_wait","go"),
+            ("h", "move_to_track","go"),
         ]),
-        ("v","flip_in_firepot")
+        ("v","flip_in_firepot","go")
     ],
     "test_movemove":[
-        ("h","move_out"),
-        ("h","move_zero")
+        ("h","move_out","go"),
+        ("h","move_zero","go")
     ],
     "test_moveflip":[
-        ("v","flip_out"),
-        ("h","move_out")
+        ("v","flip_out","go"),
+        ("h","move_out","go")
     ],
     "test_moveflip_reset":[
-        ("h","move_zero"),
-        ("v","flip_zero")
+        ("h","move_zero","go"),
+        ("v","flip_zero","go")
     ],
     "test_all":[
-        ("v","flip_out"),
-        ("h","move_out"),
-        ("h","move_zero"),
-        ("v","flip_zero"),
-        ("v","flip_out"),
-        ("h","move_out"),
-        ("v","flip_pour"),
-        ("v","flip_wash"),
-        ("v","flip_out"),
-        ("h","move_zero"),
-        ("v","flip_zero")
+        ("v","flip_out","go"),
+        ("h","move_out","go"),
+        ("h","move_zero","go"),
+        ("v","flip_zero","go"),
+        ("v","flip_out","go"),
+        ("h","move_out","go"),
+        ("v","flip_pour","go"),
+        ("v","flip_wash","go"),
+        ("v","flip_out","go"),
+        ("h","move_zero","go"),
+        ("v","flip_zero","go")
     ],
     "test_move_spin":[
-        ("h","move_out"),
-        ("s","spin_for_wash"),
-        ("h","move_zero")
+        ("h","move_out","go"),
+        ("s","spin_for_wash","go"),
+        ("h","move_zero","go")
     ]
 }
 
