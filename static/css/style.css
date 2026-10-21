@@ -1022,3 +1022,7 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
     padding:8px;
     font-size:14px;
 }
+
+.fullwidth{
+    flex:1 1 100% !important;
+}

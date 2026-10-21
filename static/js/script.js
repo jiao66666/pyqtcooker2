@@ -1324,7 +1324,7 @@ function pauseIceMotorByid() {
 
 
 
-function runIceMotor(direction) {
+function runIceMotor() {
       
        var motorid = getSelectedValue("icemotor");
        console.log("current motorid is:"+motorid)
@@ -1352,7 +1352,6 @@ function runIceMotor(direction) {
             },
             body: JSON.stringify({
                 motorid: motorid,
-                direction: direction,
                 circle: circle.value,
                 speed: speed
             })

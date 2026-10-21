@@ -796,12 +796,10 @@ def runIceMotor():
     print("运行电机单次运转绝对值坐标")
     data = request.get_json()
     motorid = data.get('motorid')  
-    direction = data.get('direction')  
     speed = data.get('speed')  
     circles = data.get('circle') 
     success = False
-    print("收到参数 :", motorid, direction,speed)
-    target = float(circles) if direction > 0 else -float(circles)
+    target = float(circles)
       
     success,msg =  system["motors"]["icemotor"][int(motorid)].go(target,int(int(speed)*360))
     currentpos = system["motors"]["icemotor"][int(motorid)].get_current_pos()
