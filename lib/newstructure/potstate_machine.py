@@ -23,7 +23,7 @@ class PotStateMachine:
         
         # 订阅电机完成事件
         self.bus.subscribe("POT_MOTOR_DONE", self.on_potmotor_done)
-        self.bus.subscribe("SPIN_DONE", self.on_spin_done)
+        self.bus.subscribe("POT_SPIN_DONE", self.on_spin_done)
         self.bus.subscribe("ESTOP_TRIGGERED", self.on_estop)
         self.bus.subscribe("MOTOR_ERROR", self.on_motor_error)
 
@@ -306,6 +306,6 @@ class PotStateMachine:
 
     def destroy(self):
         self.bus.unsubscribe("POT_MOTOR_DONE", self.on_potmotor_done)
-        self.bus.unsubscribe("SPIN_DONE", self.on_spin_done)
+        self.bus.unsubscribe("POT_SPIN_DONE", self.on_spin_done)
         self.bus.unsubscribe("ESTOP_TRIGGERED", self.on_estop)
         self.bus.unsubscribe("MOTOR_ERROR", self.on_motor_error)     

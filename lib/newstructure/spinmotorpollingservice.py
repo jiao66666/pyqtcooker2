@@ -120,7 +120,7 @@ class SpinMotorPollingService:
                     )
 
                     self.bus.publish(
-                        "SPIN_DONE",
+                        "POT_SPIN_DONE",
                         {
                             "motor_id": motor_id
                         }
@@ -187,7 +187,7 @@ class SpinMotorPollingService:
 
         runtime.set_done(motor_id,board_id=BOARDTYPE_SPIN)
         self.bus.publish(
-            "SPIN_DONE",
+            "POT_SPIN_DONE",
             {
                 "motor_id": motor_id
             }
