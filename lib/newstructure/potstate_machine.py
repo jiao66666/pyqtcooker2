@@ -23,7 +23,7 @@ class PotStateMachine:
         
         # 订阅电机完成事件
         self.bus.subscribe("POT_MOTOR_DONE", self.on_potmotor_done)
-        self.bus.subscribe("POT_SPIN_DONE", self.on_spin_done)
+        self.bus.subscribe("POT_SPIN_DONE", self.on_potspin_done)
         self.bus.subscribe("ESTOP_TRIGGERED", self.on_estop)
         self.bus.subscribe("MOTOR_ERROR", self.on_motor_error)
 
@@ -246,7 +246,7 @@ class PotStateMachine:
             self.state = "DONE"                   #动作组完成，变更状态
             self.running_tasks.remove(self.running_taskname)
 
-    def on_spin_done(self, data):
+    def on_potspin_done(self, data):
         print("DC旋转电机完成运动@@@@@@@@@@@@@@@@@@@@@@@@----statemachine")
         print(f"subscribe data:",data)
         print(f"current step is :{self.current_step}")
@@ -268,7 +268,7 @@ class PotStateMachine:
         print(f"motor {motor_id} done the action {step['action']}")
         print(f"OK检查过关OK{ctx['action']},{step['action']},{data['motor_id']},{step['motor'].motor_id}")
 
-        self.go_next_step("on_spin_done")
+        self.go_next_step("on_potspin_done")
 
         if self.current_step < len(self.steps):
             print(f"current step is:{self.current_step},small than total{len(self.steps)},continue state running...")
@@ -306,6 +306,6 @@ class PotStateMachine:
 
     def destroy(self):
         self.bus.unsubscribe("POT_MOTOR_DONE", self.on_potmotor_done)
-        self.bus.unsubscribe("POT_SPIN_DONE", self.on_spin_done)
+        self.bus.unsubscribe("POT_SPIN_DONE", self.on_potspin_done)
         self.bus.unsubscribe("ESTOP_TRIGGERED", self.on_estop)
         self.bus.unsubscribe("MOTOR_ERROR", self.on_motor_error)     
