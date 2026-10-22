@@ -3,10 +3,12 @@ from lib.newstructure.stepmotordriver import StepMotor
 from lib.newstructure.spinmotordriver import SpinMotor
 from lib.newstructure.feedmotordriver import FeederMotor
 from lib.newstructure.potstate_machine import PotStateMachine
+from lib.newstructure.icestate_machine import IceStateMachine
 from lib.newstructure.scancycle import ScanCycle
 from lib.newstructure.trackmanager import TrackManager
 from lib.newstructure.constant import *
 from lib.newstructure.stepbuilder import StepBuilder
+from lib.newstructure.icebuilder import IceBuilder
 from lib.newstructure.basecom import RS485Communication
 import threading
 from lib.newstructure.runtime import runtime
@@ -38,13 +40,16 @@ def build_system():
     motors_manager = build_motors_manager(bus,boards,motors)
 
     stepbuilder = StepBuilder(motors)
+    icebuilder = IceBuilder(motors)
 
     motion_controller = MotionController(boards["stepmotor"],MOTION_INTERVAL)
 
     from lib.newstructure.cookservice import CookerService
+    from lib.newstructure.iceservice import IceService
 
     pot1 = PotStateMachine(1, bus, trackmanager, motion_controller)
     pot2 = PotStateMachine(2, bus, trackmanager, motion_controller)
+    ice = IceStateMachine(bus)
 
     potmockmotor = MockMotor(BOARDTYPE_STEP,websocket_server,MOCK_INTERVAL)
     icemockmotor = MockMotor(BOARDTYPE_ICE,websocket_server,MOCK_INTERVAL)
@@ -65,10 +70,12 @@ def build_system():
         "bus": bus,
         "trackmanager": trackmanager,
         "stepbuilder": stepbuilder,
+        "icebuilder":icebuilder,
         "pots": {
             1: pot1,
             2: pot2
         },
+        "ice":ice,
         "stepmotorpolling": stepmotorpolling,
         "spinmotorpolling":spinmotorpolling,
         "feedermotorpolling":feedermotorpolling,
@@ -88,11 +95,18 @@ def build_system():
 
     cookservice = CookerService(system)
     system["cookservice"] = cookservice
+
+    iceservice = IceService(system)
+    system["iceservice"] = iceservice
+
     pot1.set_cookservice(cookservice)
     pot2.set_cookservice(cookservice)
-    dispatcher.set_cookservice(cookservice)
-    websocket_server.set_system(system)
+    ice.set_iceservice(iceservice)
 
+    dispatcher.set_cookservice(cookservice)
+    dispatcher.set_iceservice(iceservice)
+
+    websocket_server.set_system(system)
 
     return system
 
@@ -112,7 +126,9 @@ def recovery_system(system):
     system["state"]["mode"]="READY"
     system["pots"][1].reset()
     system["pots"][2].reset()
+    system["ice"].reset()
     system["cookservice"].reset()
+    system["iceservice"].reset()
     system["dispatcher"].reset()
     return True
 
@@ -132,6 +148,7 @@ def shutdown_device(system):
     system["spinmotorsmanager"].stop_all_motors()
     system["pots"][1].reset()
     system["pots"][2].reset()
+    system["ice"].reset()
     system["state"]["mode"] = "OFF"
     system["state"]["dirty"] = True
     system["potmockmotor"].stop()
@@ -315,10 +332,10 @@ def run_system(system):
     system["websocket"].start()
     system["scancycle"]=ScanCycle([
         system["pots"][1],
-        system["pots"][2]
-    ],POT_STATEMACHINE_INTERVAL)
+        system["pots"][2],
+        system["ice"]
+    ],STATEMACHINE_INTERVAL)
     system["scancycle"].start()
-
 
 _system = None
 _system_lock = threading.Lock()

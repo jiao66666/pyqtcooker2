@@ -3,7 +3,7 @@ from lib.newstructure.runtime import runtime
 import time
 from lib.newstructure.constant import *
 
-
+#锅状态机模型
 class PotStateMachine:
     def __init__(self, pot_id, bus, track_manager, motioncontroller):
         self.pot_id = pot_id
@@ -23,7 +23,6 @@ class PotStateMachine:
         
         # 订阅电机完成事件
         self.bus.subscribe("POT_MOTOR_DONE", self.on_potmotor_done)
-        self.bus.subscribe("ICE_MOTOR_DONE", self.on_icemotor_done)
         self.bus.subscribe("SPIN_DONE", self.on_spin_done)
         self.bus.subscribe("ESTOP_TRIGGERED", self.on_estop)
         self.bus.subscribe("MOTOR_ERROR", self.on_motor_error)
@@ -247,42 +246,6 @@ class PotStateMachine:
             self.state = "DONE"                   #动作组完成，变更状态
             self.running_tasks.remove(self.running_taskname)
 
-    def on_icemotor_done(self, data):
-        print("冰柜步进电机完成运动@@@@@@@@@@@@@@@@@@@@@@@@----statemachine")
-        print(f"subscribe data:",data)
-        #self.state = "DONE"  #only for test
-        motor_id = data["motor_id"]    
-        ctx = runtime.get(motor_id)
-        if not ctx:
-            print("》》》没有ctx《《《《")
-            return      
-
-        if self.state != "WAITING":
-            print("》》》状态不对《《《")
-            return          
-
-        step = self.steps[self.current_step]
-        if ctx["action"] != step["action"] or data["motor_id"] != step["motor"].motor_id:  #确保数据的一致性
-            print(f"》》》检查未过关《《《{ctx['action']},{step['action']},{data['motor_id']},{step['motor'].motor_id}")
-            return
-
-     
-        print(f"motor {motor_id} done the action {step['action']}")
-        print(f"OK检查过关OK{ctx['action']},{step['action']},{data['motor_id']},{step['motor'].motor_id}")
-
-        if self.need_track_release(step["action"]):  #如果需要跨动作释放，则加变量self.track_accuired 进行保存跨多个动作判断
-            self.track.release(self.pot_id)
-
-        self.go_next_step("on_icemotor_done")
-
-        if self.current_step < len(self.steps):
-            print(f"current step is:{self.current_step},small than total{len(self.steps)},continue state running...")
-            self.state = "RUNNING"                #继续取下一个动作执行
-        else:
-            print(f"current step is:{self.current_step},equal bigger than total{len(self.steps)},set state done!")
-            self.state = "DONE"                   #动作组完成，变更状态
-            self.running_tasks.remove(self.running_taskname)
-
     def on_spin_done(self, data):
         print("DC旋转电机完成运动@@@@@@@@@@@@@@@@@@@@@@@@----statemachine")
         print(f"subscribe data:",data)
@@ -343,7 +306,6 @@ class PotStateMachine:
 
     def destroy(self):
         self.bus.unsubscribe("POT_MOTOR_DONE", self.on_potmotor_done)
-        self.bus.unsubscribe("ICE_MOTOR_DONE", self.on_icemotor_done)
         self.bus.unsubscribe("SPIN_DONE", self.on_spin_done)
         self.bus.unsubscribe("ESTOP_TRIGGERED", self.on_estop)
         self.bus.unsubscribe("MOTOR_ERROR", self.on_motor_error)     

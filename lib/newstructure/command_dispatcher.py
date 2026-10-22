@@ -14,11 +14,17 @@ class CommandDispatcher:
 
         self.bus = bus
         self.cookservice = None
+        self.iceservice  = None
 
         self.bus.subscribe("POT_MOTOR_DONE", self.on_potmotor_done)
+        self.bus.subscribe("ICE_MOTOR_DONE", self.on_icemotor_done)
+
 
     def set_cookservice(self,cookservice):
         self.cookservice = cookservice
+
+    def set_iceservice(self,iceservice):
+        self.iceservice = iceservice    
 
     def submit(self, task_id, resources, run_fn):
         """
@@ -123,4 +129,20 @@ class CommandDispatcher:
             potid = get_pot_id(motor_id)
             self.cookservice.resetRunning(potid,task_id)
             self._cleanup(task_id)  
+
+    def on_icemotor_done(self, data):
+        print("冰柜电机完成运动@@@@@@@@@@@@@@@@@@@@@@@@---disptcher")
+        motor_id = data["motor_id"]    
+        ctx = runtime.get(motor_id)
+        if not ctx:
+            print("no runtime context")
+            return      
+        task_id = ctx["task_id"]
+        print(f"release resource>>>>>>>>>>>>>>>>>>>>,taskid:{task_id}")
             
+        #time.sleep(3) #for simulating ,in real env could remove this ,could be used as controlling the speed of moving
+
+        if task_id and task_id.startswith("icesingle:"):
+            print("处理关闭任务指令锁中》》》》》》》")
+            self.iceservice.resetRunning(task_id)
+            self._cleanup(task_id)             
