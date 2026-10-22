@@ -1,5 +1,6 @@
 import threading
 from lib.newstructure.runtime import runtime
+from lib.newstructure.constant import *
 class TaskResourceManager:
     """
     任务级资源所有权管理器
@@ -109,7 +110,7 @@ class TaskResourceManager:
         print("电机完成运动@@@@@@@@@@@@@@@@@@@@@@@@")
 
         motor_id = data["motor_id"]    
-        ctx = runtime.get(motor_id)
+        ctx = runtime.get(motor_id,board_id=BOARDTYPE_STEP)
         if not ctx:
             print("no runtime context")
             return      

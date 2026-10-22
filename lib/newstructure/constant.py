@@ -151,7 +151,12 @@ FLIP_EXITPOS2 = 4.0 #洗锅翻转退出位置
 
 
 
-#动作组->子动作参数Key 映射  【参数说明】 [0]:"h":水平步进电机，"v":垂直步进电机, "s":旋转DC电机 ，"f":加料电机 [1]:动作名，关联参数表映射 [2]:"go","reset"关联具体电机动作 [3]:阻塞时的动作
+#动作组->子动作参数Key 映射  
+#【参数说明】 
+# [0]:"h":水平步进电机，"v":垂直步进电机, "s":旋转DC电机 ，"f":加料电机 ,"x":冰柜x电机,"y":冰柜y电机,"z":冰柜z电机,"d":冰柜门电机
+# [1]:动作名，关联参数表映射 
+# [2]:"go","reset"关联具体电机动作 
+# [3]:阻塞时的动作
 ACTION_PARAMS_KEYLIST = {
     "takefood_fire": [
         ("v", "flip_out_togetfood","go"),
@@ -248,6 +253,16 @@ ACTION_PARAMS_KEYLIST = {
         ("h","move_out","go"),
         ("s","spin_for_wash","go"),
         ("h","move_zero","go")
+    ],
+    "test_ice_moveall":[
+        ("x","reset_zero","reset"),
+        ("y","reset_zero","reset"),
+        ("z","reset_zero_fast","reset"),
+        ("d","reset_zero","reset"),
+        ("x","move_for_test","go"),
+        ("y","move_for_test","go"),
+        ("z","move_for_test","go"),
+        ("d","move_for_test","go")
     ]
 }
 
@@ -464,6 +479,16 @@ ACTION_PARAMS_CONFIG = {
         "duration":100000,
         "speed": 500,
         "direction":-1
+    },
+    "reset_zero":{
+        "speed":90
+    },
+    "reset_zero_fast":{
+        "speed":360
+    },
+    "move_for_test":{
+        "speed":90,
+        "target":2
     }
 }
 

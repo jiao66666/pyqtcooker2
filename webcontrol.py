@@ -811,6 +811,25 @@ def runIceMotor():
         return jsonify({"status": "fail","message": f"运转失败!错误:{msg}"})
 
 
+@app.route('/testIceMotorTask', methods=['POST'])
+@require_enabled
+def testIceMotorTask():
+    print("运行冰柜电机连续动作")
+    data = request.get_json()
+    
+    success = False
+    actionname = "test_ice_moveall"  
+    success,msg =  system["iceservice"].run_task(actionname)
+    if success :
+        print("电机单次运转成功!")
+        return jsonify({"status": "success","message": f"运行电机成功!"})
+    else:
+        print("电机单次运转失败!")
+        return jsonify({"status": "fail","message": f"运转失败!错误:{msg}"})
+
+
+
+
 @app.route('/runlongoldIceMotor', methods=['POST'])
 @require_enabled
 def runlongoldIceMotor():

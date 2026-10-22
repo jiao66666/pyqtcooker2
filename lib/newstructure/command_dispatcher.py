@@ -1,6 +1,7 @@
 import threading
 from lib.newstructure.runtime import runtime
 import time
+from lib.newstructure.constant import *
 #任务型 还是 指令型 全部通过此命令器分发，防冲突 ,锁控制
 class CommandDispatcher:
 
@@ -114,7 +115,7 @@ class CommandDispatcher:
     def on_potmotor_done(self, data):
         print("锅电机完成运动@@@@@@@@@@@@@@@@@@@@@@@@---disptcher")
         motor_id = data["motor_id"]    
-        ctx = runtime.get(motor_id)
+        ctx = runtime.get(motor_id,board_id=BOARDTYPE_STEP)
         if not ctx:
             print("no runtime context")
             return      
@@ -133,7 +134,7 @@ class CommandDispatcher:
     def on_icemotor_done(self, data):
         print("冰柜电机完成运动@@@@@@@@@@@@@@@@@@@@@@@@---disptcher")
         motor_id = data["motor_id"]    
-        ctx = runtime.get(motor_id)
+        ctx = runtime.get(motor_id,board_id=BOARDTYPE_ICE)
         if not ctx:
             print("no runtime context")
             return      

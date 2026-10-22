@@ -215,7 +215,7 @@ class PotStateMachine:
         print(f"subscribe data:",data)
         #self.state = "DONE"  #only for test
         motor_id = data["motor_id"]    
-        ctx = runtime.get(motor_id)
+        ctx = runtime.get(motor_id,board_id=BOARDTYPE_STEP)
         if not ctx:
             print("》》》没有ctx《《《《")
             return      

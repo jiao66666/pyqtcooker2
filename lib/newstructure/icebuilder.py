@@ -17,9 +17,10 @@ class IceBuilder:
 
     def _get_motor_map(self):   #依据需要对电机进行扩展
         return {
-            "v": self.motors["stepmotor"][POT1_FLIP_MOTOR],
-            "h": self.motors["stepmotor"][POT1_MOVE_MOTOR],
-            "s": self.motors["spinmotor"][POT1_SPIN_MOTOR]
+            "x": self.motors["icemotor"][ICE_MOTOR_X],
+            "y": self.motors["icemotor"][ICE_MOTOR_Y],
+            "z": self.motors["icemotor"][ICE_MOTOR_Z],
+            "d": self.motors["icemotor"][ICE_MOTOR_DOOR]
         }
 
 
@@ -61,11 +62,4 @@ class IceBuilder:
 
     #标记电机类型以方便状态机进行相应动作选择
     def _get_motor_type(self,motor_key):
-          if motor_key == "v" or motor_key == "h":
-              return "step_pot"
-          elif motor_key == "s":
-              return "spin_pot"
-          elif motor_key == "f":
-              return "feeder_pot"
-          else:
-              return "unknown"
+            return "step_ice"

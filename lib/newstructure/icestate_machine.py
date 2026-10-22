@@ -60,20 +60,28 @@ class IceStateMachine:
         elif self.state == "RUNNING":
             print(f"ice machine state is RUNNING,current step is:{self.steps[self.current_step]}")
             step = self.steps[self.current_step]
-            if step["type"] == "spin_pot":
+            if step["type"] == "step_ice":
                 print(f"<<<<<<<<<<<current action is {step['action']}>>>>>>>>>>>>")
-                print(f"spin motor运行参数如下:{step['params']['direction']}，{step['params']['duration']}，{step['params']['speed']}")
+                print(f"icemotor运行参数如下:{step['params']}")
                 
                 runtime.set_running(
-                    board_id=BOARDTYPE_SPIN,
+                    board_id=BOARDTYPE_ICE,
                     motor_id=step["motor"].motor_id,
                     action=step["action"],
                     params=step["params"],
                     task_id=f"{self.running_taskname}"
                 )
-                
-                step["motor"].run(step["params"]["direction"],step["params"]["duration"],step["params"]["speed"])
-
+                if step["dotype"] == "reset":
+                    step["motor"].reset_zero_byspeed(step["params"]["speed"])
+                elif step["dotype"] == "go":
+                    step["motor"].go(step["params"]["target"],step["params"]["speed"])
+                else:
+                    self.state = "ERROR"
+                    print(
+                        f"未知动作类型 {step['dotype']}，"
+                        f"动作名称：{step['action']}"
+                    )
+                    return 
 
             self.state = "WAITING"
             self.wait_start_time = time.time()
@@ -123,7 +131,7 @@ class IceStateMachine:
         print(f"subscribe data:",data)
         #self.state = "DONE"  #only for test
         motor_id = data["motor_id"]    
-        ctx = runtime.get(motor_id)
+        ctx = runtime.get(motor_id,board_id=BOARDTYPE_ICE)
         if not ctx:
             print("》》》没有ctx《《《《")
             return      

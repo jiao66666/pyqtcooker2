@@ -280,6 +280,43 @@ class StepMotor:
 
 
     #   水平垂直复位
+    def reset_zero_byspeed(self,anglespeed)-> Tuple[bool, List[str]]:
+        """复位单个电机"""
+        if self.cmd_running :
+            print("命令还在运行中")
+            return False,["命令还在运行中"]
+        print("####复位电机####")
+        print(f"[{self.name}] ID:{self.motor_id} 运行 复位电机【{self.name}】, 主板类型:{self.board_id}")
+        # 计算脉冲数
+        params = MotionPlanner.plan_orgset_move(
+            motor=self
+        )
+
+        if params is None:
+            print("no movement needed")
+            return False,["没有参数"]   
+
+        if params["direction"] >=0:
+            pulses = abs(params["pulses"])
+        else:
+            pulses = -abs(params["pulses"])   
+
+        # 发送运行命令
+        self.set_cmd_running("ORGRST")
+        self.com.execute_command_async(
+            "ORGRST", 
+            [str(self.board_id), str(self.motor_id), str(pulses), "0",str(anglespeed)],
+            callback=self._on_run_done,
+            priority = PRIORITY_CONTROL
+        )
+ 
+        self.current_position = 0
+        self.homed = True
+    
+        return True,[f"电机{self.name}复位成功"]
+
+
+    #   水平垂直复位
     def reset_zero_both(self,positive: int = 1,speed:int = 90)-> Tuple[bool, List[str]]:
         """复位单个电机"""
 
