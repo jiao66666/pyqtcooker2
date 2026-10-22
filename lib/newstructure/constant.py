@@ -259,10 +259,10 @@ ACTION_PARAMS_KEYLIST = {
         ("y","reset_zero","reset"),
         ("z","reset_zero_fast","reset"),
         ("d","reset_zero","reset"),
-        ("x","move_for_test","go"),
-        ("y","move_for_test","go"),
-        ("z","move_for_test","go"),
-        ("d","move_for_test","go")
+        ("x","move_for_test_x","go"),
+        ("y","move_for_test_y","go"),
+        ("z","move_for_test_z","go"),
+        ("d","move_for_test_door","go")
     ],
     "test_ice_hello":[
         ("x","reset_zero","reset"),
@@ -490,9 +490,21 @@ ACTION_PARAMS_CONFIG = {
     "reset_zero_fast":{
         "speed":360
     },
-    "move_for_test":{
+    "move_for_test_x":{
         "speed":90,
-        "target":2
+        "target":5
+    },
+    "move_for_test_y":{
+        "speed":90,
+        "target":0.5
+    },
+    "move_for_test_z":{
+        "speed":360,
+        "target":15
+    },
+    "move_for_test_door":{
+        "speed":90,
+        "target":1.6
     }
 }
 
