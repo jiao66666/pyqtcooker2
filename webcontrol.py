@@ -816,9 +816,13 @@ def runIceMotor():
 def testIceMotorTask():
     print("运行冰柜电机连续动作")
     data = request.get_json()
-    
+    actionname = data.get('action')  
+
+    if actionname not in ACTION_PARAMS_KEYLIST:
+        print("动作名异常!")
+        return jsonify({"status": "fail","message": f"运转失败!错误:动作名异常"})
+
     success = False
-    actionname = "test_ice_moveall"  
     success,msg =  system["iceservice"].run_task(actionname)
     if success :
         print("电机单次运转成功!")

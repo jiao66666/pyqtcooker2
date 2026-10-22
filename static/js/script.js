@@ -1253,7 +1253,7 @@ function zeroIceMotor() {
 }
 
 
-function testIceMotorTask() {
+function testIceMotorTask(actionname) {
           // 获取 select 元素
         fetch('/testIceMotorTask', {
             method: 'POST', 
@@ -1261,6 +1261,7 @@ function testIceMotorTask() {
                 'Content-Type': 'application/json'  
             },
             body: JSON.stringify({
+                action:actionname
             })
         })
         .then(response => response.json())

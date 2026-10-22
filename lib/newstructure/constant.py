@@ -263,6 +263,10 @@ ACTION_PARAMS_KEYLIST = {
         ("y","move_for_test","go"),
         ("z","move_for_test","go"),
         ("d","move_for_test","go")
+    ],
+    "test_ice_hello":[
+        ("x","reset_zero","reset"),
+        ("z","reset_zero_fast","reset")
     ]
 }
 
