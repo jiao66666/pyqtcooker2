@@ -267,6 +267,12 @@ ACTION_PARAMS_KEYLIST = {
     "test_ice_hello":[
         ("x","reset_zero","reset"),
         ("z","reset_zero_fast","reset")
+    ],
+    "ice_open_door":[
+        ("d","open_ice_door","reset")
+    ],
+    "ice_close_door":[
+        ("d","close_ice_door","go")
     ]
 }
 
@@ -505,6 +511,13 @@ ACTION_PARAMS_CONFIG = {
     "move_for_test_door":{
         "speed":90,
         "target":1.6
+    },
+    "open_ice_door":{
+        "speed":ICE_MOTOR_DOOR_TARGET_SPEED
+    },
+    "close_ice_door":{
+        "speed":ICE_MOTOR_DOOR_TARGET_SPEED,
+        "target":ICE_MOTOR_DOOR_TARGET_POS
     }
 }
 
