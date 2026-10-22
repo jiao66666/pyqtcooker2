@@ -2,16 +2,16 @@ import threading
 import time
 
 class ScanCycle:
-    def __init__(self, pots, interval):
-        self.pots = pots
+    def __init__(self, state_machines, interval):
+        self.state_machines = state_machines
         self.running = False
         self.thread = None
         self.interval = interval
 
     def _loop(self):
         while self.running:
-            for p in self.pots:
-                p.tick()
+            for s in self.state_machines:
+                s.tick()
 
             time.sleep(self.interval)
 
