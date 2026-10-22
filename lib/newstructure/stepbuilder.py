@@ -43,7 +43,7 @@ class StepBuilder:
 
             motor_key = item[0]
             action_name = item[1]
-            doing_type =  item[2]
+            dotype =  item[2]
             sub_template = item[3] if len(item) > 3 else None
 
             action_key = f"{action_name}"
@@ -67,7 +67,7 @@ class StepBuilder:
             step = {
                 "type" : self._get_motor_type(motor_key),
                 "motor": motor_map[motor_key],
-                "doing_type":doing_type,
+                "dotype":dotype,
                 "action": action_key,
                 "params": final_params
             }

@@ -83,7 +83,7 @@ class PotStateMachine:
                     task_id=f"{self.running_taskname}"
                 )
 
-                if step["doing_type"] == "go":
+                if step["dotype"] == "go":
                     success,resp = step["motor"].go_action(step["action"],step["params"])
 
                     if not success:
@@ -104,7 +104,7 @@ class PotStateMachine:
                     self.state = "ERROR"
                     print(
                         f"Pot {self.pot_id}: "
-                        f"未知动作类型 {step['doing_type']}，"
+                        f"未知动作类型 {step['dotype']}，"
                         f"动作名称：{step['action']}"
                     )
                     return            
