@@ -34,13 +34,13 @@ POT2_FLIP_MOTOR =  3  # 2号锅翻转电机编号
 POT_MOTOR_LIST = [POT_BACKUP_MOTOR,POT1_MOVE_MOTOR,POT1_FLIP_MOTOR,POT2_MOVE_MOTOR,POT2_FLIP_MOTOR]
 
 ########冰柜步进配置#######
-ICE_MOTOR_0 = 0     #冰柜x   正转向右
-ICE_MOTOR_1 = 1     #冰柜门  
-ICE_MOTOR_2 = 2     #冰柜y   正转向左
-ICE_MOTOR_3 = 3     #冰柜z   正转向右
-ICE_MOTOR_4 = 4     #空位
+ICE_MOTOR_X = 0          #冰柜x   正转向右
+ICE_MOTOR_DOOR = 1       #冰柜门  
+ICE_MOTOR_Y = 2          #冰柜y   正转向左
+ICE_MOTOR_Z = 3          #冰柜z   正转向右
+ICE_MOTOR_BACKUP = 4     #空位
 
-ICE_MOTOR_LIST = [ICE_MOTOR_0,ICE_MOTOR_1,ICE_MOTOR_2,ICE_MOTOR_3,ICE_MOTOR_4]
+ICE_MOTOR_LIST = [ICE_MOTOR_X,ICE_MOTOR_DOOR,ICE_MOTOR_Y,ICE_MOTOR_Z,ICE_MOTOR_BACKUP]
 
 ICE_MOTOR_DOOR_TARGET_SPEED = 360   #冰柜门关门转速
 ICE_MOTOR_DOOR_TARGET_POS   = 3.28  #冰柜门关门绝对值坐标

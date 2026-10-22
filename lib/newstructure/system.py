@@ -277,11 +277,11 @@ def buildmotors(bus,boards):
             POT2_SPIN_MOTOR:SpinMotor("pot2_spin_motor", 1, bus, boards["spinmotor"])
         },
         "icemotor":{
-            ICE_MOTOR_0: StepMotor("ice_motor0", 0, bus, boards["icemotor"]),
-            ICE_MOTOR_1: StepMotor("ice_motor1", 1, bus, boards["icemotor"]),
-            ICE_MOTOR_2: StepMotor("ice_motor2", 2, bus, boards["icemotor"]),
-            ICE_MOTOR_3: StepMotor("ice_motor3", 3, bus, boards["icemotor"]),
-            ICE_MOTOR_4: StepMotor("ice_motor4", 4, bus, boards["icemotor"])
+            ICE_MOTOR_X: StepMotor("ice_motor_x", 0, bus, boards["icemotor"]),
+            ICE_MOTOR_DOOR: StepMotor("ice_motor_door", 1, bus, boards["icemotor"]),
+            ICE_MOTOR_Y: StepMotor("ice_motor_y", 2, bus, boards["icemotor"]),
+            ICE_MOTOR_Z: StepMotor("ice_motor_z", 3, bus, boards["icemotor"]),
+            ICE_MOTOR_BACKUP: StepMotor("ice_motor_backup", 4, bus, boards["icemotor"])
         }
     }
 
