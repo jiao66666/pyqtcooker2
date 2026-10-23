@@ -102,7 +102,7 @@ class CookerService:
         print(self.task_running)
 
         if current_task is not None:
-            return False, f"{pot_id} 正在执行任务：{current_task}"
+            return False, f"锅{pot_id} 正在执行任务：{current_task}"
 
         return True,"workable OK"
 

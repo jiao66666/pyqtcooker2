@@ -13,6 +13,8 @@ _last_objects = 0
 _last_snapshot = None
 
 
+#监控测试时候使用，生产模式不用
+
 def memory_monitor_strong():
     global _last_objects, _last_snapshot
 
