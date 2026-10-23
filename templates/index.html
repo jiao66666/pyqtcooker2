@@ -316,14 +316,6 @@
                     <option value="14">14</option>
                     <option value="15">15</option>
                     <option value="16">16</option>
-                    <option value="17">17</option>
-                    <option value="18">18</option>
-                    <option value="19">19</option>
-                    <option value="20">20</option>
-                    <option value="21">21</option>
-                    <option value="22">22</option>
-                    <option value="23">23</option>
-                    <option value="24">24</option>
                 </select>
             </div>
             <div class="input_circle">
@@ -331,11 +323,9 @@
                 <input class="input-classic" type="number" id="tastmotorovertime" placeholder="请输入电机打开时间(ms)" value="10000" />
             </div>
             <div class="function_container">
-                <button onclick="testTastBoardPing()">测试板连通性</button>
-                <button onclick="runTastMotor()">打开电机</button>
-                <button onclick="getTastMotorFb(1)">获取单电机反馈</button>
-                <button onclick="getTastMotorFb(0)">获取所有电机反馈</button>
-                <button onclick="rebootTastMotor()">重启所有加料电机</button>
+                <button class="fullwidth" onclick="runTastMotor()">限时打开</button>
+                <button onclick="longTastMotor(1)">持续打开</button>
+                <button onclick="longTastMotor(0)">持续关闭</button>
             </div>
         </div>
     </div>

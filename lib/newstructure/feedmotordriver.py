@@ -1,57 +1,87 @@
-# motor_driver.py
-from lib.newstructure.constant import *
-from typing import Optional, List, Tuple, Union
 
-# 定义DC电机驱动类-加料电机板
+# motor_driver.py
+
+from lib.newstructure.constant import *
+from typing import List, Tuple
+
+
 class FeederMotor:
-    def __init__(self, name,motor_id,bus,rs485):
-        """
-        :param rs485_instance: 已经初始化并连接好的串口对象
-        :param motor_id: 板子上的电机ID (1-10)
-        :param name: 电机的自定义名称 (如 "X轴", "抓手")
-        """
-        self.com = rs485 # 持有串口引用
-        self.motor_id = motor_id
+    """
+    新版锁控板驱动
+    RS485: 9600, 8N1
+    """
+
+    def __init__(self, name, motor_id, bus, rs485):
+        self.com = rs485
+        self.motor_id = int(motor_id)       # 锁通道号
         self.name = name
-        self.board_id = self.com.board_id
+        self.board_id = int(self.com.board_id)  # 锁控板地址
         self.bus = bus
-        self.overtime = 1000  # 默认加料电机持续运行时间1秒
+        self.overtime = 1000
 
     def ping(self):
-        print("测试加料板连通性....")
+        """新版协议没有独立 PING，读取全部锁状态以检测通信。"""
         self.com.execute_command_async(
-            "PING", 
+            "GETALLFB",
             [str(self.board_id)],
-            priority = PRIORITY_CONTROL
+            priority=PRIORITY_CONTROL
         )
-       
-        return True      
+        return True
 
-    def run(self, overtime:int):
-        """运转加料电机"""  ##相对运动
-        print("####运行加料电机####")
-        self.overtime = overtime  # 更新持续运行时间
-         # 发送运行命令,默认使用模式0（按持续时间开锁），锁开启后反馈为高电平(1)
+    def run(self, overtime: int = 1000):
+        """按指定持续时间开锁，overtime 单位为毫秒。"""
+        overtime = int(overtime)
+
+        if not 1 <= overtime <= 65535:
+            raise ValueError("overtime 必须在 1～65535 毫秒之间")
+
+        self.overtime = overtime
+
         self.com.execute_command_async(
-            "OPENLOCK", 
-            [str(self.board_id), str(self.motor_id),str(overtime)],
-            priority = PRIORITY_CONTROL
+            "OPENLOCK_TIME",
+            [
+                str(self.board_id),
+                str(overtime),
+                str(self.motor_id)
+            ],
+            priority=PRIORITY_CONTROL
         )
 
         return True
 
-    def getfb(self)-> Tuple[bool, List[str]]:
-        """获取加料电机反馈""" 
-        print("获取指定加料电机反馈")
-        motors = str(self.motor_id)
+    def output_on(self):
+        """锁通道持续输出（0x88）。
+
+        注意：该功能用于继电器、照明灯等持续通电设备。
+        电控锁使用此功能可能导致烧坏。
+        """
         self.com.execute_command_async(
-            "GETFB", 
-            [str(self.board_id), motors,"0","1"],
-            priority = PRIORITY_CONTROL
+            "OUTPUT_ON",
+            [str(self.board_id), str(self.motor_id)],
+            priority=PRIORITY_CONTROL
         )
         return True
 
+    def output_off(self):
+        """关闭锁通道输出（0x89）。"""
+        self.com.execute_command_async(
+            "OUTPUT_OFF",
+            [str(self.board_id), str(self.motor_id)],
+            priority=PRIORITY_CONTROL
+        )
+        return True
 
+    
+    def getfb(self) -> Tuple[bool, List[str]]:
+        """读取指定通道的锁状态。"""
+        self.com.execute_command_async(
+            "GETFB",
+            [str(self.board_id), str(self.motor_id)],
+            priority=PRIORITY_CONTROL
+        )
 
+        # 保留原有异步调用方式；这里只表示命令已提交，
+        # 不代表锁状态查询已经成功。
+        return True, []
 
 

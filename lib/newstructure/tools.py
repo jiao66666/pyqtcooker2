@@ -305,7 +305,7 @@ def get_boardlist():
             {
                 "name":"feedermotor",
                 "port":DEV_FEED_PORT,
-                "baudrate":STEP_BAUT_RATE,
+                "baudrate":FEED_BAUT_RATE,
                 "timeout":BOARD_TIMEOUT,
                 "board_id":BOARDTYPE_FEEDER
             },
@@ -381,7 +381,18 @@ current_positions = {
 
 
 def trace_info(info):
-   
+
+       # 新锁控板二进制指令：只打印，不进入旧协议解析
+    if isinstance(info, (bytes, bytearray)):
+        print(f"[RS485二进制数据] {bytes(info).hex(' ').upper()}")
+        data = []
+        data.append({
+            "type": "command",
+            "info": bytes(info).hex(' ').upper(),
+            "potid":0
+        })
+        return
+
     parts = info.split(",")
     cmd = parts[0].upper()
     board_id= int(parts[1])

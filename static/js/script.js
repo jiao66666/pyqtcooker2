@@ -309,26 +309,6 @@ function confirmDisconnect(){
 
 }
 
-function testTastBoardPing() {
-        fetch('/testtastboardping', {
-            method: 'POST', 
-            headers: {
-                'Content-Type': 'application/json'  
-            },
-            body: JSON.stringify({
-              
-            })
-        })
-        .then(response => response.json())
-        .then(data => {
-            addMessage(`${data.message}`);  // 将收到的消息保存并显示
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            addMessage("Error starting motor.");
-        });
-}
-
 
 function runTastMotor() {
         var tastMotorIDSelect = document.getElementById("tastmotorid");
@@ -343,10 +323,11 @@ function runTastMotor() {
             alert("请输入持续时间!");
             return;
         }
-
-        if(tastMotorOvertime.value>40000){
-            addMessage("超出最大有效持续时间");
-            alert("请重新输入有效持续时间!");
+        
+        console.log("motorid"+tastMotorIDSelect.value+"time"+tastMotorOvertime.value)
+        if(tastMotorOvertime.value>60000){
+            addMessage("设置时间最长为60秒");
+            alert("最长时间为60秒");
             return;
         }
 
@@ -370,42 +351,23 @@ function runTastMotor() {
         });
 }
 
-function rebootTastMotor() {
-        fetch('/reboottastmotor', {
-            method: 'POST', 
-            headers: {
-                'Content-Type': 'application/json'  
-            },
-            body: JSON.stringify({
-               
-            })
-        })
-        .then(response => response.json())
-        .then(data => {
-            addMessage(`${data.message}`);  // 将收到的消息保存并显示
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            addMessage("Error starting motor.");
-        });
-}
 
 
-function getTastMotorFb(mode) {
+function longTastMotor(status) {
         var tastMotorIDSelect = document.getElementById("tastmotorid");
         if(tastMotorIDSelect.value == "" || isNaN(tastMotorIDSelect.value)){
             addMessage("请选择电机ID");
             return;
         }
 
-        fetch('/gettastmotorfb', {
+        fetch('/longTastMotor', {
             method: 'POST', 
             headers: {
                 'Content-Type': 'application/json'  
             },
             body: JSON.stringify({
                  motorid: tastMotorIDSelect.value,
-                 mode: mode
+                 status:  status
             })
         })
         .then(response => response.json())
@@ -417,6 +379,8 @@ function getTastMotorFb(mode) {
             addMessage("Error starting motor.");
         });
 }
+
+
 
 
 let motorPressed = {};

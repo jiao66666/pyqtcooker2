@@ -144,7 +144,12 @@ class RS485Communication:
 
             print(f"[RS485] 发送命令 -> 板号:{self.board_id},串口: {self.port}, 波特率: {self.baudrate}, 命令: {command}")
             print(f"发送指令{cmd_str}中....")
-            self.serial_conn.write(cmd_str.encode('utf-8'))
+
+            if getattr(self.protocol, "binary_mode", False):
+                self.serial_conn.write(cmd_str)
+            else:
+                self.serial_conn.write(cmd_str.encode('utf-8'))
+     
             self.serial_conn.flush()
 
             trace_info(
@@ -152,7 +157,10 @@ class RS485Communication:
             )
 
             print("主板返回消息>>>>>>")
-            res = self.serial_conn.readline().decode('utf-8').strip()
+            if getattr(self.protocol, "binary_mode", False):
+               res = self._read_binary_frame()
+            else:     
+               res = self.serial_conn.readline().decode('utf-8').strip()
             print(res)
 
             print("解析消息>>>>>>>")
@@ -277,4 +285,29 @@ class RS485Communication:
             print(f"发送测试指令失败: {e}")
 
             return False, [str(e)]
-    
+
+
+    def _read_binary_frame(self):
+        """读取 WKLY 二进制协议完整数据帧"""
+
+        # 读取帧头和长度字段
+        header = self.serial_conn.read(5)
+
+        if len(header) != 5:
+            raise TimeoutError("读取二进制帧头失败")
+
+        if header[:4] != b'WKLY':
+            raise ValueError(f"无效帧头: {header.hex(' ').upper()}")
+
+        frame_length = header[4]
+
+        if frame_length < 8:
+            raise ValueError(f"无效帧长度: {frame_length}")
+
+        # 读取剩余数据
+        remaining = self.serial_conn.read(frame_length - 5)
+
+        if len(remaining) != frame_length - 5:
+            raise TimeoutError("二进制数据帧接收不完整")
+
+        return header + remaining

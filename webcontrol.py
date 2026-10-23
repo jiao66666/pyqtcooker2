@@ -108,17 +108,7 @@ def disconnect():
         print("关闭炒菜机失败!")
         return jsonify({"status": "fail","message": f"关闭失败!"})
     
-@app.route('/testtastboardping', methods=['POST'])
-@require_enabled
-def testtastboardping():
-    print("测试加料板连通性")
-    success,msg =  system["cookservice"].run_tastemotor_cmd(POT1_FLAVORMOTOR1,"ping",{})
-    if success :
-        print("测试加料板连通性成功!")
-        return jsonify({"status": "success","message": f"测试连通性运行成功"})
-    else:
-        print("测试加料板连通性失败!")
-        return jsonify({"status": "fail","message": f"运转失败,错误:{msg}!"})
+
 
 
 @app.route('/runtastmotor', methods=['POST'])
@@ -140,41 +130,31 @@ def runtastmotor():
         return jsonify({"status": "fail","message": f"运转失败!错误:{msg}"})
 
 
-@app.route('/reboottastmotor', methods=['POST'])
+@app.route('/longTastMotor', methods=['POST'])
 @require_enabled
-def reboottastmotor():
-    print("测试加料板重启")
-    data = request.get_json()
-    success = False
-  
-    success,msg =  system["cookservice"].run_tastemotor_cmd(int(POT1_FLAVORMOTOR1),"rebootfeeder",{})
-    if success :
-        print("测试加料板打开成功!")
-        return jsonify({"status": "success","message": f"重启电机运行成功"})
-    else:
-        print("测试加料板打开失败!")
-        return jsonify({"status": "fail","message": f"运转失败!错误:{msg}"})    
-
-@app.route('/gettastmotorfb', methods=['POST'])
-@require_enabled
-def gettastmotorfb():
-    print("测试加料板获取结果运行")
+def longTastMotor():
+    print("测试加料板运行")
     data = request.get_json()
     motorid = data.get('motorid')
-    mode = data.get('mode')
+    status = data.get('status')
     success = False
     print("收到参数 :", motorid)
-    success,msg = system["cookservice"].run_tastemotor_cmd(int(motorid),"getfeeder",{"mode":int(mode)})
+    if int(status) == 1:
+       hint = "打开"
+       success,msg =  system["cookservice"].run_tastemotor_cmd(int(motorid),"longfeeder_on",{})
+    else:
+       hint = "关闭"
+       success,msg =  system["cookservice"].run_tastemotor_cmd(int(motorid),"longfeeder_off",{})
+
     if success :
-        print("测试加料板打开成功!")
-        if mode == 0:
-            msg = "所有电机"
-        else:
-            msg = "单电机"    
-        return jsonify({"status": "success","message": f"运行{motorid}号电机获取{msg}反馈成功，反馈结果"})
+        print(f"测试加料板{hint}成功!")
+        return jsonify({"status": "success","message": f"持续长运行打开{motorid}号电机{hint}成功"})
     else:
         print("测试加料板打开失败!")
         return jsonify({"status": "fail","message": f"运转失败!错误:{msg}"})
+
+
+
     
 @app.route('/runlong', methods=['POST'])
 @require_enabled

@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import List,Tuple,Type
+from typing import List,Tuple,Type, Union
 from lib.newstructure.constant import *
 from lib.newstructure.tools import CRCUtil
 from lib.newstructure.tools import parse_motor_pulses,parse_motor_status,parse_all_motor_pulses,parse_all_motor_status
@@ -70,82 +70,274 @@ class StepProtocol(ProtocolBase):
 
 
 class FeederProtocol(ProtocolBase):
-    def build_command(self, command: str, params: List[str] = None) -> str:
-        cmd_str = f"YT+{command}="
-        if params:
-            cmd_str += ",".join(params)
+    """
+    新版 WKLY 二进制锁控协议。
 
-        crc = CRCUtil.crc16(cmd_str)
-        cmd_str += f"*{crc}"
+    帧格式：
+    WKLY + 帧长度 + 板地址 + 指令字 + 数据域 + XOR
 
-        # YT_LOCKER24 协议要求以 CRLF 结尾
-        cmd_str += "\r\n"
-        print(f"将构建命令串(带CRC和结束符): {repr(cmd_str)}")
-        return cmd_str
-    
+    注意：build_command 返回 bytes，不再返回 ASCII 字符串。
+    """
+    binary_mode = True
+
+    HEADER = bytes([0x57, 0x4B, 0x4C, 0x59])
+
+    CMD_OPENLOCK = 0x82
+    CMD_GETFB = 0x83
+    CMD_GETALLFB = 0x84
+    CMD_DOOR_CHANGED = 0x85
+    CMD_OPEN_ALL = 0x86
+    CMD_OPEN_MULTIPLE = 0x87
+    CMD_OUTPUT_ON = 0x88
+    CMD_OUTPUT_OFF = 0x89
+    CMD_OPEN_SIMULTANEOUS = 0x93
+    CMD_OPENLOCK_TIME = 0x94
+    CMD_MULTI_OUTPUT = 0x95
+    CMD_DOOR_UPLOAD_ENABLE = 0x55
+
+    COMMAND_MAP = {
+        "OPENLOCK": CMD_OPENLOCK,
+        "GETFB": CMD_GETFB,
+        "GETALLFB": CMD_GETALLFB,
+        "OPEN_ALL": CMD_OPEN_ALL,
+        "OPEN_MULTIPLE": CMD_OPEN_MULTIPLE,
+        "OUTPUT_ON": CMD_OUTPUT_ON,
+        "OUTPUT_OFF": CMD_OUTPUT_OFF,
+        "OPEN_SIMULTANEOUS": CMD_OPEN_SIMULTANEOUS,
+        "OPENLOCK_TIME": CMD_OPENLOCK_TIME,
+        "MULTI_OUTPUT": CMD_MULTI_OUTPUT,
+        "DOOR_UPLOAD_ENABLE": CMD_DOOR_UPLOAD_ENABLE,
+    }
+
+    @staticmethod
+    def _to_int(value) -> int:
+        """将十进制字符串、整数或 0x 开头的字符串转换为整数。"""
+        if isinstance(value, int):
+            return value
+        return int(str(value), 0)
+
+    @staticmethod
+    def _xor(data: bytes) -> int:
+        result = 0
+        for value in data:
+            result ^= value
+        return result
+
+    def build_command(
+        self,
+        command: str,
+        params: List[str] = None
+    ) -> bytes:
+        """
+        根据指令名称和参数生成完整二进制帧。
+
+        params 约定：
+        OPENLOCK:           [board_id, channel]
+        GETFB:               [board_id, channel]
+        GETALLFB:            [board_id]
+        OPEN_ALL:            [board_id]
+        OPEN_MULTIPLE:       [board_id, channel1, channel2, ...]
+        OUTPUT_ON/OFF:       [board_id, channel]
+        OPEN_SIMULTANEOUS:   [board_id, channel1, channel2, ...]
+        OPENLOCK_TIME:       [board_id, milliseconds, channel1, ...]
+        MULTI_OUTPUT:        [board_id, state, channel1, channel2, ...]
+        DOOR_UPLOAD_ENABLE:  [board_id, 0或1]
+        """
+
+        params = params or []
+
+        if command not in self.COMMAND_MAP:
+            raise ValueError(f"不支持的锁控指令: {command}")
+
+        cmd = self.COMMAND_MAP[command]
+
+        if not params:
+            raise ValueError(f"{command} 缺少板地址参数")
+
+        board_id = self._to_int(params[0])
+
+        if not 0 <= board_id <= 0xFF:
+            raise ValueError("board_id 必须在 0～255 之间")
+
+        args = [self._to_int(value) for value in params[1:]]
+
+        # 根据指令组装数据域
+        if cmd in (self.CMD_GETALLFB, self.CMD_OPEN_ALL):
+            data = []
+
+        elif cmd in (self.CMD_OPENLOCK, self.CMD_GETFB,
+                     self.CMD_OUTPUT_ON, self.CMD_OUTPUT_OFF):
+            if len(args) != 1:
+                raise ValueError(f"{command} 需要一个通道号")
+            data = args
+
+        elif cmd in (self.CMD_OPEN_MULTIPLE,
+                     self.CMD_OPEN_SIMULTANEOUS):
+            if not args:
+                raise ValueError(f"{command} 至少需要一个通道号")
+            if len(args) > 255:
+                raise ValueError("通道数量不能超过 255")
+            data = [len(args)] + args
+
+        elif cmd == self.CMD_OPENLOCK_TIME:
+            if len(args) < 2:
+                raise ValueError("OPENLOCK_TIME 需要持续时间和至少一个通道号")
+
+            milliseconds = args[0]
+            channels = args[1:]
+
+            if not 1 <= milliseconds <= 65535:
+                raise ValueError("开锁时间必须在 1～65535 毫秒之间")
+            if len(channels) > 255:
+                raise ValueError("通道数量不能超过 255")
+
+            data = [
+                (milliseconds >> 8) & 0xFF,
+                milliseconds & 0xFF,
+                len(channels),
+                *channels
+            ]
+
+        elif cmd == self.CMD_MULTI_OUTPUT:
+            if len(args) < 2:
+                raise ValueError("MULTI_OUTPUT 需要状态和至少一个通道号")
+
+            state = args[0]
+            channels = args[1:]
+
+            if state not in (0, 1):
+                raise ValueError("输出状态只能是 0（关闭）或 1（启动）")
+            if len(channels) > 255:
+                raise ValueError("通道数量不能超过 255")
+
+            data = [state, len(channels), *channels]
+
+        elif cmd == self.CMD_DOOR_UPLOAD_ENABLE:
+            if len(args) != 1 or args[0] not in (0, 1):
+                raise ValueError("门状态上传使能参数必须为 0 或 1")
+            data = args
+
+        else:
+            raise ValueError(f"{command} 尚未实现数据域组装")
+
+        if any(not 0 <= value <= 0xFF for value in data):
+            raise ValueError("数据域中的每个字节必须在 0～255 之间")
+
+        # 长度包括起始符、长度、地址、指令、数据域和校验字节
+        frame_length = 4 + 1 + 1 + 1 + len(data) + 1
+
+        if not 8 <= frame_length <= 255:
+            raise ValueError(f"帧长度超出协议范围: {frame_length}")
+
+        frame = (
+            self.HEADER
+            + bytes([frame_length, board_id, cmd])
+            + bytes(data)
+        )
+
+        checksum = self._xor(frame)
+        frame += bytes([checksum])
+
+        print(
+            f"构建锁控命令: {command}, "
+            f"数据帧: {frame.hex(' ').upper()}"
+        )
+
+        return frame
+
     def parse_response(
-            self,
-            command: str,
-            response: str
-        ) -> Tuple[bool, str, List[str]]:
+        self,
+        command: str,
+        response: Union[bytes, bytearray, str]
+    ) -> Tuple[bool, str, List[str]]:
+        """
+        解析二进制响应。
 
-        # 去除串口返回数据末尾的 CRLF / 空白字符
-        response = response.strip()
+        返回格式与旧协议一致：
+        (success, command, params)
 
-        # ==================================================
-        # 正常响应
-        #
-        # 例如：
-        #
-        # +GETFB:1,111111111111111111111111
-        #
-        # 解析结果：
-        #
-        # success = True
-        # cmd     = GETFB
-        # params  = ["1", "111111111111111111111111"]
-        # ==================================================
-        if response.startswith("+") and ":" in response:
+        params 中的字节转换成十进制字符串。
+        """
 
-            cmd, params_with_crc = response[1:].split(":", 1)
+        if isinstance(response, str):
+            # 兼容以 latin-1 一对一映射保存原始字节的情况。
+            # 如果上层已经用 UTF-8 等方式解码二进制数据，
+            # 必须先修改上层，不能在这里恢复丢失的字节。
+            response = response.encode("latin-1")
 
-            # 去除可能存在的 CRC
-            if "*" in params_with_crc:
-                params_part, crc = params_with_crc.split("*", 1)
-            else:
-                params_part = params_with_crc
+        response = bytes(response)
 
-            params = [
-                param.strip()
-                for param in params_part.split(",")
+        if len(response) < 8:
+            return False, "INVALID", []
+
+        if not response.startswith(self.HEADER):
+            return False, "INVALID", []
+
+        frame_length = response[4]
+
+        if frame_length != len(response):
+            return False, "INVALID", []
+
+        if self._xor(response[:-1]) != response[-1]:
+            return False, "INVALID", []
+
+        board_id = response[5]
+        cmd = response[6]
+        data = list(response[7:-1])
+
+        # 主动上传的门状态变化，不是普通命令应答。
+        if cmd == self.CMD_DOOR_CHANGED:
+            if len(data) != 2:
+                return False, "INVALID", []
+            return True, "DOOR_CHANGED", [
+                str(board_id),
+                str(data[0]),  # 通道号
+                str(data[1]),  # 锁状态
             ]
 
-            return True, cmd, params
+        command_names = {
+            value: key for key, value in self.COMMAND_MAP.items()
+        }
+        response_command = command_names.get(cmd, f"0x{cmd:02X}")
 
-        # ==================================================
-        # 错误响应
-        #
-        # 例如：
-        #
-        # +ERRORxxx:xxxx
-        # ==================================================
-        if response.startswith("+ERROR") and ":" in response:
+        # 状态字节是所有普通命令应答的数据域第一个字节。
+        if not data:
+            return False, response_command, []
 
-            error_with_params = response[7:].split(":", 1)
+        status = data[0]
 
-            error_code = error_with_params[0].strip()
-            error_message = error_with_params[1].strip()
+        if status != 0:
+            return False, response_command, [str(status)]
 
-            return False, "ERROR", [
-                error_code,
-                error_message
-            ]
+        # 不同指令的应答数据域结构不同。
+        if cmd in (self.CMD_OPENLOCK, self.CMD_GETFB):
+            # 状态 + 通道号 + 锁状态
+            if len(data) != 3:
+                return False, "INVALID", []
+            params = [str(data[1]), str(data[2])]
 
-        # ==================================================
-        # 无法识别的响应
-        # ==================================================
+        elif cmd == self.CMD_GETALLFB:
+            # 状态 + 锁数量 + 每个通道的状态
+            if len(data) < 2:
+                return False, "INVALID", []
+            count = data[1]
+            if len(data) != count + 2:
+                return False, "INVALID", []
+            params = [str(count)] + [str(v) for v in data[2:]]
 
-        return False, "INVALID", []
+        elif cmd in (self.CMD_OUTPUT_ON, self.CMD_OUTPUT_OFF):
+            # 文档示例响应：状态 + 通道号
+            if len(data) != 2:
+                return False, "INVALID", []
+            params = [str(data[1])]
+
+        else:
+            # 其他控制命令通常只返回状态字节。
+            if len(data) != 1:
+                return False, "INVALID", []
+            params = []
+
+        return True, response_command, params
 
 class SpinerProtocol(ProtocolBase):
     
