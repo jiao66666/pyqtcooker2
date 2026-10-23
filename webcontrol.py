@@ -121,7 +121,7 @@ def runtastmotor():
     success = False
     print("收到参数 :", motorid)
   
-    success,msg =  system["cookservice"].run_tastemotor_cmd(int(motorid),"openfeeder",{"overtime":int(overtime)})
+    success,msg =  system["cookservice"].run_tastemotor_cmd(int(motorid),"openfeeder",{"overtime":int(int(overtime)*1000)})
     if success :
         print("测试加料板打开成功!")
         return jsonify({"status": "success","message": f"打开{motorid}号电机运行成功"})

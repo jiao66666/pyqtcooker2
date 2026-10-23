@@ -325,11 +325,6 @@ function runTastMotor() {
         }
         
         console.log("motorid"+tastMotorIDSelect.value+"time"+tastMotorOvertime.value)
-        if(tastMotorOvertime.value>60000){
-            addMessage("设置时间最长为60秒");
-            alert("最长时间为60秒");
-            return;
-        }
 
         fetch('/runtastmotor', {
             method: 'POST', 
