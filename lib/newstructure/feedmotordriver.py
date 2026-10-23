@@ -3,7 +3,7 @@
 
 from lib.newstructure.constant import *
 from typing import List, Tuple
-
+import threading
 
 class FeederMotor:
     """
@@ -18,6 +18,8 @@ class FeederMotor:
         self.board_id = int(self.com.board_id)  # 锁控板地址
         self.bus = bus
         self.overtime = 1000
+        self._output_timer = None
+        self._output_lock = threading.Lock()
 
     def ping(self):
         """新版协议没有独立 PING，读取全部锁状态以检测通信。"""
@@ -29,25 +31,45 @@ class FeederMotor:
         return True
 
     def run(self, overtime: int = 1000):
-        """按指定持续时间开锁，overtime 单位为毫秒。"""
+        """持续输出指定时间，overtime 单位为毫秒。"""
+
         overtime = int(overtime)
 
-        if not 1 <= overtime <= 65535:
-            raise ValueError("overtime 必须在 1～65535 毫秒之间")
+        if overtime <= 0:
+            raise ValueError("overtime 必须大于 0 毫秒")
 
-        self.overtime = overtime
+        with self._output_lock:
+            # 已有定时输出任务，不允许重复启动
+            if self._output_timer is not None:
+                if self._output_timer.is_alive():
+                    print(f"{self.name} 正在输出中，拒绝重复启动")
+                    return False
 
-        self.com.execute_command_async(
-            "OPENLOCK_TIME",
-            [
-                str(self.board_id),
-                str(overtime),
-                str(self.motor_id)
-            ],
-            priority=PRIORITY_CONTROL
-        )
+                self._output_timer = None
+
+            self.overtime = overtime
+
+            # 开启输出
+            self.output_on()
+
+            # 创建定时关闭任务
+            self._output_timer = threading.Timer(
+                overtime / 1000,
+                self._timer_output_off
+            )
+            self._output_timer.daemon = True
+            self._output_timer.start()
 
         return True
+
+
+    def _timer_output_off(self):
+        """定时关闭输出。"""
+        try:
+            self.output_off()
+        finally:
+            with self._output_lock:
+                self._output_timer = None
 
     def output_on(self):
         """锁通道持续输出（0x88）。
