@@ -94,6 +94,13 @@ class RuntimeContext:
             self.action_params[key] = params.copy()
 
 
+
+    def set_motor_type_action_override(self, motor_type, action_name, params):
+        key = (motor_type, action_name)
+        with self._lock:
+            self.action_params[key] = params.copy()
+
+
     def get_action_override(self, key):
         with self._lock:
             return self.action_params.get(key, {}).copy()
@@ -101,10 +108,20 @@ class RuntimeContext:
     # ==================================================
     # 获取最终动作参数
     # ==================================================
-    def get_final_action_params(self, action_key, default_config):
+    def get_final_action_params(self, action_key, default_config, motor_type=None):
         final_params = default_config.copy()
+
+        # 原有逻辑：按动作名称覆盖，保持不变
         override = self.get_action_override(action_key)
         final_params.update(override)
+
+        # 新增逻辑：按电机类型和动作名称覆盖
+        if motor_type is not None:
+            key = (motor_type, action_key)
+            with self._lock:
+                override = self.action_params.get(key, {}).copy()
+            final_params.update(override)
+
         return final_params
     
 

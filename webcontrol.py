@@ -830,6 +830,16 @@ def testIceMotorTask():
         print("动作名异常!")
         return jsonify({"status": "fail","message": f"运转失败!错误:动作名异常"})
 
+    apply_action_params_override_bymotortype(
+        actionname,
+        {
+            "x": {"speed": 360},
+            "y": {"speed": 180},
+            "z": {"speed": 720},
+            "d": {"speed": 360}
+        }
+    )
+
     success = False
     success,msg =  system["iceservice"].run_task(actionname)
     if success :

@@ -61,7 +61,8 @@ class StepBuilder:
 
             final_params = runtime.get_final_action_params(   #动态修改固定动作，合并处
                 action_key,
-                default_params
+                default_params,
+                motor_key
             )
 
             step = {

@@ -225,11 +225,12 @@ def apply_action_params_override_bymotortype(template_name, motor_params):
             override_data = motor_params.get(motor_type)
 
             if override_data:
-                runtime.set_action_override(action_name, override_data)
+                runtime.set_motor_type_action_override(
+                    motor_type, action_name, override_data
+                )
 
             if len(item) > 3 and item[3]:
                 stack.append(item[3])
-
 
 
 def get_pot_pos(potnum,postype):
