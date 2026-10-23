@@ -276,7 +276,7 @@ class StepMotor:
         self.current_position = 0
         self.homed = True
     
-        return True,[f"电机{self.name}复位成功"]
+        return True,["SUBMITTED",f"电机{self.name}复位成功"]
 
 
     #   水平垂直复位
@@ -294,7 +294,7 @@ class StepMotor:
 
         if params is None:
             print("no movement needed")
-            return False,["没有参数"]   
+            return False,["NO_MOVE","没有参数"]   
 
         if params["direction"] >=0:
             pulses = abs(params["pulses"])
@@ -303,12 +303,16 @@ class StepMotor:
 
         # 发送运行命令
         self.set_cmd_running("ORGRST")
-        self.com.execute_command_async(
+        success = self.com.execute_command_async(
             "ORGRST", 
             [str(self.board_id), str(self.motor_id), str(pulses), "0",str(anglespeed)],
             callback=self._on_run_done,
             priority = PRIORITY_CONTROL
         )
+
+        if not success:
+            print(f"错误: 运行命令失败")
+            return False,["RETRY","命令执行失败"]
  
         self.current_position = 0
         self.homed = True

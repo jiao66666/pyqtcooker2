@@ -6,7 +6,6 @@ from lib.newstructure.constant import *
 class CookerService:
     def __init__(self,system):
         self.system = system
-        self.dispatcher = system["dispatcher"]
         #关键：动作注册表
         self.action_map = {
             "run": self._run_action,
@@ -124,44 +123,6 @@ class CookerService:
 
         self.system["pots"][pot_id].submit_task(task_id,steps)
         return True,"submit task OK"
-
-    #  锅步进单动作执行
-    def run_single_action(self, motor_id, action, params):
-        potid = get_pot_id(motor_id)
-        OK,msg = self.check_workable(potid)
-        print(f"OK status:{OK}")
-        if not OK:
-            return False,msg
-
-        motor = self.system["motors"]["stepmotor"][motor_id]
-        task_id = f"single:{motor_id}:{action}"
-
-        if action == "go" or action == "reset":
-            print("I'm singlle run acintion set locking")
-            self.setRunning(potid,task_id)
-
-        def run_fn():
-            handler = self.action_map.get(action)
-            if not handler:
-                raise Exception(f"unknown action: {action}")
-            handler(motor, params)
-
-        runtime.set_running(
-            board_id=BOARDTYPE_STEP,
-            motor_id=motor_id,
-            action=action,
-            pot_id=potid,
-            params=params,
-            task_id=task_id
-        )
-
-        self.dispatcher.submit(
-            task_id=task_id,
-            resources=[motor_id],
-            run_fn=run_fn
-        )
-
-        return True,"submit task ok"
     
     def run_control_cmd(self,motor_id,action,params):
 

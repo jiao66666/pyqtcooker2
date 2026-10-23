@@ -3,7 +3,6 @@ from lib.newstructure.constant import *
 class IceService:
     def __init__(self,system):
         self.system = system
-        self.dispatcher = system["dispatcher"]
         #关键：动作注册表
         self.action_map = {
             "go":self._go_action,
@@ -75,42 +74,6 @@ class IceService:
 
         self.system["ice"].submit_task(task_id,steps)
         return True,"submit task OK"
-
-    #  步进单动作执行[单动作互斥]
-    def run_single_action(self, motor_id, action, params):
-        OK,msg = self.check_workable()
-        print(f"OK status:{OK}")
-        if not OK:
-            return False,msg
-
-        motor = self.system["motors"]["stepmotor"][motor_id]
-        task_id = f"single:{motor_id}:{action}"
-
-        if action == "go" or action == "reset":
-            print("I'm singlle run acintion set locking")
-            self.setRunning(task_id)
-
-        def run_fn():
-            handler = self.action_map.get(action)
-            if not handler:
-                raise Exception(f"unknown action: {action}")
-            handler(motor, params)
-
-        runtime.set_running(
-            board_id=BOARDTYPE_ICE,
-            motor_id=motor_id,
-            action=action,
-            params=params,
-            task_id=task_id
-        )
-
-        self.dispatcher.submit(
-            task_id=task_id,
-            resources=[motor_id],
-            run_fn=run_fn
-        )
-
-        return True,"submit task ok"
 
     #纯命令执行非互斥
     def run_control_cmd(self,motor_id,action,params):

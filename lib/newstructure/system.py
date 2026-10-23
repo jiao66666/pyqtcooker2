@@ -21,8 +21,6 @@ from lib.newstructure.stepmotor_manager import StepMotorManager
 from lib.newstructure.feedermotor_manager import FeederMotorManager
 from lib.newstructure.spinmotor_manager import SpinMotorManager
 
-from lib.newstructure.command_dispatcher import CommandDispatcher
-from lib.newstructure.taskresourcemanager import TaskResourceManager
 import lib.newstructure.tools as tools
 from lib.newstructure.websocket_runtime import websocket_server
 from lib.newstructure.mock import MockMotor
@@ -58,8 +56,6 @@ def build_system():
     feedermotorpolling = FeederMotorPollingService(boards["feedermotor"],bus,motors["feedermotor"],websocket_server,FEEDER_POLLING_INTERVAL)
     icemotorpolling = StepMotorPollingService(boards["icemotor"],bus,motors["icemotor"],icemockmotor,websocket_server,ICE_POLLING_INTERVAL)
 
-    resource_manager = TaskResourceManager(bus)
-    dispatcher = CommandDispatcher(resource_manager,bus)
   
     system = {
         "state": {
@@ -88,7 +84,6 @@ def build_system():
         "feedermotorsmanager":motors_manager["feeder"],
         "spinmotorsmanager":motors_manager["spin"],
         "icemotorsmanager":motors_manager["ice"],
-        "dispatcher":dispatcher,
         "potmockmotor":potmockmotor,
         "icemockmotor":icemockmotor
     }
@@ -103,8 +98,7 @@ def build_system():
     pot2.set_cookservice(cookservice)
     ice.set_iceservice(iceservice)
 
-    dispatcher.set_cookservice(cookservice)
-    dispatcher.set_iceservice(iceservice)
+
 
     websocket_server.set_system(system)
 
@@ -129,7 +123,6 @@ def recovery_system(system):
     system["ice"].reset()
     system["cookservice"].reset()
     system["iceservice"].reset()
-    system["dispatcher"].reset()
     return True
 
 def start_system_state(system):

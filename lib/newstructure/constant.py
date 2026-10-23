@@ -273,6 +273,18 @@ ACTION_PARAMS_KEYLIST = {
     ],
     "ice_close_door":[
         ("d","close_ice_door","go")
+    ],
+    "potmotor_move_task":[
+        ("h","potmotor_move_anywhere","go")
+    ],
+    "potmotor_flip_task":[
+        ("v","potmotor_flip_anywhere","go")
+    ],
+    "potmotor_resetmove_task":[
+        ("h","potmotor_reset_move","reset")
+    ],
+    "potmotor_resetflip_task":[
+        ("v","potmotor_reset_flip","reset")
     ]
 }
 
@@ -518,6 +530,20 @@ ACTION_PARAMS_CONFIG = {
     "close_ice_door":{
         "speed":ICE_MOTOR_DOOR_TARGET_SPEED,
         "target":ICE_MOTOR_DOOR_TARGET_POS
+    },
+    "potmotor_move_anywhere":{
+        "speed":0,
+        "target":0
+    },
+    "potmotor_flip_anywhere":{
+        "speed":0,
+        "target":0
+    },
+    "potmotor_reset_move":{
+        "speed":0,
+    },
+    "potmotor_reset_flip":{
+        "speed":0,
     }
 }
 

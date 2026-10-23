@@ -2,7 +2,7 @@
 from functools import wraps
 from flask import Flask, render_template, jsonify,request
 from lib.newstructure.constant import *
-from lib.newstructure.tools import is_dev_mode,apply_action_speed_override,get_pot_pos,build_dc_action,getTestDCMsg,validate_board_command
+from lib.newstructure.tools import is_dev_mode,apply_action_params_override,apply_action_params_override_bymotortype,get_pot_pos,build_dc_action,getTestDCMsg,validate_board_command
 import webview
 import threading
 from lib.newstructure.system import run_system,init_system,shutdown_system,set_system_dirty,recovery_system,shutdown_device,start_system_state,stop_system_state,set_system_state
@@ -195,25 +195,6 @@ def runlong():
         print("电机长运转失败!")
         return jsonify({"status": "fail","message": f"长运转失败!错误:{msg}"})
     
-@app.route('/run', methods=['POST'])
-@require_enabled
-def run():
-    print("运行电机单次运转")
-    data = request.get_json()
-    motorid = data.get('motorid')  
-    direction = data.get('direction')  
-    speed = data.get('speed')  
-    circles = data.get('circle') 
-    success = False
-    print("收到参数 :", motorid, direction,speed)
-
-    success,msg =  system["cookservice"].run_single_action(motorid,"run",{"circle":float(circles),"speed":int(int(speed)*360),"direction":int(direction)})
-    if success :
-        print("电机单次运转成功!")
-        return jsonify({"status": "success","message": f"单运行成功!电机：{motorid}，方向：{direction}，速度：{speed}"})
-    else:
-        print("电机单次运转失败!")
-        return jsonify({"status": "fail","message": f"单运转失败!错误:{msg}"})
 
 @app.route('/runabs', methods=['POST'])
 @require_enabled
@@ -224,10 +205,30 @@ def runabs():
     direction = data.get('direction')  
     speed = data.get('speed')  
     circles = data.get('circle') 
+    potnum = data.get('potnum')
     success = False
     print("收到参数 :", motorid, direction,speed)
-      
-    success,msg =  system["cookservice"].run_single_action(motorid,"go",{"target":float(circles),"anglespeed":int(int(speed)*360)})
+
+
+    if int(motorid) in [POT1_MOVE_MOTOR,POT2_MOVE_MOTOR]:
+        action_param = "potmotor_move_task"
+        apply_action_params_override(
+            "potmotor_move_task",
+            {
+                "potmotor_move_anywhere": {"speed": int(int(speed)*360) ,"target":float(circles)}
+            }
+        )
+    else:
+        action_param = "potmotor_flip_task"
+        apply_action_params_override(
+            "potmotor_flip_task",
+            {
+                "potmotor_flip_anywhere": {"speed": int(int(speed)*360) ,"target":float(circles)}
+            }
+        )
+
+    pot_param = int(potnum)
+    success,msg =  system["cookservice"].run_task(action_param,pot_param)
     currentpos = system["motors"]["stepmotor"][int(motorid)].get_current_pos()
     if success :
         print("电机单次运转成功!")
@@ -308,15 +309,35 @@ def initall():
         
 @app.route('/resetmotor', methods=['POST'])
 def resetmotor():
-    print("运行电机长运转")
+    print("运行电机重置")
     data = request.get_json()
     motorid = data.get('motorid')  
     direction = data.get('direction')  
-    speed = data.get('speed')  
+    potnum = data.get('potnum')  
+    speed = data.get('speed')
     success = False
-    print("收到参数 :", motorid, direction,speed)
+    print("收到参数 :", motorid, direction,potnum)
 
-    success,msg =  system["cookservice"].run_single_action(motorid,"reset",{})
+
+    if int(motorid) in [POT1_MOVE_MOTOR,POT2_MOVE_MOTOR]:
+        action_param = "potmotor_resetmove_task"
+        apply_action_params_override(
+            "potmotor_resetmove_task",
+            {
+                "potmotor_reset_move": {"speed": int(int(speed)*360)}
+            }
+        )
+    else:
+        action_param = "potmotor_resetflip_task"
+        apply_action_params_override(
+            "potmotor_resetflip_task",
+            {
+                "potmotor_reset_flip": {"speed": int(int(speed)*360) }
+            }
+        )
+
+    pot_param = potnum
+    success,msg =  system["cookservice"].run_task(action_param,pot_param)
     if success :
         print("测试复位成功!")
         return jsonify({"status": "success","message": f"复位电机任务提交成功!电机：{motorid}，方向：{direction}"})
@@ -361,10 +382,12 @@ def testmultitaskabs():
 
     ####### 动态修改固定动作参数 #######
     
-    apply_action_speed_override(
+    apply_action_params_override_bymotortype(
         "take_fire_pour",
-        move_speed,
-        flip_speed
+        {
+            "h": {"speed": move_speed},
+            "v": {"speed": flip_speed}
+        }
     )
     
     action_param = "take_fire_pour"
@@ -397,10 +420,12 @@ def testmultitaskabs2():
 
     ####### 动态修改固定动作参数 #######
     
-    apply_action_speed_override(
+    apply_action_params_override_bymotortype(
         "take_fire_pour",
-        move_speed,
-        flip_speed
+        {
+            "h": {"speed": move_speed},
+            "v": {"speed": flip_speed}
+        }
     )
     
 
@@ -471,10 +496,13 @@ def gopos():
     ####### 动态修改固定动作参数 #######
     
     action_param = f"go_to_{postype}"
-    apply_action_speed_override(
+    apply_action_params_override_bymotortype
+    (
         action_param,
-        speed,
-        speed
+        {
+            "h": {"speed": speed},
+            "v": {"speed": speed}
+        }
     )
     
     pot_param = potnum

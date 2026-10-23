@@ -179,19 +179,13 @@ def pulses_to_circles(
     return round(circles,2)
 
 
-def apply_action_speed_override(
-    template_name,
-    move_speed=None,
-    flip_speed=None
-):
+def apply_action_params_override(template_name, action_params):
     """
-    根据动作模板，动态覆盖speed参数
+    根据动作模板，动态覆盖指定动作的参数。
 
     参数:
-        move_speed   : move动作 speed
-        flip_speed   : flip动作 speed
-
-    注：此方法可继续扩展更多参数 依据pot1,pot2实际情况相应调整    
+        template_name : 动作模板名称
+        action_params : 动作名称与覆盖参数的映射
     """
 
     template = ACTION_PARAMS_KEYLIST[template_name]
@@ -204,25 +198,8 @@ def apply_action_speed_override(
         for item in current_template:
             action_name = item[1]
 
-            override_data = None
+            override_data = action_params.get(action_name)
 
-            # move 开头动作
-            if action_name.startswith("move"):
-
-                override_data = {}
-
-                if move_speed is not None:
-                    override_data["speed"] = move_speed
-
-            # flip 开头动作
-            elif action_name.startswith("flip"):
-
-                override_data = {}
-
-                if flip_speed is not None:
-                    override_data["speed"] = flip_speed
-
-            # 存在有效覆盖数据才更新
             if override_data:
                 runtime.set_action_override(
                     action_name,
@@ -232,6 +209,27 @@ def apply_action_speed_override(
             # 子动作树
             if len(item) > 3 and item[3]:
                 stack.append(item[3])
+
+
+# 按电机类型批量覆盖参数
+def apply_action_params_override_bymotortype(template_name, motor_params):
+    template = ACTION_PARAMS_KEYLIST[template_name]
+    stack = [template]
+
+    while stack:
+        current_template = stack.pop()
+
+        for item in current_template:
+            motor_type = item[0]
+            action_name = item[1]
+            override_data = motor_params.get(motor_type)
+
+            if override_data:
+                runtime.set_action_override(action_name, override_data)
+
+            if len(item) > 3 and item[3]:
+                stack.append(item[3])
+
 
 
 def get_pot_pos(potnum,postype):

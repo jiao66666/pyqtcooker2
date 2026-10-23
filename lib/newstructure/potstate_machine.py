@@ -99,6 +99,21 @@ class PotStateMachine:
                                 f"动作 {step['action']} 无需运动"
                             )
                             # 在这里调用你现有的正常步骤完成/推进逻辑
+                elif step["dotype"] == "reset":
+                    success,resp = step["motor"].reset_zero_byspeed(step["params"]["speed"])
+                    if not success:
+                        if resp[0] == "RETRY":
+                            print(
+                                f"Pot {self.pot_id}: "
+                                f"动作 {step['action']} 提交失败，暂不进入 WAITING"
+                            )
+                            return
+
+                        if resp[0] == "NO_MOVE":
+                            print(
+                                f"Pot {self.pot_id}: "
+                                f"动作 {step['action']} 无需运动"
+                            )
                 else:
                     self.state = "ERROR"
                     print(
@@ -109,7 +124,7 @@ class PotStateMachine:
                     return            
                     
                 #可选动态调速
-                if step["params"]["varspeed"] == True:
+                if  step["params"].get("varspeed", False) == True:
                     startpos = runtime.get_position(step["motor"].motor_id,board_id=BOARDTYPE_STEP)
                     self.motioncontroller.add_task(
                         motor_id=step["motor"].motor_id,
