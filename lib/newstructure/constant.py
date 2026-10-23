@@ -168,8 +168,8 @@ ACTION_PARAMS_KEYLIST = {
         ("v", "flip_in_tofirefood","go"),
     ],
     "resetzero":[
-       ("h","move_in_tofirefood","go"),
-       ("v","flip_in_tofirefood","go")
+       ("h","potmotor_reset_move","reset"),
+       ("v","potmotor_reset_flip","reset")
     ],
     "take_fire_pour":[
         ("h", "move_in_tofirefood","go"),
@@ -540,10 +540,10 @@ ACTION_PARAMS_CONFIG = {
         "target":0
     },
     "potmotor_reset_move":{
-        "speed":0,
+        "speed":90,
     },
     "potmotor_reset_flip":{
-        "speed":0,
+        "speed":90,
     }
 }
 
