@@ -1,6 +1,9 @@
 import threading
 from lib.newstructure.runtime import runtime
 from lib.newstructure.constant import *
+
+
+#资源管理控制，暂时不使用
 class TaskResourceManager:
     """
     任务级资源所有权管理器

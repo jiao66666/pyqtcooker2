@@ -6,7 +6,7 @@ from datetime import datetime
 
 from lib.newstructure.runtime import runtime
 
-
+# 错误管理器，暂时不用
 class FaultManager:
 
     def __init__(self, bus):
