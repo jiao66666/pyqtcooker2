@@ -1,14 +1,15 @@
 import threading
 import time
+
 from lib.newstructure.constant import *
 from lib.newstructure.runtime import runtime
-import random
 from lib.newstructure.tools import is_dev_mode
 
-#此文档为加料电机轮询实现代码
+
+# 此文档为新锁控板状态轮询实现代码
 class FeederMotorPollingService:
 
-    def __init__(self, rs485, bus, motors,websocket_server,interval=0.2):
+    def __init__(self, rs485, bus, motors, websocket_server, interval=0.2):
         self.rs485 = rs485
         self.bus = bus
         self.interval = interval
@@ -16,12 +17,21 @@ class FeederMotorPollingService:
         self.motors = motors
         self.websocket_server = websocket_server
 
+        self._thread = None
+
     # =========================
     # 启动 / 停止
     # =========================
     def start(self):
+        if self.running:
+            return
+
         self.running = True
-        threading.Thread(target=self._loop, daemon=True).start()
+        self._thread = threading.Thread(
+            target=self._loop,
+            daemon=True
+        )
+        self._thread.start()
 
     def stop(self):
         self.running = False
@@ -30,114 +40,82 @@ class FeederMotorPollingService:
     # 主循环
     # =========================
     def _loop(self):
-
         while self.running:
-            self._check_all_motors_status() 
-
+            self._check_all_motors_status()
             time.sleep(self.interval)
 
-    # 为最大化查询效率可考虑替换此方法
+    # =========================
+    # 查询所有锁通道状态
+    # =========================
     def _check_all_motors_status(self):
-
         self.rs485.execute_command_async(
-            "GETFB",
-            [str(self.rs485.board_id), "1-24", "0", "1"],
-            callback=self._on_motor_status_all
+            "GETALLFB",
+            [str(self.rs485.board_id)],
+            callback=self._on_motor_status_all,
+            priority=PRIORITY_CONTROL
         )
 
-
     # =========================
-    # 回调：所有加料电机状态
+    # 回调：所有锁通道状态
     # =========================
     def _on_motor_status_all(self, command, success, resp):
-
-        print("执行加料板电机状态查询。。。")
-        print("加料电机状态回调中>>>>>>>>>>")
+        print("锁控板状态回调中>>>>>>>>>>")
 
         if not success:
-            print("查询所有加料电机状态失败")
+            print("查询锁控板所有通道状态失败")
             return
 
-        print("GETFB返回:", resp)
+        print("GETALLFB 返回:", resp)
 
         try:
-
-            # ==================================================
-            # GETFB 返回格式：
-            #
-            # +GETFB:1,111111111111111111111111
-            #
-            # resp[0] -> "111111111111111111111111"
-            #
-            # 每一个字符对应一个通道：
-            #
-            # index 0  -> 1号电机
-            # index 1  -> 2号电机
-            # ...
-            # index 23 -> 24号电机
-            #
-            # mode=0：
-            # 0 -> 低电平
-            # 1 -> 高电平
-            # ==================================================
-
-            status_data = resp[0].strip()
-
-            if not status_data:
-                print("加料电机状态数据为空")
+            if not resp:
+                print("锁控板状态数据为空")
                 return
 
-            if len(status_data) != 24:
+            # 新版 FeederProtocol.parse_response() 返回：
+            # (True, "GETALLFB", [通道数量, 通道1状态, 通道2状态, ...])
+            #
+            # 此处 resp 是 execute_command_async 回调传入的
+            # 已解析参数列表，不是原始二进制帧。
+
+            if len(resp) < 2:
+                print(f"锁控板状态数据长度不正确：{resp}")
+                return
+
+            channel_count = int(resp[0])
+            status_data = resp[1:]
+
+            if len(status_data) != channel_count:
                 print(
-                    f"警告：加料电机状态数量不正确，"
-                    f"期望=24，实际={len(status_data)}"
+                    f"锁控板状态数量不匹配："
+                    f"协议数量={channel_count}，"
+                    f"实际数量={len(status_data)}"
                 )
+                return
 
-            # ==================================================
-            # 遍历24路加料电机状态
-            # ==================================================
-
+            # 遍历所有通道
             for motor_id, status_code in enumerate(status_data, start=1):
+                status_code = int(status_code)
 
-                # ------------------------------------------------
-                # 0：关闭
-                # ------------------------------------------------
-                if status_code == "0":
-
-                    print(
-                        f"加料电机 {motor_id} 状态：关闭"
-                    )
-
-                # ------------------------------------------------
-                # 1：开启
-                # ------------------------------------------------
-                elif status_code == "1":
-
-                    print(
-                        f"加料电机 {motor_id} 状态：开启"
-                    )
-
-                # ------------------------------------------------
-                # 未知状态
-                # ------------------------------------------------
+                if status_code == 0:
+                    status_text = "关闭"
+                elif status_code == 1:
+                    status_text = "开启"
                 else:
+                    status_text = f"未知状态({status_code})"
 
-                    print(
-                        f"加料电机 {motor_id} 未知状态：{status_code}"
-                    )
+                print(f"锁通道 {motor_id} 状态：{status_text}")
 
-                # TODO:
-                # 后期可以通过 WebSocket 实时推送当前加料电机状态
+                # TODO：如需实时推送，可在此处发送 WebSocket 消息
                 #
-                # {
+                # self.websocket_server.send_message({
                 #     "type": "feeder_motor_status",
                 #     "motor_id": motor_id,
-                #     "status": "开启/关闭"
-                # }
+                #     "status": status_text
+                # })
+
+        except (TypeError, ValueError, IndexError) as e:
+            print("解析锁控板状态数据异常:", e)
 
         except Exception as e:
-
-            print(
-                "处理所有加料电机状态异常:",
-                e
-            )
+            print("处理锁控板状态异常:", e)
