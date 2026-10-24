@@ -45,6 +45,12 @@ ICE_MOTOR_LIST = [ICE_MOTOR_X,ICE_MOTOR_DOOR,ICE_MOTOR_Y,ICE_MOTOR_Z,ICE_MOTOR_B
 ICE_MOTOR_DOOR_TARGET_SPEED = 360   #冰柜门关门转速
 ICE_MOTOR_DOOR_TARGET_POS   = 3.28  #冰柜门关门绝对值坐标
 
+ICE_MOTORID_NAME_MAP ={
+    ICE_MOTOR_X:"x",
+    ICE_MOTOR_Y:"y",
+    ICE_MOTOR_Z:"z",
+    ICE_MOTOR_DOOR:"d"
+}
 
 #########锅位置配置############
 POT1_POS_OUTFOOD_FLIP  = 10  # 1号锅外倒菜位,翻转位
@@ -270,6 +276,16 @@ ACTION_PARAMS_KEYLIST = {
     ],
     "potmotor_resetflip_task":[
         ("v","potmotor_reset_flip","reset")
+    ],
+    "icemotor_repeat_cycle_y":[
+        ("y","icemotor_resetzero","reset"),
+        ("y","icemotor_moveout","go"),
+        ("y","icemotor_resetzero","reset")
+    ],
+    "icemotor_repeat_cycle_d":[
+        ("d","icemotor_resetzero","reset"),
+        ("d","icemotor_moveout","go"),
+        ("d","icemotor_resetzero","reset")
     ]
 }
 
@@ -529,6 +545,14 @@ ACTION_PARAMS_CONFIG = {
     },
     "potmotor_reset_flip":{
         "speed":90,
+    },
+    "icemotor_resetzero":{
+        "speed":90,
+        "target":0
+    },
+    "icemotor_moveout":{
+        "speed":90,
+        "target":0
     }
 }
 

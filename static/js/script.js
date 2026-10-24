@@ -929,7 +929,7 @@ function testaction(pot,action) {
 
 function resetIceMotor(positive) {
           // 获取 select 元素
-        var motorid = getSelectedValue("icemotor");
+        var motorid = getSelectedValue("icemotor_name");
         console.log("motorid",motorid)
 
          // 获取 select 元素
@@ -960,7 +960,7 @@ function resetIceMotor(positive) {
 
 function resetoldIceMotor(positive) {
           // 获取 select 元素
-        var motorid = getSelectedValue("icemotor");
+        var motorid = getSelectedValue("icemotor_name");
         console.log("motorid",motorid)
 
          // 获取 select 元素
@@ -991,7 +991,7 @@ function resetoldIceMotor(positive) {
 
 function runlongIceMotor(positive) {
           // 获取 select 元素
-        var motorid = getSelectedValue("icemotor");
+        var motorid = getSelectedValue("icemotor_name");
         console.log("motorid",motorid)
 
          // 获取 select 元素
@@ -1088,7 +1088,7 @@ function goInOutIceMotor(directionstr) {
 
 function runlongoldIceMotor(positive) {
           // 获取 select 元素
-        var motorid = getSelectedValue("icemotor");
+        var motorid = getSelectedValue("icemotor_name");
         console.log("motorid",motorid)
 
          // 获取 select 元素
@@ -1119,7 +1119,7 @@ function runlongoldIceMotor(positive) {
 
 function pauseoldIceMotor() {
           // 获取 select 元素
-        var motorid = getSelectedValue("icemotor");
+        var motorid = getSelectedValue("icemotor_name");
         console.log("motorid",motorid)
         console.log("now in pause")
          // 获取 select 元素
@@ -1170,6 +1170,10 @@ function zeroIceMotor() {
 }
 
 
+
+
+
+
 function testIceMotorTask(actionname) {
           // 获取 select 元素
         fetch('/testIceMotorTask', {
@@ -1179,6 +1183,41 @@ function testIceMotorTask(actionname) {
             },
             body: JSON.stringify({
                 action:actionname
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+             addMessage(``+data.message);  // 将收到的消息保存并显示
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            addMessage("Error starting motor.");
+        });
+}
+
+
+function testIceMotorTaskRepeat(actionname) {
+          // 获取 select 元素
+        var motorid = getSelectedValue("icemotor_name");
+        var speed = getSelectedValue("speed");
+        var speedconstant = document.getElementById("circleice_speedconstant");
+        var repeat = document.getElementById("circleice_valrepeat");
+        var circle = document.getElementById("circleice_valabs");
+        console.log("选中圈数值是:"+circle.value+"reapeat:"+repeat.value+"speedconstant:"+speedconstant.value+"speed:"+speed+"motorid:"+motorid);
+
+
+        fetch('/testIceMotorTask', {
+            method: 'POST', 
+            headers: {
+                'Content-Type': 'application/json'  
+            },
+            body: JSON.stringify({
+                action:actionname,
+                motorid:motorid,
+                speed:speed,
+                speedconstant:speedconstant.value,
+                repeat:repeat.value,
+                target:circle.value
             })
         })
         .then(response => response.json())
@@ -1216,7 +1255,7 @@ function stopIceMotor() {
 
 
 function pauseIceMotor() {
-        var motorid = getSelectedValue("icemotor");
+        var motorid = getSelectedValue("icemotor_name");
         console.log("motorid",motorid)
 
         fetch('/pauseIceMotor', {
@@ -1264,7 +1303,7 @@ function pauseIceMotorByid() {
 
 function runIceMotor() {
       
-       var motorid = getSelectedValue("icemotor");
+       var motorid = getSelectedValue("icemotor_name");
        console.log("current motorid is:"+motorid)
 
        var speed = getSelectedValue("speed");

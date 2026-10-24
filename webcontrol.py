@@ -819,6 +819,7 @@ def runIceMotor():
         return jsonify({"status": "fail","message": f"运转失败!错误:{msg}"})
 
 
+
 @app.route('/testIceMotorTask', methods=['POST'])
 @require_enabled
 def testIceMotorTask():
@@ -842,6 +843,46 @@ def testIceMotorTask():
 
     success = False
     success,msg =  system["iceservice"].run_task(actionname)
+    if success :
+        print("电机单次运转成功!")
+        return jsonify({"status": "success","message": f"运行电机成功!"})
+    else:
+        print("电机单次运转失败!")
+        return jsonify({"status": "fail","message": f"运转失败!错误:{msg}"})
+
+
+
+
+@app.route('/testIceMotorTaskRepeat', methods=['POST'])
+@require_enabled
+def testIceMotorTaskRepeat():
+    print("运行冰柜电机连续动作")
+    data = request.get_json()
+    actionname = data.get('action')
+    motorid = data.get('motorid')
+    speed = data.get("speed")
+    speedconstant = data.get("speedconstant")
+    repeat = data.get("repeat")
+    target = data.get("target")  
+
+    speedfinal=int(int(speed)*int(speedconstant))
+    repeatfinal=int(repeat)
+    actionnamefinal=f"icemotor_repeat_cycle_{ICE_MOTORID_NAME_MAP[int(motorid)]}"
+    
+    if actionnamefinal not in ACTION_PARAMS_KEYLIST:
+        print("动作名异常!")
+        return jsonify({"status": "fail","message": f"运转失败!错误:动作名异常{actionnamefinal}"})
+
+    apply_action_params_override(
+        actionnamefinal,
+        {
+            "icemotor_resetzero": {"speed": speedfinal,"target":0},
+            "icemotor_moveout":{"speed":speedfinal,"target":int(target)}
+        }
+    )
+
+    success = False
+    success,msg =  system["iceservice"].run_task(actionnamefinal,repeatfinal)
     if success :
         print("电机单次运转成功!")
         return jsonify({"status": "success","message": f"运行电机成功!"})

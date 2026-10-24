@@ -59,7 +59,7 @@ class IceService:
         return True,"workable OK"
 
     # 运行电机动作组[多动作互斥]
-    def run_task(self, task_name):
+    def run_task(self, task_name,repeat=1):
         OK,msg = self.check_workable()
         print(f"OK status:{OK}")
         if not OK:
@@ -72,7 +72,7 @@ class IceService:
         task_id = f"task:{task_name}"
         self.setRunning(task_id)
 
-        self.system["ice"].submit_task(task_id,steps)
+        self.system["ice"].submit_task(task_id,steps,repeat)
         return True,"submit task OK"
 
     #纯命令执行非互斥

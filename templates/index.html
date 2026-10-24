@@ -566,9 +566,9 @@
                 <div class="ice_circle_name" onclick="setIceMotorName(this,1)">
                     门
                 </div>
-                <!---<div class="ice_circle_name" onclick="setIceMotorName(this,4)">
+                <div class="ice_circle_name" onclick="setIceMotorName(this,4)">
                     空
-                </div>-->
+                </div>
         </div>
         <div class="ice_btncon">
             <div class="ice_btn" onpointerdown="goInOutIceMotor('in')"  onpointerup="pauseIceMotorByid()">冰柜电机回</div>
@@ -577,28 +577,14 @@
         </div>   
 
         <hr style="border: 1px dotted #ccc; width: 100%; margin: 5px auto;">
-        
-        <div class="ice_container">
-            <label id="icemotor" data-motorid="0">电机号:</label>
-            <div class="ice_circle" onclick="setIceMotor(this,0)">
-                0
-            </div>
-            <div class="ice_circle" onclick="setIceMotor(this,1)">
-                1
-            </div>
-            <div class="ice_circle" onclick="setIceMotor(this,2)">
-                2
-            </div>
-            <div class="ice_circle" onclick="setIceMotor(this,3)">
-                3
-            </div>
-            <div class="ice_circle" onclick="setIceMotor(this,4)">
-                4
-            </div>
+
+        <div class="new_input_circle">
+            <label for="circleice_valabs" class="input_tag">目标位置:</label>
+            <input class="input-classic w60" type="number" id="circleice_valabs" placeholder="请输入目标的绝对位置数值" />
         </div>
         <div class="new_input_circle">
-            <label for="circle_ice" class="input_tag">目标位置:</label>
-            <input class="input-classic w60" type="number" id="circleice_valabs" placeholder="请输入目标的绝对位置数值" />
+            <label for="circleice_valrepeat" class="input_tag">执行次数:</label>
+            <input class="input-classic w60" type="number" id="circleice_valrepeat" placeholder="请输入想要执行次数" />
         </div>
 
         <div class="ice_btncon">
@@ -614,6 +600,7 @@
             <div class="ice_btn fullwidth" onclick="pauseIceMotor()">暂停运行</div>
             <div class="ice_btn" onclick="testIceMotorTask('test_ice_hello')">测试冰柜连续动作1</div>
             <div class="ice_btn" onclick="testIceMotorTask('test_ice_moveall')">测试冰柜连续动作2</div>
+            <div class="ice_btn" onclick="testIceMotorTaskRepeat('icemotor_repeat_cycle')">重复执行动作</div>
         </div>
     </div> 
 

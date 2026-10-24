@@ -16,6 +16,8 @@ class IceStateMachine:
         self.running_tasks = set()
         self.running_taskname = None
         self.iceservice = None
+        self.total_repeat = 0
+        self.current_repeat = 0
 
         
         # 订阅电机完成事件
@@ -26,12 +28,24 @@ class IceStateMachine:
     def set_iceservice(self,iceservice):
         self.iceservice = iceservice
 
-    def submit_task(self, task_name,steps):
+    def submit_task(self, task_name,steps,repeat=1):
+
+        if not isinstance(repeat, int) or isinstance(repeat, bool) or repeat < 1:
+                return False
+
+        if not steps:
+            print(f"任务 {task_name} 的动作组为空，拒绝提交")
+            return False
+        
         if task_name in self.running_tasks:
            print("任务还在执行中，请稍后...")
            return False
         self.running_tasks.add(task_name)
         self.running_taskname = task_name
+
+        self.total_repeat = repeat
+        self.current_repeat = 0
+
         self.command_queue.put(steps)
         print("submitt task OK@!>>>>")
 
@@ -101,8 +115,26 @@ class IceStateMachine:
         elif self.state == "DONE":
             #print("ALL ACTION IS DONE!!!!!!!!!!!")
             print(f"ice machine state is DONE")
-            self.iceservice.resetRunning(self.running_taskname)
-            self.state = "IDLE"
+            self.current_repeat += 1
+
+            if self.current_repeat < self.total_repeat:
+                # 还有剩余次数，重新执行当前动作组
+                print(
+                    f"准备执行第 {self.current_repeat + 1} 次，"
+                    f"总次数 {self.total_repeat}"
+                )
+
+                self.reset_step()
+                self.state = "CHECK_HOME"
+
+            else:
+                # 所有次数执行完毕，才清理任务
+                self.iceservice.resetRunning(self.running_taskname)
+                self.running_tasks.remove(self.running_taskname)
+                self.running_taskname = None
+                self.steps = None
+                self.state = "IDLE"
+
 
         elif self.state == "ERROR":
             print(f"ice machine state is ERROR")  
@@ -157,7 +189,7 @@ class IceStateMachine:
         else:
             print(f"current step is:{self.current_step},equal bigger than total{len(self.steps)},set state done!")
             self.state = "DONE"                   #动作组完成，变更状态
-            self.running_tasks.remove(self.running_taskname)
+           
 
     def on_estop(self, data=None):
         print(f"ice machine ESTOP triggered!")
