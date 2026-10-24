@@ -96,6 +96,9 @@ class RuntimeContext:
 
 
     def set_motor_type_action_override(self, motor_type, action_name, params):
+        if params is None:
+            params = {}
+
         key = (motor_type, action_name)
         with self._lock:
             self.action_params[key] = params.copy()
