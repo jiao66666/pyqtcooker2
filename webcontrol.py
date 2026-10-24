@@ -834,7 +834,7 @@ def testIceMotorTask():
         actionname,
         {
             "x": {"speed": 360},
-            "y": {"speed": 180},
+            "y": {"speed": 620},
             "z": {"speed": 720},
             "d": {"speed": 360}
         }
