@@ -867,11 +867,11 @@ def testIceMotorTaskRepeat():
 
     speedfinal=int(int(speed)*int(speedconstant))
     repeatfinal=int(repeat)
-    actionnamefinal=f"icemotor_repeat_cycle_{ICE_MOTORID_NAME_MAP[int(motorid)]}"
+    actionnamefinal=f"{actionname}_{ICE_MOTORID_NAME_MAP[int(motorid)]}"
     
     if actionnamefinal not in ACTION_PARAMS_KEYLIST:
         print("动作名异常!")
-        return jsonify({"status": "fail","message": f"运转失败!错误:动作名异常{actionnamefinal}"})
+        return jsonify({"status": "fail","message": f"运转失败!错误:动作名异常,当前动作名{actionnamefinal}"})
 
     apply_action_params_override(
         actionnamefinal,

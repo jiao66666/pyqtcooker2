@@ -43,6 +43,7 @@ class IceStateMachine:
         self.running_tasks.add(task_name)
         self.running_taskname = task_name
 
+        print(f"=========当前任务执行次数为{repeat}次==========")
         self.total_repeat = repeat
         self.current_repeat = 0
 

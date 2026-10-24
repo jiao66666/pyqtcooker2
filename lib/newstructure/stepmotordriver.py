@@ -265,7 +265,7 @@ class StepMotor:
         #复位速度
         anglespeed = params["speed"]   #生产标准速度360，测试使用90      
          # 发送运行命令
-        self.set_cmd_running("ORGRST")
+        self.set_cmd_running("reset_zero")
         self.com.execute_command_async(
             "ORGRST", 
             [str(self.board_id), str(self.motor_id), str(pulses), "0",str(anglespeed)],
@@ -302,7 +302,7 @@ class StepMotor:
             pulses = -abs(params["pulses"])   
 
         # 发送运行命令
-        self.set_cmd_running("ORGRST")
+        self.set_cmd_running("reset_zero_byspeed")
         success = self.com.execute_command_async(
             "ORGRST", 
             [str(self.board_id), str(self.motor_id), str(pulses), "0",str(anglespeed)],
@@ -331,7 +331,7 @@ class StepMotor:
         #复位速度
         anglespeed = speed   #生产标准速度360，测试使用90      
          # 发送运行命令
-        self.set_cmd_running("ORGRST")
+        self.set_cmd_running("reset_zero_both")
         self.com.execute_command_async(
             "ORGRST", 
             [str(self.board_id), str(self.motor_id), str(pulses), "0",str(anglespeed)],

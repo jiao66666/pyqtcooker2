@@ -277,10 +277,20 @@ ACTION_PARAMS_KEYLIST = {
     "potmotor_resetflip_task":[
         ("v","potmotor_reset_flip","reset")
     ],
+    "icemotor_repeat_cycle_x":[
+        ("x","icemotor_resetzero","reset"),
+        ("x","icemotor_moveout","go"),
+        ("x","icemotor_resetzero","reset")
+    ],
     "icemotor_repeat_cycle_y":[
         ("y","icemotor_resetzero","reset"),
         ("y","icemotor_moveout","go"),
         ("y","icemotor_resetzero","reset")
+    ],
+    "icemotor_repeat_cycle_z":[
+        ("z","icemotor_resetzero","reset"),
+        ("z","icemotor_moveout","go"),
+        ("z","icemotor_resetzero","reset")
     ],
     "icemotor_repeat_cycle_d":[
         ("d","icemotor_resetzero","reset"),

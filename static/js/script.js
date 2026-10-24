@@ -1205,8 +1205,18 @@ function testIceMotorTaskRepeat(actionname) {
         var circle = document.getElementById("circleice_valabs");
         console.log("选中圈数值是:"+circle.value+"reapeat:"+repeat.value+"speedconstant:"+speedconstant.value+"speed:"+speed+"motorid:"+motorid);
 
+        if(isNaN(circle.value) ||circle.value<=0){
+            alert("请输入有效的绝对位置值！");
+            return;
+        }
 
-        fetch('/testIceMotorTask', {
+        if((isNaN(repeat.value) ||repeat.value<=0)){
+            alert("请输入有效的重复值！");
+            return;
+        }
+
+
+        fetch('/testIceMotorTaskRepeat', {
             method: 'POST', 
             headers: {
                 'Content-Type': 'application/json'  
