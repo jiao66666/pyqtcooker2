@@ -272,15 +272,7 @@ def buildmotors(bus,boards):
             POT2_FLAVORMOTOR13: FeederMotor("pot2_flavor_motor1", 13, bus, boards["feedermotor"]),
             POT2_FLAVORMOTOR14: FeederMotor("pot2_flavor_motor2", 14, bus, boards["feedermotor"]),
             POT2_FLAVORMOTOR15: FeederMotor("pot2_flavor_motor3", 15, bus, boards["feedermotor"]),
-            POT2_FLAVORMOTOR16: FeederMotor("pot2_flavor_motor4", 16, bus, boards["feedermotor"]),
-            POT2_FLAVORMOTOR17: FeederMotor("pot2_flavor_motor5", 17, bus, boards["feedermotor"]),
-            POT2_FLAVORMOTOR18: FeederMotor("pot2_flavor_motor6", 18, bus, boards["feedermotor"]),
-            POT2_FLAVORMOTOR19: FeederMotor("pot2_flavor_motor7", 19, bus, boards["feedermotor"]),
-            POT2_FLAVORMOTOR20: FeederMotor("pot2_flavor_motor8", 20, bus, boards["feedermotor"]),
-            POT2_FLAVORMOTOR21: FeederMotor("pot2_flavor_motor9", 21, bus, boards["feedermotor"]),
-            POT2_FLAVORMOTOR22: FeederMotor("pot2_flavor_motor10", 22, bus, boards["feedermotor"]),
-            POT2_FLAVORMOTOR23: FeederMotor("pot2_flavor_motor11", 23, bus, boards["feedermotor"]),
-            POT2_FLAVORMOTOR24: FeederMotor("pot2_flavor_motor12", 24, bus, boards["feedermotor"])
+            POT2_FLAVORMOTOR16: FeederMotor("pot2_flavor_motor4", 16, bus, boards["feedermotor"])
         },
         "spinmotor":{
             POT1_SPIN_MOTOR:SpinMotor("pot1_spin_motor", 0, bus, boards["spinmotor"]),
