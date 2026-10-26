@@ -171,14 +171,16 @@ class CookerService:
         resource_id = (board_id, motor_id)
         action_id = f"action:{uuid.uuid4().hex}"
 
-        success = self.resource_manager.acquire_resources(
-            action_id,
-            "action",
-            {resource_id}
-        )
+        #控制类动作跳过申请资源
+        if action not in ("pot_pause", "pot_stop","spin_stop","feeder_longoff"):
+            success = self.resource_manager.acquire_resources(
+                action_id,
+                "action",
+                {resource_id}
+            )
 
-        if not success:
-            return False, f"电机资源被占用：{resource_id}"
+            if not success:
+                return False, f"电机资源被占用：{resource_id}"
 
         try:
             handler(motor, params)
