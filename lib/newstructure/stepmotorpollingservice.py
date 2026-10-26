@@ -161,8 +161,7 @@ class StepMotorPollingService:
                     if not runtime.is_busy(motor_id,board_id=self.board_id):
                         continue
 
-                    runtime.set_done(motor_id,board_id=self.board_id)
-                    self.notify_done(motor_id)
+                    self._handle_motor_done(motor_id)
 
 
                 # ==================================================
@@ -227,7 +226,7 @@ class StepMotorPollingService:
                                 motor_id,board_id=self.board_id
                             )
 
-                            self.notify_done(motor_id)
+                            self._handle_motor_done(motor_id)
 
 
                 # ==================================================
@@ -288,9 +287,8 @@ class StepMotorPollingService:
         # 从运行中的电机中随机选择一个
         board_id,motor_id = random.choice(running_motors)
 
-        runtime.set_done(motor_id,board_id=board_id)
+        self._handle_motor_done(motor_id)
 
-        self.notify_done(motor_id)
         return
 
     # =========================
@@ -362,7 +360,7 @@ class StepMotorPollingService:
                 )
 
                 # 更新 runtime
-                runtime.set_position(motor_id, pos)
+                runtime.set_position(motor_id, pos,board_id=self.board_id)
 
                 # 更新 电机位置 信息
                 self.motors[motor_id].update_current_pos(pos)
@@ -422,25 +420,61 @@ class StepMotorPollingService:
 
         return round(circles, 2)
 
-    def notify_done(self,motorid):
-        task_id = runtime.get_taskid(motorid,self.board_id)
-        if self.board_id == BOARDTYPE_STEP:
-            print("广播锅电机动作完成消息POT_MOTOR_DONE")
+    def notify_done(self, motor_id, execution):
+        owner_type = execution.get("owner_type")
+        task_id = execution.get("task_id")
+
+        # 独立 action：通知 ResourceManager 释放独立动作资源
+        if owner_type == "action":
+            print("广播独立电机动作完成消息 ACTION_DONE")
+
             self.bus.publish(
-                "POT_MOTOR_DONE",
-                {   
-                    "board_id":BOARDTYPE_STEP,
-                    "motor_id": motorid,
-                    "task_id":task_id
+                "ACTION_DONE",
+                {
+                    "board_id": self.board_id,
+                    "motor_id": motor_id,
+                    "action_id": task_id,
+                    "owner_id": task_id,
+                    "owner_type": "action",
+                    "action": execution.get("action"),
                 }
             )
+            return
+
+        # task：保留原有的板级完成事件，交给状态机推进步骤
+        if self.board_id == BOARDTYPE_STEP:
+            print("广播锅电机动作完成消息 POT_MOTOR_DONE")
+
+            self.bus.publish(
+                "POT_MOTOR_DONE",
+                {
+                    "board_id": self.board_id,
+                    "motor_id": motor_id,
+                    "task_id": task_id,
+                }
+            )
+
         elif self.board_id == BOARDTYPE_ICE:
-            print("广播冰柜电机动作完成消息ICE_MOTOR_DONE")
+            print("广播冰柜电机动作完成消息 ICE_MOTOR_DONE")
+
             self.bus.publish(
                 "ICE_MOTOR_DONE",
                 {
-                    "board_id":BOARDTYPE_ICE,
-                    "motor_id": motorid,
-                    "task_id":task_id
+                    "board_id": self.board_id,
+                    "motor_id": motor_id,
+                    "task_id": task_id,
                 }
-            ) 
+            )
+
+
+    def _handle_motor_done(self, motor_id):
+        # 获取并更新完成状态，同时取得完成前的执行记录
+        execution = runtime.set_done(
+            motor_id,
+            board_id=self.board_id
+        )
+
+        if execution is None:
+            return
+
+        self.notify_done(motor_id, execution)
