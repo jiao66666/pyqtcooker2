@@ -240,12 +240,12 @@ class PotStateMachine:
             return          
 
         step = self.steps[self.current_step]
-        step["motor"].reset_cmd_running("on_potmotor_done")
+       
         if ctx["action"] != step["action"] or data["motor_id"] != step["motor"].motor_id:  #确保数据的一致性
             print(f"》》》检查未过关《《《{ctx['action']},{step['action']},{data['motor_id']},{step['motor'].motor_id}")
             return
 
-     
+        step["motor"].reset_cmd_running("on_potmotor_done")
         print(f"motor {motor_id} done the action {step['action']}")
         print(f"OK检查过关OK{ctx['action']},{step['action']},{data['motor_id']},{step['motor'].motor_id}")
 
