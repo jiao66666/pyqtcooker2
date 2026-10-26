@@ -6,7 +6,6 @@ class SpinMotorManager:
         self.motors = motors
         self.board_id = board_id
         self.com = rs485
-        self.cmd_running = False
         self.last_result = None
 
     def _on_run_done(self, command,success, resp):
@@ -19,8 +18,6 @@ class SpinMotorManager:
             print(f"[{cmd}] 执行失败: {resp}")
         else:
             print(f"[{cmd}] ACK成功")
-
-        self.cmd_running = False
 
     def setspeedall(self,speed):
         """批量设置电机速度"""

@@ -15,7 +15,6 @@ class IceStateMachine:
         self.wait_start_time = 0
         self.running_tasks = set()
         self.running_taskname = None
-        self.iceservice = None
         self.total_repeat = 0
         self.current_repeat = 0
 
@@ -25,8 +24,6 @@ class IceStateMachine:
         self.bus.subscribe("ESTOP_TRIGGERED", self.on_estop)
         self.bus.subscribe("MOTOR_ERROR", self.on_motor_error)
 
-    def set_iceservice(self,iceservice):
-        self.iceservice = iceservice
 
     def submit_task(self, task_name,steps,repeat=1):
 
@@ -88,6 +85,8 @@ class IceStateMachine:
                 )
                 if step["dotype"] == "reset":
                     step["motor"].reset_zero_byspeed(step["params"]["speed"])
+                elif step["dotype"] == "resetboth":
+                    step["motor"].reset_zero_both(step["params"]["direction"],step["params"]["speed"])    
                 elif step["dotype"] == "go":
                     step["motor"].go(step["params"]["target"],step["params"]["speed"])
                 else:
@@ -130,7 +129,6 @@ class IceStateMachine:
 
             else:
                 # 所有次数执行完毕，才清理任务
-                self.iceservice.resetRunning(self.running_taskname)
                 self.running_tasks.remove(self.running_taskname)
                 self.running_taskname = None
                 self.steps = None
@@ -178,8 +176,6 @@ class IceStateMachine:
         if ctx["action"] != step["action"] or data["motor_id"] != step["motor"].motor_id:  #确保数据的一致性
             print(f"》》》检查未过关《《《{ctx['action']},{step['action']},{data['motor_id']},{step['motor'].motor_id}")
             return
-
-        step["motor"].reset_cmd_running("on_icemotor_done")
         
         print(f"motor {motor_id} done the action {step['action']}")
         print(f"OK检查过关OK{ctx['action']},{step['action']},{data['motor_id']},{step['motor'].motor_id}")

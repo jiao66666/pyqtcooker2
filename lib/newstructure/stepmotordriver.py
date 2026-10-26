@@ -14,24 +14,14 @@ class StepMotor:
         self.bus = bus
         self.homed = False  # 是否已回零位
         self.current_position = 0
-        self.cmd_running = False
         self.last_result = None
 
-    def set_cmd_running(self,action):
-        print(f"{action} is ready to execute,setting cmdrunning true>>>>>>>")
-        self.cmd_running = True
-
-    def reset_cmd_running(self,action):
-        print(f"{action} is ready to execute,setting cmdrunning false>>>>>>>")
-        self.cmd_running = False
 
     def _on_run_done(self,command ,success, resp):
         self._default_done(command, success, resp)
 
     def _default_done(self, cmd, success, resp):
         self.last_result = (success, resp)
-        print(f"{cmd} is executed done ,ready to set cmd_running false<<<<<<<")
-        #self.reset_cmd_running("normaldone")
       
         if not success:
             print(f"[{cmd}] 执行失败: {resp}")
@@ -55,7 +45,8 @@ class StepMotor:
             )
            
     def reset_home(self):
-        self.home = False
+        self.current_position = 0
+        self.homed = True
         
     def get_current_pos(self):
         return self.current_position  
@@ -132,10 +123,6 @@ class StepMotor:
     def run(self, circles: float, anglespeed: int, direction: int):
         """异步运行电机（基于通信队列，无线程）"""
         print("####运行电机####")
-        if self.cmd_running :
-            print("run命令还在运行中")
-            return False
-
         print(f"[{self.name}] ID:{self.motor_id} 运行 {circles} 圈, 角速度 {anglespeed}")
 
         # 计算脉冲
@@ -146,7 +133,6 @@ class StepMotor:
             pulses = -abs(pulses)
 
         # 提交到通信队列（不再开线程）
-        self.set_cmd_running("run")
         self.com.execute_command_async(
             "RUN",
             [
@@ -164,9 +150,7 @@ class StepMotor:
     # dir = in or out
     def go_InOut(self, anglespeed: int, dir: str):
         """长运转电机"""
-        if self.cmd_running :
-            print("命令还在运行中")
-            return False,["命令还在运行"]
+
         print("####运行电机####")
         print(f"[{self.name}] ID:{self.motor_id} 连续运行, 角速度 {anglespeed}, 主板类型:{self.board_id},")
 
@@ -180,7 +164,6 @@ class StepMotor:
             return False,["没有参数"] 
              
             # 发送运行命令  优先级CONTROL 1
-        self.set_cmd_running("go_InOut")
         self.com.execute_command_async(
             "LONG", 
             [str(self.board_id), str(self.motor_id), str(params["direction"]), str(anglespeed)],
@@ -195,14 +178,10 @@ class StepMotor:
 
     def runlong(self, anglespeed: int, direction: int):
         """长运转电机"""
-        if self.cmd_running :
-            print("命令还在运行中")
-            return False,["命令还在运行"]
         print("####运行电机####")
         print(f"[{self.name}] ID:{self.motor_id} 连续运行, 角速度 {anglespeed}, 主板类型:{self.board_id}")
 
             # 发送运行命令  优先级CONTROL 1
-        self.set_cmd_running("runlong")
         self.com.execute_command_async(
             "LONG", 
             [str(self.board_id), str(self.motor_id), str(direction), str(anglespeed)],
@@ -247,9 +226,7 @@ class StepMotor:
     #   水平垂直复位
     def reset_zero(self)-> Tuple[bool, List[str]]:
         """复位单个电机"""
-        if self.cmd_running :
-            print("命令还在运行中")
-            return False,["命令还在运行中"]
+
         print("####复位电机####")
         print(f"[{self.name}] ID:{self.motor_id} 运行 复位电机【{self.name}】, 主板类型:{self.board_id}")
         # 计算脉冲数
@@ -269,26 +246,20 @@ class StepMotor:
         #复位速度
         anglespeed = params["speed"]   #生产标准速度360，测试使用90      
          # 发送运行命令
-        self.set_cmd_running("reset_zero")
         self.com.execute_command_async(
             "ORGRST", 
             [str(self.board_id), str(self.motor_id), str(pulses), "0",str(anglespeed)],
             callback=self._on_run_done,
             priority = PRIORITY_CONTROL
         )
- 
-        self.current_position = 0
-        self.homed = True
-    
+        
+        self.reset_home()
         return True,["SUBMITTED",f"电机{self.name}复位成功"]
 
 
     #   水平垂直复位
     def reset_zero_byspeed(self,anglespeed)-> Tuple[bool, List[str]]:
         """复位单个电机"""
-        if self.cmd_running :
-            print("命令还在运行中")
-            return False,["命令还在运行中"]
         print("####复位电机####")
         print(f"[{self.name}] ID:{self.motor_id} 运行 复位电机【{self.name}】, 主板类型:{self.board_id}")
         # 计算脉冲数
@@ -306,7 +277,6 @@ class StepMotor:
             pulses = -abs(params["pulses"])   
 
         # 发送运行命令
-        self.set_cmd_running("reset_zero_byspeed")
         success = self.com.execute_command_async(
             "ORGRST", 
             [str(self.board_id), str(self.motor_id), str(pulses), "0",str(anglespeed)],
@@ -318,9 +288,7 @@ class StepMotor:
             print(f"错误: 运行命令失败")
             return False,["RETRY","命令执行失败"]
  
-        self.current_position = 0
-        self.homed = True
-    
+        self.reset_home()
         return True,[f"电机{self.name}复位成功"]
 
 
@@ -335,15 +303,12 @@ class StepMotor:
         #复位速度
         anglespeed = speed   #生产标准速度360，测试使用90      
          # 发送运行命令
-        self.set_cmd_running("reset_zero_both")
         self.com.execute_command_async(
             "ORGRST", 
             [str(self.board_id), str(self.motor_id), str(pulses), "0",str(anglespeed)],
             callback=self._on_run_done,
             priority = PRIORITY_CONTROL
         )
- 
-        self.current_position = 0
-        self.homed = True
-    
+
+        self.reset_home()
         return True,[f"电机{self.name}复位成功"]

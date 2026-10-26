@@ -20,6 +20,8 @@ from lib.newstructure.motioncontroller import MotionController
 from lib.newstructure.stepmotor_manager import StepMotorManager
 from lib.newstructure.feedermotor_manager import FeederMotorManager
 from lib.newstructure.spinmotor_manager import SpinMotorManager
+from lib.newstructure.resourcemanager import ResourceManager
+
 
 import lib.newstructure.tools as tools
 from lib.newstructure.websocket_runtime import websocket_server
@@ -34,6 +36,7 @@ def build_system():
     boards = buildboards()
 
     motors = buildmotors(bus,boards)
+    resource_manager = ResourceManager(bus)
 
     motors_manager = build_motors_manager(bus,boards,motors)
 
@@ -88,17 +91,11 @@ def build_system():
         "icemockmotor":icemockmotor
     }
 
-    cookservice = CookerService(system)
+    cookservice = CookerService(system,resource_manager)
     system["cookservice"] = cookservice
 
-    iceservice = IceService(system)
+    iceservice = IceService(system,resource_manager)
     system["iceservice"] = iceservice
-
-    pot1.set_cookservice(cookservice)
-    pot2.set_cookservice(cookservice)
-    ice.set_iceservice(iceservice)
-
-
 
     websocket_server.set_system(system)
 
@@ -121,8 +118,6 @@ def recovery_system(system):
     system["pots"][1].reset()
     system["pots"][2].reset()
     system["ice"].reset()
-    system["cookservice"].reset()
-    system["iceservice"].reset()
     return True
 
 def start_system_state(system):
@@ -264,15 +259,14 @@ def buildmotors(bus,boards):
             POT1_FLAVORMOTOR6: FeederMotor("pot1_flavor_motor6", 6, bus, boards["feedermotor"]),
             POT1_FLAVORMOTOR7: FeederMotor("pot1_flavor_motor7", 7, bus, boards["feedermotor"]),
             POT1_FLAVORMOTOR8: FeederMotor("pot1_flavor_motor8", 8, bus, boards["feedermotor"]),
-            POT1_FLAVORMOTOR9: FeederMotor("pot1_flavor_motor9", 9, bus, boards["feedermotor"]),
-            POT1_FLAVORMOTOR10: FeederMotor("pot1_flavor_motor10", 10, bus, boards["feedermotor"]),
-            POT1_FLAVORMOTOR11: FeederMotor("pot1_flavor_motor11", 11, bus, boards["feedermotor"]),
-            POT1_FLAVORMOTOR12: FeederMotor("pot1_flavor_motor12", 12, bus, boards["feedermotor"]),
-
-            POT2_FLAVORMOTOR13: FeederMotor("pot2_flavor_motor1", 13, bus, boards["feedermotor"]),
-            POT2_FLAVORMOTOR14: FeederMotor("pot2_flavor_motor2", 14, bus, boards["feedermotor"]),
-            POT2_FLAVORMOTOR15: FeederMotor("pot2_flavor_motor3", 15, bus, boards["feedermotor"]),
-            POT2_FLAVORMOTOR16: FeederMotor("pot2_flavor_motor4", 16, bus, boards["feedermotor"])
+            POT2_FLAVORMOTOR9: FeederMotor("pot2_flavor_motor9", 9, bus, boards["feedermotor"]),
+            POT2_FLAVORMOTOR10: FeederMotor("pot2_flavor_motor10", 10, bus, boards["feedermotor"]),
+            POT2_FLAVORMOTOR11: FeederMotor("pot2_flavor_motor11", 11, bus, boards["feedermotor"]),
+            POT2_FLAVORMOTOR12: FeederMotor("pot2_flavor_motor12", 12, bus, boards["feedermotor"]),
+            POT2_FLAVORMOTOR13: FeederMotor("pot2_flavor_motor13", 13, bus, boards["feedermotor"]),
+            POT2_FLAVORMOTOR14: FeederMotor("pot2_flavor_motor14", 14, bus, boards["feedermotor"]),
+            POT2_FLAVORMOTOR15: FeederMotor("pot2_flavor_motor15", 15, bus, boards["feedermotor"]),
+            POT2_FLAVORMOTOR16: FeederMotor("pot2_flavor_motor16", 16, bus, boards["feedermotor"])
         },
         "spinmotor":{
             POT1_SPIN_MOTOR:SpinMotor("pot1_spin_motor", 0, bus, boards["spinmotor"]),
@@ -283,7 +277,7 @@ def buildmotors(bus,boards):
             ICE_MOTOR_DOOR: StepMotor("ice_motor_door", 1, bus, boards["icemotor"]),
             ICE_MOTOR_Y: StepMotor("ice_motor_y", 2, bus, boards["icemotor"]),
             ICE_MOTOR_Z: StepMotor("ice_motor_z", 3, bus, boards["icemotor"]),
-            ICE_MOTOR_BACKUP: StepMotor("ice_motor_backup", 4, bus, boards["icemotor"])
+            ICE_MOTOR_SPIN: StepMotor("ice_motor_spin", 4, bus, boards["icemotor"])
         }
     }
 

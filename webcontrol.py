@@ -50,7 +50,6 @@ def require_enabled(func):
     return wrapper
 
 
-
 # 渲染前端的 HTML 页面
 @app.route('/')
 def index():
@@ -77,24 +76,6 @@ def connect():
         return jsonify({"status": "fail","message": f"请稍后再试"})
     
 
-
-
-
-# API 路由
-@app.route('/dynamicSpeed', methods=['POST'])
-def dynamicSpeed():
-    print("dynamic speed")
-    data = request.get_json()
-    speed = data.get('speed')
-    success=system["stepmotorsmanager"].speed_all(speed*360)
-    if success:
-        print("动态修改速度成功!")
-        return jsonify({"status": "success","message": "动态修改速度成功!"})
-    else:
-        print("动态修改速度失败!")
-        return jsonify({"status": "fail","message": f"动态修改速度失败!"})
-    
-
 @app.route('/disconnect', methods=['POST'])
 def disconnect():
     print("start Shutdown Power")
@@ -110,7 +91,6 @@ def disconnect():
     
 
 
-
 @app.route('/runtastmotor', methods=['POST'])
 @require_enabled
 def runtastmotor():
@@ -121,7 +101,7 @@ def runtastmotor():
     success = False
     print("收到参数 :", motorid)
   
-    success,msg =  system["cookservice"].run_tastemotor_cmd(int(motorid),"openfeeder",{"overtime":int(int(overtime)*1000)})
+    success,msg =  system["cookservice"].run_tastemotor_cmd(int(motorid),"feeder_timeopen",{"overtime":int(int(overtime)*1000)})
     if success :
         print("测试加料板打开成功!")
         return jsonify({"status": "success","message": f"打开{motorid}号电机运行成功"})
@@ -141,10 +121,10 @@ def longTastMotor():
     print("收到参数 :", motorid)
     if int(status) == 1:
        hint = "打开"
-       success,msg =  system["cookservice"].run_tastemotor_cmd(int(motorid),"longfeeder_on",{})
+       success,msg =  system["cookservice"].run_tastemotor_cmd(int(motorid),"feeder_longon",{})
     else:
        hint = "关闭"
-       success,msg =  system["cookservice"].run_tastemotor_cmd(int(motorid),"longfeeder_off",{})
+       success,msg =  system["cookservice"].run_tastemotor_cmd(int(motorid),"feeder_longoff",{})
 
     if success :
         print(f"测试加料板{hint}成功!")
@@ -167,7 +147,7 @@ def runlong():
     success = False
     print("收到参数 :", motorid, direction,speed)
     multipy_nums = 360 #临时改小为36，作为初次测试用  生产环境请使用 360
-    success,msg =  system["cookservice"].run_control_cmd(motorid,"runlong",{"speed":int(int(speed)*multipy_nums),"direction":int(direction)})
+    success,msg =  system["cookservice"].run_potmotor_cmd(motorid,"pot_runlong",{"speed":int(int(speed)*multipy_nums),"direction":int(direction)})
     if success :
         print("电机长运转成功!")
         return jsonify({"status": "success","message": f"长运行成功!电机：{motorid}，方向：{direction}，速度：{speed}"})
@@ -185,30 +165,11 @@ def runabs():
     direction = data.get('direction')  
     speed = data.get('speed')  
     circles = data.get('circle') 
-    potnum = data.get('potnum')
     success = False
     print("收到参数 :", motorid, direction,speed)
 
-
-    if int(motorid) in [POT1_MOVE_MOTOR,POT2_MOVE_MOTOR]:
-        action_param = "potmotor_move_task"
-        apply_action_params_override(
-            "potmotor_move_task",
-            {
-                "potmotor_move_anywhere": {"speed": int(int(speed)*360) ,"target":float(circles)}
-            }
-        )
-    else:
-        action_param = "potmotor_flip_task"
-        apply_action_params_override(
-            "potmotor_flip_task",
-            {
-                "potmotor_flip_anywhere": {"speed": int(int(speed)*360) ,"target":float(circles)}
-            }
-        )
-
-    pot_param = int(potnum)
-    success,msg =  system["cookservice"].run_task(action_param,pot_param)
+    action_param = "pot_go"
+    success,msg =  system["cookservice"].run_potmotor_cmd(int(motorid),action_param,{"speed": int(int(speed)*360) ,"target":float(circles)})
     currentpos = system["motors"]["stepmotor"][int(motorid)].get_current_pos()
     if success :
         print("电机单次运转成功!")
@@ -226,7 +187,7 @@ def pause():
     success = False
     print("收到参数 :", motorid)
 
-    success,msg =  system["cookservice"].run_control_cmd(motorid,"pause",{})
+    success,msg =  system["cookservice"].run_potmotor_cmd(motorid,"pot_pause",{})
     if success :
         print("电机暂停成功!")
         return jsonify({"status": "success","message": "电机暂停成功!"})
@@ -242,7 +203,7 @@ def stop():
     success = False
     print("收到参数 :", motorid)
 
-    success,msg = system["cookservice"].run_control_cmd(motorid,"stop",{})
+    success,msg = system["cookservice"].run_potmotor_cmd(motorid,"pot_stop",{})
     if success :
         print("电机暂停成功!")
         return jsonify({"status": "success","message": "电机暂停成功!"})
@@ -294,30 +255,11 @@ def resetmotor():
     motorid = data.get('motorid')  
     direction = data.get('direction')  
     potnum = data.get('potnum')  
-    speed = data.get('speed')
     success = False
     print("收到参数 :", motorid, direction,potnum)
 
-
-    if int(motorid) in [POT1_MOVE_MOTOR,POT2_MOVE_MOTOR]:
-        action_param = "potmotor_resetmove_task"
-        apply_action_params_override(
-            "potmotor_resetmove_task",
-            {
-                "potmotor_reset_move": {"speed": int(int(speed)*360)}
-            }
-        )
-    else:
-        action_param = "potmotor_resetflip_task"
-        apply_action_params_override(
-            "potmotor_resetflip_task",
-            {
-                "potmotor_reset_flip": {"speed": int(int(speed)*360) }
-            }
-        )
-
-    pot_param = potnum
-    success,msg =  system["cookservice"].run_task(action_param,pot_param)
+    action_param = "pot_reset"
+    success,msg =  system["cookservice"].run_potmotor_cmd(int(motorid),action_param,{})
     if success :
         print("测试复位成功!")
         return jsonify({"status": "success","message": f"复位电机任务提交成功!电机：{motorid}，方向：{direction}"})
@@ -494,6 +436,23 @@ def gopos():
     else:
         print("测试失败!")
         return jsonify({"status": "fail","message": f"提交{potnum}号锅{pos_info['msg']}任务失败!错误:{msg}"})    
+
+
+
+# API 路由
+@app.route('/dynamicSpeed', methods=['POST'])
+def dynamicSpeed():
+    print("dynamic speed")
+    data = request.get_json()
+    speed = data.get('speed')
+    success=system["stepmotorsmanager"].speed_all(speed*360)
+    if success:
+        print("动态修改速度成功!")
+        return jsonify({"status": "success","message": "动态修改速度成功!"})
+    else:
+        print("动态修改速度失败!")
+        return jsonify({"status": "fail","message": f"动态修改速度失败!"})
+
 
 
 @app.route('/testdata', methods=['POST'])
@@ -714,8 +673,9 @@ def resetIceMotor():
     speed =   data.get('speed')
     print(f"positive:{positive},motorid:{motorid}")
     success = False
-    
-    success,msg = system["motors"]["icemotor"][int(motorid)].reset_zero_both(int(positive),int(int(speed)*90))
+
+    action_param ="resetboth"
+    success,msg = system["cookservice"].run_icmotor_cmd(int(motorid),action_param,{"speed": int(int(speed)*90),"direction":int(positive)})
     
     if success :
         print("测试成功!")
@@ -733,8 +693,9 @@ def zeroIceMotor():
     motorid = data.get('motorid')
     print(f"motorid:{motorid}")
     success = False
-    
-    success,msg = system["motors"]["icemotor"][int(motorid)].reset_zero()
+
+    action_param ="reset"
+    success,msg = system["cookservice"].run_icmotor_cmd(int(motorid),action_param,{})
     
     if success :
         print("测试成功!")
@@ -742,7 +703,6 @@ def zeroIceMotor():
     else:
         print("测试失败!")
         return jsonify({"status": "fail","message": f"提交数据测试失败！错误:{msg}"})    
-
 
 
 @app.route('/runlongIceMotor', methods=['POST'])
@@ -760,15 +720,15 @@ def runlongIceMotor():
     if int(speedconstant)<=0 or int(speedconstant)>1080:
         print("测试失败!")
         return jsonify({"status": "fail","message": f"提交数据测试失败！错误:速度参数异常"})   
-    success,msg = system["motors"]["icemotor"][int(motorid)].runlong(int(int(speed)*int(speedconstant)),int(positive))
-    
+
+    action_param = "runlong"
+    success,msg = system["cookservice"].run_icmotor_cmd(int(motorid),action_param,{"speed":int(int(speed)*int(speedconstant)),"direction":int(positive)})
     if success :
         print("测试成功!")
         return jsonify({"status": "success","message": f"提交数据测试成功!"})
     else:
         print("测试失败!")
         return jsonify({"status": "fail","message": f"提交数据测试失败！错误:{msg}"})   
-
 
 
 @app.route('/goInOutIceMotor', methods=['POST'])
@@ -785,9 +745,10 @@ def goInOutIceMotor():
 
     if int(speedconstant)<=0 or int(speedconstant)>1080:
         print("测试失败!")
-        return jsonify({"status": "fail","message": f"提交数据测试失败！错误:速度参数异常"})   
-    
-    success,msg = system["motors"]["icemotor"][int(motorid)].go_InOut(int(int(speed)*int(speedconstant)),directionstr)
+        return jsonify({"status": "fail","message": f"提交数据测试失败！错误:速度参数异常"})  
+     
+    action_param="goinout"
+    success,msg = system["cookservice"].run_icmotor_cmd(int(motorid),action_param,{"speed":int(int(speed)*int(speedconstant)),"direction":directionstr})
     
     if success :
         print("测试成功!")
@@ -795,7 +756,6 @@ def goInOutIceMotor():
     else:
         print("测试失败!")
         return jsonify({"status": "fail","message": f"提交数据测试失败！错误:{msg}"})  
-
 
 
 @app.route('/runIceMotor', methods=['POST'])
@@ -808,8 +768,9 @@ def runIceMotor():
     circles = data.get('circle') 
     success = False
     target = float(circles)
-      
-    success,msg =  system["motors"]["icemotor"][int(motorid)].go(target,int(int(speed)*360))
+
+    action_param="go"
+    success,msg =  system["cookservice"].run_icmotor_cmd(int(motorid),action_param,{"target":target,"speed":int(int(speed)*360)})
     currentpos = system["motors"]["icemotor"][int(motorid)].get_current_pos()
     if success :
         print("电机单次运转成功!")
@@ -819,38 +780,47 @@ def runIceMotor():
         return jsonify({"status": "fail","message": f"运转失败!错误:{msg}"})
 
 
-
 @app.route('/testIceMotorTask', methods=['POST'])
 @require_enabled
 def testIceMotorTask():
     print("运行冰柜电机连续动作")
     data = request.get_json()
     actionname = data.get('action')  
-
-    if actionname not in ACTION_PARAMS_KEYLIST:
-        print("动作名异常!")
-        return jsonify({"status": "fail","message": f"运转失败!错误:动作名异常"})
-
-    apply_action_params_override_bymotortype(
-        actionname,
-        {
-            "x": {"speed": 360},
-            "y": {"speed": 180},
-            "z": {"speed": 720},
-            "d": {"speed": 360}
-        }
-    )
-
     success = False
-    success,msg =  system["iceservice"].run_task(actionname)
+    
+    if actionname in ["ice_open_door","ice_close_door"]:
+        print("single action do")
+        if actionname == "ice_open_door":
+           success,msg =  system["iceservice"].run_icmotor_cmd(ICE_MOTOR_DOOR,"reset",{})
+        else:
+           success,msg =  system["iceservice"].run_icmotor_cmd(ICE_MOTOR_DOOR,"go",{"target":ICE_MOTOR_DOOR_TARGET_POS,"speed":ICE_MOTOR_DOOR_TARGET_SPEED})
+    
+    elif actionname in ["test_ice_hello","test_ice_moveall","icemotor_repeat_cycle"]:    
+        if actionname not in ACTION_PARAMS_KEYLIST:
+            print("动作名异常!")
+            return jsonify({"status": "fail","message": f"运转失败!错误:动作名异常"})
+
+        apply_action_params_override_bymotortype(
+            actionname,
+            {
+                "x": {"speed": 360},
+                "y": {"speed": 180},
+                "z": {"speed": 720},
+                "d": {"speed": 360}
+            }
+        )
+        success,msg =  system["iceservice"].run_task(actionname)
+    else:
+        print("错误动作名")    
+        return jsonify({"status": "fail","message": f"运转失败!错误:{msg}"})
+
+    
     if success :
         print("电机单次运转成功!")
         return jsonify({"status": "success","message": f"运行电机成功!"})
     else:
         print("电机单次运转失败!")
         return jsonify({"status": "fail","message": f"运转失败!错误:{msg}"})
-
-
 
 
 @app.route('/testIceMotorTaskRepeat', methods=['POST'])
@@ -889,6 +859,29 @@ def testIceMotorTaskRepeat():
     else:
         print("电机单次运转失败!")
         return jsonify({"status": "fail","message": f"运转失败!错误:{msg}"})
+
+
+
+@app.route('/pauseIceMotor', methods=['POST'])
+@require_enabled
+def pauseIceMotor():
+    print("动作测试")
+    data = request.get_json()
+    motorid = data.get('motorid')
+    success = False
+
+    action_param = "pause"
+    success,msg = system["iceservice"].run_icmotor_cmd(int(motorid),action_param,{})
+    
+    if success :
+        print("测试成功!")
+        return jsonify({"status": "success","message": f"提交数据测试成功!"})
+    else:
+        print("测试失败!")
+        return jsonify({"status": "fail","message": f"提交数据测试失败！错误:{msg}"}) 
+
+
+
 
 
 
@@ -958,43 +951,6 @@ def resetoldIceMotor():
     else:
         print("测试失败!")
         return jsonify({"status": "fail","message": f"提交数据测试失败！错误:{msg}"})    
-
-
-@app.route('/stopIceMotor', methods=['POST'])
-@require_enabled
-def stopIceMotor():
-    print("动作测试")
-    data = request.get_json()
-    success = False
-    success,msg = system["icemotorsmanager"].stop_all_motors()
-    
-    if success :
-        print("测试成功!")
-        return jsonify({"status": "success","message": f"提交数据测试成功!"})
-    else:
-        print("测试失败!")
-        return jsonify({"status": "fail","message": f"提交数据测试失败！错误:{msg}"}) 
-
-
-@app.route('/pauseIceMotor', methods=['POST'])
-@require_enabled
-def pauseIceMotor():
-    print("动作测试")
-    data = request.get_json()
-    motorid = data.get('motorid')
-    success = False
-    success,msg = system["motors"]["icemotor"][int(motorid)].pause()
-    
-    if success :
-        print("测试成功!")
-        return jsonify({"status": "success","message": f"提交数据测试成功!"})
-    else:
-        print("测试失败!")
-        return jsonify({"status": "fail","message": f"提交数据测试失败！错误:{msg}"}) 
-
-
-
-
 
 
 #启动flask后端服务器WEB UI

@@ -38,9 +38,9 @@ ICE_MOTOR_X = 0          #冰柜x   正转向右
 ICE_MOTOR_DOOR = 1       #冰柜门  
 ICE_MOTOR_Y = 2          #冰柜y   正转向左
 ICE_MOTOR_Z = 3          #冰柜z   正转向右
-ICE_MOTOR_BACKUP = 4     #空位
+ICE_MOTOR_SPIN = 4       #磁铁旋转器
 
-ICE_MOTOR_LIST = [ICE_MOTOR_X,ICE_MOTOR_DOOR,ICE_MOTOR_Y,ICE_MOTOR_Z,ICE_MOTOR_BACKUP]
+ICE_MOTOR_LIST = [ICE_MOTOR_X,ICE_MOTOR_DOOR,ICE_MOTOR_Y,ICE_MOTOR_Z,ICE_MOTOR_SPIN]
 
 ICE_MOTOR_DOOR_TARGET_SPEED = 360   #冰柜门关门转速
 ICE_MOTOR_DOOR_TARGET_POS   = 3.28  #冰柜门关门绝对值坐标
@@ -49,7 +49,8 @@ ICE_MOTORID_NAME_MAP ={
     ICE_MOTOR_X:"x",
     ICE_MOTOR_Y:"y",
     ICE_MOTOR_Z:"z",
-    ICE_MOTOR_DOOR:"d"
+    ICE_MOTOR_DOOR:"d",
+    ICE_MOTOR_SPIN:"s"
 }
 
 #########锅位置配置############
@@ -84,13 +85,13 @@ POT1_FLAVORMOTOR3 = 3
 POT1_FLAVORMOTOR4 = 4
 POT1_FLAVORMOTOR5 = 5
 POT1_FLAVORMOTOR6 = 6
-POT1_FLAVORMOTOR7 = 7
-POT1_FLAVORMOTOR8 = 8
-POT1_FLAVORMOTOR9 = 9
-POT1_FLAVORMOTOR10 = 10
-POT1_FLAVORMOTOR11 = 11
-POT1_FLAVORMOTOR12 = 12
+POT1_FLAVORMOTOR7 = 7   #磁铁1
+POT1_FLAVORMOTOR8 = 8   #磁铁2
 
+POT2_FLAVORMOTOR9 = 9   #研磨机
+POT2_FLAVORMOTOR10 = 10
+POT2_FLAVORMOTOR11 = 11
+POT2_FLAVORMOTOR12 = 12
 POT2_FLAVORMOTOR13 = 13
 POT2_FLAVORMOTOR14 = 14
 POT2_FLAVORMOTOR15 = 15
@@ -107,11 +108,10 @@ FEED_MOTOR_LIST = [
     POT1_FLAVORMOTOR6,
     POT1_FLAVORMOTOR7,
     POT1_FLAVORMOTOR8,
-    POT1_FLAVORMOTOR9,
-    POT1_FLAVORMOTOR10,
-    POT1_FLAVORMOTOR11,
-    POT1_FLAVORMOTOR12,
-
+    POT2_FLAVORMOTOR9,
+    POT2_FLAVORMOTOR10,
+    POT2_FLAVORMOTOR11,
+    POT2_FLAVORMOTOR12,
     POT2_FLAVORMOTOR13,
     POT2_FLAVORMOTOR14,
     POT2_FLAVORMOTOR15,
@@ -259,24 +259,6 @@ ACTION_PARAMS_KEYLIST = {
         ("x","reset_zero","reset"),
         ("z","reset_zero_fast","reset")
     ],
-    "ice_open_door":[
-        ("d","open_ice_door","reset")
-    ],
-    "ice_close_door":[
-        ("d","close_ice_door","go")
-    ],
-    "potmotor_move_task":[
-        ("h","potmotor_move_anywhere","go")
-    ],
-    "potmotor_flip_task":[
-        ("v","potmotor_flip_anywhere","go")
-    ],
-    "potmotor_resetmove_task":[
-        ("h","potmotor_reset_move","reset")
-    ],
-    "potmotor_resetflip_task":[
-        ("v","potmotor_reset_flip","reset")
-    ],
     "icemotor_repeat_cycle_x":[
         ("x","icemotor_resetzero","reset"),
         ("x","icemotor_moveout","go"),
@@ -296,6 +278,12 @@ ACTION_PARAMS_KEYLIST = {
         ("d","icemotor_resetzero","reset"),
         ("d","icemotor_moveout","go"),
         ("d","icemotor_resetzero","reset")
+    ],
+    "icemotor_reset_zeroboth":[
+        ("x","icemotor_resetzero","resetboth")
+    ],
+    "icemotor_reset_zero":[
+        ("x","icemotor_resetzero","reset")
     ]
 }
 
@@ -535,21 +523,6 @@ ACTION_PARAMS_CONFIG = {
         "speed":90,
         "target":1.6
     },
-    "open_ice_door":{
-        "speed":ICE_MOTOR_DOOR_TARGET_SPEED
-    },
-    "close_ice_door":{
-        "speed":ICE_MOTOR_DOOR_TARGET_SPEED,
-        "target":ICE_MOTOR_DOOR_TARGET_POS
-    },
-    "potmotor_move_anywhere":{
-        "speed":0,
-        "target":0
-    },
-    "potmotor_flip_anywhere":{
-        "speed":0,
-        "target":0
-    },
     "potmotor_reset_move":{
         "speed":90,
     },
@@ -558,12 +531,37 @@ ACTION_PARAMS_CONFIG = {
     },
     "icemotor_resetzero":{
         "speed":90,
-        "target":0
+        "target":0,
+        "direction":1
     },
     "icemotor_moveout":{
         "speed":90,
         "target":0
     }
+}
+
+
+# 锅电机资源映射：pot_id -> 动作字母 -> (board_id, motor_id)
+POT_MOTOR_RESOURCE_MAP = {
+    1: {
+        "h": (BOARDTYPE_STEP, POT1_MOVE_MOTOR),
+        "v": (BOARDTYPE_STEP, POT1_FLIP_MOTOR),
+        "s": (BOARDTYPE_SPIN, POT1_SPIN_MOTOR),
+    },
+    2: {
+        "h": (BOARDTYPE_STEP, POT2_MOVE_MOTOR),
+        "v": (BOARDTYPE_STEP, POT2_FLIP_MOTOR),
+        "s": (BOARDTYPE_SPIN, POT2_SPIN_MOTOR),
+    },
+}
+
+# 冰柜电机资源映射
+ICE_MOTOR_RESOURCE_MAP = {
+    "x": (BOARDTYPE_ICE, ICE_MOTOR_X),
+    "y": (BOARDTYPE_ICE, ICE_MOTOR_Y),
+    "z": (BOARDTYPE_ICE, ICE_MOTOR_Z),
+    "d": (BOARDTYPE_ICE, ICE_MOTOR_DOOR),
+    "s": (BOARDTYPE_ICE, ICE_MOTOR_SPIN)
 }
 
 

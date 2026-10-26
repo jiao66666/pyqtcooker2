@@ -55,6 +55,7 @@ class RuntimeContext:
                 "enabled": False,
                 "action": None,
                 "task_id": None,
+                "owner_type": None,
                 "params": {},
 
                 # 所属锅：非锅所属电机可以为 None
@@ -131,20 +132,35 @@ class RuntimeContext:
     # ---------------------------
     # 状态变更
     # ---------------------------
-    def set_running(self, motor_id: int, action: str, pot_id: int = None,params:dict = None,task_id=None ,board_id:int = BOARDTYPE_STEP):
+    def set_running(
+        self,
+        motor_id: int,
+        action: str,
+        pot_id: int = None,
+        params: dict = None,
+        task_id=None,
+        board_id: int = BOARDTYPE_STEP,
+        owner_type: str = "task",
+    ):
         if params is None:
             params = {}
 
         key = (board_id, motor_id)
+
         with self._lock:
-            self.motors[key]["state"] = "RUNNING"
-            self.motors[key]["action"] = action
-                    # 仅在明确传入 pot_id 时更新归属
+            if key not in self.motors:
+                raise KeyError(f"电机尚未初始化：{key}")
+
+            info = self.motors[key]
+            info["state"] = "RUNNING"
+            info["action"] = action
+
             if pot_id is not None:
-                self.motors[key]["pot_id"] = pot_id
-            
-            self.motors[key]["params"] = params.copy()
-            self.motors[key]["task_id"] = task_id
+                info["pot_id"] = pot_id
+
+            info["params"] = params.copy()
+            info["task_id"] = task_id
+            info["owner_type"] = owner_type
 
     def set_position(self, motor_id: int, pos: float,board_id:int = BOARDTYPE_STEP):
         key = (board_id, motor_id)
@@ -160,11 +176,26 @@ class RuntimeContext:
         key = (board_id, motor_id)
         with self._lock:
              return self.motors[key].get("params", {})
-    def set_done(self, motor_id: int,board_id:int = BOARDTYPE_STEP):
+    def set_done(self, motor_id: int, board_id: int = BOARDTYPE_STEP):
         key = (board_id, motor_id)
+
         with self._lock:
-            if key in self.motors:
-                self.motors[key]["state"] = "DONE"
+            info = self.motors.get(key)
+            if info is None:
+                return None
+
+            # 必须在清理之前获取执行关联信息
+            execution = {
+                "board_id": board_id,
+                "motor_id": motor_id,
+                "action": info["action"],
+                "task_id": info["task_id"],
+                "owner_type": info["owner_type"]
+            }
+
+            info["state"] = "DONE"
+
+            return execution
 
     def get_taskid(self,motor_id:int,board_id:int = BOARDTYPE_STEP):
         key = (board_id, motor_id)
@@ -233,13 +264,12 @@ class RuntimeContext:
     # 内部复位
     # ---------------------------
     def _reset_motor_info(self, info: dict):
-
         info["state"] = "IDLE"
         info["enabled"] = False
         info["action"] = None
         info["params"] = {}
-        info["task_id"] = None        
-
+        info["task_id"] = None
+        info["owner_type"] = None
 
     # ---------------------------
     # 清理某个锅相关的运行状态

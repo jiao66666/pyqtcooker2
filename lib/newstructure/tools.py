@@ -406,13 +406,10 @@ def trace_info(info):
         pulses = int(parts[3])
         motorid = int(parts[2])
         # 当前属于哪个锅
-        potid = get_pot_id(motorid)
+        potid = get_pot_id(motorid,BOARDTYPE_STEP)
     elif cmd == "#RUN" and board_id == BOARDTYPE_SPIN:
         motorid = int(parts[2])
-        if motorid == POT1_SPIN_MOTOR:
-            potid = 1
-        elif motorid == POT2_SPIN_MOTOR:
-            potid = 2         
+        potid = get_pot_id(motorid,BOARDTYPE_SPIN)
     else:
         potid = 0    
 
@@ -484,34 +481,46 @@ def trace_info(info):
     # print("ws:executing info", data)
 
 
-def get_pot_id(motorid):
+def get_pot_id(motorid,board_id = BOARDTYPE_STEP):
     print(f"get motorid is:{motorid},ready to transform")
-    if motorid in [POT1_MOVE_MOTOR,POT1_FLIP_MOTOR]:
-        return POT1
+    if board_id == BOARDTYPE_STEP:
+        if motorid in [POT1_MOVE_MOTOR,POT1_FLIP_MOTOR]:
+            return POT1
+        else:
+            return POT2    
+    elif board_id == BOARDTYPE_SPIN:
+        if motorid in [POT1_SPIN_MOTOR]:
+            return POT1
+        else:
+            return POT2  
+    elif board_id == BOARDTYPE_FEEDER:
+        if motorid in [POT1_FLAVORMOTOR1,POT1_FLAVORMOTOR2,POT1_FLAVORMOTOR3,POT1_FLAVORMOTOR4,POT1_FLAVORMOTOR5,POT1_FLAVORMOTOR6,POT1_FLAVORMOTOR7,POT1_FLAVORMOTOR8]:
+            return POT1
+        else:
+            return POT2       
     else:
-        return POT2       
-
+        return 0       
 
 def build_dc_action(command, direction, dc_speed, dc_time):
     if command == "longrun":
-        return "dc_longrun", {
+        return "spin_longrun", {
             "direction": direction,
             "speed": dc_speed
         }
 
     if command == "run":
-        return "dc_run", {
+        return "spin_run", {
             "direction": direction,
             "time": dc_time,
             "speed": dc_speed
         }
     if command == "speed":
-        return "dc_speed", {
+        return "spin_speed", {
             "speed": dc_speed
         }
 
     if command == "speedall":
-        return "dc_speedall", {
+        return "spin_speedall", {
             "speed": dc_speed
         }
     
@@ -520,15 +529,15 @@ def build_dc_action(command, direction, dc_speed, dc_time):
 
 def getTestDCMsg(pot,action,direction):
     
-    if action == "dc_longrun":
+    if action == "spin_longrun":
         astr="长转"
-    elif action == "dc_run":
+    elif action == "spin_run":
         astr="正常转"
-    elif action == "dc_stop":
+    elif action == "spin_stop":
         astr="停止"  
-    elif action == "dc_speed":
+    elif action == "spin_speed":
         astr="速度"  
-    elif action == "dc_speedall":
+    elif action == "spin_speedall":
         astr="批量速度"
         pot="1-2"
     else:
@@ -1532,3 +1541,47 @@ def _is_channel(value: str) -> bool:
         )
 
     return False
+
+
+
+def get_task_resources(task_name, pot_id=None):
+    """
+    根据动作组名称获取需要占用的全部电机资源。
+
+    pot_id:
+        1 或 2：锅动作组
+        None：冰柜动作组
+    """
+    template = ACTION_PARAMS_KEYLIST.get(task_name)
+
+    if template is None:
+        raise ValueError(f"未知的动作组：{task_name}")
+
+    if pot_id is not None:
+        motor_resource_map = POT_MOTOR_RESOURCE_MAP.get(pot_id)
+
+        if motor_resource_map is None:
+            raise ValueError(f"无效的锅编号：{pot_id}")
+    else:
+        motor_resource_map = ICE_MOTOR_RESOURCE_MAP
+
+    resources = set()
+
+    def collect_resources(items):
+        for item in items:
+            motor_key = item[0]
+
+            if motor_key not in motor_resource_map:
+                raise ValueError(
+                    f"动作组 {task_name} 中的电机标识 "
+                    f"{motor_key} 没有对应的资源映射"
+                )
+
+            resources.add(motor_resource_map[motor_key])
+
+            if len(item) > 3 and isinstance(item[3], list):
+                collect_resources(item[3])
+
+    collect_resources(template)
+
+    return resources

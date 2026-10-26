@@ -17,8 +17,7 @@ class PotStateMachine:
         self.wait_start_time = 0
         self.motioncontroller = motioncontroller
         self.running_tasks = set()
-        self.running_taskname = None
-        self.cookservice = None
+        self.running_task_id = None
 
         
         # 订阅电机完成事件
@@ -27,22 +26,20 @@ class PotStateMachine:
         self.bus.subscribe("ESTOP_TRIGGERED", self.on_estop)
         self.bus.subscribe("MOTOR_ERROR", self.on_motor_error)
 
-    def set_cookservice(self,cookservice):
-        self.cookservice = cookservice
 
-    def submit_task(self, task_name,steps):
-        if task_name in self.running_tasks:
+    def submit_task(self, running_task_id,steps):
+        if running_task_id in self.running_tasks:
            print("任务还在执行中，请稍后...")
            return False
-        self.running_tasks.add(task_name)
-        self.running_taskname = task_name
+        self.running_tasks.add(running_task_id)
+        self.running_task_id = running_task_id
         self.command_queue.put(steps)
         print("submitt task OK@!>>>>")
         #print(self.command_queue.qsize())
 
     def clear_running_task(self):
         self.running_tasks = set()
-        self.running_taskname = None
+        self.running_task_id = None
 
     def tick(self):
         if self.state in ["STOPPED"]:
@@ -79,7 +76,8 @@ class PotStateMachine:
                     action=step["action"],
                     pot_id=self.pot_id,
                     params=step["params"],
-                    task_id=f"{self.running_taskname}"
+                    task_id=f"{self.running_task_id}",
+                    owner_type="task"
                 )
 
                 if step["dotype"] == "go":
@@ -142,7 +140,7 @@ class PotStateMachine:
                     action=step["action"],
                     pot_id=self.pot_id,
                     params=step["params"],
-                    task_id=f"{self.running_taskname}"
+                    task_id=f"{self.running_task_id}"
                 )
                 
                 step["motor"].run(step["params"]["direction"],step["params"]["duration"],step["params"]["speed"])
@@ -167,8 +165,13 @@ class PotStateMachine:
         elif self.state == "DONE":
             #print("ALL ACTION IS DONE!!!!!!!!!!!")
             print(f"{self.pot_id} machine state is DONE")
-            self.cookservice.resetRunning(self.pot_id,self.running_taskname)
             self.state = "IDLE"
+
+            # 通知 Service：整个锅任务已完成
+            self.bus.publish("POT_TASK_DONE", {
+                "pot_id": self.pot_id,
+                "task_id": self.running_task_id,
+            })
 
         elif self.state == "ERROR":
             print(f"{self.pot_id} machine state is ERROR")  
@@ -178,7 +181,7 @@ class PotStateMachine:
     def reset(self):
         self.state = "IDLE"    
         self.running_tasks = set()
-        self.running_taskname = None
+        self.running_task_id = None
 
     def check_home(self):
         return True            
@@ -245,7 +248,6 @@ class PotStateMachine:
             print(f"》》》检查未过关《《《{ctx['action']},{step['action']},{data['motor_id']},{step['motor'].motor_id}")
             return
 
-        step["motor"].reset_cmd_running("on_potmotor_done")
         print(f"motor {motor_id} done the action {step['action']}")
         print(f"OK检查过关OK{ctx['action']},{step['action']},{data['motor_id']},{step['motor'].motor_id}")
 
@@ -260,7 +262,7 @@ class PotStateMachine:
         else:
             print(f"current step is:{self.current_step},equal bigger than total{len(self.steps)},set state done!")
             self.state = "DONE"                   #动作组完成，变更状态
-            self.running_tasks.remove(self.running_taskname)
+            self.running_tasks.remove(self.running_task_id)
 
     def on_potspin_done(self, data):
         print("DC旋转电机完成运动@@@@@@@@@@@@@@@@@@@@@@@@----statemachine")
@@ -292,7 +294,7 @@ class PotStateMachine:
         else:
             print(f"current step is:{self.current_step},equal bigger than total{len(self.steps)},set state done!")
             self.state = "DONE"                   #动作组完成，变更状态
-            self.running_tasks.remove(self.running_taskname)
+            self.running_tasks.remove(self.running_task_id)
 
 
     def on_estop(self, data=None):

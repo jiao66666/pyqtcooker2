@@ -66,7 +66,7 @@ class MotionPlanner:
         电机回零运动
         """
         pulses = RESET_PULSES 
-        speed = 90
+        speed = 360
         if motor.board_id == BOARDTYPE_STEP:
             if motor.motor_id in [POT1_MOVE_MOTOR,POT1_FLIP_MOTOR]:
                 direction = 1 
@@ -79,7 +79,7 @@ class MotionPlanner:
                 direction = 1  
 
             if motor.motor_id == ICE_MOTOR_Z:  #由于移动慢，可加速回零
-                speed = 360     
+                speed = 720     
         else:
             print("方向异常")
             return None 

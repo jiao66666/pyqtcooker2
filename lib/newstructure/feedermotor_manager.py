@@ -6,7 +6,6 @@ class FeederMotorManager:
         self.motors = motors
         self.board_id = board_id
         self.com = rs485
-        self.cmd_running = False
         self.last_result = None
 
     def _on_run_done(self, command,success, resp):
@@ -20,7 +19,6 @@ class FeederMotorManager:
         else:
             print(f"[{cmd}] ACK成功")
 
-        self.cmd_running = False
 
     def reboot(self):
         """重启加料电机"""  ##相对运动

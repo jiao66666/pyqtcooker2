@@ -423,12 +423,15 @@ class StepMotorPollingService:
         return round(circles, 2)
 
     def notify_done(self,motorid):
+        task_id = runtime.get_taskid(motorid,self.board_id)
         if self.board_id == BOARDTYPE_STEP:
             print("广播锅电机动作完成消息POT_MOTOR_DONE")
             self.bus.publish(
                 "POT_MOTOR_DONE",
-                {
-                    "motor_id": motorid
+                {   
+                    "board_id":BOARDTYPE_STEP,
+                    "motor_id": motorid,
+                    "task_id":task_id
                 }
             )
         elif self.board_id == BOARDTYPE_ICE:
@@ -436,6 +439,8 @@ class StepMotorPollingService:
             self.bus.publish(
                 "ICE_MOTOR_DONE",
                 {
-                    "motor_id": motorid
+                    "board_id":BOARDTYPE_ICE,
+                    "motor_id": motorid,
+                    "task_id":task_id
                 }
             ) 

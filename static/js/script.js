@@ -1243,25 +1243,7 @@ function testIceMotorTaskRepeat(actionname) {
 
 
 
-function stopIceMotor() {
-      
-        fetch('/stopIceMotor', {
-            method: 'POST', 
-            headers: {
-                'Content-Type': 'application/json'  
-            },
-            body: JSON.stringify({
-            })
-        })
-        .then(response => response.json())
-        .then(data => {
-             addMessage(``+data.message);  // 将收到的消息保存并显示
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            addMessage("Error starting motor.");
-        });
-}
+
 
 
 function pauseIceMotor() {

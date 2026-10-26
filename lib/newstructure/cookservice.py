@@ -1,83 +1,32 @@
-import threading
-from lib.newstructure.system import get_system
 from lib.newstructure.runtime import runtime
-from lib.newstructure.tools import get_pot_id
 from lib.newstructure.constant import *
+from lib.newstructure.tools import get_task_resources
+import uuid
+
+#锅服务代码  #多动作使用task,单动作使用action
 class CookerService:
-    def __init__(self,system):
+    def __init__(self,system,resource_manager):
         self.system = system
+        self.resource_manager = resource_manager
         #关键：动作注册表
         self.action_map = {
-            "run": self._run_action,
-            "runlong": self._runlong_action,
-            "reset": self._reset_action,
-            "move": self._move_action,
-            "go":self._go_action,
-            "pause":self._pause_action,
-            "stop":self._stop_action,
-            "openfeeder":self._openfeedermotor_action,
-            "longfeeder_on":self._longfeederon_action,
-            "longfeeder_off":self._longfeederoff_action,
-            "dc_longrun":self._dclongrun_action,
-            "dc_run":self._dcrun_action,
-            "dc_stop":self._dcstop_action,
-            "dc_speed":self._dcspeed_action,
-            "dc_speedall":self._dcspeedall_action
-        }
-
-        self.task_running = {
-            1: None,
-            2: None
+            "pot_runlong": self._pot_runlong_action,
+            "pot_pause":self._pot_pause_action,
+            "pot_stop":self._pot_stop_action,
+            "pot_go":self._pot_go_action,
+            "pot_reset":self._pot_reset_action,
+            "feeder_timeopen":self._feeder_timeopen_action,
+            "feeder_longon":self._feeder_longon_action,
+            "feeder_longoff":self._feeder_longoff_action,
+            "spin_longrun":self._spin_longrun_action,
+            "spin_run":self._spin_run_action,
+            "spin_stop":self._spin_stop_action,
+            "spin_speed":self._spin_speed_action,
+            "spin_speedall":self._spin_speedall_action
         }
 
 
-    def resetRunning(self, pot_id, task_id=None):
-        current_task = self.task_running.get(pot_id)
-
-        print(
-            f"{pot_id} 请求重置运行状态，"
-            f"current={current_task}, request={task_id}"
-        )
-
-        # 只有锁的持有者才能释放
-        if current_task != task_id:
-            print(
-                f"{pot_id} 运行锁释放失败："
-                f"当前持有者={current_task}，"
-                f"请求释放者={task_id}"
-            )
-            return False
-
-        self.task_running[pot_id] = None
-        return True
-
-
-    def reset(self):
-        self.task_running = {
-            1: None,
-            2: None
-        }
-        
-    def setRunning(self, pot_id, task_id):
-        current_task = self.task_running.get(pot_id)
-
-        # 已经被占用
-        if current_task is not None:
-            print(
-                f"{pot_id} 运行锁设置失败："
-                f"当前已经被 {current_task} 占用"
-            )
-            return False
-
-        self.task_running[pot_id] = task_id
-
-        print(
-            f"{pot_id} 设置运行锁：{task_id}"
-        )
-
-        return True
-
-    def check_workable(self,pot_id):
+    def check_workable(self):
         state = self.system["state"]
 
         # 系统脏状态
@@ -92,128 +41,151 @@ class CookerService:
         if not runtime.is_all_enabled():
             return False,"电机未使能"
         
-
-        # 检查锅运行锁
-        current_task = self.task_running.get(pot_id)
-        print(
-            f"Task running lock info: "
-            f"pot={pot_id}, current_task={current_task}"
-        )
-        print(self.task_running)
-
-        if current_task is not None:
-            return False, f"锅{pot_id} 正在执行任务：{current_task}"
-
         return True,"workable OK"
 
     # 运行锅电机动作组
     def run_task(self, task_name, pot_id):
-        OK,msg = self.check_workable(pot_id)
-        print(f"OK status:{OK}")
+        OK, msg = self.check_workable()
         if not OK:
-            return False,msg
+            return False, msg
 
-        steps = self.system["stepbuilder"].build(task_name, pot_id)
-        print("printing.....steps>>>>>>>>>>>>>>>>>>>>>>")
-        print(steps)
-        
-        task_id = f"task:{pot_id}:{task_name}"
-        self.setRunning(pot_id,task_id)
+        # 获取动作组需要占用的全部电机资源
+        resources = get_task_resources(task_name, pot_id=pot_id)
 
-        self.system["pots"][pot_id].submit_task(task_id,steps)
-        return True,"submit task OK"
-    
-    def run_control_cmd(self,motor_id,action,params):
+        # 每次任务执行都生成唯一 ID
+        task_id = f"task:{pot_id}:{uuid.uuid4().hex}"
 
+        # 申请整个动作组的资源
+        success = self.resource_manager.acquire_resources(
+            task_id,
+            "task",
+            resources
+        )
+
+        if not success:
+            return False, "电机资源被占用，任务无法启动"
+
+        try:
+            steps = self.system["stepbuilder"].build(task_name, pot_id)
+
+            print("printing.....steps>>>>>>>>>>>>>>>>>>>>>>")
+            print(steps)
+
+            # 提交给状态机执行
+            self.system["pots"][pot_id].submit_task(task_id, steps)
+
+            return True, "submit task OK"
+
+        except Exception as e:
+            # 提交失败时，释放本次申请的资源
+            self.resource_manager.release_resources(task_id)
+
+            print(f"任务提交失败：{e}")
+            return False, f"任务提交失败：{e}"
+
+    def run_potmotor_cmd(self, motor_id, action, params):
         motor = self.system["motors"]["stepmotor"][motor_id]
-        def run_fn():
-            handler = self.action_map.get(action)
-            if not handler:
-                return False,f"unknown action: {action}"
-            handler(motor, params)
-            return True,"run cmd OK"
-        ok,msg=run_fn()
-        return ok,msg
 
-    def run_tastemotor_cmd(self,motor_id,action,params):
+        return self._run_motor_action(
+            motor,
+            BOARDTYPE_STEP,
+            motor_id,
+            action,
+            params
+        )
+
+
+    def run_tastemotor_cmd(self, motor_id, action, params):
         motor = self.system["motors"]["feedermotor"][motor_id]
-        def run_fn():
-            handler = self.action_map.get(action)
-            if not handler:
-                return False,f"unknown action: {action}"
-            handler(motor, params)
-        run_fn()
-        return True,"run cmd OK"
-    
-    def run_dcmotor_cmd(self,motor_id,action,params):
+
+        return self._run_motor_action(
+            motor,
+            BOARDTYPE_FEEDER,
+            motor_id,
+            action,
+            params
+        )
+
+
+    def run_dcmotor_cmd(self, motor_id, action, params):
         motor = self.system["motors"]["spinmotor"][motor_id]
-        def run_fn():
-            handler = self.action_map.get(action)
-            if not handler:
-                return False,f"unknown action: {action}"
-            handler(motor, params)
-        run_fn()
-        return True,"run cmd OK"
 
+        return self._run_motor_action(
+            motor,
+            BOARDTYPE_SPIN,
+            motor_id,
+            action,
+            params
+        )
 
-    def _pause_action(self,motor,params):
+    def _pot_pause_action(self,motor,params):
         motor.pause()
 
-    def _stop_action(self,motor,params):
+    def _pot_stop_action(self,motor,params):
         motor.stop()
             
-    def _runlong_action(self, motor, params):
+    def _pot_runlong_action(self, motor, params):
         motor.runlong(
             params["speed"],
             params["direction"]
         )    
-
-    def _reset_action(self, motor, params):
-        motor.reset_zero() 
-
-    def _move_action(self, motor, params):
-        motor.go_action(
-            params["action"],
-            params
-        )     
-
-    def _run_action(self, motor, params):
-        motor.run(
-            params["circle"],
-            params["speed"],
-            params["direction"]
-        )     
-
-    def _go_action(self,motor,params):
+    def _pot_go_action(self,motor,params):
         motor.go(
             params["target"],
-            params["anglespeed"]
-        )      
+            params["speed"]
+        )
 
+    def _pot_reset_action(self,motor,params):
+        motor.reset_zero()       
 
-    def _openfeedermotor_action(self,motor,params):
+    def _feeder_timeopen_action(self,motor,params):
         motor.run(params["overtime"])
 
-    def _longfeederon_action(self,motor,params):
+    def _feeder_longon_action(self,motor,params):
         motor.output_on()
 
-    def _longfeederoff_action(self,motor,params):
+    def _feeder_longoff_action(self,motor,params):
         motor.output_off()
 
-    def _dclongrun_action(self,motor,params):
+    def _spin_longrun_action(self,motor,params):
         motor.longrun(params["direction"],params["speed"])
 
-    def _dcrun_action(self,motor,params):
+    def _spin_run_action(self,motor,params):
         motor.run(params["direction"],params["time"],params["speed"])
 
-    def _dcstop_action(self,motor,params):
+    def _spin_stop_action(self,motor,params):
         motor.stop()    
 
-    def _dcspeed_action(self,motor,params):
+    def _spin_speed_action(self,motor,params):
         motor.setspeed(params["speed"])     
 
-    def _dcspeedall_action(self,motor,params):
+    def _spin_speedall_action(self,motor,params):
         self.system["spinmotorsmanager"].setspeedall(params["speed"])    
+
+
+    def _run_motor_action(self, motor, board_id, motor_id, action, params):
+        handler = self.action_map.get(action)
+        if not handler:
+            return False, f"unknown action: {action}"
+
+        resource_id = (board_id, motor_id)
+        action_id = f"action:{uuid.uuid4().hex}"
+
+        success = self.resource_manager.acquire_resources(
+            action_id,
+            "action",
+            {resource_id}
+        )
+
+        if not success:
+            return False, f"电机资源被占用：{resource_id}"
+
+        try:
+            handler(motor, params)
+            return True, "run cmd OK"
+        except Exception as e:
+            self.resource_manager.release_resources(action_id)
+            return False, f"执行动作失败：{e}"        
 
                             
 

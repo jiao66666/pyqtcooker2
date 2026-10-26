@@ -6,7 +6,6 @@ class StepMotorManager:
         self.motors = motors
         self.board_id = board_id
         self.com = rs485
-        self.cmd_running = False
         self.last_result = None
 
     def _on_run_done(self, command,success, resp):
@@ -20,18 +19,9 @@ class StepMotorManager:
         else:
             print(f"[{cmd}] ACK成功")
 
-        self.cmd_running = False
 
     def enable_all_motors(self)-> Tuple[bool, List[str]]:
-
         print("使能所有电机....")
-
-        if self.cmd_running:
-            print("命令还在执行中")
-            return False,[f"请稍后再试"]
-
-        self.cmd_running = True
-
         self.com.execute_command_async(
             "ENABLE",
             [str(self.board_id), "0", "11111"],
@@ -42,15 +32,7 @@ class StepMotorManager:
         return True,["使能成功"]
 
     def stop_all_motors(self):
-
         print("急停所有电机....")
-
-        if self.cmd_running:
-            print("命令还在执行中")
-            return False,["命令还在运行中"]
-
-        self.cmd_running = True
-
         self.com.execute_command_async(
             "STOP",
             [str(self.board_id), "0", "11111"],
@@ -69,12 +51,6 @@ class StepMotorManager:
 
     def speed_all(self,speedval):
         print("加速所有电机....")
-
-        if self.cmd_running:
-            print("命令还在执行中")
-            return False
-
-        self.cmd_running = True
         cmdstr =f"{speedval},{speedval},{speedval},{speedval},{speedval}"
         self.com.execute_command_async(
             "SPEED",
