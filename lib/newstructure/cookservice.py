@@ -15,6 +15,7 @@ class CookerService:
             "pot_stop":self._pot_stop_action,
             "pot_go":self._pot_go_action,
             "pot_reset":self._pot_reset_action,
+            "pot_resetboth":self._pot_resetboth_action,
             "feeder_timeopen":self._feeder_timeopen_action,
             "feeder_longon":self._feeder_longon_action,
             "feeder_longoff":self._feeder_longoff_action,
@@ -136,7 +137,10 @@ class CookerService:
         )
 
     def _pot_reset_action(self,motor,params):
-        motor.reset_zero()       
+        motor.reset_zero()      
+
+    def _pot_resetboth_action(self,motor,params):
+        motor.reset_zero_both(params['direction'],params['speed'])     
 
     def _feeder_timeopen_action(self,motor,params):
         motor.run(params["overtime"],params["task_id"])

@@ -539,14 +539,19 @@
          <div class="actionpanel_con">
               <div class="actionpanel_title">电机动作测试区</div>
               <div class="actionpanel_btnarea">
-                  <!--<div class="actionpanel_btn" onclick="testaction(1,'test_movemove')">1号锅【移动-移动】</div>
-                  <div class="actionpanel_btn" onclick="testaction(2,'test_movemove')">2号锅【移动-移动】</div>
-                  <div class="actionpanel_btn" onclick="testaction(1,'test_all')">1号锅【全流程】</div>
-                  <div class="actionpanel_btn" onclick="testaction(2,'test_all')">2号锅【全流程】</div>-->
                   <div class="actionpanel_btn" onclick="testaction(1,'test_move_spin')">1号锅【移动-旋转】</div>
                   <div class="actionpanel_btn" onclick="testaction(2,'test_move_spin')">2号锅【移动-旋转】</div>
                   <div class="actionpanel_btn" onclick="testIceMotorTask('ice_open_door')">冰柜门-开</div>
                   <div class="actionpanel_btn" onclick="testIceMotorTask('ice_close_door')">冰柜门-关</div>
+              </div>
+         </div>
+         <div class="actionpanel_con">
+              <div class="actionpanel_title">锅步进主板测试区</div>
+              <div class="actionpanel_btnarea">
+                  <div class="actionpanel_btn" onpointerdown="runlongoldIceMotor(1)" onpointerup="pauseoldIceMotor()">正转长运行【老板0号】</div>
+                  <div class="actionpanel_btn" onpointerdown="runlongoldIceMotor(-1)" onpointerup="pauseoldIceMotor()">反转长运行【老板0号】</div>
+                  <div class="actionpanel_btn" onclick="resetoldIceMotor(1)">正转限位启动【老板0号】</div>
+                  <div class="actionpanel_btn" onclick="resetoldIceMotor(-1)">反转限位启动【老板0号】</div>
               </div>
          </div>
     </div>
@@ -597,10 +602,6 @@
             <div class="ice_btn" onclick="resetIceMotor(-1)">反转限位启动</div>
             <div class="ice_btn" onpointerdown="runlongIceMotor(1)"  onpointerup="pauseIceMotor()" >正转长运行</div>
             <div class="ice_btn" onpointerdown="runlongIceMotor(-1)" onpointerup="pauseIceMotor()" >反转长运行</div>
-            <!--<div class="ice_btn" onpointerdown="runlongoldIceMotor(1)" onpointerup="pauseoldIceMotor()">正转长运行【老板0号】</div>
-            <div class="ice_btn" onpointerdown="runlongoldIceMotor(-1)" onpointerup="pauseoldIceMotor()">反转长运行【老板0号】</div>
-            <div class="ice_btn" onclick="resetoldIceMotor(1)">正转限位启动【老板0号】</div>
-            <div class="ice_btn" onclick="resetoldIceMotor(-1)">反转限位启动【老板0号】</div>-->
             <div class="ice_btn fullwidth" onclick="pauseIceMotor()">暂停运行</div>
             <div class="ice_btn" onclick="testIceMotorTask('test_ice_hello')">测试冰柜连续动作1</div>
             <div class="ice_btn" onclick="testIceMotorTask('test_ice_moveall')">测试冰柜连续动作2</div>

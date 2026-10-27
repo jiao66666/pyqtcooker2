@@ -409,7 +409,6 @@ function startMotor(potnum,directionstr) {
                 'Content-Type': 'application/json'  
             },
             body: JSON.stringify({
-                boardtype: '1',  // 五轴板
                 motorid: motorObj.motor,
                 direction: motorObj.direction,
                 speed: speed
@@ -573,7 +572,6 @@ function stopMotor(potnum,directionstr) {
                 'Content-Type': 'application/json'  
             },
             body: JSON.stringify({
-                boardtype: '1',  // 五轴板
                 motorid: motorObj.motor
             })
         })
@@ -977,14 +975,14 @@ function resetIceMotor(positive) {
 
 function resetoldIceMotor(positive) {
           // 获取 select 元素
-        var motorid = getSelectedValue("icemotor_name");
+        var motorid = '0';
         console.log("motorid",motorid)
 
          // 获取 select 元素
         var speed = getSelectedValue("speed");
         console.log("选中速度值是:", speed);
         console.log("获取参数positive:"+positive+"motorid:"+motorid)
-        fetch('/resetoldIceMotor', {
+        fetch('/resetzeroPotmotor', {
             method: 'POST', 
             headers: {
                 'Content-Type': 'application/json'  
@@ -1103,22 +1101,21 @@ function goInOutIceMotor(directionstr) {
 
 
 
-function runlongoldIceMotor(positive) {
+function runlongoldIceMotor(direction) {
           // 获取 select 元素
-        var motorid = getSelectedValue("icemotor_name");
+        var motorid = '0';
         console.log("motorid",motorid)
-
          // 获取 select 元素
         var speed = getSelectedValue("speed");
         console.log("选中速度值是:", speed);
-        console.log("获取参数positive:"+positive+"motorid:"+motorid)
-        fetch('/runlongoldIceMotor', {
+        console.log("direction:"+direction+"motorid:"+motorid)
+        fetch('/runlong', {
             method: 'POST', 
             headers: {
                 'Content-Type': 'application/json'  
             },
             body: JSON.stringify({
-                positive:positive,
+                direction:direction,
                 motorid:motorid,
                 speed:speed
             })
@@ -1136,20 +1133,17 @@ function runlongoldIceMotor(positive) {
 
 function pauseoldIceMotor() {
           // 获取 select 元素
-        var motorid = getSelectedValue("icemotor_name");
+        var motorid = '0';
         console.log("motorid",motorid)
         console.log("now in pause")
          // 获取 select 元素
-        var speed = getSelectedValue("speed");
-        console.log("选中速度值是:", speed);
-        fetch('/pauseoldIceMotor', {
+        fetch('/pause', {
             method: 'POST', 
             headers: {
                 'Content-Type': 'application/json'  
             },
             body: JSON.stringify({
-                motorid:motorid,
-                speed:speed
+                motorid:motorid
             })
         })
         .then(response => response.json())
