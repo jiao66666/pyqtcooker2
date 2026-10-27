@@ -293,6 +293,8 @@ def testmultitaskabs():
     data = request.get_json()
     speed_level = data.get('speed_level') 
     speed_flip = data.get('speed_flip') 
+    repeat = data.get('repeat')
+
    
     success = False
     #runtask参数：[圈数，速度，方向]
@@ -315,7 +317,7 @@ def testmultitaskabs():
     action_param = "take_fire_pour"
     pot_param = 1
     print("simulate click....")
-    success,msg = system["cookservice"].run_task(action_param,pot_param)
+    success,msg = system["cookservice"].run_task(action_param,pot_param,int(repeat))
     print("**************************************1号锅测试水平翻转任务结束******************************")
     if success :
         print("测试成功!")
@@ -330,6 +332,7 @@ def testmultitaskabs2():
     data = request.get_json()
     speed_level = data.get('speed_level') 
     speed_flip = data.get('speed_flip') 
+    repeat = data.get('repeat')
    
     success = False
 
@@ -354,7 +357,7 @@ def testmultitaskabs2():
     action_param = "take_fire_pour"
     pot_param = 2
     print("simulate click....")
-    success,msg = system["cookservice"].run_task(action_param,pot_param)
+    success,msg = system["cookservice"].run_task(action_param,pot_param,int(repeat))
     print("**************************************2号锅测试水平翻转任务结束******************************")
     if success :
         print("测试成功!")

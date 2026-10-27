@@ -689,10 +689,17 @@ function testMultiTaskabs() {
             return;
         }
 
+        var execute_times = document.getElementById("execute_times");
+        if(execute_times.value == "" || isNaN(execute_times.value) || parseInt(execute_times.value) <= 0){
+            alert("请输入执行次数！");
+            return;
+        }
+
         console.log("选中水平移动速度值是:", speed_level.value);
          console.log("选中翻转移动速度值是:", speed_flip.value);
           console.log("选中加速段占比是:", acc_percent.value);
          console.log("选中匀速段占比是:", speed_percent.value);
+          console.log("执行次数是:", execute_times.value);
 
      // 获取 select 元素
         fetch('/testmultitaskabs', {
@@ -704,7 +711,8 @@ function testMultiTaskabs() {
                  speed_level: speed_level.value,  
                  speed_flip: speed_flip.value,  
                  acc_percent: acc_percent.value,
-                 speed_percent: speed_percent.value
+                 speed_percent: speed_percent.value,
+                 repeat:execute_times.value
             })
         })
         .then(response => response.json())
@@ -744,10 +752,18 @@ function testMultiTaskabs2() {
             return;
         }
 
+        var execute_times = document.getElementById("execute_times");
+        if(execute_times.value == "" || isNaN(execute_times.value) || parseInt(execute_times.value) <= 0){
+            alert("请输入执行次数！");
+            return;
+        }
+
         console.log("选中水平移动速度值是:", speed_level.value);
          console.log("选中翻转移动速度值是:", speed_flip.value);
           console.log("选中加速段占比是:", acc_percent.value);
          console.log("选中匀速段占比是:", speed_percent.value);
+        console.log("执行次数是:", execute_times.value);
+
 
 
 
@@ -761,7 +777,8 @@ function testMultiTaskabs2() {
                  speed_level: speed_level.value,  
                  speed_flip: speed_flip.value,  
                  acc_percent: acc_percent.value,
-                 speed_percent: speed_percent.value
+                 speed_percent: speed_percent.value,
+                 repeat:execute_times.value
             })
         })
         .then(response => response.json())
