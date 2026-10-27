@@ -469,6 +469,7 @@ class StepMotorPollingService:
 
     def _handle_motor_done(self, motor_id):
         # 获取并更新完成状态，同时取得完成前的执行记录
+        print("处理电机完成》》》》》》》》》")
         execution = runtime.set_done(
             motor_id,
             board_id=self.board_id

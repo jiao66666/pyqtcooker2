@@ -98,6 +98,7 @@ class ResourceManager:
         self.release_resources(task_id)
 
     def on_action_done(self, data):
+        print("处理电机解锁《《《《《《《《《《《《《")
         action_id = data.get("action_id")
         if not action_id:
             return

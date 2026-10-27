@@ -168,26 +168,59 @@ class CookerService:
         if not handler:
             return False, f"unknown action: {action}"
 
+        # 控制类动作不申请资源
+        control_actions = (
+            "pot_pause",
+            "pot_stop",
+            "spin_stop",
+            "feeder_longoff",
+        )
+
+        # 控制类动作直接执行，不作为新的运行任务登记
+        if action in control_actions:
+            try:
+                handler(motor, params)
+                return True, "run cmd OK"
+            except Exception as e:
+                return False, f"执行动作失败：{e}"
+
         resource_id = (board_id, motor_id)
         action_id = f"action:{uuid.uuid4().hex}"
 
-        #控制类动作跳过申请资源
-        if action not in ("pot_pause", "pot_stop","spin_stop","feeder_longoff"):
-            success = self.resource_manager.acquire_resources(
-                action_id,
-                "action",
-                {resource_id}
-            )
+        # 1. 申请独立动作资源
+        success = self.resource_manager.acquire_resources(
+            action_id,
+            "action",
+            {resource_id}
+        )
 
-            if not success:
-                return False, f"电机资源被占用：{resource_id}"
+        if not success:
+            return False, f"电机资源被占用：{resource_id}"
 
         try:
-            handler(motor, params)
-            return True, "run cmd OK"
-        except Exception as e:
-            self.resource_manager.release_resources(action_id)
-            return False, f"执行动作失败：{e}"        
+            # 2. 登记 Runtime
+            runtime.set_running(
+                motor_id=motor_id,
+                action=action,
+                params=params,
+                task_id=action_id,
+                board_id=board_id,
+                owner_type="action",
+            )
 
-                            
+            # 3. 执行命令
+            handler(motor, params)
+
+            return True, "run cmd OK"
+
+        except Exception as e:
+            # 命令提交失败，清理运行登记并释放资源
+            runtime.clear_execution(
+                motor_id,
+                board_id=board_id
+            )
+
+            self.resource_manager.release_resources(action_id)
+
+            return False, f"执行动作失败：{e}"                
 
