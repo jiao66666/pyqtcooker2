@@ -44,7 +44,7 @@ class CookerService:
         return True,"workable OK"
 
     # 运行锅电机动作组
-    def run_task(self, task_name, pot_id):
+    def run_task(self, task_name, pot_id,repeat=1):
         OK, msg = self.check_workable()
         if not OK:
             return False, msg
@@ -72,7 +72,7 @@ class CookerService:
             print(steps)
 
             # 提交给状态机执行
-            self.system["pots"][pot_id].submit_task(task_id, steps)
+            self.system["pots"][pot_id].submit_task(task_id, steps,repeat)
 
             return True, "submit task OK"
 

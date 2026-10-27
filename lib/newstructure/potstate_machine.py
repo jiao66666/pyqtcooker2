@@ -18,6 +18,8 @@ class PotStateMachine:
         self.motioncontroller = motioncontroller
         self.running_tasks = set()
         self.running_task_id = None
+        self.total_repeat = 0
+        self.current_repeat = 0
 
         
         # 订阅电机完成事件
@@ -27,12 +29,25 @@ class PotStateMachine:
         self.bus.subscribe("MOTOR_ERROR", self.on_motor_error)
 
 
-    def submit_task(self, running_task_id,steps):
+    def submit_task(self, running_task_id,steps,repeat=1):
+
+        if not isinstance(repeat, int) or isinstance(repeat, bool) or repeat < 1:
+                return False
+
+        if not steps:
+            print(f"任务 {running_task_id} 的动作组为空，拒绝提交")
+            return False
+
         if running_task_id in self.running_tasks:
            print("任务还在执行中，请稍后...")
            return False
         self.running_tasks.add(running_task_id)
         self.running_task_id = running_task_id
+
+        print(f"=========当前任务执行次数为{repeat}次==========")
+        self.total_repeat = repeat
+        self.current_repeat = 0
+
         self.command_queue.put(steps)
         print("submitt task OK@!>>>>")
         #print(self.command_queue.qsize())
@@ -162,18 +177,39 @@ class PotStateMachine:
                     "action": step["action"],
                     "reason": "timeout"
                 }
+                
         elif self.state == "DONE":
-            #print("ALL ACTION IS DONE!!!!!!!!!!!")
             print(f"{self.pot_id} machine state is DONE")
-            self.state = "IDLE"
+            self.current_repeat += 1
 
-            # 通知 ResourceManager：整个锅任务已完成
-            self.bus.publish("TASK_DONE", {
-                "pot_id": self.pot_id,
-                "task_id": self.running_task_id,
-                "owner_id": self.running_task_id,
-                "owner_type": "task",
-            })
+            if self.current_repeat < self.total_repeat:
+                # 还有剩余次数，重新执行当前动作组
+                print(
+                    f"锅 {self.pot_id} 准备执行第 {self.current_repeat + 1} 次，"
+                    f"总次数 {self.total_repeat}"
+                )
+
+                self.reset_step()
+                self.state = "CHECK_HOME"
+
+            else:
+                # 所有次数执行完毕，通知 ResourceManager 释放任务资源
+                self.bus.publish("TASK_DONE", {
+                    "pot_id": self.pot_id,
+                    "task_id": self.running_task_id,
+                    "owner_id": self.running_task_id,
+                    "owner_type": "task",
+                })
+
+                # 清理任务
+                self.running_tasks.remove(self.running_task_id)
+                self.running_task_id = None
+                self.steps = None
+                self.state = "IDLE"
+
+                # 重置重复执行计数
+                self.total_repeat = 0
+                self.current_repeat = 0
 
         elif self.state == "ERROR":
             print(f"{self.pot_id} machine state is ERROR")  

@@ -141,6 +141,10 @@ class IceStateMachine:
                 self.steps = None
                 self.state = "IDLE"
 
+                # 重置重复执行计数
+                self.total_repeat = 0
+                self.current_repeat = 0
+
         elif self.state == "ERROR":
             print(f"ice machine state is ERROR")  
             self.bus.unsubscribe("MOTOR_ERROR", self.on_motor_error)
