@@ -120,20 +120,14 @@ class IceService:
         if not handler:
             return False, f"unknown action: {action}"
 
+        # 1. 判断动作是否需要申请资源
+        need_resource = action not in ("pause", "stop")
+
         resource_id = (board_id, motor_id)
         action_id = f"action:ice:{uuid.uuid4().hex}"
 
-        runtime.set_running(
-            motor_id=motor_id,
-            action=action,
-            params=params,
-            board_id=board_id,
-            owner_type="action",
-            task_id=action_id
-        )
-
-        # pause / stop 是控制命令，允许干预正在运行的电机
-        if action not in ("pause", "stop"):
+        if need_resource:
+            # 2. 先申请资源
             success = self.resource_manager.acquire_resources(
                 action_id,
                 "action",
@@ -143,12 +137,22 @@ class IceService:
             if not success:
                 return False, f"电机资源被占用：{resource_id}"
 
+            # 3. 申请成功后，再登记 Runtime
+            runtime.set_running(
+                motor_id=motor_id,
+                action=action,
+                params=params,
+                board_id=board_id,
+                owner_type="action",
+                task_id=action_id
+            )
+
+        # 4. 执行动作
         try:
             handler(motor, params)
             return True, "run cmd OK"
+
         except Exception as e:
-            # 只有能确认电机没有启动时，才适合立即释放资源。
-            # 如果命令可能已启动，应由后续状态/完成事件处理。
             print(f"执行动作失败：{e}")
             return False, f"执行动作失败：{e}"
                             

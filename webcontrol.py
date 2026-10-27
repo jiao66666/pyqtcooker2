@@ -675,7 +675,7 @@ def resetIceMotor():
     success = False
 
     action_param ="resetboth"
-    success,msg = system["cookservice"].run_icmotor_cmd(int(motorid),action_param,{"speed": int(int(speed)*90),"direction":int(positive)})
+    success,msg = system["iceservice"].run_icmotor_cmd(int(motorid),action_param,{"speed": int(int(speed)*90),"direction":int(positive)})
     
     if success :
         print("测试成功!")
@@ -695,7 +695,7 @@ def zeroIceMotor():
     success = False
 
     action_param ="reset"
-    success,msg = system["cookservice"].run_icmotor_cmd(int(motorid),action_param,{})
+    success,msg = system["iceservice"].run_icmotor_cmd(int(motorid),action_param,{})
     
     if success :
         print("测试成功!")
@@ -722,7 +722,7 @@ def runlongIceMotor():
         return jsonify({"status": "fail","message": f"提交数据测试失败！错误:速度参数异常"})   
 
     action_param = "runlong"
-    success,msg = system["cookservice"].run_icmotor_cmd(int(motorid),action_param,{"speed":int(int(speed)*int(speedconstant)),"direction":int(positive)})
+    success,msg = system["iceservice"].run_icmotor_cmd(int(motorid),action_param,{"speed":int(int(speed)*int(speedconstant)),"direction":int(positive)})
     if success :
         print("测试成功!")
         return jsonify({"status": "success","message": f"提交数据测试成功!"})
@@ -748,7 +748,7 @@ def goInOutIceMotor():
         return jsonify({"status": "fail","message": f"提交数据测试失败！错误:速度参数异常"})  
      
     action_param="goinout"
-    success,msg = system["cookservice"].run_icmotor_cmd(int(motorid),action_param,{"speed":int(int(speed)*int(speedconstant)),"direction":directionstr})
+    success,msg = system["iceservice"].run_icmotor_cmd(int(motorid),action_param,{"speed":int(int(speed)*int(speedconstant)),"direction":directionstr})
     
     if success :
         print("测试成功!")
@@ -770,7 +770,7 @@ def runIceMotor():
     target = float(circles)
 
     action_param="go"
-    success,msg =  system["cookservice"].run_icmotor_cmd(int(motorid),action_param,{"target":target,"speed":int(int(speed)*360)})
+    success,msg =  system["iceservice"].run_icmotor_cmd(int(motorid),action_param,{"target":target,"speed":int(int(speed)*360)})
     currentpos = system["motors"]["icemotor"][int(motorid)].get_current_pos()
     if success :
         print("电机单次运转成功!")
