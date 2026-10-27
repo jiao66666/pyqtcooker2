@@ -55,6 +55,8 @@ class PotStateMachine:
     def clear_running_task(self):
         self.running_tasks = set()
         self.running_task_id = None
+        self.total_repeat = 0
+        self.current_repeat = 0
 
     def tick(self):
         if self.state in ["STOPPED"]:
