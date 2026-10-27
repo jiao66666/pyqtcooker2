@@ -154,6 +154,14 @@ class IceService:
 
         except Exception as e:
             print(f"执行动作失败：{e}")
+
+            if need_resource:
+                runtime.clear_execution(
+                    motor_id,
+                    board_id=board_id
+                )
+
+                self.resource_manager.release_resources(action_id)
             return False, f"执行动作失败：{e}"
                             
 

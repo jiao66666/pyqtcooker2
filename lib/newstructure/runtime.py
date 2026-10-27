@@ -285,4 +285,19 @@ class RuntimeContext:
                     self._reset_motor_info(info)
 
 
+    def clear_execution(self, motor_id, board_id):
+        with self._lock:
+            info = self.motors.get((board_id, motor_id))
+            if not info:
+                return False
+
+            info["state"] = "IDLE"
+            info["action"] = None
+            info["params"] = {}
+            info["task_id"] = None
+            info["owner_type"] = None
+
+            return True                    
+
+
 runtime = RuntimeContext()        
