@@ -177,7 +177,7 @@ class PotStateMachine:
                     "action": step["action"],
                     "reason": "timeout"
                 }
-                
+
         elif self.state == "DONE":
             print(f"{self.pot_id} machine state is DONE")
             self.current_repeat += 1
@@ -300,7 +300,6 @@ class PotStateMachine:
         else:
             print(f"current step is:{self.current_step},equal bigger than total{len(self.steps)},set state done!")
             self.state = "DONE"                   #动作组完成，变更状态
-            self.running_tasks.remove(self.running_task_id)
 
     def on_potspin_done(self, data):
         print("DC旋转电机完成运动@@@@@@@@@@@@@@@@@@@@@@@@----statemachine")
@@ -332,7 +331,6 @@ class PotStateMachine:
         else:
             print(f"current step is:{self.current_step},equal bigger than total{len(self.steps)},set state done!")
             self.state = "DONE"                   #动作组完成，变更状态
-            self.running_tasks.remove(self.running_task_id)
 
 
     def on_estop(self, data=None):
