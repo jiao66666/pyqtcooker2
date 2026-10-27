@@ -87,6 +87,7 @@ class ResourceManager:
             return True
 
     def on_task_done(self, data):
+        print("处理电机解锁(任务)<<<<<<<<<<<<<<<")
         task_id = data.get("task_id")
         if not task_id:
             return
@@ -98,7 +99,7 @@ class ResourceManager:
         self.release_resources(task_id)
 
     def on_action_done(self, data):
-        print("处理电机解锁《《《《《《《《《《《《《")
+        print("处理电机解锁（动作）《《《《《《《《《《《《《")
         action_id = data.get("action_id")
         if not action_id:
             return

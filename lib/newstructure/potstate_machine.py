@@ -167,10 +167,12 @@ class PotStateMachine:
             print(f"{self.pot_id} machine state is DONE")
             self.state = "IDLE"
 
-            # 通知 Service：整个锅任务已完成
-            self.bus.publish("POT_TASK_DONE", {
+            # 通知 ResourceManager：整个锅任务已完成
+            self.bus.publish("TASK_DONE", {
                 "pot_id": self.pot_id,
                 "task_id": self.running_task_id,
+                "owner_id": self.running_task_id,
+                "owner_type": "task",
             })
 
         elif self.state == "ERROR":
