@@ -264,7 +264,7 @@ class SpinMotorPollingService:
             self.bus.publish("ACTION_DONE", {
                 "board_id": BOARDTYPE_SPIN,
                 "motor_id": motor_id,
-                "owner_id": owner_id,
+                "task_id": owner_id,
             })
             return
 

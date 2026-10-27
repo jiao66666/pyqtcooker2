@@ -72,6 +72,7 @@ class ResourceManager:
             resources = self.owner_resources.get(owner_id)
 
             if resources is None:
+                print("error>>>>resource is NONE")
                 return False
 
             for resource_id in resources:
@@ -90,6 +91,7 @@ class ResourceManager:
         print("处理电机解锁(任务)<<<<<<<<<<<<<<<")
         task_id = data.get("task_id")
         if not task_id:
+            print("error>>>>没有任务ID")
             return
 
         if self.owner_types.get(task_id) != "task":
@@ -100,8 +102,9 @@ class ResourceManager:
 
     def on_action_done(self, data):
         print("处理电机解锁（动作）《《《《《《《《《《《《《")
-        action_id = data.get("action_id")
+        action_id = data.get("task_id")
         if not action_id:
+            print("error>>>>没有任务ID")
             return
 
         if self.owner_types.get(action_id) != "action":

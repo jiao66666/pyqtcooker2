@@ -437,6 +437,7 @@ class StepMotorPollingService:
                     "owner_id": task_id,
                     "owner_type": "action",
                     "action": execution.get("action"),
+                    "task_id":task_id
                 }
             )
             return
