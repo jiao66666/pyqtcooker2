@@ -524,7 +524,7 @@ def build_dc_action(command, direction, dc_speed, dc_time):
             "speed": dc_speed
         }
     
-    return "dc_stop", {}   
+    return "spin_stop", {}   
 
 
 def getTestDCMsg(pot,action,direction):
