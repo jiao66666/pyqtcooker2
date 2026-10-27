@@ -20,6 +20,7 @@ class FeederMotor:
         self.overtime = 1000
         self._output_timer = None
         self._output_lock = threading.Lock()
+        self._task_id = None
 
     def ping(self):
         """新版协议没有独立 PING，读取全部锁状态以检测通信。"""
@@ -30,7 +31,7 @@ class FeederMotor:
         )
         return True
 
-    def run(self, overtime: int = 1000):
+    def run(self, overtime: int = 1000, task_id=None):
         """持续输出指定时间，overtime 单位为毫秒。"""
 
         overtime = int(overtime)
@@ -48,6 +49,7 @@ class FeederMotor:
                 self._output_timer = None
 
             self.overtime = overtime
+            self._task_id = task_id
 
             # 开启输出
             self.output_on()
@@ -67,6 +69,12 @@ class FeederMotor:
         """定时关闭输出。"""
         try:
             self.output_off()
+            if self._task_id:
+                self.bus.publish("ACTION_DONE", {
+                    "board_id": self.board_id,
+                    "motor_id": self.motor_id,
+                    "task_id": self._task_id,
+                })
         finally:
             with self._output_lock:
                 self._output_timer = None

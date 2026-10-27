@@ -139,7 +139,7 @@ class CookerService:
         motor.reset_zero()       
 
     def _feeder_timeopen_action(self,motor,params):
-        motor.run(params["overtime"])
+        motor.run(params["overtime"],params["task_id"])
 
     def _feeder_longon_action(self,motor,params):
         motor.output_on()
@@ -209,7 +209,12 @@ class CookerService:
             )
 
             # 3. 执行命令
-            handler(motor, params)
+            if action == "feeder_timeopen":
+                action_params = params.copy()
+                action_params["task_id"] = action_id
+                handler(motor, action_params)
+            else:
+                handler(motor, params)
 
             return True, "run cmd OK"
 
