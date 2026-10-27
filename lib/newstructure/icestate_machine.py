@@ -14,7 +14,7 @@ class IceStateMachine:
         self.command_queue = queue.Queue()
         self.wait_start_time = 0
         self.running_tasks = set()
-        self.running_taskname = None
+        self.running_task_id = None
         self.total_repeat = 0
         self.current_repeat = 0
 
@@ -25,20 +25,20 @@ class IceStateMachine:
         self.bus.subscribe("MOTOR_ERROR", self.on_motor_error)
 
 
-    def submit_task(self, task_name,steps,repeat=1):
+    def submit_task(self, running_task_id,steps,repeat=1):
 
         if not isinstance(repeat, int) or isinstance(repeat, bool) or repeat < 1:
                 return False
 
         if not steps:
-            print(f"任务 {task_name} 的动作组为空，拒绝提交")
+            print(f"任务 {running_task_id} 的动作组为空，拒绝提交")
             return False
         
-        if task_name in self.running_tasks:
+        if running_task_id in self.running_tasks:
            print("任务还在执行中，请稍后...")
            return False
-        self.running_tasks.add(task_name)
-        self.running_taskname = task_name
+        self.running_tasks.add(running_task_id)
+        self.running_task_id = running_task_id
 
         print(f"=========当前任务执行次数为{repeat}次==========")
         self.total_repeat = repeat
@@ -49,7 +49,7 @@ class IceStateMachine:
 
     def clear_running_task(self):
         self.running_tasks = set()
-        self.running_taskname = None
+        self.running_task_id = None
 
     def tick(self):
         if self.state in ["STOPPED"]:
@@ -81,7 +81,7 @@ class IceStateMachine:
                     motor_id=step["motor"].motor_id,
                     action=step["action"],
                     params=step["params"],
-                    task_id=f"{self.running_taskname}"
+                    task_id=f"{self.running_task_id}"
                 )
                 if step["dotype"] == "reset":
                     step["motor"].reset_zero_byspeed(step["params"]["speed"])
@@ -112,9 +112,9 @@ class IceStateMachine:
                     "action": step["action"],
                     "reason": "timeout"
                 }
+
         elif self.state == "DONE":
-            #print("ALL ACTION IS DONE!!!!!!!!!!!")
-            print(f"ice machine state is DONE")
+            print("ice machine state is DONE")
             self.current_repeat += 1
 
             if self.current_repeat < self.total_repeat:
@@ -128,12 +128,18 @@ class IceStateMachine:
                 self.state = "CHECK_HOME"
 
             else:
-                # 所有次数执行完毕，才清理任务
-                self.running_tasks.remove(self.running_taskname)
-                self.running_taskname = None
+                # 所有次数执行完毕，通知 ResourceManager 释放任务资源
+                self.bus.publish("TASK_DONE", {
+                    "task_id": self.running_task_id,
+                    "owner_id": self.running_task_id,
+                    "owner_type": "task",
+                })
+
+                # 清理任务
+                self.running_tasks.remove(self.running_task_id)
+                self.running_task_id = None
                 self.steps = None
                 self.state = "IDLE"
-
 
         elif self.state == "ERROR":
             print(f"ice machine state is ERROR")  
@@ -143,7 +149,7 @@ class IceStateMachine:
     def reset(self):
         self.state = "IDLE"    
         self.running_tasks = set()
-        self.running_taskname = None
+        self.running_task_id = None
 
     def check_home(self):
         return True            
