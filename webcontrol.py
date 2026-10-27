@@ -397,13 +397,13 @@ def testdc_command():
 
     print("action:",action)
     print("params:",params)
-    success = system["cookservice"].run_dcmotor_cmd(motor_id,action,params)
+    success, result_msg = system["cookservice"].run_dcmotor_cmd(motor_id,action,params)
     if success :
         print("测试成功!")
         return jsonify({"status": "success","message": f"{msg}测试成功!"})
     else:
         print("测试失败!")
-        return jsonify({"status": "fail","message": f"{msg}测试失败!"})    
+        return jsonify({"status": "fail","message": f"{result_msg}测试失败!"})    
 
 @app.route('/gopos', methods=['POST'])
 def gopos():

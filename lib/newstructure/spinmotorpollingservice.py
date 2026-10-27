@@ -119,12 +119,7 @@ class SpinMotorPollingService:
                         f"SPIN电机 {motor_id} 状态：停止"
                     )
 
-                    self.bus.publish(
-                        "POT_SPIN_DONE",
-                        {
-                            "motor_id": motor_id
-                        }
-                    )
+                    self._handle_motor_done(motor_id)
 
                 # ------------------------------------------------
                 # 3：运行
@@ -173,27 +168,21 @@ class SpinMotorPollingService:
 
     def dev_spin_motor_status_all(self):
         print("模拟spin完成")
-         # 获取所有正在运行的电机
-        running_motors = runtime.get_running_motors_byboardid(BOARDTYPE_SPIN)
 
-        # 没有运行中的电机，直接返回
+        running_motors = runtime.get_running_motors_byboardid(
+            BOARDTYPE_SPIN
+        )
+
         if not running_motors:
             print("当前没有运行中的电机")
             return
 
-        # 从运行中的电机中随机选择一个
         motor_id = random.choice(running_motors)
         print(f"done spin motorid:{motor_id}")
 
-        runtime.set_done(motor_id,board_id=BOARDTYPE_SPIN)
-        self.bus.publish(
-            "POT_SPIN_DONE",
-            {
-                "motor_id": motor_id
-            }
-        )        
+        self._handle_motor_done(motor_id)
 
-        return
+
 
     def _check_motor_rpm(self,motor_id):
         self.rs485.execute_command_async(
@@ -242,3 +231,47 @@ class SpinMotorPollingService:
                 "处理所有电机状态异常:",
                 e
             )
+
+
+    def _handle_motor_done(self, motor_id):
+        # 获取电机当前执行记录
+        print("处理电机完成SPIN》》》》》》》》")
+        ctx = runtime.get(motor_id, board_id=BOARDTYPE_SPIN)
+
+        if not ctx:
+            return
+
+        # 没有正在执行的动作，不处理重复的停止状态
+        if ctx.get("state") != "RUNNING":
+            print("error......state no running ...")
+            return
+
+        # 保存并清理 Runtime 执行记录
+        done_info = runtime.set_done(
+            motor_id,
+            board_id=BOARDTYPE_SPIN
+        )
+
+        if not done_info:
+            print("error....no done info")
+            return
+
+        owner_type = done_info.get("owner_type")
+        owner_id = done_info.get("task_id")
+
+        # 独立动作：通知 ResourceManager
+        if owner_type == "action":
+            self.bus.publish("ACTION_DONE", {
+                "board_id": BOARDTYPE_SPIN,
+                "motor_id": motor_id,
+                "owner_id": owner_id,
+            })
+            return
+
+        # 锅状态机任务中的动作：通知锅状态机推进步骤
+        self.bus.publish("POT_SPIN_DONE", {
+            "board_id": BOARDTYPE_SPIN,
+            "motor_id": motor_id,
+            "pot_id": done_info.get("pot_id"),
+            "task_id": owner_id,
+        })
