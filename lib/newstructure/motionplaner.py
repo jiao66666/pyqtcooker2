@@ -38,7 +38,7 @@ class MotionPlanner:
             else:
                 direction = 1 if delta >= 0 else -1
         elif motor.board_id == BOARDTYPE_ICE:
-            if motor.motor_id in [ICE_MOTOR_X,ICE_MOTOR_Z]:
+            if motor.motor_id in [ICE_MOTOR_Z]:
                 direction = 1 if delta >=0 else 1
             else:
                 direction = -1 if delta >=0 else 1    
@@ -73,7 +73,7 @@ class MotionPlanner:
             else:
                 direction = -1 
         elif motor.board_id == BOARDTYPE_ICE:
-            if motor.motor_id in [ICE_MOTOR_X,ICE_MOTOR_Z]:
+            if motor.motor_id in [ICE_MOTOR_Z]:
                 direction = -1 
             else:
                 direction = 1  
@@ -109,12 +109,12 @@ class MotionPlanner:
                     direction = -1 
         elif motor.board_id == BOARDTYPE_ICE:
             if directionstr == "out":
-                if motor.motor_id in [ICE_MOTOR_X,ICE_MOTOR_Z]:
+                if motor.motor_id in [ICE_MOTOR_Z]:
                     direction = 1 
                 else:
                     direction = -1 
             else:
-                if motor.motor_id in [ICE_MOTOR_X,ICE_MOTOR_Z]:
+                if motor.motor_id in [ICE_MOTOR_Z]:
                     direction = -1 
                 else:
                     direction = 1         
