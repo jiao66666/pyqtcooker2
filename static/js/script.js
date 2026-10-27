@@ -1181,8 +1181,26 @@ function zeroIceMotor() {
 }
 
 
+function handleSetZero(motorid) {
 
-
+        fetch('/handleSetZero', {
+            method: 'POST', 
+            headers: {
+                'Content-Type': 'application/json'  
+            },
+            body: JSON.stringify({
+                motorid:motorid
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+             addMessage(``+data.message);  // 将收到的消息保存并显示
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            addMessage("Error starting motor.");
+        });
+}
 
 
 function testIceMotorTask(actionname) {
@@ -1535,6 +1553,7 @@ function createMotorStatusApp(el) {
             icemotor_y:0.0,
             icemotor_z:0.0,
             icemotor_door:0.0,
+            icemotor_spin:0.0,
 
             // 炒菜机运行时间
             time_ellapse: "0天 0时 0分 0秒",
@@ -1574,6 +1593,8 @@ function createMotorStatusApp(el) {
                         this.icemotor_z = position
                     }else if (motor_id == 1){
                         this.icemotor_door = position
+                    }else if (motor_id == 4){
+                        this.icemotor_spin = position
                     }
                }
             },

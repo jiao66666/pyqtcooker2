@@ -16,7 +16,8 @@ class IceService:
             "reset":self._resetzero_action,
             "resetboth":self._resetzeroboth_action,
             "runlong":self._runlong_action,
-            "goinout":self._goinout_action
+            "goinout":self._goinout_action,
+            "handzero":self._handzero_action
         }
 
         
@@ -103,6 +104,9 @@ class IceService:
 
     def _resetzeroboth_action(self,motor,params):
         motor.reset_zero_both(params["direction"],params["speed"])
+
+    def _handzero_action(self,motor,params):
+        motor.handzero()    
 
     def _runlong_action(self,motor,params):  
         motor.runlong(

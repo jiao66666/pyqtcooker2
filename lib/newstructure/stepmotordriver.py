@@ -226,6 +226,22 @@ class StepMotor:
         return True ,["执行成功"]    
 
 
+    #   不用限位情况下请零脉冲 手动归零
+    def handzero(self):
+        """清零脉冲"""
+        print("####清零脉冲####")
+        print(f"[{self.name}] ID:{self.motor_id} 清零脉冲中... 主板类型:{self.board_id}")
+      
+         # 发送运行命令
+        self.com.execute_command_async(
+            "PULSEZero", 
+            [str(self.board_id), str(self.motor_id)],
+            callback=self._on_run_done,
+            priority = PRIORITY_CONTROL
+        )
+
+        return True ,["执行成功"]   
+
     #   水平垂直复位
     def reset_zero(self)-> Tuple[bool, List[str]]:
         """复位单个电机"""

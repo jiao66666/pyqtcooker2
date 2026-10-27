@@ -605,7 +605,8 @@
             <div class="ice_btn fullwidth" onclick="pauseIceMotor()">暂停运行</div>
             <div class="ice_btn" onclick="testIceMotorTask('test_ice_hello')">测试冰柜连续动作1</div>
             <div class="ice_btn" onclick="testIceMotorTask('test_ice_moveall')">测试冰柜连续动作2</div>
-            <div class="ice_btn" onclick="testIceMotorTaskRepeat('icemotor_repeat_cycle')">重复执行动作</div>
+            <div class="ice_btn" onclick="testIceMotorTaskRepeat('icemotor_repeat_cycle')">执行重复动作</div>
+            <div class="ice_btn" onclick="handleSetZero(4)">磁铁旋转手动归零</div>
         </div>
     </div> 
 
@@ -707,6 +708,10 @@
                 <div class="fb_display_row">
                     <label>冰柜z电机:</label>
                     <div>${ icemotor_z }</div>
+                </div>
+                <div class="fb_display_row">
+                    <label>磁铁旋钮:</label>
+                    <div>${ icemotor_spin }</div>
                 </div>
              </div>
             <div class= "fb_display_col">
