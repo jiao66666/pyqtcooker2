@@ -1,7 +1,7 @@
 from lib.newstructure.constant import *
 from lib.newstructure.runtime import runtime
 
-class IceBuilder:
+class IceStepBuilder:
 
     def __init__(self, motors):
         self.motors = motors
@@ -20,7 +20,8 @@ class IceBuilder:
             "x": self.motors["icemotor"][ICE_MOTOR_X],
             "y": self.motors["icemotor"][ICE_MOTOR_Y],
             "z": self.motors["icemotor"][ICE_MOTOR_Z],
-            "d": self.motors["icemotor"][ICE_MOTOR_DOOR]
+            "d": self.motors["icemotor"][ICE_MOTOR_DOOR],
+            "s": self.motors["icemotor"][ICE_MOTOR_SPIN]
         }
 
 

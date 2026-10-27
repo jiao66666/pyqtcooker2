@@ -1,7 +1,7 @@
 from lib.newstructure.constant import *
 from lib.newstructure.runtime import runtime
 
-class StepBuilder:
+class PotStepBuilder:
 
     def __init__(self, motors):
         self.motors = motors

@@ -67,7 +67,7 @@ class CookerService:
             return False, "电机资源被占用，任务无法启动"
 
         try:
-            steps = self.system["stepbuilder"].build(task_name, pot_id)
+            steps = self.system["potstepbuilder"].build(task_name, pot_id)
 
             print("printing.....steps>>>>>>>>>>>>>>>>>>>>>>")
             print(steps)

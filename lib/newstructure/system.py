@@ -7,8 +7,8 @@ from lib.newstructure.icestate_machine import IceStateMachine
 from lib.newstructure.scancycle import ScanCycle
 from lib.newstructure.trackmanager import TrackManager
 from lib.newstructure.constant import *
-from lib.newstructure.stepbuilder import StepBuilder
-from lib.newstructure.icebuilder import IceBuilder
+from lib.newstructure.potstepbuilder import PotStepBuilder
+from lib.newstructure.icestepbuilder import IceStepBuilder
 from lib.newstructure.basecom import RS485Communication
 import threading
 from lib.newstructure.runtime import runtime
@@ -40,8 +40,8 @@ def build_system():
 
     motors_manager = build_motors_manager(bus,boards,motors)
 
-    stepbuilder = StepBuilder(motors)
-    icebuilder = IceBuilder(motors)
+    potstepbuilder = PotStepBuilder(motors)
+    icestepbuilder = IceStepBuilder(motors)
 
     motion_controller = MotionController(boards["stepmotor"],MOTION_INTERVAL)
 
@@ -68,8 +68,8 @@ def build_system():
 
         "bus": bus,
         "trackmanager": trackmanager,
-        "stepbuilder": stepbuilder,
-        "icebuilder":icebuilder,
+        "potstepbuilder": potstepbuilder,
+        "icestepbuilder":icestepbuilder,
         "pots": {
             1: pot1,
             2: pot2

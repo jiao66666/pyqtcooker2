@@ -60,7 +60,7 @@ class IceService:
             return False, "冰柜电机资源被占用，任务无法启动"
 
         try:
-            steps = self.system["icebuilder"].build(task_name)
+            steps = self.system["icestepbuilder"].build(task_name)
 
             print("printing.....steps>>>>>>>>>>>>>>>>>>>>>>")
             print(steps)
