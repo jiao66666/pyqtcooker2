@@ -116,6 +116,9 @@ class StepMotor:
         if not success:
             print(f"错误: 运行命令失败")
             return False,["运行命令失败"]
+
+        if is_dev_mode():  #模拟更新位置
+            self.update_current_pos(target)
         
         print("执行成功")
         return True,["执行成功"]    
