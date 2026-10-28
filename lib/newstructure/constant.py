@@ -50,7 +50,7 @@ ICE_MOTORID_NAME_MAP ={
     ICE_MOTOR_Y:"y",
     ICE_MOTOR_Z:"z",
     ICE_MOTOR_DOOR:"d",
-    ICE_MOTOR_SPIN:"s"
+    ICE_MOTOR_SPIN:"s"    
 }
 
 #########锅位置配置############
@@ -564,7 +564,7 @@ ICE_MOTOR_RESOURCE_MAP = {
     "s": (BOARDTYPE_ICE, ICE_MOTOR_SPIN),
     "ml":(BOARDTYPE_FEEDER, POT1_FLAVORMOTOR7),    #磁吸左侧
     "mr":(BOARDTYPE_FEEDER, POT1_FLAVORMOTOR8),    #磁吸右侧
-    "shake":(BOARDTYPE_FEEDER,POT2_FLAVORMOTOR9)   #研磨摇动
+    "sk":(BOARDTYPE_FEEDER, POT2_FLAVORMOTOR9)     #研磨摇动
 }
 
 
