@@ -278,12 +278,6 @@ ACTION_PARAMS_KEYLIST = {
         ("d","icemotor_resetzero","reset"),
         ("d","icemotor_moveout","go"),
         ("d","icemotor_resetzero","reset")
-    ],
-    "icemotor_reset_zeroboth":[
-        ("x","icemotor_resetzero","resetboth")
-    ],
-    "icemotor_reset_zero":[
-        ("x","icemotor_resetzero","reset")
     ]
 }
 
