@@ -21,7 +21,10 @@ class IceStepBuilder:
             "y": self.motors["icemotor"][ICE_MOTOR_Y],
             "z": self.motors["icemotor"][ICE_MOTOR_Z],
             "d": self.motors["icemotor"][ICE_MOTOR_DOOR],
-            "s": self.motors["icemotor"][ICE_MOTOR_SPIN]
+            "s": self.motors["icemotor"][ICE_MOTOR_SPIN],
+            "ml":self.motors["feedermotor"][POT1_FLAVORMOTOR7],
+            "mr":self.motors["feedermotor"][POT1_FLAVORMOTOR8],
+            "sk":self.motors["feedermotor"][POT2_FLAVORMOTOR9]
         }
 
 
