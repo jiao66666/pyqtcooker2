@@ -218,6 +218,8 @@ def stopall():
     success2 = system["stepmotorsmanager"].reset_home_all()
     success3 = system["spinmotorsmanager"].stop_all_motors()
     success4 = system["icemotorsmanager"].stop_all_motors()
+    success5 = system["icemotorsmanager"].reset_home_all()
+    success6 = system["feedermotorsmanager"].stop_all_motors()
     set_system_dirty(system,True)
     set_system_state(system,"EMERGENCY")
     runtime.set_all_enabled(False)
@@ -227,12 +229,12 @@ def stopall():
         "ESTOP_TRIGGERED",
         {}
     )
-    if success1 and success2 and success3 and success4 :
+    if success1 and success2 and success3 and success4 and success5 and success6 :
         print("测试成功!")
         return jsonify({"status": "success","message": "急停所有电机成功!"})
     else:
         print("测试失败!")
-        return jsonify({"status": "fail","message": "急停所有电机失败!"})
+        return jsonify({"status": "fail","message": f"急停所有电机失败!{success5},{success6}"})
     
 
 @app.route('/initall', methods=['POST'])
