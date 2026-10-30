@@ -178,6 +178,7 @@ class CookerService:
             "pot_stop",
             "spin_stop",
             "feeder_longoff",
+            "feeder_longon"
         )
 
         # 控制类动作直接执行，不作为新的运行任务登记

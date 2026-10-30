@@ -69,12 +69,6 @@ class FeederMotor:
         """定时关闭输出。"""
         try:
             self.output_off()
-            if self._task_id:
-                self.bus.publish("ACTION_DONE", {
-                    "board_id": self.board_id,
-                    "motor_id": self.motor_id,
-                    "task_id": self._task_id,
-                })
         finally:
             with self._output_lock:
                 self._output_timer = None
@@ -94,13 +88,30 @@ class FeederMotor:
 
     def output_off(self):
         """关闭锁通道输出（0x89）。"""
-        self.com.execute_command_async(
-            "OUTPUT_OFF",
-            [str(self.board_id), str(self.motor_id)],
-            priority=PRIORITY_CONTROL
-        )
-        return True
 
+        with self._output_lock:
+            # 取消正在等待的定时器
+            if self._output_timer is not None:
+                self._output_timer.cancel()
+                self._output_timer = None
+
+            # 关闭硬件输出
+            self.com.execute_command_async(
+                "OUTPUT_OFF",
+                [str(self.board_id), str(self.motor_id)],
+                priority=PRIORITY_CONTROL
+            )
+
+            # 如果当前是正在执行限时任务，发送完成消息
+            if self._task_id:
+                self.bus.publish("ACTION_DONE", {
+                    "board_id": self.board_id,
+                    "motor_id": self.motor_id,
+                    "task_id": self._task_id,
+                })
+
+                self._task_id = None
+        return True
     
     def getfb(self) -> Tuple[bool, List[str]]:
         """读取指定通道的锁状态。"""
