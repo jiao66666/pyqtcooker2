@@ -134,6 +134,8 @@ def shutdown_device(system):
     system["stepmotorsmanager"].stop_all_motors()
     system["icemotorsmanager"].stop_all_motors()
     system["spinmotorsmanager"].stop_all_motors()
+    system["feedermotorsmanager"].stop_all_motors()
+
     system["pots"][1].reset()
     system["pots"][2].reset()
     system["ice"].reset()
@@ -162,6 +164,10 @@ def shutdown_system(system):
         if "icemotorsmanager" in system:    
             system["icemotorsmanager"].stop_all_motors()
             system["icemotorsmanager"].reset_home_all()
+        if "spinmotorsmanager" in system:
+            system["spinmotorsmanager"].stop_all_motors()
+        if "feedermotorsmanager" in system:   
+            system["feedermotorsmanager"].stop_all_motors()
     except Exception as e:
         print(f"停止电机失败: {e}")
 
