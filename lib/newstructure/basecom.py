@@ -5,6 +5,7 @@ from typing import Optional, List, Tuple, Callable, Any
 from lib.newstructure.constant import *
 from lib.newstructure.protocols import ProtocolFactory
 from lib.newstructure.tools import trace_info
+from lib.newstructure.logger import log_to_file
 import time
 
 
@@ -99,6 +100,12 @@ class RS485Communication:
 
                 print(">>> Worker取出命令:", item["command"])
                 print(">>> 取出后队列:", self.queue.qsize())
+
+                if self.queue.qsize() >=100:
+                    log_to_file(">>> Worker取出命令:", item["command"])
+                    log_to_file(">>> 取出后队列:", self.queue.qsize())
+
+
                 start = time.perf_counter()
 
                 command = item["command"]
@@ -118,14 +125,26 @@ class RS485Communication:
                     f"队列={self.queue.qsize()}"
                  )
 
+                if self.queue.qsize() >=100:
+                    log_to_file("<<< Worker完成命令:", command)
+                    log_to_file("<<< 完成后队列:", self.queue.qsize())
+
+                    log_to_file(
+                        f"消费 {command} "
+                        f"耗时={elapsed:.3f}s "
+                        f"队列={self.queue.qsize()}"
+                    )
+
                 if callback:
                     try:
                         callback(command,success, resp)
                     except Exception as e:
                         print(f"回调执行异常: {e}")
+                        log_to_file(f"回调执行异常: {e}")
 
             except Exception as e:
                 print(f"Worker异常: {e}")
+                log_to_file(f"Worker异常: {e}")
 
     # =========================
     # 真正的同步IO（只允许内部调用）
