@@ -314,8 +314,8 @@ def init_system():
 
 #启动主TICK循环
 def run_system(system):
-    system["stepmotorpolling"].start()
-    system["spinmotorpolling"].start()
+    #system["stepmotorpolling"].start()
+    #system["spinmotorpolling"].start()
     system["icemotorpolling"].start()
     #system["feedermotorpolling"].start()
     system["motioncontroller"].start()
