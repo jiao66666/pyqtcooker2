@@ -130,6 +130,7 @@ class RS485Communication:
                     log_to_file("<<< 完成后队列:", self.queue.qsize())
 
                     log_to_file(
+                        f"主板ID:{self.board_id}"
                         f"消费 {command} "
                         f"耗时={elapsed:.3f}s "
                         f"队列={self.queue.qsize()}"
