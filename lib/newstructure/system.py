@@ -150,9 +150,20 @@ def shutdown_device(system):
 
     return True
 
-def shutdown_system(system):
-    print("系统关闭中...")
 
+
+_system_shutdown = False
+
+def shutdown_system(system):
+    global _system_shutdown
+
+    if _system_shutdown:
+        print("系统已经关闭，跳过重复关闭")
+        return True
+
+    _system_shutdown = True
+
+    print("系统关闭中...")
     # A. 关闭模拟数据
     system["potmockmotor"].stop()
     system["icemockmotor"].stop()
