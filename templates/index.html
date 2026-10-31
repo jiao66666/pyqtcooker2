@@ -55,16 +55,16 @@
         </div>  
     </div>
     <div class="tab-buttons">
-        <button class="active" onclick="showTab(1, this)">手动操控区</button>
+        <button class="active" onclick="showTab(7, this)">冰柜步进板</button>
+        <button onclick="showTab(1, this)">锅手控区</button>
         <button onclick="showTab(2, this)">锅步进板</button>
-        <button onclick="showTab(7, this)">冰柜步进板</button>
         <button onclick="showTab(3, this)">锅旋转板</button>
         <button onclick="showTab(4, this)">加料电机板</button>
         <button onclick="showTab(5, this)">数据测试区</button>
         <button onclick="showTab(6, this)">动作测试区</button>
     </div>
 
-    <div id="tab1" class="tab-content" style="display:block;">
+    <div id="tab1" class="tab-content">
     <div class="speed_container">
         <label id="speed" data-speed="1">电机速度:</label>
         <div class="speed_circle" onclick="setSpeed(this,1)">

@@ -2164,6 +2164,8 @@ window.onload = ()=>{
 
     initCommandPanel();
 
+    initActiveTab();
+
 };
 
 window.addEventListener('pywebviewready', function () {
@@ -2204,3 +2206,30 @@ document.querySelectorAll('.tab-buttons').forEach(container => {
         // 不在这里取消拖动，允许鼠标拖出容器后继续滚动
     });
 });
+
+
+// 初始化当前激活的 Tab
+function initActiveTab() {
+    const activeBtn = document.querySelector('.tab-buttons button.active');
+
+    if (!activeBtn) return;
+
+    // 从 onclick 中提取 Tab ID，例如 showTab(7, this)
+    const match = activeBtn.getAttribute('onclick').match(/showTab\((\d+)/);
+
+    if (!match) return;
+
+    const tabId = match[1];
+
+    // 隐藏所有 Tab 内容
+    document.querySelectorAll('.tab-content').forEach(tab => {
+        tab.style.display = 'none';
+    });
+
+    // 显示当前激活的 Tab 内容
+    const activeTab = document.getElementById(`tab${tabId}`);
+
+    if (activeTab) {
+        activeTab.style.display = 'block';
+    }
+}
