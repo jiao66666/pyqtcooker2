@@ -86,9 +86,7 @@ class IceStateMachine:
                     task_id=f"{self.running_task_id}"
                 )
                 if step["dotype"] == "reset":
-                    step["motor"].reset_zero_byspeed(step["params"]["speed"])
-                elif step["dotype"] == "resetboth":
-                    step["motor"].reset_zero_both(step["params"]["direction"],step["params"]["speed"])    
+                    step["motor"].reset_zero_byspeed(step["params"]["speed"])  
                 elif step["dotype"] == "go":
                     step["motor"].go(step["params"]["target"],step["params"]["speed"])
                 else:
