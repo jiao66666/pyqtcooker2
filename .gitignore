@@ -81,3 +81,7 @@ dmypy.json
 .idea/
 *.swp
 *.swo
+
+# Runtime logs
+logs/
+*.log

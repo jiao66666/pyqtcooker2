@@ -11,6 +11,10 @@ from lib.newstructure.potstepbuilder import PotStepBuilder
 from lib.newstructure.icestepbuilder import IceStepBuilder
 from lib.newstructure.basecom import RS485Communication
 import threading
+
+from lib.newstructure.logger import init_logger
+log_writer = init_logger()
+
 from lib.newstructure.runtime import runtime
 from lib.newstructure.stepmotorpollingservice import StepMotorPollingService
 from lib.newstructure.spinmotorpollingservice import SpinMotorPollingService
@@ -226,6 +230,7 @@ def shutdown_system(system):
 
 
     print("系统关闭完成")
+
     return True
 
 #RS485连接创建
