@@ -77,9 +77,7 @@ class MotionPlanner:
                 direction = -1 
             else:
                 direction = 1  
-
-            if motor.motor_id == ICE_MOTOR_Z:  #由于移动慢，可加速回零
-                speed = 720     
+ 
         else:
             print("方向异常")
             return None 
