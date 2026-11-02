@@ -550,10 +550,10 @@ ACTION_PARAMS_CONFIG = {
         "target":1.6
     },
     "potmotor_reset_move":{
-        "speed":90,
+        "speed":360,
     },
     "potmotor_reset_flip":{
-        "speed":90,
+        "speed":360,
     },
     "icemotor_resetzero":{
         "speed":360,
