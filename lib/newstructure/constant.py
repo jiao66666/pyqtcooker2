@@ -556,7 +556,7 @@ ACTION_PARAMS_CONFIG = {
         "speed":90,
     },
     "icemotor_resetzero":{
-        "speed":90,
+        "speed":360,
         "target":0,
         "direction":1
     },
