@@ -48,8 +48,10 @@ ICE_SAFE_Y_POS              = 2.6   #Y轴安全位置（方便X移动时候不�
 ICE_X_OUTTRACK_POS          = 2.4   #X轴出去取盒子第一移动轨道
 ICE_X_PICTRACK_POS          = 7.2   #X轴取盒子前轨道
 ICE_Y_PICTRACK_POS          = 1.2   #Y轴取盒子前轨道
+ICE_Z_TOUCH_POS             = 1.0   #Z轴取盒子最终碰触位置
 ICE_X_TOUCH_POS             = 7.0   #X轴取盒子最终触碰位置
 ICE_X_PUTTRACK_POS          = 0.6   #X轴放盒子前轨道
+ICE_SAFE_Z_POS              = 0.0   #Z轴安全位置
 
 
 ICE_MOTORID_NAME_MAP ={
@@ -302,7 +304,9 @@ ACTION_PARAMS_KEYLIST = {
         ("y","icemotor_gotosafey","go"),
         ("x","icemotor_x_pictrack","go"),
         ("y","icemotor_y_pictrack","go"),
+        ("z","icemotor_z_touch","go"),
         ("x","icemotor_x_touch","go"),
+        ("z","icemotor_gotosafez","go"),
         ("y","icemotor_gotosafey","go"),
         ("x","icemotor_x_puttrack","go"),
         ("y","icemotor_resetzero","reset"),
@@ -592,6 +596,14 @@ ACTION_PARAMS_CONFIG = {
     "icemotor_x_puttrack":{
         "speed":360,
         "target":ICE_X_PUTTRACK_POS
+    },
+    "icemotor_z_touch":{
+        "speed":360,
+        "target":ICE_Z_TOUCH_POS
+    },
+    "icemotor_gotosafez":{
+        "speed":360,
+        "target":ICE_SAFE_Z_POS
     }
 }
 
