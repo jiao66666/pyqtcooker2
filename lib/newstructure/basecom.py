@@ -4,7 +4,7 @@ import queue
 from typing import Optional, List, Tuple, Callable, Any
 from lib.newstructure.constant import *
 from lib.newstructure.protocols import ProtocolFactory
-from lib.newstructure.tools import trace_info
+from lib.newstructure.tools import trace_info,is_dev_mode
 from lib.newstructure.logger import log_to_file
 import time
 
@@ -101,7 +101,7 @@ class RS485Communication:
                 print(">>> Worker取出命令:", item["command"])
                 print(">>> 取出后队列:", self.queue.qsize())
 
-                if self.queue.qsize() >=100:
+                if self.queue.qsize() >=100 and not is_dev_mode():
                     log_to_file(">>> Worker取出命令:", item["command"])
                     log_to_file(">>> 取出后队列:", self.queue.qsize())
 
@@ -125,7 +125,7 @@ class RS485Communication:
                     f"队列={self.queue.qsize()}"
                  )
 
-                if self.queue.qsize() >=100:
+                if self.queue.qsize() >=100 and not is_dev_mode():
                     log_to_file("<<< Worker完成命令:", command)
                     log_to_file("<<< 完成后队列:", self.queue.qsize())
 
