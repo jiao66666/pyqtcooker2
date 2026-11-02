@@ -301,7 +301,7 @@ ACTION_PARAMS_KEYLIST = {
         ("x","icemotor_x_outtrack","go"),
         ("y","icemotor_gotosafey","go"),
         ("x","icemotor_x_pictrack","go"),
-        ("x","icemotor_y_pictrack","go"),
+        ("y","icemotor_y_pictrack","go"),
         ("x","icemotor_x_touch","go"),
         ("y","icemotor_gotosafey","go"),
         ("x","icemotor_x_puttrack","go"),
