@@ -867,6 +867,48 @@ def testIceMotorTaskRepeat():
 
 
 
+
+@app.route('/zeroIceMotorAll', methods=['POST'])
+@require_enabled
+def zeroIceMotorAll():
+    print("运行冰柜复位")
+    data = request.get_json()
+
+    success = False
+    actionname = "ice_reset_task"
+    success,msg =  system["iceservice"].run_task(actionname)
+    if success :
+        print("电机单次运转成功!")
+        return jsonify({"status": "success","message": f"运行电机成功!"})
+    else:
+        print("电机单次运转失败!")
+        return jsonify({"status": "fail","message": f"运转失败!错误:{msg}"})
+
+
+@app.route('/iceMotorPickTask', methods=['POST'])
+@require_enabled
+def iceMotorPickTask():
+    print("运行冰柜取盒子动作")
+    data = request.get_json()
+    speed = data.get("speed")
+    speedconstant = data.get("speedconstant")
+    repeat = data.get("repeat")
+ 
+    repeatfinal=int(repeat)
+
+    success = False
+    actionname = "ice_pick_task"
+    success,msg =  system["iceservice"].run_task(actionname,repeatfinal)
+    if success :
+        print("电机单次运转成功!")
+        return jsonify({"status": "success","message": f"运行电机成功!"})
+    else:
+        print("电机单次运转失败!")
+        return jsonify({"status": "fail","message": f"运转失败!错误:{msg}"})
+
+
+
+
 @app.route('/pauseIceMotor', methods=['POST'])
 @require_enabled
 def pauseIceMotor():

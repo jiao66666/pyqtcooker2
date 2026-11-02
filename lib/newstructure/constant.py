@@ -44,6 +44,13 @@ ICE_MOTOR_LIST = [ICE_MOTOR_X,ICE_MOTOR_DOOR,ICE_MOTOR_Y,ICE_MOTOR_Z,ICE_MOTOR_S
 
 ICE_MOTOR_DOOR_TARGET_SPEED = 360   #冰柜门关门转速
 ICE_MOTOR_DOOR_TARGET_POS   = 3.28  #冰柜门关门绝对值坐标
+ICE_SAFE_Y_POS              = 2.6   #Y轴安全位置（方便X移动时候不撞）   
+ICE_X_OUTTRACK_POS          = 2.4   #X轴出去取盒子第一移动轨道
+ICE_X_PICTRACK_POS          = 7.2   #X轴取盒子前轨道
+ICE_Y_PICTRACK_POS          = 1.2   #Y轴取盒子前轨道
+ICE_X_TOUCH_POS             = 7.0   #X轴取盒子最终触碰位置
+ICE_X_PUTTRACK_POS          = 0.6   #X轴放盒子前轨道
+
 
 ICE_MOTORID_NAME_MAP ={
     ICE_MOTOR_X:"x",
@@ -52,6 +59,8 @@ ICE_MOTORID_NAME_MAP ={
     ICE_MOTOR_DOOR:"d",
     ICE_MOTOR_SPIN:"s"    
 }
+
+
 
 #########锅位置配置############
 POT1_POS_OUTFOOD_FLIP  = 10  # 1号锅外倒菜位,翻转位
@@ -278,6 +287,26 @@ ACTION_PARAMS_KEYLIST = {
         ("d","icemotor_resetzero","reset"),
         ("d","icemotor_moveout","go"),
         ("d","icemotor_resetzero","reset")
+    ],
+    "ice_reset_task":[
+        ("z","icemotor_resetzero","reset"),
+        ("y","icemotor_resetzero","reset"),
+        ("y","icemotor_gotosafey","go"),
+        ("x","icemotor_resetzero","reset"),
+        ("y","icemotor_resetzero","reset"),
+        ("d","icemotor_resetzero","reset"),
+        ("d","icemotor_closedoor","go")
+    ],
+    "ice_pick_task":[
+        ("x","icemotor_x_outtrack","go"),
+        ("y","icemotor_gotosafey","go"),
+        ("x","icemotor_x_pictrack","go"),
+        ("x","icemotor_y_pictrack","go"),
+        ("x","icemotor_x_touch","go"),
+        ("y","icemotor_gotosafey","go"),
+        ("x","icemotor_x_puttrack","go"),
+        ("y","icemotor_resetzero","reset"),
+        ("x","icemotor_resetzero","reset"),
     ]
 }
 
@@ -531,6 +560,38 @@ ACTION_PARAMS_CONFIG = {
     "icemotor_moveout":{
         "speed":90,
         "target":0
+    },
+    "icemotor_gotosafey":{
+        "speed":360,
+        "target":ICE_SAFE_Y_POS
+    },
+    "icemotor_closedoor":{
+        "speed":360,
+        "target":ICE_MOTOR_DOOR_TARGET_POS
+    },
+    "icemotor_x_outtrack":{
+        "speed":360,
+        "target":ICE_X_OUTTRACK_POS
+    },
+    "icemotor_x_outtrack":{
+        "speed":360,
+        "target":ICE_X_OUTTRACK_POS
+    },
+    "icemotor_x_pictrack":{
+        "speed":360,
+        "target":ICE_X_PICTRACK_POS
+    },
+    "icemotor_y_pictrack":{
+        "speed":360,
+        "target":ICE_Y_PICTRACK_POS
+    },
+    "icemotor_x_touch":{
+        "speed":360,
+        "target":ICE_X_TOUCH_POS
+    },
+    "icemotor_x_puttrack":{
+        "speed":360,
+        "target":ICE_X_PUTTRACK_POS
     }
 }
 

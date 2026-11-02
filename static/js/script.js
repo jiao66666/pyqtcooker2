@@ -1181,6 +1181,75 @@ function zeroIceMotor() {
 }
 
 
+
+function zeroIceMotorAll() {
+          // 获取 select 元素
+        fetch('/zeroIceMotorAll', {
+            method: 'POST', 
+            headers: {
+                'Content-Type': 'application/json'  
+            },
+            body: JSON.stringify({
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+             addMessage(``+data.message);  // 将收到的消息保存并显示
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            addMessage("Error starting motor.");
+        });
+}
+
+
+function iceMotorPickTask() {
+        var speed = getSelectedValue("speed");
+        console.log("选中速度值是:", speed);
+
+        var constant = document.getElementById("circleice_speedconstant");
+        console.log("选中圈数值是:", constant.value);
+
+        if(constant.value == "" || isNaN(constant.value)){
+            alert("请输入有效的绝对位置值！");
+            return;
+        }
+
+        if(constant.value>1080 || constant.value<=0){
+            alert("绝对位置值不合法！");
+            return;
+        }
+
+        var repeat = document.getElementById("circleice_valrepeat");
+        if((isNaN(repeat.value) ||repeat.value<=0)){
+            alert("请输入有效的重复值！");
+            return;
+        }
+
+
+
+        fetch('/iceMotorPickTask', {
+            method: 'POST', 
+            headers: {
+                'Content-Type': 'application/json'  
+            },
+            body: JSON.stringify({
+                speedconstant:constant.value,
+                speed:speed,
+                repeat:repeat.value
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+             addMessage(``+data.message);  // 将收到的消息保存并显示
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            addMessage("Error starting motor.");
+        });
+}
+
+
 function handleSetZero(motorid) {
 
         fetch('/handleSetZero', {
