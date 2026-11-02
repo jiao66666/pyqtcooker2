@@ -576,10 +576,6 @@ ACTION_PARAMS_CONFIG = {
         "speed":360,
         "target":ICE_X_OUTTRACK_POS
     },
-    "icemotor_x_outtrack":{
-        "speed":360,
-        "target":ICE_X_OUTTRACK_POS
-    },
     "icemotor_x_pictrack":{
         "speed":360,
         "target":ICE_X_PICTRACK_POS
