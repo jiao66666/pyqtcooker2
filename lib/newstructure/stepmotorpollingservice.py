@@ -359,11 +359,17 @@ class StepMotorPollingService:
                 )
 
                 # 脉冲转换实际位置
-                pos = self.convert_pulses_to_position(
-                    pulse,
-                    motor_id
-                )
-
+                if self.board_id == BOARDTYPE_ICE: 
+                    pos = self.convert_pulses_to_position_ice(
+                        pulse,
+                        motor_id
+                    )
+                else:
+                    pos = self.convert_pulses_to_position_step(
+                        pulse,
+                        motor_id
+                    )
+ 
                 # 更新 runtime
                 runtime.set_position(motor_id, pos,board_id=self.board_id)
 
@@ -413,9 +419,8 @@ class StepMotorPollingService:
     # =========================
     # 脉冲转位置
     # =========================
-    def convert_pulses_to_position(self, pulses: int, motor_id: int) -> float:
-
-        if motor_id in [1, 2]:
+    def convert_pulses_to_position_step(self, pulses: int, motor_id: int) -> float:
+        if motor_id in [POT1_MOVE_MOTOR, POT1_FLIP_MOTOR]:
             if pulses < 0:
                 circles = abs(pulses / (MICRO_STEP * 200))
             else:
@@ -425,6 +430,16 @@ class StepMotorPollingService:
 
         return round(circles, 2)
 
+    def convert_pulses_to_position_ice(self, pulses: int, motor_id: int) -> float:
+
+        if pulses < 0:
+            circles = abs(pulses / (MICRO_STEP * 200))
+        else:
+            circles = -abs(pulses / (MICRO_STEP * 200))
+
+        return round(circles, 2)
+
+    
     def notify_done(self, motor_id, execution):
         owner_type = execution.get("owner_type")
         task_id = execution.get("task_id")
