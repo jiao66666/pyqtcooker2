@@ -876,6 +876,22 @@ def zeroIceMotorAll():
 
     success = False
     actionname = "ice_reset_task"
+
+    speedval = 360
+    if actionname not in ACTION_PARAMS_KEYLIST:
+        print("动作名异常!")
+        return jsonify({"status": "fail","message": f"运转失败!错误:动作名异常"})
+
+    apply_action_params_override_bymotortype(
+        actionname,
+        {
+            "x": {"speed": speedval},
+            "y": {"speed": speedval},
+            "z": {"speed": speedval*2},
+            "d": {"speed": speedval}
+        }
+    )
+
     success,msg =  system["iceservice"].run_task(actionname)
     if success :
         print("电机单次运转成功!")
@@ -894,10 +910,22 @@ def iceMotorPutTask():
     pos = data.get("pos")
     repeat = data.get("repeat")
  
-    
-
-    success = False
     actionname = "ice_put_task"
+    speedval = int(speed)
+    if actionname not in ACTION_PARAMS_KEYLIST:
+        print("动作名异常!")
+        return jsonify({"status": "fail","message": f"运转失败!错误:动作名异常"})
+
+    apply_action_params_override_bymotortype(
+        actionname,
+        {
+            "x": {"speed": speedval},
+            "y": {"speed": speedval},
+            "z": {"speed": speedval}
+        }
+    )
+    
+    success = False
     success,msg =  system["iceservice"].run_task(actionname,int(repeat))
     if success :
         print("电机单次运转成功!")
