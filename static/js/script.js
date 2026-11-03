@@ -1203,6 +1203,31 @@ function zeroIceMotorAll() {
 }
 
 
+
+function zeroIceMotorDC(motorid,status) {
+          // 获取 select 元素
+        fetch('/longTastMotor', {
+            method: 'POST', 
+            headers: {
+                'Content-Type': 'application/json'  
+            },
+            body: JSON.stringify({
+                motorid:motorid,
+                status:status
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+             addMessage(``+data.message);  // 将收到的消息保存并显示
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            addMessage("Error starting motor.");
+        });
+}
+
+
+
 function iceMotorPickTask() {
         var speed = getSelectedValue("speed");
         console.log("选中速度值是:", speed);
