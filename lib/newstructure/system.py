@@ -32,6 +32,9 @@ from lib.newstructure.websocket_runtime import websocket_server
 from lib.newstructure.mock import MockMotor
 import time
 
+from lib.newstructure.icestorage import IceStorage
+
+
 #系统构建中心
 def build_system():
     bus = EventBus()
@@ -92,7 +95,8 @@ def build_system():
         "spinmotorsmanager":motors_manager["spin"],
         "icemotorsmanager":motors_manager["ice"],
         "potmockmotor":potmockmotor,
-        "icemockmotor":icemockmotor
+        "icemockmotor":icemockmotor,
+        "icestorage": IceStorage()
     }
 
     cookservice = CookerService(system,resource_manager)
