@@ -96,6 +96,7 @@ def build_system():
         "icemotorsmanager":motors_manager["ice"],
         "potmockmotor":potmockmotor,
         "icemockmotor":icemockmotor,
+        "resource_manager":resource_manager,
         "icestorage": IceStorage()
     }
 
@@ -126,6 +127,7 @@ def recovery_system(system):
     system["pots"][1].reset()
     system["pots"][2].reset()
     system["ice"].reset()
+    system["resource_manager"].reset()
     return True
 
 def start_system_state(system):

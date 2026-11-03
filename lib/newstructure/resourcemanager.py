@@ -93,12 +93,13 @@ class ResourceManager:
         if not task_id:
             print("error>>>>没有任务ID")
             return
+        
+        with self.lock:
+            if self.owner_types.get(task_id) != "task":
+                print(f"[ResourceManager] unknown task: {task_id}")
+                return
 
-        if self.owner_types.get(task_id) != "task":
-            print(f"[ResourceManager] unknown task: {task_id}")
-            return
-
-        self.release_resources(task_id)
+            self.release_resources(task_id)
 
     def on_action_done(self, data):
         print("处理电机解锁（动作）《《《《《《《《《《《《《")
@@ -112,3 +113,13 @@ class ResourceManager:
             return
 
         self.release_resources(action_id)
+
+
+    def reset(self):
+        """强制清空所有资源占用状态"""
+        with self.lock:
+            self.resource_owner.clear()
+            self.owner_resources.clear()
+            self.owner_types.clear()
+
+        print("[ResourceManager] 所有资源占用已重置")
