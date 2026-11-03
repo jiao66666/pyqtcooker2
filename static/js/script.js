@@ -1228,40 +1228,41 @@ function zeroIceMotorDC(motorid,status) {
 
 
 
-function iceMotorPickTask() {
-        var speed = getSelectedValue("speed");
-        console.log("选中速度值是:", speed);
+function iceMotorPutTask() {
 
-        var constant = document.getElementById("circleice_speedconstant");
-        console.log("选中圈数值是:", constant.value);
 
-        if(constant.value == "" || isNaN(constant.value)){
-            alert("请输入有效的绝对位置值！");
+        var speed = document.getElementById("ice_taskspeed");
+        console.log("speed:", speed.value);
+
+        if(speed.value == "" || isNaN(speed.value)){
+            alert("请输入有效的速度值！");
             return;
         }
 
-        if(constant.value>1080 || constant.value<=0){
-            alert("绝对位置值不合法！");
+        if(speed.value>3600 || speed.value<=0){
+            alert("速度值不合法！");
             return;
         }
 
-        var repeat = document.getElementById("circleice_valrepeat");
+        var repeat = document.getElementById("ice_taskrepeat");
         if((isNaN(repeat.value) ||repeat.value<=0)){
             alert("请输入有效的重复值！");
             return;
         }
+        console.log("repeatnums:"+repeat.value)
 
+        var pos = document.getElementById("icestorageid");
+        console.log("position",pos.value)
 
-
-        fetch('/iceMotorPickTask', {
+        fetch('/iceMotorPutTask', {
             method: 'POST', 
             headers: {
                 'Content-Type': 'application/json'  
             },
             body: JSON.stringify({
-                speedconstant:constant.value,
-                speed:speed,
-                repeat:repeat.value
+                speed:speed.value,
+                repeat:repeat.value,
+                pos:pos.value
             })
         })
         .then(response => response.json())

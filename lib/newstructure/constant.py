@@ -298,7 +298,7 @@ ACTION_PARAMS_KEYLIST = {
         ("d","icemotor_resetzero","reset"),
         ("d","icemotor_closedoor","go")
     ],
-    "ice_pick_task":[
+    "ice_put_task":[   
         ("x","icemotor_x_outtrack","go"),
         ("y","icemotor_gotosafey","go"),
         ("x","icemotor_x_pictrack","go"),

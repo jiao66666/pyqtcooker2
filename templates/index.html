@@ -56,6 +56,7 @@
     </div>
     <div class="tab-buttons">
         <button class="active" onclick="showTab(7, this)">冰柜步进板</button>
+        <button onclick="showTab(8, this)">冰柜任务区</button>
         <button onclick="showTab(1, this)">锅手控区</button>
         <button onclick="showTab(2, this)">锅步进板</button>
         <button onclick="showTab(3, this)">锅旋转板</button>
@@ -582,16 +583,14 @@
         <div class="ice_btncon">
             <div class="ice_btn" onpointerdown="goInOutIceMotor('in')"  onpointerup="pauseIceMotorByid()">冰柜电机回</div>
             <div class="ice_btn" onpointerdown="goInOutIceMotor('out')" onpointerup="pauseIceMotorByid()">冰柜电机出</div>
-            <div class="ice_btn" onclick="zeroIceMotor()">冰柜电机限位运行</div>
-            <div class="ice_btn" onclick="zeroIceMotorAll()">冰柜整机复位</div>
-
             <div class="ice_btn" onclick="zeroIceMotorDC(7,1)">冰柜旋转左吸开</div>
             <div class="ice_btn" onclick="zeroIceMotorDC(7,0)">冰柜旋转左吸关</div>
             <div class="ice_btn" onclick="zeroIceMotorDC(8,1)">冰柜旋转右吸开</div>
             <div class="ice_btn" onclick="zeroIceMotorDC(8,0)">冰柜旋转右吸关</div>
             <div class="ice_btn" onclick="zeroIceMotorDC(9,1)">冰柜研磨开</div>
             <div class="ice_btn" onclick="zeroIceMotorDC(9,0)">冰柜研磨关</div>
-            <div class="ice_btn" onclick="iceMotorPickTask()">冰柜取盒子测试</div>
+            <div class="ice_btn" class="fullwidth" onclick="zeroIceMotor()">冰柜电机限位运行</div>
+           
         </div>   
 
         <hr style="border: 1px dotted #ccc; width: 100%; margin: 5px auto;">
@@ -618,6 +617,56 @@
             <div class="ice_btn" onclick="handleSetZero(4)">磁铁旋转手动归零</div>
         </div>
     </div> 
+
+
+    <div id="tab8" class="tab-content">
+
+        <div class="new_input_circle">
+            <label for="ice_taskspeed" class="input_tag">速度:</label>
+            <input class="input-classic w60" type="number" id="ice_taskspeed" placeholder="请输入速度" value="360"/>
+        </div>
+        <div class="new_input_circle">
+            <label for="ice_taskrepeat" class="input_tag">执行次数:</label>
+            <input class="input-classic w60" type="number" id="ice_taskrepeat" placeholder="请输入想要执行次数" value= "1"/>
+        </div>
+        <div class="ice_btn" onclick="zeroIceMotorAll()">冰柜整机复位</div>
+        
+
+        <hr style="border: 1px dotted #ccc; width: 100%; margin: 5px auto;">
+        <div class="tastmotorid_select_row">
+            <label for="icestorageid">位置号:</label>
+            <select id="icestorageid" name="icestorageid">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+                <option value="10">10</option>
+                <option value="11">11</option>
+                <option value="12">12</option>
+                <option value="13">13</option>
+                <option value="14">14</option>
+                <option value="15">15</option>
+                <option value="16">16</option>
+                <option value="18">17</option>
+                <option value="18">18</option>
+                <option value="19">19</option>
+                <option value="20">20</option>
+                <option value="21">21</option>
+                <option value="22">22</option>
+                <option value="23">23</option>
+                <option value="24">24</option>
+            </select>
+        </div>
+        <div class="ice_btn" onclick="iceMotorPutTask()">冰柜取-放盒子测试</div>
+
+
+
+    </div>
 
     <div class="prompt">控制台消息</div>
     <div class="history_con">

@@ -885,20 +885,20 @@ def zeroIceMotorAll():
         return jsonify({"status": "fail","message": f"运转失败!错误:{msg}"})
 
 
-@app.route('/iceMotorPickTask', methods=['POST'])
+@app.route('/iceMotorPutTask', methods=['POST'])
 @require_enabled
-def iceMotorPickTask():
-    print("运行冰柜取盒子动作")
+def iceMotorPutTask():
+    print("运行冰柜取放盒子动作")
     data = request.get_json()
     speed = data.get("speed")
-    speedconstant = data.get("speedconstant")
+    pos = data.get("pos")
     repeat = data.get("repeat")
  
-    repeatfinal=int(repeat)
+    
 
     success = False
-    actionname = "ice_pick_task"
-    success,msg =  system["iceservice"].run_task(actionname,repeatfinal)
+    actionname = "ice_put_task"
+    success,msg =  system["iceservice"].run_task(actionname,int(repeat))
     if success :
         print("电机单次运转成功!")
         return jsonify({"status": "success","message": f"运行电机成功!"})
