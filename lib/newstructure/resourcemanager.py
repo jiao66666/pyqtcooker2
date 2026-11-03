@@ -117,9 +117,9 @@ class ResourceManager:
 
     def reset(self):
         """强制清空所有资源占用状态"""
+        print("准备清空资源占用.......")
         with self.lock:
             self.resource_owner.clear()
             self.owner_resources.clear()
             self.owner_types.clear()
-
-        print("[ResourceManager] 所有资源占用已重置")
+            print("[ResourceManager] 所有资源占用已重置!")
