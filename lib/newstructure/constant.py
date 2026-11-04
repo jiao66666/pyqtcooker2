@@ -631,11 +631,11 @@ ACTION_PARAMS_CONFIG = {
         "target":ICE_X_PUTTRACK_POS
     },
     "icemotor_z_finalputpos":{
-        "speed":90,
+        "speed":720,
         "target":ICE_Z_FINALPUT_POS
     },
     "icemotor_y_finalputpos":{
-        "speed":90,
+        "speed":360,
         "target":ICE_Y_FINALPUT_POS
     },
     "icemotor_x_finalputpos":{
