@@ -911,10 +911,10 @@ def iceMotorPutTask():
     repeat = data.get("repeat")
 
 
-    done_test_pos = 1
-    if int(pos)>= done_test_pos:
+    done_test_pos = 2
+    if int(pos) >= done_test_pos:
         print("位置号异常!")
-        return jsonify({"status": "fail","message": f"只开放1以下取盒子任务"})
+        return jsonify({"status": "fail","message": f"只开放2以下取盒子任务"})
 
  
     actionname = "ice_put_task"
@@ -926,7 +926,6 @@ def iceMotorPutTask():
     apply_action_params_override_bymotortype(
         actionname,
         {
-            "x": {"speed": speedval},
             "y": {"speed": speedval},
             "z": {"speed": speedval}
         }
