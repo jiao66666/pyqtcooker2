@@ -67,8 +67,13 @@ class ResourceManager:
             )
             return True
 
-    def release_resources(self, owner_id):
+    def release_resources(self, owner_id, expected_type=None):
         with self.lock:
+            if expected_type is not None:
+                if self.owner_types.get(owner_id) != expected_type:
+                    print(f"[ResourceManager] owner type mismatch: {owner_id}")
+                    return False
+
             resources = self.owner_resources.get(owner_id)
 
             if resources is None:
@@ -82,38 +87,26 @@ class ResourceManager:
             del self.owner_resources[owner_id]
             self.owner_types.pop(owner_id, None)
 
-            print(
-                f"[ResourceManager] owner={owner_id} released"
-            )
+            print(f"[ResourceManager] owner={owner_id} released")
             return True
 
+
     def on_task_done(self, data):
-        print("处理电机解锁(任务)<<<<<<<<<<<<<<<")
         task_id = data.get("task_id")
         if not task_id:
             print("error>>>>没有任务ID")
             return
-        
-        with self.lock:
-            if self.owner_types.get(task_id) != "task":
-                print(f"[ResourceManager] unknown task: {task_id}")
-                return
 
-            self.release_resources(task_id)
+        self.release_resources(task_id, expected_type="task")
+
 
     def on_action_done(self, data):
-        print("处理电机解锁（动作）《《《《《《《《《《《《《")
         action_id = data.get("task_id")
         if not action_id:
             print("error>>>>没有任务ID")
             return
 
-        if self.owner_types.get(action_id) != "action":
-            print(f"[ResourceManager] unknown action: {action_id}")
-            return
-
-        self.release_resources(action_id)
-
+        self.release_resources(action_id, expected_type="action")
 
     def reset(self):
         """强制清空所有资源占用状态"""
