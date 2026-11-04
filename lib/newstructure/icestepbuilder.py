@@ -76,4 +76,7 @@ class IceStepBuilder:
 
     #标记电机类型以方便状态机进行相应动作选择
     def _get_motor_type(self,motor_key):
+        if motor_key == "ml" or motor_key == "mr" or motor_key == "sk":    
+            return "dc_ice"
+        else:    
             return "step_ice"

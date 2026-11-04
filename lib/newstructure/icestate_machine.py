@@ -88,8 +88,23 @@ class IceStateMachine:
                 if step["dotype"] == "reset":
                     step["motor"].reset_zero_byspeed(step["params"]["speed"])  
                 elif step["dotype"] == "go":
-                    step["motor"].go(step["params"]["target"],step["params"]["speed"])
-                elif step["dotype"] == "on":
+                    step["motor"].go(step["params"]["target"],step["params"]["speed"]) 
+                else:
+                    self.state = "ERROR"
+                    print(
+                        f"未知动作类型 {step['dotype']}，"
+                        f"动作名称：{step['action']}"
+                    )
+                    return 
+            elif step["type"] == "dc_ice":
+                runtime.set_running(
+                    board_id=BOARDTYPE_FEEDER,
+                    motor_id=step["motor"].motor_id,
+                    action=step["action"],
+                    params=step["params"],
+                    task_id=f"{self.running_task_id}"
+                )
+                if step["dotype"] == "on":
                     step["motor"].output_on()
                     time.sleep(step["params"]["delay"])  #阻塞一定时间以确保吸住
                 elif step["dotype"] == "off":
