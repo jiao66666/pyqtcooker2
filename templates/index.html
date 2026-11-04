@@ -539,7 +539,7 @@
     </div>
 
     <div id="tab7" class="tab-content">
-        <div class="speed_container">
+        <div class="speed_container hidden">
             <label id="speed" data-speed="1">电机速度:</label>
             <div class="speed_circle" onclick="setSpeed(this,1)">
                 1
@@ -558,28 +558,40 @@
             </div>
         </div>
 
-        <div class="new_input_circle">
-            <label for="circle_speeconstant" class="input_tag">速度系数:</label>
-            <input class="input-classic w60" type="number" id="circleice_speedconstant" placeholder="请输入速度系数" value="360"/>
+        <div class="ice_container ">
+            <label id="icemotor_name" data-motorid="0">电机:</label>
+            <div class="ice_circle_name" onclick="setIceMotorName(this,0)">
+                X
+            </div>
+            <div class="ice_circle_name" onclick="setIceMotorName(this,2)">
+                Y
+            </div>
+            <div class="ice_circle_name" onclick="setIceMotorName(this,3)">
+                Z
+            </div>
+            <div class="ice_circle_name" onclick="setIceMotorName(this,1)">
+                门
+            </div>
+            <div class="ice_circle_name" onclick="setIceMotorName(this,4)">
+                转
+            </div>
         </div>
-        <div class="ice_container">
-                <label id="icemotor_name" data-motorid="0">电机:</label>
-                <div class="ice_circle_name" onclick="setIceMotorName(this,0)">
-                    X
+        <div class="ice_container outlined pad5 mt5">   
+            <div class="ice_container_col br">
+                <div class="new_input_circle">
+                    <label for="circle_speeconstant" class="input_tag">速度系数:</label>
+                    <input class="input-classic w60" type="number" id="circleice_speedconstant" placeholder="请输入速度系数" value="360"/>
                 </div>
-                <div class="ice_circle_name" onclick="setIceMotorName(this,2)">
-                    Y
+                <div class="new_input_circle">
+                    <label for="circleice_valabs" class="input_tag">目标位置:</label>
+                    <input class="input-classic w60" type="number" id="circleice_valabs" placeholder="请输入目标的绝对位置数值" />
                 </div>
-                <div class="ice_circle_name" onclick="setIceMotorName(this,3)">
-                    Z
-                </div>
-                <div class="ice_circle_name" onclick="setIceMotorName(this,1)">
-                    门
-                </div>
-                <div class="ice_circle_name" onclick="setIceMotorName(this,4)">
-                    转
-                </div>
-        </div>
+            </div>  
+            <div class="ice_container_col">
+                <div class="ice_btn" onclick="runIceMotor()">绝对值运行</div>
+            </div>
+        </div>   
+
         <div class="ice_btncon">
             <div class="ice_btn" onpointerdown="goInOutIceMotor('in')"  onpointerup="pauseIceMotorByid()">冰柜电机回</div>
             <div class="ice_btn" onpointerdown="goInOutIceMotor('out')" onpointerup="pauseIceMotorByid()">冰柜电机出</div>
@@ -595,17 +607,13 @@
 
         <hr style="border: 1px dotted #ccc; width: 100%; margin: 5px auto;">
 
-        <div class="new_input_circle">
-            <label for="circleice_valabs" class="input_tag">目标位置:</label>
-            <input class="input-classic w60" type="number" id="circleice_valabs" placeholder="请输入目标的绝对位置数值" />
-        </div>
+       
         <div class="new_input_circle">
             <label for="circleice_valrepeat" class="input_tag">执行次数:</label>
             <input class="input-classic w60" type="number" id="circleice_valrepeat" placeholder="请输入想要执行次数" value= "1"/>
         </div>
 
         <div class="ice_btncon">
-            <div class="ice_btn fullwidth" onclick="runIceMotor()">绝对值运行</div>
             <div class="ice_btn" onclick="resetIceMotor(1)">正转限位启动</div>
             <div class="ice_btn" onclick="resetIceMotor(-1)">反转限位启动</div>
             <div class="ice_btn" onpointerdown="runlongIceMotor(-1)"  onpointerup="pauseIceMotor()" >正转长运行</div>
