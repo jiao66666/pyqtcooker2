@@ -1585,3 +1585,30 @@ def get_task_resources(task_name, pot_id=None):
     collect_resources(template)
 
     return resources
+
+
+
+
+def get_step_from_task(task, index):
+    """
+    根据序号获取单步任务
+    返回结构与原任务一致
+    """
+    if index < 0 or index >= len(task):
+        return []
+
+    return [task[index]]
+
+
+
+
+def comb_multitask_one(tasks):
+    """
+    将多个任务合并为一个连续任务
+    """
+    result = []
+
+    for task in tasks:
+        result.extend(task)
+
+    return result
