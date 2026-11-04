@@ -96,6 +96,11 @@ class IceStateMachine:
                         f"动作名称：{step['action']}"
                     )
                     return 
+
+                # 步进电机等待完成反馈
+                self.state = "WAITING"
+                self.wait_start_time = time.time()
+
             elif step["type"] == "dc_ice":
                 runtime.set_running(
                     board_id=BOARDTYPE_FEEDER,
@@ -121,9 +126,6 @@ class IceStateMachine:
                 self.go_next_step("on_icedc_done")
                 if self.current_step >= len(self.steps):
                     self.state = "DONE"
-
-            self.state = "WAITING"
-            self.wait_start_time = time.time()
    
         elif self.state == "WAITING":
             if time.time() - self.wait_start_time > TIMEOUT:
