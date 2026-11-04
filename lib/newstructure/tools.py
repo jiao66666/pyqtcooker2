@@ -1588,6 +1588,46 @@ def get_task_resources(task_name, pot_id=None):
     return resources
 
 
+def get_task_resources_bystep(task_name, index, pot_id=None):
+    """
+    根据动作组名称和单步序号，获取当前单步需要占用的电机资源。
+    """
+    template = ACTION_PARAMS_KEYLIST.get(task_name)
+
+    if template is None:
+        raise ValueError(f"未知的动作组：{task_name}")
+
+    if index < 0 or index >= len(template):
+        raise IndexError(f"动作组 {task_name} 的序号无效：{index}")
+
+    if pot_id is not None:
+        motor_resource_map = POT_MOTOR_RESOURCE_MAP.get(pot_id)
+
+        if motor_resource_map is None:
+            raise ValueError(f"无效的锅编号：{pot_id}")
+    else:
+        motor_resource_map = ICE_MOTOR_RESOURCE_MAP
+
+    resources = set()
+
+    def collect_resources(items):
+        for item in items:
+            motor_key = item[0]
+
+            if motor_key not in motor_resource_map:
+                raise ValueError(
+                    f"动作组 {task_name} 中的电机标识 "
+                    f"{motor_key} 没有对应的资源映射"
+                )
+
+            resources.add(motor_resource_map[motor_key])
+
+            if len(item) > 3 and isinstance(item[3], list):
+                collect_resources(item[3])
+
+    collect_resources([template[index]])
+
+    return resources
 
 
 def get_step_from_task(task, index):

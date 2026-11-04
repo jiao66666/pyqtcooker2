@@ -1,5 +1,5 @@
 import uuid
-from lib.newstructure.tools import get_task_resources
+from lib.newstructure.tools import get_task_resources,get_task_resources_bystep
 from lib.newstructure.runtime import runtime
 from lib.newstructure.constant import *
 
@@ -82,8 +82,21 @@ class IceService:
         if not OK:
             return False, msg
 
+
+        # 获取整个冰柜动作组需要占用的资源
+        resources = get_task_resources_bystep(task_name,index)
+
         # 每次任务生成唯一 ID
         task_id = f"task:ice:{uuid.uuid4().hex}"
+
+        # 申请整个任务的资源
+        success = self.resource_manager.acquire_resources(
+            task_id,
+            "task",
+            resources
+        )
+        if not success:
+            return False, "冰柜电机资源被占用，任务无法启动"
 
         try:
             steps = self.system["icestepbuilder"].build_bystep(task_name,index)
