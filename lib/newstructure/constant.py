@@ -639,7 +639,7 @@ ACTION_PARAMS_CONFIG = {
         "target":ICE_Y_FINALPUT_POS
     },
     "icemotor_x_finalputpos":{
-        "speed":90,
+        "speed":360,
         "target":ICE_X_FINALPUT_POS
     }
 
