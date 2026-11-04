@@ -413,10 +413,11 @@ def trace_info(info):
     else:
         potid = 0    
 
+    extra = translate_step_command(info)
     data = []
     data.append({
         "type": "command",
-        "info": info,
+        "info": f"{info}({extra})",
         "potid":potid
     })
 
@@ -1612,3 +1613,30 @@ def comb_multitask_one(tasks):
         result.extend(task)
 
     return result
+
+
+
+def translate_step_command(command: str) -> str:
+    try:
+        command = command.strip().split("*")[0]
+
+        if command.startswith("#RUN,"):
+            parts = command.split(",")
+
+            motor_id = int(parts[2])
+            pulses = int(parts[3])
+            speed = int(parts[4])
+
+            position = round(-pulses / (128 * 200), 2)
+            direction = "移出" if position > 0 else "移回"
+
+            return f"{ICE_MOTORID_NAME_MAP[motor_id]}轴{direction}{abs(position)}，速度{speed}"
+
+        elif command.startswith("#ORGRST,"):
+            motor_id = int(command.split(",")[2])
+            return f"{ICE_MOTORID_NAME_MAP[motor_id]}轴回零"
+
+        return "未知指令"
+
+    except (ValueError, IndexError):
+        return "指令格式错误"
