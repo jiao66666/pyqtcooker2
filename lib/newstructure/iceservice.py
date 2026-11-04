@@ -75,6 +75,33 @@ class IceService:
             print(f"冰柜任务提交失败：{e}")
             return False, f"冰柜任务提交失败：{e}"
 
+
+    # 运行电机动作组[动作]
+    def run_task_bystep(self, task_name, index,repeat=1):
+        OK, msg = self.check_workable()
+        if not OK:
+            return False, msg
+
+        # 每次任务生成唯一 ID
+        task_id = f"task:ice:{uuid.uuid4().hex}"
+
+        try:
+            steps = self.system["icestepbuilder"].build_bystep(task_name,index)
+
+            print("printing.....steps>>>>>>>>>>>>>>>>>>>>>>")
+            print(steps)
+
+            # 提交任务，repeat 整体执行期间持续占用资源
+            self.system["ice"].submit_task(task_id, steps, repeat)
+
+            return True, "submit task OK"
+
+        except Exception as e:
+            print(f"冰柜任务提交失败：{e}")
+            return False, f"冰柜任务提交失败：{e}"
+
+
+
     #纯命令执行非互斥
     def run_icmotor_cmd(self, motor_id, action, params):
         motor = self.system["motors"]["icemotor"][motor_id]

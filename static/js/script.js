@@ -1276,6 +1276,58 @@ function iceMotorPutTask() {
 }
 
 
+
+function iceMotorPutTaskByStep() {
+
+
+        var speed = document.getElementById("ice_taskspeed");
+        console.log("speed:", speed.value);
+
+        if(speed.value == "" || isNaN(speed.value)){
+            alert("请输入有效的速度值！");
+            return;
+        }
+
+        if(speed.value>3600 || speed.value<=0){
+            alert("速度值不合法！");
+            return;
+        }
+
+        var repeat = document.getElementById("ice_taskrepeat");
+        if((isNaN(repeat.value) ||repeat.value<=0)){
+            alert("请输入有效的重复值！");
+            return;
+        }
+        console.log("repeatnums:"+repeat.value)
+
+        var pos = document.getElementById("icestorageid");
+        console.log("position",pos.value)
+
+        var icestepindex = document.getElementById("icestepindex");
+        console.log("icestepindex",icestepindex.value)
+
+
+        fetch('/iceMotorPutTaskByStep', {
+            method: 'POST', 
+            headers: {
+                'Content-Type': 'application/json'  
+            },
+            body: JSON.stringify({
+                speed:speed.value,
+                pos:pos.value,
+                index:icestepindex.value
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+             addMessage(``+data.message);  // 将收到的消息保存并显示
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            addMessage("Error starting motor.");
+        });
+}
+
 function handleSetZero(motorid) {
 
         fetch('/handleSetZero', {

@@ -666,9 +666,31 @@
                 <option value="24">24</option>
             </select>
         </div>
-        <div class="ice_btn" onclick="iceMotorPutTask()">冰柜取-放盒子测试</div>
-
-
+        <div class="ice_btn" onclick="iceMotorPutTask()">冰柜取-放盒子整体测试</div>
+        <hr style="border: 1px dotted #ccc; width: 100%; margin: 15px auto;">
+        <div class="tastmotorid_select_row">
+            <label for="icestepindex">位置号:</label>
+            <select id="icestepindex" name="icestepindex">
+                <option value="0">[0]X轴移出入轨</option>
+                <option value="1">[1]Y轴移出至安全轨道</option>
+                <option value="2">[2]Z轴移出入轨</option>
+                <option value="3">[3]X轴触碰盒子</option>
+                <option value="4">[4]左侧磁力开</option>
+                <option value="5">[5]Z轴向上到零位</option>
+                <option value="6">[6]X轴移出到放盒轨道</option>
+                <option value="7">[7]Y轴回到零位</option>
+                <option value="8">[8]Z轴到存放最终位</option>
+                <option value="9">[9]Y轴到存放最终位</option>
+                <option value="10">[10]X轴到存放最终位</option>
+                <option value="11">[11]左侧磁力关</option>
+                <option value="12">[12]X轴回到放盒轨道</option>
+                <option value="13">[13]Z轴回到零位</option>
+                <option value="14">[14]Y轴回到安全轨道</option>
+                <option value="15">[15]X轴回零</option>
+                <option value="16">[16]Y轴回零</option>
+            </select>
+        </div>
+        <div class="ice_btn" onclick="iceMotorPutTaskByStep()">冰柜取-放盒子分步测试</div>
 
     </div>
 

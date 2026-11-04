@@ -2,7 +2,7 @@
 from functools import wraps
 from flask import Flask, render_template, jsonify,request
 from lib.newstructure.constant import *
-from lib.newstructure.tools import is_dev_mode,apply_action_params_override,apply_action_params_override_bymotortype,get_pot_pos,build_dc_action,getTestDCMsg,validate_board_command
+from lib.newstructure.tools import is_dev_mode,apply_action_params_override,apply_action_params_override_bymotortype,get_pot_pos,build_dc_action,getTestDCMsg,validate_board_command,get_step_from_task
 import webview
 import threading
 from lib.newstructure.system import run_system,init_system,shutdown_system,set_system_dirty,recovery_system,shutdown_device,start_system_state,stop_system_state,set_system_state
@@ -937,6 +937,29 @@ def iceMotorPutTask():
     if success :
         print("电机单次运转成功!")
         return jsonify({"status": "success","message": f"运行电机成功!"})
+    else:
+        print("电机单次运转失败!")
+        return jsonify({"status": "fail","message": f"运转失败!错误:{msg}"})
+
+
+@app.route('/iceMotorPutTaskByStep', methods=['POST'])
+@require_enabled
+def iceMotorPutTaskByStep():
+    print("运行冰柜取放盒子分步动作")
+    data = request.get_json()
+    speed = data.get("speed")
+    pos = data.get("pos")
+    index = data.get("index")
+ 
+    actionname = "ice_put_task"
+    speedval = int(speed)
+
+    print(f"speed:{speed},pos:{pos},index:{index},speed:{speedval}")
+    success = False
+    success,msg =  system["iceservice"].run_task_bystep(actionname,int(index))
+    if success :
+        print("电机单次运转成功!")
+        return jsonify({"status": "success","message": f"运行电机分步任务，序号{index}成功!"})
     else:
         print("电机单次运转失败!")
         return jsonify({"status": "fail","message": f"运转失败!错误:{msg}"})

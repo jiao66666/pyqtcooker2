@@ -89,6 +89,11 @@ class IceStateMachine:
                     step["motor"].reset_zero_byspeed(step["params"]["speed"])  
                 elif step["dotype"] == "go":
                     step["motor"].go(step["params"]["target"],step["params"]["speed"])
+                elif step["dotype"] == "on":
+                    step["motor"].output_on()
+                    time.sleep(step["params"]["delay"])  #阻塞一定时间以确保吸住
+                elif step["dotype"] == "off":
+                    step["motor"].output_off()    
                 else:
                     self.state = "ERROR"
                     print(

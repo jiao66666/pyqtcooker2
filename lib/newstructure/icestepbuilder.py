@@ -15,6 +15,15 @@ class IceStepBuilder:
 
         return self._build_steps(ACTION_PARAMS_KEYLIST[action], motor_map)
 
+    def build_bystep(self, action,index):
+        # 电机映射
+        motor_map = self._get_motor_map()
+
+        if action not in ACTION_PARAMS_KEYLIST:
+            return []
+
+        return self._build_steps([ACTION_PARAMS_KEYLIST[action][index]], motor_map)
+
     def _get_motor_map(self):   #依据需要对电机进行扩展
         return {
             "x": self.motors["icemotor"][ICE_MOTOR_X],
