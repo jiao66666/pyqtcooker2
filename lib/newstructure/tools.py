@@ -1628,7 +1628,7 @@ def translate_step_command(command: str) -> str:
             speed = int(parts[4])
 
             position = round(-pulses / (128 * 200), 2)
-            direction = "移出" if position > 0 else "移回"
+            direction = "右移" if position > 0 else "左移"
 
             return f"{ICE_MOTORID_NAME_MAP[motor_id]}轴{direction}{abs(position)}，速度{speed}"
 
