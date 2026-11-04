@@ -117,6 +117,11 @@ class IceStateMachine:
                     )
                     return 
 
+                # 当前磁吸动作完成，推进下一步
+                self.go_next_step("on_icedc_done")
+                if self.current_step >= len(self.steps):
+                    self.state = "DONE"
+
             self.state = "WAITING"
             self.wait_start_time = time.time()
    
