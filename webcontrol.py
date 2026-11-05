@@ -911,10 +911,10 @@ def iceMotorPutTask():
     repeat = data.get("repeat")
 
 
-    done_test_pos = 1
-    if int(pos) > done_test_pos:
+    done_tested_pos = 4
+    if int(pos) > done_tested_pos:
         print("位置号异常!")
-        return jsonify({"status": "fail","message": f"只开放2以下取盒子任务"})
+        return jsonify({"status": "fail","message": f"只开放{done_tested_pos}以下取盒子任务"})
 
 
     final_cordinate = system["icestorage"].get_position(int(pos))
