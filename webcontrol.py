@@ -911,12 +911,15 @@ def iceMotorPutTask():
     repeat = data.get("repeat")
 
 
-    done_test_pos = 2
-    if int(pos) >= done_test_pos:
+    done_test_pos = 1
+    if int(pos) > done_test_pos:
         print("位置号异常!")
         return jsonify({"status": "fail","message": f"只开放2以下取盒子任务"})
 
- 
+
+    final_cordinate = system["icestorage"].get_position(int(pos))
+    print(f"going to put at x:{final_cordinate['x']},y:{final_cordinate['y']},z:{final_cordinate['z']}")
+   
     actionname = "ice_put_task"
     speedval = int(speed)
     if actionname not in ACTION_PARAMS_KEYLIST:
@@ -928,6 +931,15 @@ def iceMotorPutTask():
         {
             "y": {"speed": speedval},
             "z": {"speed": speedval}
+        }
+    )
+
+    apply_action_params_override(
+        actionname,
+        {
+            "icemotor_x_finalputpos": {"target":final_cordinate['x']},
+            "icemotor_y_finalputpos":{"target":final_cordinate['y']},
+            "icemotor_z_finalputpos":{"target":final_cordinate['z']}
         }
     )
     
