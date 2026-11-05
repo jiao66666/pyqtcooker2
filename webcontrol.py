@@ -718,16 +718,15 @@ def runlongIceMotor():
     positive = data.get('positive')
     motorid = data.get('motorid')
     speed =   data.get('speed')
-    speedconstant = data.get('speedconstant')
     print(f"positive:{positive},motorid:{motorid}")
     success = False
 
-    if int(speedconstant)<=0 or int(speedconstant)>1080:
+    if int(speed)<=0 or int(speed)>3600:
         print("测试失败!")
         return jsonify({"status": "fail","message": f"提交数据测试失败！错误:速度参数异常"})   
 
     action_param = "runlong"
-    success,msg = system["iceservice"].run_icmotor_cmd(int(motorid),action_param,{"speed":int(int(speed)*int(speedconstant)),"direction":int(positive)})
+    success,msg = system["iceservice"].run_icmotor_cmd(int(motorid),action_param,{"speed":int(speed),"direction":int(positive)})
     if success :
         print("测试成功!")
         return jsonify({"status": "success","message": f"提交数据测试成功!"})
@@ -744,16 +743,15 @@ def goInOutIceMotor():
     directionstr = data.get('directionstr')
     motorid = data.get('motorid')
     speed =   data.get('speed')
-    speedconstant = data.get('speedconstant')
     print(f"positive:{directionstr},motorid:{motorid}")
     success = False
 
-    if int(speedconstant)<=0 or int(speedconstant)>1080:
+    if int(speed)<=0 or int(speed)>3600:
         print("测试失败!")
         return jsonify({"status": "fail","message": f"提交数据测试失败！错误:速度参数异常"})  
      
     action_param="goinout"
-    success,msg = system["iceservice"].run_icmotor_cmd(int(motorid),action_param,{"speed":int(int(speed)*int(speedconstant)),"direction":directionstr})
+    success,msg = system["iceservice"].run_icmotor_cmd(int(motorid),action_param,{"speed":int(speed),"direction":directionstr})
     
     if success :
         print("测试成功!")
@@ -836,11 +834,16 @@ def testIceMotorTaskRepeat():
     actionname = data.get('action')
     motorid = data.get('motorid')
     speed = data.get("speed")
-    speedconstant = data.get("speedconstant")
     repeat = data.get("repeat")
     target = data.get("target")  
 
-    speedfinal=int(int(speed)*int(speedconstant))
+    speedfinal=int(speed)
+
+    if speedfinal<=0 or speedfinal>=3600:
+        print("电机单次运转失败!")
+        return jsonify({"status": "fail","message": f"运转失败!错误:速度异常"}) 
+
+
     repeatfinal=int(repeat)
     actionnamefinal=f"{actionname}_{ICE_MOTORID_NAME_MAP[int(motorid)]}"
     

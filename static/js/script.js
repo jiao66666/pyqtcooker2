@@ -1037,8 +1037,7 @@ function runlongIceMotor(positive) {
             body: JSON.stringify({
                 positive:positive,
                 motorid:motorid,
-                speed:speed,
-                speedconstant:constant.value
+                speed:Math.max(Number(speed),Number(constant.value))
             })
         })
         .then(response => response.json())
@@ -1084,8 +1083,7 @@ function goInOutIceMotor(directionstr) {
             body: JSON.stringify({
                 directionstr:directionstr,
                 motorid:motorid,
-                speed:speed,
-                speedconstant:constant.value
+                speed:Math.max(Number(speed),Number(constant.value))
             })
         })
         .then(response => response.json())
@@ -1400,8 +1398,7 @@ function testIceMotorTaskRepeat(actionname) {
             body: JSON.stringify({
                 action:actionname,
                 motorid:motorid,
-                speed:speed,
-                speedconstant:speedconstant.value,
+                speed:Math.max(Number(speed),Number(speedconstant.value)),
                 repeat:repeat.value,
                 target:circle.value
             })

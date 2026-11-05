@@ -44,9 +44,6 @@
                 <div class="stopallbtn">
                     <button onclick="stopall()">紧急停止</button>
                 </div>
-                <!--<div class="initbtn">
-                    <button onclick="initall()">初始化/恢复</button>
-                </div>-->
             </div>
         </div>
         <hr style="border: 1px dotted #ccc; width: 100%; margin: 5px auto;">
@@ -539,22 +536,22 @@
     </div>
 
     <div id="tab7" class="tab-content">
-        <div class="speed_container hidden">
+        <div class="speed_container">
             <label id="speed" data-speed="1">电机速度:</label>
-            <div class="speed_circle" onclick="setSpeed(this,1)">
-                1
+            <div class="speed_circle" onclick="setSpeed(this,90)">
+                90
             </div>
-            <div class="speed_circle" onclick="setSpeed(this,2)">
-                2
+            <div class="speed_circle" onclick="setSpeed(this,180)">
+                180
             </div>
-            <div class="speed_circle" onclick="setSpeed(this,3)">
-                3
+            <div class="speed_circle" onclick="setSpeed(this,360)">
+                360
             </div>
-            <div class="speed_circle" onclick="setSpeed(this,4)">
-                4
+            <div class="speed_circle" onclick="setSpeed(this,720)">
+                720
             </div>
-            <div class="speed_circle" onclick="setSpeed(this,5)">
-                5
+            <div class="speed_circle" onclick="setSpeed(this,1800)">
+                1800
             </div>
         </div>
 
@@ -579,8 +576,8 @@
         <div class="ice_container outlined pad5 mt5">   
             <div class="ice_container_col br">
                 <div class="new_input_circle">
-                    <label for="circle_speeconstant" class="input_tag">速度系数:</label>
-                    <input class="input-classic w60" type="number" id="circleice_speedconstant" placeholder="请输入速度系数" value="360"/>
+                    <label for="circle_speeconstant" class="input_tag">速度值:</label>
+                    <input class="input-classic w60" type="number" id="circleice_speedconstant" placeholder="请输入速度值" value="360"/>
                 </div>
                 <div class="new_input_circle">
                     <label for="circleice_valabs" class="input_tag">目标位置:</label>
