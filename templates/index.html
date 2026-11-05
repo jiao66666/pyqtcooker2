@@ -626,6 +626,11 @@
     <div id="tab8" class="tab-content">
         <div class="ice_btn" onclick="zeroIceMotorAll()">冰柜整机复位</div>
         <hr style="border: 1px dotted #ccc; width: 100%; margin: 5px auto;">
+
+        <div class="">
+            
+        </div>
+
         <div class="new_input_circle">
             <label for="ice_taskspeed" class="input_tag">速度:</label>
             <input class="input-classic w60" type="number" id="ice_taskspeed" placeholder="请输入速度" value="360"/>
@@ -634,7 +639,7 @@
             <label for="ice_taskrepeat" class="input_tag">执行次数:</label>
             <input class="input-classic w60" type="number" id="ice_taskrepeat" placeholder="请输入想要执行次数" value= "1"/>
         </div>
-        <div class="tastmotorid_select_row">
+        <!--<div class="tastmotorid_select_row">
             <label for="icestorageid">位置号:</label>
             <select id="icestorageid" name="icestorageid">
                 <option value="1">1</option>
@@ -662,11 +667,11 @@
                 <option value="23">23</option>
                 <option value="24">24</option>
             </select>
-        </div>
+        </div>-->
         <div class="ice_btn" onclick="iceMotorPutTask()">冰柜取-放盒子整体测试</div>
         <hr style="border: 1px dotted #ccc; width: 100%; margin: 15px auto;">
         <div class="tastmotorid_select_row">
-            <label for="icestepindex">位置号:</label>
+            <label for="icestepindex">动作列表:</label>
             <select id="icestepindex" name="icestepindex">
                 <option value="0">[0]X轴移出入轨</option>
                 <option value="1">[1]Y轴移出至取盒轨道</option>
