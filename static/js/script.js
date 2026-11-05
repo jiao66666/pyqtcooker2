@@ -1022,7 +1022,7 @@ function runlongIceMotor(positive) {
             return;
         }
 
-        if(constant.value>1080 || constant.value<=0){
+        if(constant.value>3600 || constant.value<=0){
             alert("绝对位置值不合法！");
             return;
         }
@@ -1069,7 +1069,7 @@ function goInOutIceMotor(directionstr) {
             return;
         }
 
-        if(constant.value>1080 || constant.value<=0){
+        if(constant.value>3600 || constant.value<=0){
             alert("绝对位置值不合法！");
             return;
         }
