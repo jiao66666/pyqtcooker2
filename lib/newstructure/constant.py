@@ -44,12 +44,9 @@ ICE_MOTOR_LIST = [ICE_MOTOR_X,ICE_MOTOR_DOOR,ICE_MOTOR_Y,ICE_MOTOR_Z,ICE_MOTOR_S
 
 ICE_MOTOR_DOOR_TARGET_SPEED = 360   #冰柜门关门转速
 ICE_MOTOR_DOOR_TARGET_POS   = 3.28  #冰柜门关门绝对值坐标
-ICE_SAFE_Y_POS              = 2.75   #Y轴安全位置（方便X移动时候不撞）   
-ICE_X_OUTTRACK_POS          = 2.2   #X轴出去取盒子第一移动轨道
-ICE_Y_OUTTRACK_POS          = 3.36  #Y轴出去取盒子第一移动轨道
 ICE_Z_OUTTRACK_POS          = 4.0   #Z轴准备碰盒子前位置 
+ICE_Y_OUTTRACK_POS          = 2.50   #Y轴准备取盒位置 
 ICE_X_TOUCH_POS             = 2.58   #X轴碰盒子最终位置 
-ICE_X_PUTTRACK_POS          = 8.8   #X轴放盒子前轨道
 
 ICE_Z_FINALPUT_POS          = 4.83  #Z轴最终放盒位置 
 ICE_Y_FINALPUT_POS          = 0.24  #Y轴最终放盒位置 
@@ -320,29 +317,23 @@ ACTION_PARAMS_KEYLIST = {
     "ice_reset_task":[
         ("z","icemotor_resetzero","reset"),
         ("y","icemotor_resetzero","reset"),
-        ("y","icemotor_gotosafey","go"),
         ("x","icemotor_resetzero","reset"),
         ("y","icemotor_resetzero","reset"),
         ("d","icemotor_resetzero","reset"),
         ("d","icemotor_closedoor","go")
     ],
     "ice_put_task":[   
-        ("x","icemotor_x_outtrack","go"),
-        ("y","icemotor_y_outtrack","go"),
         ("z","icemotor_z_outtrack","go"),
+        ("y","icemotor_y_outtrack","go"),
         ("x","icemotor_x_touch","go"),
         ("ml","icemotor_ml_suck","on"),
-        ("z","icemotor_resetzero","reset"),
-        ("y","icemotor_gotosafey","go"),
-        ("x","icemotor_x_puttrack","go"),
+        ("z","icemotor_resetzero_fast","reset"),
         ("y","icemotor_resetzero","reset"),
         ("z","icemotor_z_finalputpos","go"),
         ("y","icemotor_y_finalputpos","go"),
         ("x","icemotor_x_finalputpos","go"),
         ("ml","icemotor_ml_suck","off"),
-        ("x","icemotor_x_puttrack","go"),
         ("z","icemotor_resetzero","reset"),
-        ("y","icemotor_gotosafey","go"),
         ("x","icemotor_resetzero","reset"),
         ("y","icemotor_resetzero","reset")
     ]
@@ -595,29 +586,26 @@ ACTION_PARAMS_CONFIG = {
         "target":0,
         "direction":1
     },
+    "icemotor_resetzero_fast":{
+        "speed":1800,
+        "target":0,
+        "direction":1
+    },
     "icemotor_moveout":{
         "speed":90,
         "target":0
-    },
-    "icemotor_gotosafey":{
-        "speed":360,
-        "target":ICE_SAFE_Y_POS
     },
     "icemotor_closedoor":{
         "speed":360,
         "target":ICE_MOTOR_DOOR_TARGET_POS
     },
-    "icemotor_x_outtrack":{
+    "icemotor_z_outtrack":{
         "speed":360,
-        "target":ICE_X_OUTTRACK_POS
+        "target":ICE_Z_OUTTRACK_POS
     },
     "icemotor_y_outtrack":{
         "speed":360,
         "target":ICE_Y_OUTTRACK_POS
-    },
-    "icemotor_z_outtrack":{
-        "speed":360,
-        "target":ICE_Z_OUTTRACK_POS
     },
     "icemotor_x_touch":{
         "speed":90,
@@ -625,10 +613,6 @@ ACTION_PARAMS_CONFIG = {
     },
     "icemotor_ml_suck":{
         "delay":1.5
-    },
-    "icemotor_x_puttrack":{
-        "speed":360,
-        "target":ICE_X_PUTTRACK_POS
     },
     "icemotor_z_finalputpos":{
         "speed":720,
