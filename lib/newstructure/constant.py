@@ -327,7 +327,7 @@ ACTION_PARAMS_KEYLIST = {
         ("y","icemotor_y_outtrack","go"),
         ("x","icemotor_x_touch","go"),
         ("ml","icemotor_ml_suck","on"),
-        ("z","icemotor_resetzero_fast","reset"),
+        ("z","icemotor_z_zero","go"),
         ("y","icemotor_resetzero","reset"),
         ("z","icemotor_z_finalputpos","go"),
         ("y","icemotor_y_finalputpos","go"),
@@ -586,7 +586,7 @@ ACTION_PARAMS_CONFIG = {
         "target":0,
         "direction":1
     },
-    "icemotor_resetzero_fast":{
+    "icemotor_z_zero":{
         "speed":1800,
         "target":0,
         "direction":1
