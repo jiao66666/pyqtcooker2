@@ -44,7 +44,7 @@ ICE_MOTOR_LIST = [ICE_MOTOR_X,ICE_MOTOR_DOOR,ICE_MOTOR_Y,ICE_MOTOR_Z,ICE_MOTOR_S
 
 ICE_MOTOR_DOOR_TARGET_SPEED = 360    #冰柜门关门转速
 ICE_MOTOR_DOOR_TARGET_POS   = 3.28   #冰柜门关门绝对值坐标
-ICE_Z_OUTTRACK_POS          = 95.5   #Z轴准备碰盒子前位置 
+ICE_Z_OUTTRACK_POS          = 93.78  #Z轴准备碰盒子前位置 
 ICE_Y_OUTTRACK_POS          = 1.04   #Y轴准备取盒位置 
 ICE_X_TOUCH_POS             = 2.33   #X轴碰盒子最终位置 
 ICE_X_BACK_POS              = 10.0   #X轴送完盒子回退一点方便Z升降
@@ -63,10 +63,10 @@ ICE_MOTORID_NAME_MAP ={
 
 
 ICE_STORAGE_MAP = {
-    1:  {"x": 12, "y": 0.24, "z": 4.83},
-    2:  {"x": 12, "y": 2.14, "z": 3.55},
-    3:  {"x": 12, "y": 0.24, "z": 24.6},
-    4:  {"x": 12, "y": 2.15, "z": 22.6},
+    1:  {"x": 12, "y": 0.24, "z": 3.11},
+    2:  {"x": 12, "y": 2.14, "z": 1.83},
+    3:  {"x": 12, "y": 0.24, "z": 22.88},
+    4:  {"x": 12, "y": 2.15, "z": 20.88},
     5:  {"x": 0, "y": 0, "z": 0},
     6:  {"x": 0, "y": 0, "z": 0},
     7:  {"x": 0, "y": 0, "z": 0},
