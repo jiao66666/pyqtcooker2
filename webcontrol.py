@@ -908,7 +908,7 @@ def zeroIceMotorAll():
 def iceMotorPutTask():
     print("运行冰柜取放盒子动作")
     data = request.get_json()
-    speed = data.get("speed")
+    #speed = data.get("speed")
     pos = data.get("pos")
     repeat = data.get("repeat")
 
@@ -951,14 +951,26 @@ def iceMotorPutTask():
 def iceMotorPutTaskByStep():
     print("运行冰柜取放盒子分步动作")
     data = request.get_json()
-    speed = data.get("speed")
+    #speed = data.get("speed")
     pos = data.get("pos")
     index = data.get("index")
  
+    final_cordinate = system["icestorage"].get_position(int(pos))
+    print(f"going to put at x:{final_cordinate['x']},y:{final_cordinate['y']},z:{final_cordinate['z']}")
+   
     actionname = "ice_put_task"
-    speedval = int(speed)
+    if actionname not in ACTION_PARAMS_KEYLIST:
+        print("动作名异常!")
+        return jsonify({"status": "fail","message": f"运转失败!错误:动作名异常"})
 
-    print(f"speed:{speed},pos:{pos},index:{index},speed:{speedval}")
+    apply_action_params_override(
+        actionname,
+        {
+            "icemotor_x_finalputpos": {"target":final_cordinate['x']},
+            "icemotor_y_finalputpos":{"target":final_cordinate['y']},
+            "icemotor_z_finalputpos":{"target":final_cordinate['z']}
+        }
+    )
     success = False
     success,msg =  system["iceservice"].run_task_bystep(actionname,int(index))
     if success :
