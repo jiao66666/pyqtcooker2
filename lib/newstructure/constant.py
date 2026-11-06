@@ -594,7 +594,7 @@ ACTION_PARAMS_CONFIG = {
     },
     "icemotor_z_zero":{
         "speed":1800,
-        "target":10
+        "target":5
     },
     "icemotor_moveout":{
         "speed":90,
