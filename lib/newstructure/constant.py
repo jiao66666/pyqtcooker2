@@ -63,9 +63,9 @@ ICE_MOTORID_NAME_MAP ={
 
 
 ICE_STORAGE_MAP = {
-    1:  {"x": 12, "y": 0.24, "z": 3.11},
+    1:  {"x": 12, "y": 0.20, "z": 4.27},
     2:  {"x": 12, "y": 2.14, "z": 1.83},
-    3:  {"x": 12, "y": 0.24, "z": 22.88},
+    3:  {"x": 12, "y": 0.20, "z": 22.88},
     4:  {"x": 12, "y": 2.15, "z": 20.88},
     5:  {"x": 0, "y": 0, "z": 0},
     6:  {"x": 0, "y": 0, "z": 0},
@@ -320,8 +320,8 @@ ACTION_PARAMS_KEYLIST = {
         ("y","icemotor_resetzero","reset"),
         ("x","icemotor_resetzero","reset"),
         ("y","icemotor_resetzero","reset"),
-        ("d","icemotor_resetzero","reset"),
-        ("d","icemotor_closedoor","go")
+        #("d","icemotor_resetzero","reset"),
+        #("d","icemotor_closedoor","go")
     ],
     "ice_put_task":[   
         ("z","icemotor_z_outtrack","go"),
