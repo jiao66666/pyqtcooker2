@@ -923,18 +923,9 @@ def iceMotorPutTask():
     print(f"going to put at x:{final_cordinate['x']},y:{final_cordinate['y']},z:{final_cordinate['z']}")
    
     actionname = "ice_put_task"
-    speedval = int(speed)
     if actionname not in ACTION_PARAMS_KEYLIST:
         print("动作名异常!")
         return jsonify({"status": "fail","message": f"运转失败!错误:动作名异常"})
-
-    apply_action_params_override_bymotortype(
-        actionname,
-        {
-            "y": {"speed": speedval},
-            "z": {"speed": speedval}
-        }
-    )
 
     apply_action_params_override(
         actionname,
