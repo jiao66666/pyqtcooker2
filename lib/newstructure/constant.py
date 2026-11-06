@@ -44,9 +44,9 @@ ICE_MOTOR_LIST = [ICE_MOTOR_X,ICE_MOTOR_DOOR,ICE_MOTOR_Y,ICE_MOTOR_Z,ICE_MOTOR_S
 
 ICE_MOTOR_DOOR_TARGET_SPEED = 360   #冰柜门关门转速
 ICE_MOTOR_DOOR_TARGET_POS   = 3.28  #冰柜门关门绝对值坐标
-ICE_Z_OUTTRACK_POS          = 94.52   #Z轴准备碰盒子前位置 
+ICE_Z_OUTTRACK_POS          = 95.5   #Z轴准备碰盒子前位置 
 ICE_Y_OUTTRACK_POS          = 2.0   #Y轴准备取盒位置 
-ICE_X_TOUCH_POS             = 2.60   #X轴碰盒子最终位置 
+ICE_X_TOUCH_POS             = 2.33   #X轴碰盒子最终位置 
 
 ICE_Z_FINALPUT_POS          = 4.83  #Z轴最终放盒位置 
 ICE_Y_FINALPUT_POS          = 0.24  #Y轴最终放盒位置 
