@@ -599,7 +599,7 @@ ACTION_PARAMS_CONFIG = {
         "target":ICE_MOTOR_DOOR_TARGET_POS
     },
     "icemotor_z_outtrack":{
-        "speed":360,
+        "speed":1800,
         "target":ICE_Z_OUTTRACK_POS
     },
     "icemotor_y_outtrack":{
