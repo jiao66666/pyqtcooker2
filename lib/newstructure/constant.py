@@ -46,6 +46,8 @@ ICE_MOTOR_DOOR_TARGET_SPEED = 360    #冰柜门关门转速
 ICE_MOTOR_DOOR_TARGET_POS   = 3.28   #冰柜门关门绝对值坐标
 ICE_Z_OUTTRACK_POS          = 93.78  #Z轴准备碰盒子前位置 
 ICE_Y_OUTTRACK_POS          = 1.04   #Y轴准备取盒位置 
+ICE_X_OUTTRACK_POS          = 2.0    #Z轴准备碰盒子前位置 
+
 ICE_X_TOUCH_POS             = 2.33   #X轴碰盒子最终位置 
 ICE_X_BACK_POS              = 10.0   #X轴送完盒子回退一点方便Z升降
 
@@ -326,6 +328,7 @@ ACTION_PARAMS_KEYLIST = {
     "ice_put_task":[   
         ("z","icemotor_z_outtrack","go"),
         ("y","icemotor_y_outtrack","go"),
+        ("x","icemotor_x_outtrack","go"),
         ("x","icemotor_x_touch","go"),
         ("ml","icemotor_ml_suck","on"),
         ("z","icemotor_z_zero","go"),
@@ -334,7 +337,6 @@ ACTION_PARAMS_KEYLIST = {
         ("y","icemotor_y_finalputpos","go"),
         ("x","icemotor_x_finalputpos","go"),
         ("ml","icemotor_ml_suck","off"),
-
         ("x","icemotor_x_back","go"),
         ("z","icemotor_resetzero","reset"),
         ("x","icemotor_resetzero","reset"),
@@ -608,6 +610,10 @@ ACTION_PARAMS_CONFIG = {
     "icemotor_y_outtrack":{
         "speed":360,
         "target":ICE_Y_OUTTRACK_POS
+    },
+    "icemotor_x_outtrack":{
+        "speed":720,
+        "target":ICE_X_OUTTRACK_POS
     },
     "icemotor_x_touch":{
         "speed":90,
