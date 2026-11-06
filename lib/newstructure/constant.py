@@ -332,6 +332,7 @@ ACTION_PARAMS_KEYLIST = {
         ("x","icemotor_x_touch","go"),
         ("ml","icemotor_ml_suck","on"),
         ("z","icemotor_z_zero","go"),
+        ("z","icemotor_resetzero","reset"),
         ("y","icemotor_resetzero","reset"),
         ("z","icemotor_z_finalputpos","go"),
         ("y","icemotor_y_finalputpos","go"),
@@ -593,7 +594,7 @@ ACTION_PARAMS_CONFIG = {
     },
     "icemotor_z_zero":{
         "speed":1800,
-        "target":0
+        "target":10
     },
     "icemotor_moveout":{
         "speed":90,
