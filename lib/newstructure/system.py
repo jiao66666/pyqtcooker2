@@ -331,6 +331,7 @@ def init_system():
 
 #启动主TICK循环
 def run_system(system):
+    #暂时关闭冰柜以外的轮询和状态机控制 
     #system["stepmotorpolling"].start()
     #system["spinmotorpolling"].start()
     system["icemotorpolling"].start()
@@ -338,8 +339,8 @@ def run_system(system):
     system["motioncontroller"].start()
     system["websocket"].start()
     system["scancycle"]=ScanCycle([
-        system["pots"][1],
-        system["pots"][2],
+        #system["pots"][1],
+        #system["pots"][2],
         system["ice"]
     ],STATEMACHINE_INTERVAL)
     system["scancycle"].start()
