@@ -49,7 +49,12 @@ ICE_Y_OUTTRACK_POS          = 1.04   #Y轴准备取盒位置
 ICE_X_OUTTRACK_POS          = 2.0    #Z轴准备碰盒子前位置 
 
 ICE_X_TOUCH_POS             = 2.33   #X轴碰盒子最终位置 
-ICE_X_BACK_POS              = 10.0   #X轴送完盒子回退一点方便Z升降
+ICE_X_SAFE_POS              = 10.0   #X轴送完盒子回退一点方便Z升降
+ICE_Z_SAFE_POS              = 10.0   #Z轴安全轨道
+
+ICE_Y_SAFEZERO              = 1.0   #Y轴回零前安全位置
+ICE_Z_SAFEZERO              = 2.0   #Z轴回零前安全位置 
+ICE_X_SAFEZERO              = 1.0   #X轴回零前安全位置    
 
 ICE_Z_FINALPUT_POS          = 4.83  #Z轴最终放盒位置 
 ICE_Y_FINALPUT_POS          = 0.24  #Y轴最终放盒位置 
@@ -331,17 +336,19 @@ ACTION_PARAMS_KEYLIST = {
         ("x","icemotor_x_outtrack","go"),
         ("x","icemotor_x_touch","go"),
         ("ml","icemotor_ml_suck","on"),
-        ("z","icemotor_z_zero","go"),
-        ("z","icemotor_resetzero","reset"),
-        ("y","icemotor_resetzero","reset"),
+        ("z","icemotor_z_safetrack","go"),
+        ("x","icemotor_x_safetrack","go"),
         ("z","icemotor_z_finalputpos","go"),
         ("y","icemotor_y_finalputpos","go"),
         ("x","icemotor_x_finalputpos","go"),
         ("ml","icemotor_ml_suck","off"),
-        ("x","icemotor_x_back","go"),
-        ("z","icemotor_resetzero","reset"),
+        ("x","icemotor_x_safetrack","go"),
+        ("z","icemotor_z_safezero","go"),
+        ("y","icemotor_y_safezero","go"),
+        ("x","icemotor_x_safezero","go"),
         ("x","icemotor_resetzero","reset"),
-        ("y","icemotor_resetzero","reset")
+        ("y","icemotor_resetzero","reset"),
+        ("z","icemotor_resetzero","reset")
     ]
 }
 
@@ -592,10 +599,6 @@ ACTION_PARAMS_CONFIG = {
         "target":0,
         "direction":1
     },
-    "icemotor_z_zero":{
-        "speed":1800,
-        "target":5
-    },
     "icemotor_moveout":{
         "speed":90,
         "target":0
@@ -605,11 +608,11 @@ ACTION_PARAMS_CONFIG = {
         "target":ICE_MOTOR_DOOR_TARGET_POS
     },
     "icemotor_z_outtrack":{
-        "speed":1800,
+        "speed":3600,
         "target":ICE_Z_OUTTRACK_POS
     },
     "icemotor_y_outtrack":{
-        "speed":360,
+        "speed":720,
         "target":ICE_Y_OUTTRACK_POS
     },
     "icemotor_x_outtrack":{
@@ -623,26 +626,38 @@ ACTION_PARAMS_CONFIG = {
     "icemotor_ml_suck":{
         "delay":1.5
     },
-    "icemotor_x_back":{
-        "speed":360,
-        "target":ICE_X_BACK_POS
+    "icemotor_z_safetrack":{
+        "speed":3600,
+        "target":ICE_Z_SAFE_POS
+    },
+    "icemotor_x_safetrack":{
+        "speed":720,
+        "target":ICE_X_SAFE_POS
     },
     "icemotor_z_finalputpos":{
-        "speed":720,
+        "speed":3600,
         "target":ICE_Z_FINALPUT_POS
     },
     "icemotor_y_finalputpos":{
-        "speed":360,
+        "speed":720,
         "target":ICE_Y_FINALPUT_POS
     },
     "icemotor_x_finalputpos":{
         "speed":360,
         "target":ICE_X_FINALPUT_POS
+    },
+    "icemotor_z_safezero":{
+        "speed":3600,
+        "target":ICE_Z_SAFEZERO
+    },
+    "icemotor_y_safezero":{
+        "speed":720,
+        "target":ICE_Y_SAFEZERO
+    },    
+    "icemotor_x_safezero":{
+        "speed":720,
+        "target":ICE_X_SAFEZERO
     }
-
-    
-
-
 }
 
 
@@ -688,7 +703,7 @@ PRIORITY_CONTROL = 1
 PRIORITY_NORMAL = 2
 
 #RS485最大队列命令缓冲数量
-MAX_CMD_NUMS = 2000
+MAX_CMD_NUMS = 5000
 
 #开发测试环境端口配置
 DEV_STEP_PORT = "COM2"
