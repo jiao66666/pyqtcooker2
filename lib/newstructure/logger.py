@@ -1,3 +1,4 @@
+
 import sys
 import os
 import queue
@@ -6,8 +7,10 @@ from datetime import datetime
 
 
 class AsyncTeeLogger:
-    def __init__(self, console, log_path):
+    def __init__(self, console, log_path, capture_all_print=False):
         self.console = console
+        self.capture_all_print = capture_all_print  # 是否记录所有 print
+
         self.queue = queue.Queue(maxsize=50000)
         self.running = True
 
@@ -26,7 +29,7 @@ class AsyncTeeLogger:
         self.worker.start()
 
     def write(self, message):
-        """普通 print：只输出控制台，不写入文件"""
+        """普通 print：控制台输出，根据开关决定是否写入文件"""
 
         if isinstance(message, bytes):
             message = message.decode("utf-8", errors="replace")
@@ -34,10 +37,12 @@ class AsyncTeeLogger:
         self.console.write(message)
         self.console.flush()
 
-    def log_to_file(self, *args, sep=" ", end="\n"):
-        """指定内容写入本地文件，不影响普通 print"""
+        # 开启开关后，所有普通 print 也记录到文件
+        if self.capture_all_print and message:
+            self._put_log(message)
 
-        message = sep.join(str(arg) for arg in args) + end
+    def _put_log(self, message):
+        """统一异步写入队列"""
 
         timestamp = datetime.now().strftime(
             "%Y-%m-%d %H:%M:%S.%f"
@@ -51,6 +56,12 @@ class AsyncTeeLogger:
             with self.dropped_lock:
                 self.dropped += 1
 
+    def log_to_file(self, *args, sep=" ", end="\n"):
+        """指定内容写入本地文件，不影响普通 print"""
+
+        message = sep.join(str(arg) for arg in args) + end
+        self._put_log(message)
+
     def _write_loop(self):
         while self.running or not self.queue.empty():
             try:
@@ -61,7 +72,6 @@ class AsyncTeeLogger:
             try:
                 self.log_file.write(message)
             except Exception as e:
-                # 后台写入异常，不影响业务线程
                 try:
                     self.console.write(
                         f"\n日志文件写入失败: {e}\n"
@@ -105,7 +115,13 @@ def init_logger():
 
     log_path = os.path.join(log_dir, filename)
 
-    logger = AsyncTeeLogger(sys.__stdout__, log_path)
+    # True：记录所有 print
+    # False：只记录主动调用 log_to_file 的内容
+    logger = AsyncTeeLogger(
+        sys.__stdout__,
+        log_path,
+        capture_all_print=True
+    )
 
     sys.stdout = logger
     sys.stderr = logger
