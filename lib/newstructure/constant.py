@@ -326,7 +326,6 @@ ACTION_PARAMS_KEYLIST = {
         ("z","icemotor_resetzero","reset"),
         ("y","icemotor_resetzero","reset"),
         ("x","icemotor_resetzero","reset"),
-        ("y","icemotor_resetzero","reset"),
         #("d","icemotor_resetzero","reset"),
         #("d","icemotor_closedoor","go")
     ],
