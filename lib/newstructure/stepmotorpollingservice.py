@@ -178,8 +178,11 @@ class StepMotorPollingService:
 
                 elif status_code == "2":
 
-                    print(
-                        f"电机 {motor_id} 状态：ORGING（复位中）"
+                    print(f"电机 {motor_id} 状态：ORGING（复位中）")
+
+                    runtime.set_started(
+                        motor_id,
+                        board_id=self.board_id
                     )
 
                     # 复位中，不触发完成
