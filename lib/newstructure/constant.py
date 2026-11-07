@@ -52,7 +52,7 @@ ICE_X_TOUCH_POS             = 2.33   #X轴碰盒子最终位置
 ICE_X_SAFE_POS              = 9.5    #X轴送完盒子回退一点方便Z升降
 ICE_Z_SAFE_POS              = 10.0   #Z轴安全轨道
 
-ICE_Y_SAFEZERO              = 0.2   #Y轴回零前安全位置
+ICE_Y_SAFEZERO              = 0.10   #Y轴回零前安全位置
 ICE_Z_SAFEZERO              = 2.0   #Z轴回零前安全位置 
 ICE_X_SAFEZERO              = 1.0   #X轴回零前安全位置    
 
@@ -650,7 +650,7 @@ ACTION_PARAMS_CONFIG = {
         "target":ICE_Z_SAFEZERO
     },
     "icemotor_y_safezero":{
-        "speed":360,
+        "speed":720,
         "target":ICE_Y_SAFEZERO
     },    
     "icemotor_x_safezero":{
