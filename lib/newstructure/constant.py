@@ -53,7 +53,7 @@ ICE_X_SAFE_POS              = 9.5    #X轴送完盒子回退一点方便Z升降
 ICE_Z_SAFE_POS              = 10.0   #Z轴安全轨道
 
 ICE_Y_SAFEZERO              = 0.2   #Y轴回零前安全位置
-ICE_Z_SAFEZERO              = 2.0   #Z轴回零前安全位置 
+ICE_Z_SAFEZERO              = 5.0   #Z轴回零前安全位置 
 ICE_X_SAFEZERO              = 1.0   #X轴回零前安全位置    
 
 ICE_Z_FINALPUT_POS          = 4.83  #Z轴最终放盒位置 
