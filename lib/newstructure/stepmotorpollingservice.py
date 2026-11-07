@@ -163,7 +163,7 @@ class StepMotorPollingService:
                     )
 
                     # 只有当前电机存在运行任务时才处理完成
-                    if not runtime.is_busy(motor_id,board_id=self.board_id):
+                    if not runtime.is_busy(motor_id,board_id=self.board_id) or not runtime.is_started(motor_id, board_id=self.board_id):
                         continue
 
                     self._handle_motor_done(motor_id)
@@ -199,6 +199,11 @@ class StepMotorPollingService:
                     print(
                         f"电机 {motor_id} 状态：RUNING（运行中）"
                     )
+                        # 主板确认电机已经进入运行状态
+                    runtime.set_started(
+                        motor_id,
+                        board_id=self.board_id
+                    )
 
                     # ------------------------------------------------
                     # quitinadvance 判断
@@ -227,9 +232,6 @@ class StepMotorPollingService:
                                 f"{curpos} >= {quit_in_advance}"
                             )
 
-                            runtime.set_done(
-                                motor_id,board_id=self.board_id
-                            )
 
                             self._handle_motor_done(motor_id)
 

@@ -62,7 +62,8 @@ class RuntimeContext:
                 "pot_id": pot_id,
 
                 # 位置反馈：尚未获取时为 None
-                "position": None
+                "position": None,
+                "started": False
             }
 
     # ==================================================
@@ -95,6 +96,28 @@ class RuntimeContext:
             self.action_params[key] = params.copy()
 
 
+    def set_started(self, motor_id, board_id):
+        key = (board_id, motor_id)
+
+        with self._lock:
+            info = self.motors.get(key)
+
+            if not info:
+                return False
+
+            if info["state"] != "RUNNING":
+                return False
+
+            info["started"] = True
+            return True
+
+    def is_started(self, motor_id, board_id):
+        key = (board_id, motor_id)
+
+        with self._lock:
+            info = self.motors.get(key)
+            return bool(info and info.get("started", False))
+        
 
     def set_motor_type_action_override(self, motor_type, action_name, params):
         if params is None:
@@ -153,6 +176,7 @@ class RuntimeContext:
 
             info = self.motors[key]
             info["state"] = "RUNNING"
+            info["started"] = False
             info["action"] = action
 
             if pot_id is not None:
@@ -182,6 +206,11 @@ class RuntimeContext:
         with self._lock:
             info = self.motors.get(key)
             if info is None:
+                return None
+
+
+            # 只有 RUNNING 状态才能完成
+            if info["state"] != "RUNNING":
                 return None
 
             # 必须在清理之前获取执行关联信息
@@ -270,6 +299,7 @@ class RuntimeContext:
         info["params"] = {}
         info["task_id"] = None
         info["owner_type"] = None
+        info["started"] = False
 
     # ---------------------------
     # 清理某个锅相关的运行状态
@@ -296,6 +326,7 @@ class RuntimeContext:
             info["params"] = {}
             info["task_id"] = None
             info["owner_type"] = None
+            info["started"] = False
 
             return True                    
 
