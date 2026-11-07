@@ -120,7 +120,7 @@ def init_logger():
     logger = AsyncTeeLogger(
         sys.__stdout__,
         log_path,
-        capture_all_print=False
+        capture_all_print=True
     )
 
     sys.stdout = logger
