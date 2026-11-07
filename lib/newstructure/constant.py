@@ -46,13 +46,13 @@ ICE_MOTOR_DOOR_TARGET_SPEED = 360    #冰柜门关门转速
 ICE_MOTOR_DOOR_TARGET_POS   = 3.28   #冰柜门关门绝对值坐标
 ICE_Z_OUTTRACK_POS          = 93.78  #Z轴准备碰盒子前位置 
 ICE_Y_OUTTRACK_POS          = 1.04   #Y轴准备取盒位置 
-ICE_X_OUTTRACK_POS          = 2.0    #Z轴准备碰盒子前位置 
+ICE_X_OUTTRACK_POS          = 2.2    #Z轴准备碰盒子前位置 
 
 ICE_X_TOUCH_POS             = 2.33   #X轴碰盒子最终位置 
-ICE_X_SAFE_POS              = 10.0   #X轴送完盒子回退一点方便Z升降
+ICE_X_SAFE_POS              = 6.0    #X轴送完盒子回退一点方便Z升降
 ICE_Z_SAFE_POS              = 10.0   #Z轴安全轨道
 
-ICE_Y_SAFEZERO              = 1.0   #Y轴回零前安全位置
+ICE_Y_SAFEZERO              = 0.2   #Y轴回零前安全位置
 ICE_Z_SAFEZERO              = 2.0   #Z轴回零前安全位置 
 ICE_X_SAFEZERO              = 1.0   #X轴回零前安全位置    
 
@@ -612,11 +612,11 @@ ACTION_PARAMS_CONFIG = {
         "target":ICE_Z_OUTTRACK_POS
     },
     "icemotor_y_outtrack":{
-        "speed":720,
+        "speed":1080,
         "target":ICE_Y_OUTTRACK_POS
     },
     "icemotor_x_outtrack":{
-        "speed":720,
+        "speed":1080,
         "target":ICE_X_OUTTRACK_POS
     },
     "icemotor_x_touch":{
@@ -631,7 +631,7 @@ ACTION_PARAMS_CONFIG = {
         "target":ICE_Z_SAFE_POS
     },
     "icemotor_x_safetrack":{
-        "speed":720,
+        "speed":1080,
         "target":ICE_X_SAFE_POS
     },
     "icemotor_z_finalputpos":{
@@ -639,7 +639,7 @@ ACTION_PARAMS_CONFIG = {
         "target":ICE_Z_FINALPUT_POS
     },
     "icemotor_y_finalputpos":{
-        "speed":720,
+        "speed":1080,
         "target":ICE_Y_FINALPUT_POS
     },
     "icemotor_x_finalputpos":{
@@ -651,11 +651,11 @@ ACTION_PARAMS_CONFIG = {
         "target":ICE_Z_SAFEZERO
     },
     "icemotor_y_safezero":{
-        "speed":720,
+        "speed":1080,
         "target":ICE_Y_SAFEZERO
     },    
     "icemotor_x_safezero":{
-        "speed":720,
+        "speed":1080,
         "target":ICE_X_SAFEZERO
     }
 }
