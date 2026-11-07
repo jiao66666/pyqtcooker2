@@ -607,15 +607,15 @@ ACTION_PARAMS_CONFIG = {
         "target":ICE_MOTOR_DOOR_TARGET_POS
     },
     "icemotor_z_outtrack":{
-        "speed":3600,
+        "speed":5400,
         "target":ICE_Z_OUTTRACK_POS
     },
     "icemotor_y_outtrack":{
-        "speed":1080,
+        "speed":1440,
         "target":ICE_Y_OUTTRACK_POS
     },
     "icemotor_x_outtrack":{
-        "speed":1080,
+        "speed":1440,
         "target":ICE_X_OUTTRACK_POS
     },
     "icemotor_x_touch":{
@@ -626,23 +626,23 @@ ACTION_PARAMS_CONFIG = {
         "delay":1.5
     },
     "icemotor_z_safetrack":{
-        "speed":3600,
+        "speed":5400,
         "target":ICE_Z_SAFE_POS
     },
     "icemotor_x_safetrack":{
-        "speed":1080,
+        "speed":1440,
         "target":ICE_X_SAFE_POS
     },
     "icemotor_z_finalputpos":{
-        "speed":3600,
+        "speed":5400,
         "target":ICE_Z_FINALPUT_POS
     },
     "icemotor_y_finalputpos":{
-        "speed":1080,
+        "speed":1440,
         "target":ICE_Y_FINALPUT_POS
     },
     "icemotor_x_finalputpos":{
-        "speed":720,
+        "speed":360,
         "target":ICE_X_FINALPUT_POS
     },
     "icemotor_z_safezero":{
@@ -654,7 +654,7 @@ ACTION_PARAMS_CONFIG = {
         "target":ICE_Y_SAFEZERO
     },    
     "icemotor_x_safezero":{
-        "speed":1080,
+        "speed":1440,
         "target":ICE_X_SAFEZERO
     }
 }
