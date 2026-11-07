@@ -626,11 +626,21 @@
     <div id="tab8" class="tab-content">
         <div class="ice_btn" onclick="zeroIceMotorAll()">冰柜整机复位</div>
         <hr style="border: 1px dotted #ccc; width: 100%; margin: 5px auto;">
-
-        <div class="new_input_circle hidden">
-            <label for="ice_taskspeed" class="input_tag">速度:</label>
-            <input class="input-classic w60" type="number" id="ice_taskspeed" placeholder="请输入速度" value="360"/>
+        <div class="ice_row_container">
+            <div class="new_input_circle">
+                <label for="ice_taskspeed_x" class="input_tag">X速度:</label>
+                <input class="input-classic w60" type="number" id="ice_taskspeed_x" placeholder="请输入速度" value="1440"/>
+            </div>
+            <div class="new_input_circle">
+                <label for="ice_taskspeed_y" class="input_tag">Y速度:</label>
+                <input class="input-classic w60" type="number" id="ice_taskspeed_y" placeholder="请输入速度" value="1440"/>
+            </div>
+            <div class="new_input_circle">
+                <label for="ice_taskspeed_z" class="input_tag">Z速度:</label>
+                <input class="input-classic w60" type="number" id="ice_taskspeed_z" placeholder="请输入速度" value="5400"/>
+            </div>
         </div>
+
         <div class="new_input_circle">
             <label for="ice_taskrepeat" class="input_tag">执行次数:</label>
             <input class="input-classic w60" type="number" id="ice_taskrepeat" placeholder="请输入想要执行次数" value= "1"/>

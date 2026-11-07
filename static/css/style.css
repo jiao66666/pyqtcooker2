@@ -1054,3 +1054,8 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
 .mt10{
     margin-top:10px;
 }
+
+.ice_row_container{
+    display: flex;
+    flex-flow: row nowrap;
+}

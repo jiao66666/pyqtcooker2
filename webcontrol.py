@@ -908,11 +908,13 @@ def zeroIceMotorAll():
 def iceMotorPutTask():
     print("运行冰柜取放盒子动作")
     data = request.get_json()
-    #speed = data.get("speed")
+    speed_x = data.get("speed_x")
+    speed_y = data.get("speed_y")
+    speed_z = data.get("speed_z")
     pos = data.get("pos")
     repeat = data.get("repeat")
 
-
+    print(f"speed x:{speed_x},speed y:{speed_y},speed_z:{speed_z}")
     done_tested_pos = 4
     if int(pos) > done_tested_pos:
         print("位置号异常!")
@@ -931,8 +933,15 @@ def iceMotorPutTask():
         actionname,
         {
             "icemotor_x_finalputpos": {"target":final_cordinate['x']},
-            "icemotor_y_finalputpos":{"target":final_cordinate['y']},
-            "icemotor_z_finalputpos":{"target":final_cordinate['z']}
+            "icemotor_y_finalputpos":{"target":final_cordinate['y'],"speed":int(speed_y)},
+            "icemotor_z_finalputpos":{"target":final_cordinate['z'],"speed":int(speed_z)},
+            "icemotor_x_outtrack":{"speed":int(speed_x)},
+            "icemotor_x_safetrack":{"speed":int(speed_x)},
+            "icemotor_x_safezero":{"speed":int(speed_x)},
+            "icemotor_y_outtrack":{"speed":int(speed_y)},
+            "icemotor_z_outtrack":{"speed":int(speed_z)},
+            "icemotor_z_safetrack":{"speed":int(speed_z)},
+            "icemotor_z_safezero":{"speed":int(speed_z)}
         }
     )
     
@@ -951,10 +960,13 @@ def iceMotorPutTask():
 def iceMotorPutTaskByStep():
     print("运行冰柜取放盒子分步动作")
     data = request.get_json()
-    #speed = data.get("speed")
+    speed_x = data.get("speed_x")
+    speed_y = data.get("speed_y")
+    speed_z = data.get("speed_z")
     pos = data.get("pos")
     index = data.get("index")
- 
+
+    print(f"speed x:{speed_x},speed y:{speed_y},speed_z:{speed_z}")
     final_cordinate = system["icestorage"].get_position(int(pos))
     print(f"going to put at x:{final_cordinate['x']},y:{final_cordinate['y']},z:{final_cordinate['z']}")
    
@@ -967,8 +979,15 @@ def iceMotorPutTaskByStep():
         actionname,
         {
             "icemotor_x_finalputpos": {"target":final_cordinate['x']},
-            "icemotor_y_finalputpos":{"target":final_cordinate['y']},
-            "icemotor_z_finalputpos":{"target":final_cordinate['z']}
+            "icemotor_y_finalputpos":{"target":final_cordinate['y'],"speed":int(speed_y)},
+            "icemotor_z_finalputpos":{"target":final_cordinate['z'],"speed":int(speed_z)},
+            "icemotor_x_outtrack":{"speed":int(speed_x)},
+            "icemotor_x_safetrack":{"speed":int(speed_x)},
+            "icemotor_x_safezero":{"speed":int(speed_x)},
+            "icemotor_y_outtrack":{"speed":int(speed_y)},
+            "icemotor_z_outtrack":{"speed":int(speed_z)},
+            "icemotor_z_safetrack":{"speed":int(speed_z)},
+            "icemotor_z_safezero":{"speed":int(speed_z)}
         }
     )
     success = False

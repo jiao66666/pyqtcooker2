@@ -1229,18 +1229,46 @@ function zeroIceMotorDC(motorid,status) {
 function iceMotorPutTask() {
 
 
-        var speed = document.getElementById("ice_taskspeed");
-        console.log("speed:", speed.value);
+        var speed_x = document.getElementById("ice_taskspeed_x");
+        console.log("speed:", speed_x.value);
 
-        if(speed.value == "" || isNaN(speed.value)){
+        if(speed_x.value == "" || isNaN(speed_x.value)){
             alert("请输入有效的速度值！");
             return;
         }
 
-        if(speed.value>3600 || speed.value<=0){
+        if(speed_x.value>3600 || speed_x.value<=0){
             alert("速度值不合法！");
             return;
         }
+
+        var speed_y = document.getElementById("ice_taskspeed_y");
+        console.log("speed:", speed_y.value);
+
+        if(speed_y.value == "" || isNaN(speed_y.value)){
+            alert("请输入有效的速度值！");
+            return;
+        }
+
+        if(speed_y.value>3600 || speed_y.value<=0){
+            alert("速度值不合法！");
+            return;
+        }
+
+
+        var speed_z = document.getElementById("ice_taskspeed_z");
+        console.log("speed:", speed_z.value);
+
+        if(speed_z.value == "" || isNaN(speed_z.value)){
+            alert("请输入有效的速度值！");
+            return;
+        }
+
+        if(speed_z.value>10800 || speed_z.value<=0){
+            alert("速度值不合法！");
+            return;
+        }
+
 
         var repeat = document.getElementById("ice_taskrepeat");
         if((isNaN(repeat.value) ||repeat.value<=0)){
@@ -1258,7 +1286,9 @@ function iceMotorPutTask() {
                 'Content-Type': 'application/json'  
             },
             body: JSON.stringify({
-                speed:speed.value,
+                speed_x:speed_x.value,
+                speed_y:speed_y.value,
+                speed_z:speed_z.value,
                 repeat:repeat.value,
                 pos:pos.value
             })
@@ -1277,16 +1307,42 @@ function iceMotorPutTask() {
 
 function iceMotorPutTaskByStep() {
 
+        var speed_x = document.getElementById("ice_taskspeed_x");
+        console.log("speed:", speed_x.value);
 
-        var speed = document.getElementById("ice_taskspeed");
-        console.log("speed:", speed.value);
-
-        if(speed.value == "" || isNaN(speed.value)){
+        if(speed_x.value == "" || isNaN(speed_x.value)){
             alert("请输入有效的速度值！");
             return;
         }
 
-        if(speed.value>3600 || speed.value<=0){
+        if(speed_x.value>3600 || speed_x.value<=0){
+            alert("速度值不合法！");
+            return;
+        }
+
+        var speed_y = document.getElementById("ice_taskspeed_y");
+        console.log("speed:", speed_y.value);
+
+        if(speed_y.value == "" || isNaN(speed_y.value)){
+            alert("请输入有效的速度值！");
+            return;
+        }
+
+        if(speed_y.value>3600 || speed_y.value<=0){
+            alert("速度值不合法！");
+            return;
+        }
+
+
+        var speed_z = document.getElementById("ice_taskspeed_z");
+        console.log("speed:", speed_z.value);
+
+        if(speed_z.value == "" || isNaN(speed_z.value)){
+            alert("请输入有效的速度值！");
+            return;
+        }
+
+        if(speed_z.value>10800 || speed_z.value<=0){
             alert("速度值不合法！");
             return;
         }
@@ -1311,7 +1367,9 @@ function iceMotorPutTaskByStep() {
                 'Content-Type': 'application/json'  
             },
             body: JSON.stringify({
-                speed:speed.value,
+                speed_x:speed_x.value,
+                speed_y:speed_y.value,
+                speed_z:speed_z.value,
                 pos:pos.value,
                 index:icestepindex.value
             })

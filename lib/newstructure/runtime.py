@@ -1,5 +1,6 @@
 import threading
 from lib.newstructure.constant import *
+import copy
 
 
 class RuntimeContext:
@@ -93,7 +94,10 @@ class RuntimeContext:
             params = {}
 
         with self._lock:
-            self.action_params[key] = params.copy()
+            if key not in self.action_params:
+                self.action_params[key] = {}
+
+            self.action_params[key].update(copy.deepcopy(params))
 
 
     def set_started(self, motor_id, board_id):
