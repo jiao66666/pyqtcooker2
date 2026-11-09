@@ -933,15 +933,8 @@ def iceMotorPutTask():
         actionname,
         {
             "icemotor_x_finalputpos": {"target":final_cordinate['x']},
-            "icemotor_y_finalputpos":{"target":final_cordinate['y'],"speed":int(speed_y)},
-            "icemotor_z_finalputpos":{"target":final_cordinate['z'],"speed":int(speed_z)},
-            "icemotor_x_outtrack":{"speed":int(speed_x)},
-            "icemotor_x_safetrack":{"speed":int(speed_x)},
-            "icemotor_x_safezero":{"speed":int(speed_x)},
-            "icemotor_y_outtrack":{"speed":int(speed_y)},
-            "icemotor_z_outtrack":{"speed":int(speed_z)},
-            "icemotor_z_safetrack":{"speed":int(speed_z)},
-            "icemotor_z_safezero":{"speed":int(speed_z)}
+            "icemotor_y_finalputpos":{"target":final_cordinate['y']},
+            "icemotor_z_finalputpos":{"target":final_cordinate['z']}
         }
     )
     
