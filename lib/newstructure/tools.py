@@ -1545,6 +1545,7 @@ def _is_channel(value: str) -> bool:
 
 
 
+
 def get_task_resources(task_name, pot_id=None):
     """
     根据动作组名称获取需要占用的全部电机资源。
@@ -1570,6 +1571,18 @@ def get_task_resources(task_name, pot_id=None):
 
     def collect_resources(items):
         for item in items:
+
+            # 并行动作组：递归收集内部所有动作的资源
+            if item[0] == "parallel":
+                if len(item) < 2 or not isinstance(item[1], list):
+                    raise ValueError(
+                        f"动作组 {task_name} 的 parallel 配置格式错误"
+                    )
+
+                collect_resources(item[1])
+                continue
+
+            # 普通动作
             motor_key = item[0]
 
             if motor_key not in motor_resource_map:
@@ -1580,12 +1593,14 @@ def get_task_resources(task_name, pot_id=None):
 
             resources.add(motor_resource_map[motor_key])
 
+            # 原有的备选动作资源收集逻辑
             if len(item) > 3 and isinstance(item[3], list):
                 collect_resources(item[3])
 
     collect_resources(template)
 
     return resources
+
 
 
 def get_task_resources_bystep(task_name, index, pot_id=None):

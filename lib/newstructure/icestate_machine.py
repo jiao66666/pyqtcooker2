@@ -18,6 +18,15 @@ class IceStateMachine:
         self.total_repeat = 0
         self.current_repeat = 0
 
+
+        # 当前动作执行类型
+        self.current_action_type = "single"
+        # 并行动作组中尚未完成的电机
+        # {(board_id, motor_id): step}
+        self.parallel_pending = {}
+        # 当前并行动作组
+        self.parallel_actions = []        
+
         
         # 订阅电机完成事件
         self.bus.subscribe("ICE_MOTOR_DONE", self.on_icemotor_done)
@@ -53,6 +62,10 @@ class IceStateMachine:
         self.total_repeat = 0
         self.current_repeat = 0
 
+        self.parallel_pending.clear()
+        self.parallel_actions = []
+        self.current_action_type = "single"
+
     def tick(self):
         if self.state in ["STOPPED"]:
             print(f"ice state machine state is STOPPED")
@@ -74,7 +87,12 @@ class IceStateMachine:
         elif self.state == "RUNNING":
             print(f"ice machine state is RUNNING,current step is:{self.steps[self.current_step]}")
             step = self.steps[self.current_step]
-            if step["type"] == "step_ice":
+
+
+
+            if step["type"] == "parallel_ice":
+                self.start_parallel_actions(step["actions"])
+            elif step["type"] == "step_ice":
                 print(f"<<<<<<<<<<<current action is {step['action']}>>>>>>>>>>>>")
                 print(f"icemotor运行参数如下:{step['params']}")
                 
@@ -127,19 +145,35 @@ class IceStateMachine:
                 self.go_next_step("on_icedc_done")
                 if self.current_step >= len(self.steps):
                     self.state = "DONE"
+                else:
+                    self.state = "RUNNING"
    
         elif self.state == "WAITING":
             if time.time() - self.wait_start_time > TIMEOUT:
                 print("motor time out !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+
                 step = self.steps[self.current_step]
-                #system = get_system()
-                #system["stepmotorsmanager"].stop_all_motors()
+
+                if self.current_action_type == "parallel":
+
+                    self.error_info = {
+                        "step": self.current_step,
+                        "actions": [
+                            item["action"]
+                            for item in self.parallel_pending.values()
+                        ],
+                        "reason": "parallel_timeout"
+                    }
+
+                else:
+
+                    self.error_info = {
+                        "step": self.current_step,
+                        "action": step["action"],
+                        "reason": "timeout"
+                    }
+
                 self.state = "ERROR"
-                self.error_info = {
-                    "step": self.current_step,
-                    "action": step["action"],
-                    "reason": "timeout"
-                }
 
         elif self.state == "DONE":
             print("ice machine state is DONE")
@@ -175,8 +209,80 @@ class IceStateMachine:
 
         elif self.state == "ERROR":
             print(f"ice machine state is ERROR")  
-            self.bus.unsubscribe("MOTOR_ERROR", self.on_motor_error)
-  
+
+
+
+
+    def start_parallel_actions(self, actions):
+
+        print("========== 开始执行并行动作组 ==========")
+
+        self.current_action_type = "parallel"
+
+        self.parallel_actions = actions
+        self.parallel_pending = {}
+
+        # 第一步：检查并登记所有电机
+        for step in actions:
+
+            if step["type"] != "step_ice":
+                print(f"当前并行动作组暂不支持该电机类型: {step['type']}")
+                self.state = "ERROR"
+                return
+
+            motor_id = step["motor"].motor_id
+            resource_id = (BOARDTYPE_ICE, motor_id)
+
+            # 一个并行动作组中不允许重复使用同一个电机
+            if resource_id in self.parallel_pending:
+                print(f"并行动作组存在重复电机: {resource_id}")
+                self.state = "ERROR"
+                return
+
+            if step["dotype"] not in ("go", "reset"):
+                print(f"未知并行动作类型: {step['dotype']}")
+                self.state = "ERROR"
+                return
+
+            self.parallel_pending[resource_id] = step
+
+        # 第二步：提前登记所有电机运行状态
+        for resource_id, step in self.parallel_pending.items():
+
+            runtime.set_running(
+                board_id=resource_id[0],
+                motor_id=resource_id[1],
+                action=step["action"],
+                params=step["params"],
+                task_id=f"{self.running_task_id}"
+            )
+
+        # 第三步：先进入等待状态，再提交运动指令
+        self.state = "WAITING"
+        self.wait_start_time = time.time()
+
+        # 第四步：依次提交三个电机的运动指令
+        for resource_id, step in self.parallel_pending.items():
+
+            print(
+                f"并行启动电机 {resource_id}, "
+                f"action={step['action']}"
+            )
+
+            if step["dotype"] == "reset":
+
+                step["motor"].reset_zero_byspeed(
+                    step["params"]["speed"]
+                )
+
+            elif step["dotype"] == "go":
+
+                step["motor"].go(
+                    step["params"]["target"],
+                    step["params"]["speed"]
+                )
+
+        print("========== 并行动作组启动完成 ==========")
 
     def reset(self):
         self.state = "IDLE"    
@@ -193,7 +299,10 @@ class IceStateMachine:
 
     def reset_step(self):
         print("now reset the step to 0")
-        self.current_step = 0    
+        self.current_step = 0
+        self.current_action_type = "single"
+        self.parallel_pending.clear()
+        self.parallel_actions = []
 
     def on_icemotor_done(self, data):
         print("冰柜步进电机完成运动@@@@@@@@@@@@@@@@@@@@@@@@----statemachine")
@@ -208,6 +317,18 @@ class IceStateMachine:
         if self.state != "WAITING":
             print("》》》状态不对《《《")
             return          
+
+        # ==============================
+        # 并行动作组完成事件
+        # ==============================
+        if self.current_action_type == "parallel":
+
+            self.handle_parallel_motor_done(
+                motor_id,
+                ctx
+            )
+
+            return
 
         step = self.steps[self.current_step]
        
@@ -226,7 +347,55 @@ class IceStateMachine:
         else:
             print(f"current step is:{self.current_step},equal bigger than total{len(self.steps)},set state done!")
             self.state = "DONE"                   #动作组完成，变更状态
-           
+
+
+    def handle_parallel_motor_done(self, motor_id, ctx):
+
+        resource_id = (BOARDTYPE_ICE, motor_id)
+
+        step = self.parallel_pending.get(resource_id)
+
+        if not step:
+            print(f"该电机不属于当前并行动作组: {resource_id}")
+            return
+
+        # 校验动作名称
+        if ctx["action"] != step["action"]:
+
+            print(
+                f"并行电机动作不匹配: "
+                f"{ctx['action']} != {step['action']}"
+            )
+            return
+
+        print(
+            f"并行电机 {motor_id} 完成动作 {step['action']}"
+        )
+
+        # 从等待集合中移除已完成电机
+        self.parallel_pending.pop(resource_id)
+
+        print(
+            f"并行动作剩余等待电机: "
+            f"{list(self.parallel_pending.keys())}"
+        )
+
+        # 所有电机完成
+        if not self.parallel_pending:
+
+            print("========== XYZ 并行动作全部完成 ==========")
+
+            self.parallel_actions = []
+
+            self.go_next_step("parallel_actions_done")
+
+            if self.current_step < len(self.steps):
+
+                self.state = "RUNNING"
+
+            else:
+
+                self.state = "DONE"     
 
     def on_estop(self, data=None):
         print(f"ice machine ESTOP triggered!")

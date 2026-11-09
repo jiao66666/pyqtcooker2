@@ -1021,6 +1021,23 @@ def pauseIceMotor():
         return jsonify({"status": "fail","message": f"提交数据测试失败！错误:{msg}"}) 
 
 
+@app.route('/iceMotorParallelTest', methods=['POST'])
+@require_enabled
+def iceMotorParallelTest():
+    print("动作测试")
+    data = request.get_json()
+    success = False
+
+    taskname = "ice_parallel_test"
+    success,msg = system["iceservice"].run_task(taskname)
+    
+    if success :
+        print("测试成功!")
+        return jsonify({"status": "success","message": f"提交数据测试成功!"})
+    else:
+        print("测试失败!")
+        return jsonify({"status": "fail","message": f"提交数据测试失败！错误:{msg}"}) 
+
 
 
 @app.route('/resetzeroPotmotor', methods=['POST'])

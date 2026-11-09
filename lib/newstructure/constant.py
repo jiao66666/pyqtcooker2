@@ -348,6 +348,13 @@ ACTION_PARAMS_KEYLIST = {
         ("x","icemotor_resetzero","reset"),
         ("y","icemotor_resetzero","reset"),
         ("z","icemotor_resetzero","reset")
+    ],
+    "ice_parallel_test":[
+        ("parallel",[
+            ("z","icemotor_z_outtrack","go"),
+            ("y","icemotor_y_outtrack","go"),
+            ("x","icemotor_x_outtrack","go")
+        ])
     ]
 }
 
@@ -367,14 +374,12 @@ POT_INTAKE_POS   = 10
 
 #子动作参数KEY->命令参数 映射
 #varspeed 决定是否需要变速运行
-#quitinadvance决定动作是否需要同时运行，而非串行运行（默认）
 #pot_params决定1，2锅具体参数的覆盖
 ACTION_PARAMS_CONFIG = {
     "flip_out_togetfood": {
         "speed": BASE_SPEED,
         "target": POT_RESET_POS,
         "varspeed":False,
-        "quitinadvance":0,
         "pot_params": {
             1: {
                 "target": POT1_VSAFE_POS
@@ -388,7 +393,6 @@ ACTION_PARAMS_CONFIG = {
         "speed": BASE_SPEED,
         "target":POT_RESET_POS,
         "varspeed":False,
-        "quitinadvance":0,
         "pot_params": {
             1: {
                 "target": POT1_HSAFE_POS
@@ -402,7 +406,6 @@ ACTION_PARAMS_CONFIG = {
         "speed": BASE_SPEED,
         "target":POT_RESET_POS,
         "varspeed":False,
-        "quitinadvance":0,
         "pot_params": {
             1: {
                 "target": POT1_WAIT_POS
@@ -416,7 +419,6 @@ ACTION_PARAMS_CONFIG = {
         "speed": BASE_SPEED,
         "target":POT_RESET_POS,
         "varspeed":False,
-        "quitinadvance":0,
         "pot_params": {
             1: {
                 "target": POT1_HSAFE_POS
@@ -430,31 +432,26 @@ ACTION_PARAMS_CONFIG = {
         "speed": BASE_SPEED,
         "target":POT_RESET_POS,
         "varspeed":False,
-        "quitinadvance":0
     },
     "flip_in_tofirefood": {
         "speed": BASE_SPEED,
         "target":POT_RESET_POS,
         "varspeed":False,
-        "quitinadvance":0
     },
     "flip_out_pour": {
         "speed": BASE_SPEED,
         "target":POT_POUR_POS,
         "varspeed":False,
-        "quitinadvance":0
     },
     "flip_in_wash": {
         "speed": BASE_SPEED,
         "target":POT_WASH_POS,
         "varspeed":False,
-        "quitinadvance":0
     },
     "flip_out_getfood": {
         "speed": BASE_SPEED,
         "target":POT_RESET_POS,
         "varspeed":False,
-        "quitinadvance":0,
         "pot_params": {
             1: {
                 "target": POT1_VSAFE_POS
@@ -468,7 +465,6 @@ ACTION_PARAMS_CONFIG = {
         "speed": BASE_SPEED,
         "target":POT_RESET_POS,
         "varspeed":False,
-        "quitinadvance":0,
         "pot_params": {
             1: {
                 "target": POT1_VSAFE_POS
@@ -483,31 +479,26 @@ ACTION_PARAMS_CONFIG = {
         "speed": BASE_SPEED,
         "target":POT_POUR_POS,
         "varspeed":False,
-        "quitinadvance":0
     },
     "flip_to_infood":{
         "speed": BASE_SPEED,
         "target":POT_INTAKE_POS,
         "varspeed":False,
-        "quitinadvance":0
     },
     "flip_to_washpot":{
         "speed": BASE_SPEED,
         "target":POT_WASH_POS,
         "varspeed":False,
-        "quitinadvance":0
     },
     "flip_in_firepot":{
         "speed": BASE_SPEED,
         "target":POT_RESET_POS,
         "varspeed":False,
-        "quitinadvance":0
     },
     "move_out":{
         "speed": BASE_SPEED,
         "target":POT_RESET_POS,
         "varspeed":False,
-        "quitinadvance":0,
         "pot_params": {
             1: {
                 "target": POT1_HSAFE_POS
@@ -521,13 +512,11 @@ ACTION_PARAMS_CONFIG = {
         "speed": BASE_SPEED,
         "target":POT_RESET_POS,
         "varspeed":False,
-        "quitinadvance":0
     },
     "flip_out":{
         "speed": BASE_SPEED,
         "target":POT_RESET_POS,
         "varspeed":False,
-        "quitinadvance":0,
         "pot_params": {
             1: {
                 "target": POT1_VSAFE_POS
@@ -541,19 +530,16 @@ ACTION_PARAMS_CONFIG = {
         "speed": BASE_SPEED,
         "target":POT_RESET_POS,
         "varspeed":False,
-        "quitinadvance":0
     },
     "flip_pour":{
         "speed": BASE_SPEED,
         "target":POT_POUR_POS,
         "varspeed":False,
-        "quitinadvance":0
     },
     "flip_wash":{
         "speed": BASE_SPEED,
         "target":POT_WASH_POS,
         "varspeed":False,
-        "quitinadvance":0
     },
     "spin_for_wash":{
         "duration": 10000,

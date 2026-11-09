@@ -208,37 +208,6 @@ class StepMotorPollingService:
                         board_id=self.board_id
                     )
 
-                    # ------------------------------------------------
-                    # quitinadvance 判断
-                    # ------------------------------------------------
-
-                    if not step_params:
-                        continue
-
-                    quit_in_advance = step_params.get(
-                        "quitinadvance",
-                        0
-                    )
-
-                    if quit_in_advance > 0:
-
-                        curpos = runtime.get_position(
-                            motor_id,board_id=self.board_id
-                        )
-
-                        # 达到提前退出位置
-                        if curpos >= quit_in_advance:
-
-                            print(
-                                f"电机 {motor_id} "
-                                f"达到提前退出位置："
-                                f"{curpos} >= {quit_in_advance}"
-                            )
-
-
-                            self._handle_motor_done(motor_id)
-
-
                 # ==================================================
                 # 状态 4
                 #
