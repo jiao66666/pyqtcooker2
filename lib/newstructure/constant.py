@@ -336,27 +336,7 @@ ACTION_PARAMS_KEYLIST = {
         #("d","icemotor_resetzero","reset"),
         #("d","icemotor_closedoor","go")
     ],
-    "ice_put_task":[   
-        ("z","icemotor_z_outtrack","go"),
-        ("y","icemotor_y_outtrack","go"),
-        ("x","icemotor_x_outtrack","go"),
-        ("x","icemotor_x_touch","go"),
-        ("ml","icemotor_ml_suck","on"),
-        ("z","icemotor_z_safetrack","go"),
-        ("x","icemotor_x_safetrack","go"),
-        ("z","icemotor_z_finalputpos","go"),
-        ("y","icemotor_y_finalputpos","go"),
-        ("x","icemotor_x_finalputpos","go"),
-        ("ml","icemotor_ml_suck","off"),
-        ("x","icemotor_x_safetrack","go"),
-        ("z","icemotor_z_safezero","go"),
-        ("y","icemotor_y_safezero","go"),
-        ("x","icemotor_x_safezero","go"),
-        ("x","icemotor_resetzero","reset"),
-        ("y","icemotor_resetzero","reset"),
-        ("z","icemotor_resetzero","reset")
-    ],
-    "ice_parallel_test":[
+    "ice_put_task":[
         ("parallel",[
             ("z","icemotor_z_outtrack","go"),
             ("y","icemotor_y_outtrack","go"),

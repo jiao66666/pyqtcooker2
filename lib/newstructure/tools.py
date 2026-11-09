@@ -1614,8 +1614,14 @@ def get_task_resources(task_name, pot_id=None):
 
 def get_task_resources_bystep(task_name, index, pot_id=None):
     """
-    根据动作组名称和单步序号，获取当前单步需要占用的电机资源。
+    根据任务名称和单步序号，获取当前步骤需要占用的电机资源。
+
+    支持：
+        1. 普通单轴动作
+        2. parallel 并行动作组
+        3. 第四个字段中的备选动作
     """
+
     template = ACTION_PARAMS_KEYLIST.get(task_name)
 
     if template is None:
@@ -1636,16 +1642,30 @@ def get_task_resources_bystep(task_name, index, pot_id=None):
 
     def collect_resources(items):
         for item in items:
+
+            # 并行动作组
+            if item[0] == "parallel":
+
+                if len(item) < 2 or not isinstance(item[1], list):
+                    raise ValueError(
+                        f"任务 {task_name} 中存在无效的 parallel 动作配置"
+                    )
+
+                collect_resources(item[1])
+                continue
+
+            # 普通动作
             motor_key = item[0]
 
             if motor_key not in motor_resource_map:
                 raise ValueError(
-                    f"动作组 {task_name} 中的电机标识 "
+                    f"任务 {task_name} 中的电机标识 "
                     f"{motor_key} 没有对应的资源映射"
                 )
 
             resources.add(motor_resource_map[motor_key])
 
+            # 第四个字段：备选动作
             if len(item) > 3 and isinstance(item[3], list):
                 collect_resources(item[3])
 
