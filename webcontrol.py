@@ -1037,7 +1037,7 @@ def iceMotorParallelTest():
             "y": 0,
             "z": 0
         },
-        total_time=5.6268
+        total_time=7.54
     )
 
     print(speeds)
