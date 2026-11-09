@@ -58,7 +58,7 @@ ICE_X_SAFEZERO              = 1.0   #X轴回零前安全位置
 
 ICE_Z_FINALPUT_POS          = 4.83  #Z轴最终放盒位置 
 ICE_Y_FINALPUT_POS          = 0.24  #Y轴最终放盒位置 
-ICE_X_FINALPUT_POS          = 12.0 #X轴最终放盒位置 
+ICE_X_FINALPUT_POS          = 12.0  #X轴最终放盒位置 
 
 ICE_MOTORID_NAME_MAP ={
     ICE_MOTOR_X:"x",
