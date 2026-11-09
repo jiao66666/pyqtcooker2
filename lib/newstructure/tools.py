@@ -1695,3 +1695,55 @@ def translate_step_command(command: str) -> str:
 
     except (ValueError, IndexError):
         return "指令格式错误"
+
+
+
+def calculate_parallel_speeds(actions, current_positions, total_time):
+    """
+    根据指定的总运动时间，计算各轴同步运动速度。
+
+    actions:
+        [
+            ("z", "icemotor_z_outtrack", "go"),
+            ("y", "icemotor_y_outtrack", "go"),
+            ("x", "icemotor_x_outtrack", "go")
+        ]
+
+    current_positions:
+        {
+            "x": 当前X轴位置,
+            "y": 当前Y轴位置,
+            "z": 当前Z轴位置
+        }
+
+    total_time:
+        最慢轴实际运行到目标位置所需的时间（秒）
+    """
+
+    if total_time <= 0:
+        raise ValueError("总运动时间必须大于0")
+
+    result = {}
+
+    for motor_key, action_name, dotype in actions:
+
+        if dotype != "go":
+            raise ValueError(f"暂不支持该动作类型：{dotype}")
+
+        current_position = current_positions.get(motor_key)
+
+        if current_position is None:
+            raise ValueError(f"{motor_key}轴当前位置未知")
+
+        params = ACTION_PARAMS_CONFIG.get(action_name)
+
+        if params is None:
+            raise ValueError(f"找不到动作参数：{action_name}")
+
+        target = params["target"]
+
+        distance = abs(target - current_position)
+
+        result[motor_key] = round(distance / total_time, 2)
+
+    return result    

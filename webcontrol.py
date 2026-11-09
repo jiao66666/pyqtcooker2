@@ -2,7 +2,7 @@
 from functools import wraps
 from flask import Flask, render_template, jsonify,request
 from lib.newstructure.constant import *
-from lib.newstructure.tools import is_dev_mode,apply_action_params_override,apply_action_params_override_bymotortype,get_pot_pos,build_dc_action,getTestDCMsg,validate_board_command,get_step_from_task
+from lib.newstructure.tools import is_dev_mode,apply_action_params_override,apply_action_params_override_bymotortype,get_pot_pos,build_dc_action,getTestDCMsg,validate_board_command,get_step_from_task,calculate_parallel_speeds
 import webview
 import threading
 from lib.newstructure.system import run_system,init_system,shutdown_system,set_system_dirty,recovery_system,shutdown_device,start_system_state,stop_system_state,set_system_state
@@ -1026,9 +1026,23 @@ def pauseIceMotor():
 def iceMotorParallelTest():
     print("动作测试")
     data = request.get_json()
-    success = False
-
+    
     taskname = "ice_parallel_test"
+    actions = ACTION_PARAMS_KEYLIST[taskname][0][1]
+    print(actions)
+    speeds = calculate_parallel_speeds(
+        actions=actions,
+        current_positions={
+            "x": 0,
+            "y": 0,
+            "z": 0
+        },
+        total_time=10
+    )
+
+    print(speeds)
+
+    success = False
     success,msg = system["iceservice"].run_task(taskname)
     
     if success :
