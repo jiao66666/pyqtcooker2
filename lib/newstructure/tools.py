@@ -1707,38 +1707,125 @@ def translate_step_command(command: str) -> str:
 
 
 
-def calculate_parallel_speeds(actions, current_positions, total_time):
+def calculate_parallel_speeds(actions, current_positions):
     """
     计算并行动作组各轴同步角速度。
 
-    返回单位：度/秒
+    以理论耗时最长的轴作为基准：
+    1. 根据各轴最大速度计算理论运动时间。
+    2. 取最长时间作为统一运动时间。
+    3. 反算其他轴的同步角速度。
+
+    速度单位：度/秒
+    位置单位：电机圈数
     """
 
-    if total_time <= 0:
-        raise ValueError("总运动时间必须大于0")
+    if not actions:
+        raise ValueError("并行动作列表不能为空")
 
-    result = {}
+    motor_data = {}
+    max_total_time = 0
 
+    # 第一步：计算每个轴按最大速度运行所需的时间
     for motor_key, action_name, dotype in actions:
 
         if dotype != "go":
-            raise ValueError(f"暂不支持该动作类型：{dotype}")
+            raise ValueError(f"并行动作暂不支持：{dotype}")
 
         current_position = current_positions.get(motor_key)
 
         if current_position is None:
-            raise ValueError(f"{motor_key}轴当前位置未知")
+            raise ValueError(f"电机 {motor_key} 当前位置信息不存在")
 
         params = ACTION_PARAMS_CONFIG.get(action_name)
 
         if params is None:
-            raise ValueError(f"找不到动作参数：{action_name}")
+            raise ValueError(f"动作参数不存在：{action_name}")
 
-        target = params["target"]
+        target = params.get("target")
+        max_speed = params.get("speed")
 
-        # 圈数/秒转换为度/秒
-        angular_speed = abs(target - current_position) * 360 / total_time
+        if target is None or max_speed is None or max_speed <= 0:
+            raise ValueError(f"电机 {motor_key} 的目标位置或最大速度无效")
 
-        result[motor_key] = round(angular_speed, 2)
+        distance = abs(target - current_position)
+
+        # 已经在目标位置，不需要运动
+        if distance == 0:
+            motor_data[motor_key] = {
+                "distance": 0,
+                "max_speed": max_speed
+            }
+            continue
+
+        total_time = distance * 360 / max_speed
+
+        max_total_time = max(max_total_time, total_time)
+
+        motor_data[motor_key] = {
+            "distance": distance,
+            "max_speed": max_speed
+        }
+
+    if max_total_time <= 0:
+        return {motor_key: 0 for motor_key in motor_data}
+
+    # 第二步：根据统一时间反算各轴速度
+    result = {}
+
+    for motor_key, data in motor_data.items():
+
+        distance = data["distance"]
+
+        if distance == 0:
+            result[motor_key] = 0
+            continue
+
+        speed = distance * 360 / max_total_time
+
+        # 不超过该轴原本配置的最大速度
+        speed = min(speed, data["max_speed"])
+
+        result[motor_key] = round(speed, 2)
+
+    print(f"并行动作理论总时间：{max_total_time:.3f} 秒")
+    print(f"并行动作同步速度：{result}")
 
     return result
+
+
+
+def calculate_task_parallel_speeds(task_name, parallel_index, current_positions):
+    """
+    根据任务名称和并行动作组索引，计算三轴同步速度。
+
+    参数：
+        task_name: 任务名称
+        parallel_index: 并行动作组在任务列表中的索引
+        current_positions: 各轴当前电机圈数
+
+    返回：
+        各轴同步速度字典
+    """
+
+    task = ACTION_PARAMS_KEYLIST.get(task_name)
+
+    if task is None:
+        raise ValueError(f"任务不存在：{task_name}")
+
+    if parallel_index < 0 or parallel_index >= len(task):
+        raise IndexError(f"动作组索引越界：{parallel_index}")
+
+    item = task[parallel_index]
+
+    if not isinstance(item, tuple) or len(item) < 2 or item[0] != "parallel":
+        raise ValueError(
+            f"任务 {task_name} 的第 {parallel_index} 项不是并行动作组"
+        )
+
+    actions = item[1]
+
+    return calculate_parallel_speeds(
+        actions=actions,
+        current_positions=current_positions
+    )

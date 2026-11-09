@@ -61,6 +61,12 @@ ICE_Z_FINALPUT_POS          = 4.83  #Z轴最终放盒位置
 ICE_Y_FINALPUT_POS          = 0.24  #Y轴最终放盒位置 
 ICE_X_FINALPUT_POS          = 12.0  #X轴最终放盒位置 
 
+MAX_Z_SPEED                 = 6000  #Z轴运动最大速度 
+ICE_Y_OUTSPEED              = 66    #Y轴出去取盒多轴同步速度 
+ICE_X_OUTSPEED              = 138   #X轴出去取盒多轴同步速度
+ICE_Y_PUTSPEED              = 61    #Y轴去放盒多轴同步速度
+ICE_X_PUTSPEED              = 545   #X轴出去取盒多轴同步速度
+
 ICE_MOTORID_NAME_MAP ={
     ICE_MOTOR_X:"x",
     ICE_MOTOR_Y:"y",
@@ -366,7 +372,7 @@ ACTION_PARAMS_KEYLIST = {
         ]),
         ("x","icemotor_x_finalputpos","go"),
         ("ml","icemotor_ml_suck","off"),
-        ("x","icemotor_x_safetrack","go"),
+        ("x","icemotor_x_safetrack_fast","go"),
         ("parallel",[
             ("z","icemotor_z_safezero","go"),
             ("y","icemotor_y_safezero","go"),
@@ -615,15 +621,15 @@ ACTION_PARAMS_CONFIG = {
         "target":ICE_MOTOR_DOOR_TARGET_POS
     },
     "icemotor_z_outtrack":{
-        "speed":5400,
+        "speed":MAX_Z_SPEED,
         "target":ICE_Z_OUTTRACK_POS
     },
     "icemotor_y_outtrack":{
-        "speed":1440,
+        "speed":ICE_Y_OUTSPEED,
         "target":ICE_Y_OUTTRACK_POS
     },
     "icemotor_x_outtrack":{
-        "speed":1440,
+        "speed":ICE_X_OUTSPEED,
         "target":ICE_X_OUTTRACK_POS
     },
     "icemotor_x_touch":{
@@ -634,19 +640,19 @@ ACTION_PARAMS_CONFIG = {
         "delay":1.5
     },
     "icemotor_z_safetrack":{
-        "speed":5400,
+        "speed":MAX_Z_SPEED,
         "target":ICE_Z_SAFE_POS
     },
     "icemotor_x_safetrack":{
-        "speed":1440,
+        "speed":ICE_X_PUTSPEED,
         "target":ICE_X_SAFE_POS
     },
     "icemotor_z_finalputpos":{
-        "speed":5400,
+        "speed":MAX_Z_SPEED,
         "target":ICE_Z_FINALPUT_POS
     },
     "icemotor_y_finalputpos":{
-        "speed":1440,
+        "speed":ICE_Y_PUTSPEED,
         "target":ICE_Y_FINALPUT_POS
     },
     "icemotor_x_finalputpos":{
@@ -668,6 +674,10 @@ ACTION_PARAMS_CONFIG = {
     "icemotor_z_flytrack":{
         "speed":3600,
         "target":ICE_Z_FLY_TRACK
+    },
+    "icemotor_x_safetrack_fast":{
+        "speed":1800,
+        "target":ICE_X_SAFE_POS
     }
 }
 

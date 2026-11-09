@@ -2,7 +2,7 @@
 from functools import wraps
 from flask import Flask, render_template, jsonify,request
 from lib.newstructure.constant import *
-from lib.newstructure.tools import is_dev_mode,apply_action_params_override,apply_action_params_override_bymotortype,get_pot_pos,build_dc_action,getTestDCMsg,validate_board_command,get_step_from_task,calculate_parallel_speeds
+from lib.newstructure.tools import calculate_task_parallel_speeds,is_dev_mode,apply_action_params_override,apply_action_params_override_bymotortype,get_pot_pos,build_dc_action,getTestDCMsg,validate_board_command,get_step_from_task,calculate_parallel_speeds
 import webview
 import threading
 from lib.newstructure.system import run_system,init_system,shutdown_system,set_system_dirty,recovery_system,shutdown_device,start_system_state,stop_system_state,set_system_state
@@ -1028,28 +1028,28 @@ def iceMotorParallelTest():
     data = request.get_json()
     
     taskname = "ice_parallel_test"
-    actions = ACTION_PARAMS_KEYLIST[taskname][0][1]
-    print(actions)
-    speeds = calculate_parallel_speeds(
-        actions=actions,
+    speeds = calculate_task_parallel_speeds(
+        task_name=taskname,
+        parallel_index=0,
         current_positions={
             "x": 0,
             "y": 0,
             "z": 0
-        },
-        total_time=7.54
-    )
-
-    print(speeds)
-
-    apply_action_params_override(
-        taskname,
-        {
-            "icemotor_x_outtrack":{"speed":int(speeds['x'])},
-            "icemotor_y_outtrack":{"speed":int(speeds['y'])},
-            "icemotor_z_outtrack":{"speed":int(speeds['z'])}
         }
     )
+
+    print("第一组并行速度：", speeds)
+    speeds2 = calculate_task_parallel_speeds(
+        task_name=taskname,
+        parallel_index=4,
+        current_positions={
+            "x": ICE_X_TOUCH_POS,
+            "y": ICE_Y_OUTTRACK_POS,
+            "z": ICE_Z_FLY_TRACK
+        }
+    )
+    print("第二组并行速度：", speeds2)
+
 
     success = False
     success,msg = system["iceservice"].run_task(taskname)
