@@ -402,7 +402,7 @@ class StepMotorPollingService:
         else:
             circles = pulses / (MICRO_STEP * 200)
 
-        return round(circles, 2)
+        return circles
 
     def convert_pulses_to_position_ice(self, pulses: int, motor_id: int) -> float:
 
@@ -411,7 +411,7 @@ class StepMotorPollingService:
         else:
             circles = -abs(pulses / (MICRO_STEP * 200))
 
-        return round(circles, 2)
+        return circles
 
     
     def notify_done(self, motor_id, execution):

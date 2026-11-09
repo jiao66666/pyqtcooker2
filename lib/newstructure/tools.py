@@ -1700,24 +1700,9 @@ def translate_step_command(command: str) -> str:
 
 def calculate_parallel_speeds(actions, current_positions, total_time):
     """
-    根据指定的总运动时间，计算各轴同步运动速度。
+    计算并行动作组各轴同步角速度。
 
-    actions:
-        [
-            ("z", "icemotor_z_outtrack", "go"),
-            ("y", "icemotor_y_outtrack", "go"),
-            ("x", "icemotor_x_outtrack", "go")
-        ]
-
-    current_positions:
-        {
-            "x": 当前X轴位置,
-            "y": 当前Y轴位置,
-            "z": 当前Z轴位置
-        }
-
-    total_time:
-        最慢轴实际运行到目标位置所需的时间（秒）
+    返回单位：度/秒
     """
 
     if total_time <= 0:
@@ -1742,8 +1727,9 @@ def calculate_parallel_speeds(actions, current_positions, total_time):
 
         target = params["target"]
 
-        distance = abs(target - current_position)
+        # 圈数/秒转换为度/秒
+        angular_speed = abs(target - current_position) * 360 / total_time
 
-        result[motor_key] = round(distance / total_time, 2)
+        result[motor_key] = round(angular_speed, 2)
 
-    return result    
+    return result
