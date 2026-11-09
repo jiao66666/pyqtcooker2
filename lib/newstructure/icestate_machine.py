@@ -95,7 +95,7 @@ class IceStateMachine:
             elif step["type"] == "step_ice":
                 print(f"<<<<<<<<<<<current action is {step['action']}>>>>>>>>>>>>")
                 print(f"icemotor运行参数如下:{step['params']}")
-                
+                self.current_action_type = "single"
                 runtime.set_running(
                     board_id=BOARDTYPE_ICE,
                     motor_id=step["motor"].motor_id,
@@ -120,6 +120,7 @@ class IceStateMachine:
                 self.wait_start_time = time.time()
 
             elif step["type"] == "dc_ice":
+                self.current_action_type = "single"
                 runtime.set_running(
                     board_id=BOARDTYPE_FEEDER,
                     motor_id=step["motor"].motor_id,
@@ -386,6 +387,8 @@ class IceStateMachine:
             print("========== XYZ 并行动作全部完成 ==========")
 
             self.parallel_actions = []
+            self.current_action_type = "single"  # 重置动作类型
+
 
             self.go_next_step("parallel_actions_done")
 
