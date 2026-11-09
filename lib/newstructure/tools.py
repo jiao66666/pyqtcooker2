@@ -179,6 +179,7 @@ def pulses_to_circles(
     return round(circles,2)
 
 
+
 def apply_action_params_override(template_name, action_params):
     """
     根据动作模板，动态覆盖指定动作的参数。
@@ -196,6 +197,14 @@ def apply_action_params_override(template_name, action_params):
         current_template = stack.pop()
 
         for item in current_template:
+
+            # 并行动作组
+            if item[0] == "parallel":
+                if len(item) > 1 and isinstance(item[1], list):
+                    stack.append(item[1])
+                continue
+
+            # 普通动作
             action_name = item[1]
 
             override_data = action_params.get(action_name)
@@ -206,7 +215,7 @@ def apply_action_params_override(template_name, action_params):
                     override_data
                 )
 
-            # 子动作树
+            # 子动作树（备选动作）
             if len(item) > 3 and item[3]:
                 stack.append(item[3])
 

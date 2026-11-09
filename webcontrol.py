@@ -1037,10 +1037,19 @@ def iceMotorParallelTest():
             "y": 0,
             "z": 0
         },
-        total_time=10
+        total_time=5.6268
     )
 
     print(speeds)
+
+    apply_action_params_override(
+        taskname,
+        {
+            "icemotor_x_outtrack":{"speed":int(speeds['x'])},
+            "icemotor_y_outtrack":{"speed":int(speeds['y'])},
+            "icemotor_z_outtrack":{"speed":int(speeds['z'])}
+        }
+    )
 
     success = False
     success,msg = system["iceservice"].run_task(taskname)
