@@ -363,6 +363,19 @@ ACTION_PARAMS_KEYLIST = {
             ("x","icemotor_x_safetrack","go"),
             ("z","icemotor_z_finalputpos","go"),
             ("y","icemotor_y_finalputpos","go")
+        ]),
+        ("x","icemotor_x_finalputpos","go"),
+        ("ml","icemotor_ml_suck","off"),
+        ("x","icemotor_x_safetrack","go"),
+        ("parallel",[
+            ("z","icemotor_z_safezero","go"),
+            ("y","icemotor_y_safezero","go"),
+            ("x","icemotor_x_safezero","go")
+        ]),
+        ("parallel",[
+            ("x","icemotor_resetzero","reset"),
+            ("y","icemotor_resetzero","reset"),
+            ("z","icemotor_resetzero","reset")
         ])
     ]
 }
@@ -637,7 +650,7 @@ ACTION_PARAMS_CONFIG = {
         "target":ICE_Y_FINALPUT_POS
     },
     "icemotor_x_finalputpos":{
-        "speed":720,
+        "speed":360,
         "target":ICE_X_FINALPUT_POS
     },
     "icemotor_z_safezero":{
