@@ -1727,26 +1727,19 @@ def translate_step_command(command: str) -> str:
 
 
 
-def calculate_parallel_speeds(actions, current_positions):
+def calculate_parallel_speeds(actions, current_positions, reference_motor="z"):
     """
-    计算并行动作组各轴同步角速度。
+    以指定基准轴的最大速度为基准，计算其他轴的同步速度。
 
-    以理论耗时最长的轴作为基准：
-    1. 根据各轴最大速度计算理论运动时间。
-    2. 取最长时间作为统一运动时间。
-    3. 反算其他轴的同步角速度。
-
-    速度单位：度/秒
-    位置单位：电机圈数
+    reference_motor:
+        默认 z，作为时间基准轴。
     """
 
     if not actions:
         raise ValueError("并行动作列表不能为空")
 
     motor_data = {}
-    max_total_time = 0
 
-    # 第一步：计算每个轴按最大速度运行所需的时间
     for motor_key, action_name, dotype in actions:
 
         if dotype != "go":
@@ -1763,52 +1756,49 @@ def calculate_parallel_speeds(actions, current_positions):
             raise ValueError(f"动作参数不存在：{action_name}")
 
         target = params.get("target")
-        max_speed = params.get("speed")
 
-        if target is None or max_speed is None or max_speed <= 0:
-            raise ValueError(f"电机 {motor_key} 的目标位置或最大速度无效")
+        if target is None:
+            raise ValueError(f"电机 {motor_key} 缺少目标位置")
 
         distance = abs(target - current_position)
 
-        # 已经在目标位置，不需要运动
-        if distance == 0:
-            motor_data[motor_key] = {
-                "distance": 0,
-                "max_speed": max_speed
-            }
-            continue
-
-        total_time = distance * 360 / max_speed
-
-        max_total_time = max(max_total_time, total_time)
-
         motor_data[motor_key] = {
             "distance": distance,
-            "max_speed": max_speed
+            "max_speed": params.get("speed")
         }
 
-    if max_total_time <= 0:
-        return {motor_key: 0 for motor_key in motor_data}
+    # 获取基准轴
+    reference = motor_data.get(reference_motor)
 
-    # 第二步：根据统一时间反算各轴速度
+    if reference is None:
+        raise ValueError(f"并行动作中不存在基准轴：{reference_motor}")
+
+    reference_speed = reference["max_speed"]
+
+    if reference_speed is None or reference_speed <= 0:
+        raise ValueError(f"基准轴 {reference_motor} 的最大速度无效")
+
+    if reference["distance"] == 0:
+        raise ValueError(f"基准轴 {reference_motor} 当前已经处于目标位置")
+
+    # 根据基准轴计算统一时间
+    total_time = reference["distance"] * 360 / reference_speed
+
     result = {}
 
     for motor_key, data in motor_data.items():
 
-        distance = data["distance"]
-
-        if distance == 0:
+        if data["distance"] == 0:
             result[motor_key] = 0
             continue
 
-        speed = distance * 360 / max_total_time
-
-        # 不超过该轴原本配置的最大速度
-        speed = min(speed, data["max_speed"])
+        speed = data["distance"] * 360 / total_time
 
         result[motor_key] = round(speed, 2)
 
-    print(f"并行动作理论总时间：{max_total_time:.3f} 秒")
+    print(f"基准轴：{reference_motor}")
+    print(f"基准轴最大速度：{reference_speed}")
+    print(f"并行动作理论总时间：{total_time:.3f} 秒")
     print(f"并行动作同步速度：{result}")
 
     return result

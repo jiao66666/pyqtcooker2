@@ -1006,7 +1006,7 @@ def iceMotorParallelTest():
     print("动作测试")
     data = request.get_json()
     
-    taskname = "ice_parallel_test"
+    taskname = "ice_put_task"
     speeds = calculate_task_parallel_speeds(
         task_name=taskname,
         parallel_index=0,
