@@ -49,7 +49,7 @@ class IceStepBuilder:
             # 并行动作组
             if item[0] == "parallel":
 
-                if len(item) != 2:
+                if len(item) not in (2, 3):
                     raise ValueError(
                         f"并行动作组配置错误：{item}"
                     )
@@ -59,14 +59,34 @@ class IceStepBuilder:
                     motor_map
                 )
 
+                start_config = None
+
+                if len(item) == 3 and item[2]:
+
+                    config = item[2]
+
+                    start_config = {
+                        "start_mode": config["start_mode"],
+                        "triggers": [
+                            (
+                                self._get_motor_id(trigger_motor),
+                                trigger_position,
+                                self._get_motor_id(target_motor),
+                                trigger_direction
+                            )
+                            for trigger_motor, trigger_position, target_motor,trigger_direction
+                            in config.get("triggers", [])
+                        ]
+                    }
+
                 steps.append({
                     "type": "parallel_ice",
-                    "actions": parallel_actions
+                    "actions": parallel_actions,
+                    "start_config": start_config
                 })
 
             else:
 
-                # 普通单电机动作
                 steps.append(
                     self._build_single_step(item, motor_map)
                 )
@@ -108,3 +128,15 @@ class IceStepBuilder:
             return "dc_ice"
 
         return "step_ice"
+
+
+    def _get_motor_id(self, motor_key):
+        """
+        根据电机名称获取实际 motor_id。
+        """
+        for motor_id, name in ICE_MOTORID_NAME_MAP.items():
+            if name == motor_key:
+                return motor_id
+
+        raise ValueError(f"未知的冰柜电机标识: {motor_key}")
+    

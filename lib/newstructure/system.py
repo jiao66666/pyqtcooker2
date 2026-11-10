@@ -153,6 +153,7 @@ def shutdown_device(system):
     system["state"]["dirty"] = True
     system["potmockmotor"].stop()
     system["icemockmotor"].stop()
+    runtime.clear_all_executions()
 
     return True
 
@@ -245,7 +246,7 @@ def shutdown_system(system):
         print(f"系统状态设置失败: {e}")
 
 
-
+    runtime.clear_all_executions()
     print("系统关闭完成")
 
     return True

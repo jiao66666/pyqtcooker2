@@ -11,6 +11,13 @@ BOARD_NAME_MAP={
     "icemotor":BOARDTYPE_ICE
 }
 
+BOARDID_NAME_MAP={
+    BOARDTYPE_STEP:"stepmotor",
+    BOARDTYPE_ICE:"icemotor",
+    BOARDTYPE_SPIN:"spinmotor",
+    BOARDTYPE_FEEDER:"feedmotor"
+}
+
 # 电机类型 -> 控制板 ID
 MOTOR_TYPE_BOARD_MAP = {
     "step_pot": BOARDTYPE_STEP,
@@ -341,7 +348,13 @@ ACTION_PARAMS_KEYLIST = {
             ("z","icemotor_z_outtrack","go"),
             ("y","icemotor_y_outtrack","go"),
             ("x","icemotor_x_outtrack","go")
-        ]),
+        ],{
+        "start_mode": "position",
+        "triggers": [
+            ("z", ICE_Z_FLY_TRACK, "x",1),
+            ("z", ICE_Z_FLY_TRACK, "y",1)
+        ]
+        }),
         ("x","icemotor_x_touch","go"),
         ("ml","icemotor_ml_suck","on"),
         ("z","icemotor_z_flytrack","go"),

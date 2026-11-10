@@ -1839,3 +1839,8 @@ def calculate_task_parallel_speeds(task_name, parallel_index, current_positions)
         actions=actions,
         current_positions=current_positions
     )
+
+
+def get_motor_position(boardid,motorid):
+    from lib.newstructure.system_runtime import system
+    return system["motors"][BOARDID_NAME_MAP[boardid]][motorid].get_current_pos()

@@ -335,4 +335,24 @@ class RuntimeContext:
             return True                    
 
 
+
+
+    def clear_all_executions(self):
+        """
+        清理所有电机的执行状态。
+
+        保留：
+            enabled
+            position
+            电机身份信息
+        """
+        with self._lock:
+            for info in self.motors.values():
+                info["state"] = "IDLE"
+                info["action"] = None
+                info["params"] = {}
+                info["task_id"] = None
+                info["owner_type"] = None
+                info["started"] = False
+
 runtime = RuntimeContext()        
