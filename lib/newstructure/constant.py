@@ -1,3 +1,6 @@
+#原点回弹脉冲值
+ORGSET_REBOUNCE = 100
+
 ########电路板通用配置#########
 BOARDTYPE_FEEDER = 1     # 加料板
 BOARDTYPE_STEP = 2       # 锅步进板

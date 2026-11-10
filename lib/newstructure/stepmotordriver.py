@@ -267,7 +267,7 @@ class StepMotor:
          # 发送运行命令
         self.com.execute_command_async(
             "ORGRST", 
-            [str(self.board_id), str(self.motor_id), str(pulses), "0",str(anglespeed)],
+            [str(self.board_id), str(self.motor_id), str(pulses), ORGSET_REBOUNCE,str(anglespeed)],
             callback=self._on_run_done,
             priority = PRIORITY_CONTROL
         )
@@ -298,7 +298,7 @@ class StepMotor:
         # 发送运行命令
         success = self.com.execute_command_async(
             "ORGRST", 
-            [str(self.board_id), str(self.motor_id), str(pulses), "0",str(anglespeed)],
+            [str(self.board_id), str(self.motor_id), str(pulses), ORGSET_REBOUNCE,str(anglespeed)],
             callback=self._on_run_done,
             priority = PRIORITY_CONTROL
         )
@@ -324,7 +324,7 @@ class StepMotor:
          # 发送运行命令
         self.com.execute_command_async(
             "ORGRST", 
-            [str(self.board_id), str(self.motor_id), str(pulses), "0",str(anglespeed)],
+            [str(self.board_id), str(self.motor_id), str(pulses), ORGSET_REBOUNCE,str(anglespeed)],
             callback=self._on_run_done,
             priority = PRIORITY_CONTROL
         )
