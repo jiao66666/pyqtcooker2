@@ -797,7 +797,7 @@ def testIceMotorTask():
         else:
            success,msg =  system["iceservice"].run_icmotor_cmd(ICE_MOTOR_DOOR,"go",{"target":ICE_MOTOR_DOOR_TARGET_POS,"speed":ICE_MOTOR_DOOR_TARGET_SPEED})
     
-    elif actionname in ["test_ice_hello","test_ice_moveall","icemotor_repeat_cycle"]:    
+    elif actionname in ["test_ice_hello","test_ice_moveall","icemotor_repeat_cycle","ice_trigger_task"]:    
         if actionname not in ACTION_PARAMS_KEYLIST:
             print("动作名异常!")
             return jsonify({"status": "fail","message": f"运转失败!错误:动作名异常"})

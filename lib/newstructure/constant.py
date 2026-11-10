@@ -380,6 +380,26 @@ ACTION_PARAMS_KEYLIST = {
             ("y","icemotor_resetzero","reset"),
             ("z","icemotor_resetzero","reset")
         ])
+    ],
+    "ice_trigger_task":[
+        ("parallel",[
+            ("z","icemotor_z_testpoint","go"),
+            ("y","icemotor_y_testpoint","go"),
+            ("x","icemotor_x_testpoint","go")
+        ]),
+        ("x","icemotor_x_testpoint3","go"),
+        ("parallel",[
+            ("z","icemotor_resetzero","reset"),
+            ("y","icemotor_resetzero","reset"),
+            ("x","icemotor_resetzero","reset")
+        ],{
+        "start_mode": "position",
+        "triggers": [
+            ("x", 5, "y",-1),
+            ("x", 5, "z",-1)
+        ]
+        }),
+        ("z","icemotor_z_testpoint4","go")
     ]
 }
 
@@ -675,6 +695,26 @@ ACTION_PARAMS_CONFIG = {
     "icemotor_x_safetrack_fast":{
         "speed":1800,
         "target":ICE_X_SAFE_POS
+    },
+    "icemotor_z_testpoint":{
+        "speed":360,
+        "target":60
+    },
+    "icemotor_y_testpoint":{
+        "speed":360,
+        "target":1
+    },
+    "icemotor_x_testpoint":{
+        "speed":360,
+        "target":6
+    },
+    "icemotor_x_testpoint3":{
+        "speed":360,
+        "target":7
+    },
+    "icemotor_z_testpoint4":{
+        "speed":360,
+        "target":30
     }
 }
 
