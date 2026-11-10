@@ -53,7 +53,7 @@ ICE_MOTOR_DOOR_TARGET_SPEED = 360    #冰柜门关门转速
 ICE_MOTOR_DOOR_TARGET_POS   = 3.28   #冰柜门关门绝对值坐标
 ICE_Z_OUTTRACK_POS          = 93.78  #Z轴准备碰盒子前位置 
 ICE_Y_OUTTRACK_POS          = 1.04   #Y轴准备取盒位置 
-ICE_X_OUTTRACK_POS          = 2.16   #X轴准备碰盒子前位置 
+ICE_X_OUTTRACK_POS          = 2.18   #X轴准备碰盒子前位置 
 
 ICE_X_TOUCH_POS             = 2.33   #X轴碰盒子最终位置 
 ICE_X_SAFE_POS              = 9.5    #X轴送完盒子回退一点方便Z升降
@@ -348,6 +348,13 @@ ACTION_PARAMS_KEYLIST = {
             ("z","icemotor_z_outtrack","go"),
             ("y","icemotor_y_outtrack","go"),
             ("x","icemotor_x_outtrack","go")
+        ]),
+        ("x","icemotor_x_touch","go"),
+        ("ml","icemotor_ml_suck","on"),
+        ("parallel",[
+            ("x","icemotor_x_safetrack","go"),
+            ("z","icemotor_z_finalputpos","go"),
+            ("y","icemotor_y_finalputpos","go")
         ],{
         "start_mode": "position",
         "triggers": [
@@ -355,22 +362,19 @@ ACTION_PARAMS_KEYLIST = {
             ("z", ICE_Z_FLY_TRACK, "y",1)
         ]
         }),
-        ("x","icemotor_x_touch","go"),
-        ("ml","icemotor_ml_suck","on"),
-        ("z","icemotor_z_flytrack","go"),
-        ("parallel",[
-            ("x","icemotor_x_safetrack","go"),
-            ("z","icemotor_z_finalputpos","go"),
-            ("y","icemotor_y_finalputpos","go")
-        ]),
         ("x","icemotor_x_finalputpos","go"),
         ("ml","icemotor_ml_suck","off"),
-        ("x","icemotor_x_safetrack_fast","go"),
         ("parallel",[
             ("z","icemotor_z_safezero","go"),
             ("y","icemotor_y_safezero","go"),
             ("x","icemotor_x_safezero","go")
-        ]),
+        ],{
+        "start_mode": "position",
+        "triggers": [
+            ("x", ICE_X_SAFE_POS, "y",-1),
+            ("x", ICE_X_SAFE_POS, "z",-1)
+        ]
+        }),
         ("parallel",[
             ("x","icemotor_resetzero","reset"),
             ("y","icemotor_resetzero","reset"),
