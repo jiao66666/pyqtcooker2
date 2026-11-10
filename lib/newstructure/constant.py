@@ -389,9 +389,9 @@ ACTION_PARAMS_KEYLIST = {
         ]),
         ("x","icemotor_x_testpoint3","go"),
         ("parallel",[
-            ("z","icemotor_resetzero","reset"),
-            ("y","icemotor_resetzero","reset"),
-            ("x","icemotor_resetzero","reset")
+            ("z","icemotor_resetzero","go"),
+            ("y","icemotor_resetzero","go"),
+            ("x","icemotor_resetzero","go")
         ],{
         "start_mode": "position",
         "triggers": [
