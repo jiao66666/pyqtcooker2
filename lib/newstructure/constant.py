@@ -698,7 +698,7 @@ ACTION_PARAMS_CONFIG = {
     },
     "icemotor_z_testpoint":{
         "speed":360,
-        "target":60
+        "target":3
     },
     "icemotor_y_testpoint":{
         "speed":360,
@@ -714,7 +714,7 @@ ACTION_PARAMS_CONFIG = {
     },
     "icemotor_z_testpoint4":{
         "speed":360,
-        "target":30
+        "target":5
     }
 }
 
