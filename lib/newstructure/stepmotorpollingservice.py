@@ -139,13 +139,8 @@ class StepMotorPollingService:
                     # 急停状态交给系统的急停逻辑处理
                     # 如果你的系统已经有 ESTOP_TRIGGERED，
                     # 建议在这里发布急停事件
+                    continue
 
-                    self.bus.publish(
-                        "ESTOP_TRIGGERED",
-                        {
-                            "motor_id": motor_id
-                        }
-                    )
 
                 # ==================================================
                 # 状态 1
