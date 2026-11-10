@@ -149,8 +149,6 @@ class IceStateMachine:
             print(f"ice machine state is RUNNING,current step is:{self.steps[self.current_step]}")
             step = self.steps[self.current_step]
 
-
-
             if step["type"] == "parallel_ice":
                 self.start_parallel_actions(step["actions"],step.get("start_config"))
             elif step["type"] == "step_ice":
@@ -198,6 +196,18 @@ class IceStateMachine:
 
 
             elif step["type"] == "dc_ice":
+
+                if step["dotype"] not in ("on", "off"):
+                    self.state = "ERROR"
+                    self.error_info = f"未知的动作类型：{step['dotype']}"
+                    return
+
+                # 2. 校验必要参数
+                if not step.get("motor") or not step.get("action"):
+                    self.state = "ERROR"
+                    self.error_info = f"动作参数不完整：{step}"
+                    return
+
                 self.current_action_type = "single"
                 runtime.set_running(
                     board_id=BOARDTYPE_FEEDER,
@@ -297,155 +307,6 @@ class IceStateMachine:
 
         elif self.state == "ERROR":
             print(f"ice machine state is ERROR")  
-
-
-
-
-    def start_one_parallel_motor(self, resource_id, step):
-        """
-        启动并行动作组中的单个电机。
-
-        resource_id: (board_id, motor_id)
-        step: 对应的 step_ice 动作
-        """
-
-        board_id, motor_id = resource_id
-
-        # 防止重复启动
-        if resource_id in self.parallel_pending:
-            print(f"电机已经启动，忽略重复启动: {resource_id}")
-            return False
-
-        if step["type"] != "step_ice":
-            print(f"不支持的并行电机类型: {step['type']}")
-            self.state = "ERROR"
-            return False
-
-        if step["dotype"] not in ("go", "reset"):
-            print(f"未知并行动作类型: {step['dotype']}")
-            self.state = "ERROR"
-            return False
-
-        try:
-            print(
-                f"========== 启动并行电机 {resource_id} =========="
-            )
-
-            # 1. 先登记运行状态
-            runtime.set_running(
-                board_id=board_id,
-                motor_id=motor_id,
-                action=step["action"],
-                params=step["params"],
-                task_id=f"{self.running_task_id}"
-            )
-
-
-
-            # 2. 先加入等待完成集合
-            self.parallel_pending[resource_id] = step
-
-            # 3. 记录电机启动时间
-            self.parallel_motor_start_times[resource_id] = time.time()
-            # 3. 从待启动集合中移除
-            self.parallel_waiting_start.pop(resource_id, None)
-            # 2. 先加入等待完成集合
-
-
-            # 4. 发送实际运动指令
-            if step["dotype"] == "reset":
-
-                step["motor"].reset_zero_byspeed(
-                    step["params"]["speed"]
-                )
-
-            elif step["dotype"] == "go":
-
-                step["motor"].go(
-                    step["params"]["target"],
-                    step["params"]["speed"]
-                )
-
-            print(
-                f"并行电机启动成功: {resource_id}, "
-                f"action={step['action']}"
-            )
-
-            return True
-
-        except Exception as e:
-
-            print(
-                f"并行电机启动失败: {resource_id}, "
-                f"action={step['action']}, error={e}"
-            )
-
-            self.error_info = {
-                "reason": "parallel_motor_start_failed",
-                "motor": resource_id,
-                "action": step["action"],
-                "detail": str(e)
-            }
-
-            self.parallel_pending.pop(resource_id, None)
-            self.parallel_motor_start_times.pop(resource_id, None)
-            self.state = "ERROR"
-
-            return False
-
-
-
-    def check_parallel_triggers(self):
-        """
-        检查并行动作组中尚未启动的电机，
-        根据触发轴的绝对位置决定是否启动。
-        """
-        
-        for resource_id, trigger_info in list(
-            self.parallel_waiting_start.items()
-        ):
-
-            trigger_motor_id = trigger_info["trigger_motor_id"]
-            trigger_position = trigger_info["trigger_position"]
-
-            # 这里需要从 RuntimeContext 或轮询数据中读取
-            # 触发轴当前的实时绝对位置
-
-            current_position = get_motor_position(
-                BOARDTYPE_ICE,
-                trigger_motor_id
-            )
-
-            if current_position is None:
-                continue
-
-            direction = trigger_info["direction"]
-
-            if direction == 1:
-                triggered = current_position >= trigger_position
-
-            elif direction == -1:
-                triggered = current_position <= trigger_position
-
-            else:
-                print(f"触发方向无效: {direction}")
-                self.state = "ERROR"
-                return
-
-            if triggered:
-                step = trigger_info["step"]
-
-                print(
-                    f"位置触发成功：电机 {trigger_motor_id} "
-                    f"当前位置 {current_position}，"
-                    f"触发位置 {trigger_position}"
-                )
-
-                result = self.start_one_parallel_motor(resource_id, step)
-
-                if result is False or self.state == "ERROR":
-                  return
-
 
 
 
@@ -662,6 +523,151 @@ class IceStateMachine:
 
 
 
+
+    def start_one_parallel_motor(self, resource_id, step):
+        """
+        启动并行动作组中的单个电机。
+
+        resource_id: (board_id, motor_id)
+        step: 对应的 step_ice 动作
+        """
+
+        board_id, motor_id = resource_id
+
+        # 防止重复启动
+        if resource_id in self.parallel_pending:
+            print(f"电机已经启动，忽略重复启动: {resource_id}")
+            return False
+
+        if step["type"] != "step_ice":
+            print(f"不支持的并行电机类型: {step['type']}")
+            self.state = "ERROR"
+            return False
+
+        if step["dotype"] not in ("go", "reset"):
+            print(f"未知并行动作类型: {step['dotype']}")
+            self.state = "ERROR"
+            return False
+
+        try:
+            print(
+                f"========== 启动并行电机 {resource_id} =========="
+            )
+
+            # 1. 先登记运行状态
+            runtime.set_running(
+                board_id=board_id,
+                motor_id=motor_id,
+                action=step["action"],
+                params=step["params"],
+                task_id=f"{self.running_task_id}"
+            )
+
+
+
+            # 2. 先加入等待完成集合
+            self.parallel_pending[resource_id] = step
+
+            # 3. 记录电机启动时间
+            self.parallel_motor_start_times[resource_id] = time.time()
+            # 3. 从待启动集合中移除
+            self.parallel_waiting_start.pop(resource_id, None)
+            # 2. 先加入等待完成集合
+
+
+            # 4. 发送实际运动指令
+            if step["dotype"] == "reset":
+
+                step["motor"].reset_zero_byspeed(
+                    step["params"]["speed"]
+                )
+
+            elif step["dotype"] == "go":
+
+                step["motor"].go(
+                    step["params"]["target"],
+                    step["params"]["speed"]
+                )
+
+            print(
+                f"并行电机启动成功: {resource_id}, "
+                f"action={step['action']}"
+            )
+
+            return True
+
+        except Exception as e:
+
+            print(
+                f"并行电机启动失败: {resource_id}, "
+                f"action={step['action']}, error={e}"
+            )
+
+            self.error_info = {
+                "reason": "parallel_motor_start_failed",
+                "motor": resource_id,
+                "action": step["action"],
+                "detail": str(e)
+            }
+
+            self.parallel_pending.pop(resource_id, None)
+            self.parallel_motor_start_times.pop(resource_id, None)
+            self.state = "ERROR"
+
+            return False
+
+
+
+    def check_parallel_triggers(self):
+        """
+        检查并行动作组中尚未启动的电机，
+        根据触发轴的绝对位置决定是否启动。
+        """
+        
+        for resource_id, trigger_info in list(
+            self.parallel_waiting_start.items()
+        ):
+
+            trigger_motor_id = trigger_info["trigger_motor_id"]
+            trigger_position = trigger_info["trigger_position"]
+
+            # 这里需要从 RuntimeContext 或轮询数据中读取
+            # 触发轴当前的实时绝对位置
+
+            current_position = get_motor_position(
+                BOARDTYPE_ICE,
+                trigger_motor_id
+            )
+
+            if current_position is None:
+                continue
+
+            direction = trigger_info["direction"]
+
+            if direction == 1:
+                triggered = current_position >= trigger_position
+
+            elif direction == -1:
+                triggered = current_position <= trigger_position
+
+            else:
+                print(f"触发方向无效: {direction}")
+                self.state = "ERROR"
+                return
+
+            if triggered:
+                step = trigger_info["step"]
+
+                print(
+                    f"位置触发成功：电机 {trigger_motor_id} "
+                    f"当前位置 {current_position}，"
+                    f"触发位置 {trigger_position}"
+                )
+
+                result = self.start_one_parallel_motor(resource_id, step)
+
+                if result is False or self.state == "ERROR":
+                  return
 
 
     def reset(self):
