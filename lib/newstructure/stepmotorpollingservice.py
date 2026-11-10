@@ -158,7 +158,29 @@ class StepMotorPollingService:
                     )
 
                     # 只有当前电机存在运行任务时才处理完成
-                    if not runtime.is_busy(motor_id,board_id=self.board_id) or not runtime.is_started(motor_id, board_id=self.board_id):
+                    is_busy = runtime.is_busy(
+                        motor_id,
+                        board_id=self.board_id
+                    )
+
+                    is_started = runtime.is_started(
+                        motor_id,
+                        board_id=self.board_id
+                    )
+
+                    print(
+                        f"[完成状态检查] motor={motor_id}, "
+                        f"status={status_code}, "
+                        f"is_busy={is_busy}, "
+                        f"is_started={is_started}"
+                    )
+
+                    if not is_busy or not is_started:
+                        print(
+                            f"[完成事件被跳过] motor={motor_id}, "
+                            f"is_busy={is_busy}, "
+                            f"is_started={is_started}"
+                        )
                         continue
 
                     self._handle_motor_done(motor_id)
