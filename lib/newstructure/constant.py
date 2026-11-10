@@ -730,11 +730,11 @@ ACTION_PARAMS_CONFIG = {
         "target":ORGSET_Z_OFFSET
     },
     "icemotor_y_offset":{
-        "speed":720,
+        "speed":360,
         "target":ORGSET_Y_OFFSET
     },
     "icemotor_x_offset":{
-        "speed":720,
+        "speed":360,
         "target":ORGSET_X_OFFSET
     }
 }
