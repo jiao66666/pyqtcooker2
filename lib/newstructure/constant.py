@@ -1,5 +1,8 @@
 #原点回弹脉冲值
-ORGSET_REBOUNCE = 100
+ORGSET_REBOUNCE = 0
+ORGSET_Z_OFFSET = 0.5
+ORGSET_X_OFFSET = 0.1
+ORGSET_Y_OFFSET = 0.1
 
 ########电路板通用配置#########
 BOARDTYPE_FEEDER = 1     # 加料板
@@ -340,8 +343,11 @@ ACTION_PARAMS_KEYLIST = {
         ("d","icemotor_resetzero","reset")
     ],
     "ice_reset_task":[
+        ("z","icemotor_z_offset","go"),
         ("z","icemotor_resetzero","reset"),
+        ("y","icemotor_y_offset","go"),
         ("y","icemotor_resetzero","reset"),
+        ("x","icemotor_x_offset","go"),
         ("x","icemotor_resetzero","reset"),
         #("d","icemotor_resetzero","reset"),
         #("d","icemotor_closedoor","go")
@@ -718,6 +724,18 @@ ACTION_PARAMS_CONFIG = {
     "icemotor_z_testpoint4":{
         "speed":360,
         "target":5
+    },
+    "icemotor_z_offset":{
+        "speed":720,
+        "target":ORGSET_Z_OFFSET
+    },
+    "icemotor_y_offset":{
+        "speed":720,
+        "target":ORGSET_Y_OFFSET
+    },
+    "icemotor_x_offset":{
+        "speed":720,
+        "target":ORGSET_X_OFFSET
     }
 }
 
