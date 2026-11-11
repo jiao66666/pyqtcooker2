@@ -915,7 +915,7 @@ def iceMotorPutTask():
     repeat = data.get("repeat")
 
     print(f"speed x:{speed_x},speed y:{speed_y},speed_z:{speed_z}")
-    done_tested_pos = 4
+    done_tested_pos = 1
     if int(pos) > done_tested_pos:
         print("位置号异常!")
         return jsonify({"status": "fail","message": f"只开放{done_tested_pos}以下取盒子任务"})
