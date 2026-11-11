@@ -706,8 +706,36 @@ class IceStateMachine:
         # 清理错误信息
         self.error_info = None
 
+
     def check_home(self):
-        return True            
+        """
+        检查冰柜四个电机是否全部回到零位。
+        只有全部满足零位要求，才返回 True。
+        """
+        tolerance = 0.01
+        check_motor_list = [ICE_MOTOR_X,ICE_MOTOR_Y,ICE_MOTOR_Z,ICE_MOTOR_SPIN]
+        for motor_id in check_motor_list:
+
+            current_position = get_motor_position(
+                BOARDTYPE_ICE,
+                motor_id
+            )
+
+            # 没有获取到有效位置
+            if current_position is None:
+                print(f"电机 {motor_id} 位置未知，无法确认零位")
+                return False
+
+            # 判断是否在零位误差范围内
+            if abs(float(current_position)) > tolerance:
+                print(
+                    f"电机 {motor_id} 未回到零位，"
+                    f"当前位置：{current_position}"
+                )
+                return False
+
+        print("冰柜四个电机全部处于零位")
+        return True       
 
 
     def go_next_step(self,actor="unknown"):
