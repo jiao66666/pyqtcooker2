@@ -932,12 +932,12 @@ def iceMotorPutTask():
     apply_action_params_override(
         actionname,
         {
-            "icemotor_x_finalputpos": {"target":final_cordinate['x']},
-            "icemotor_y_finalputpos":{"target":final_cordinate['y']},
-            "icemotor_z_finalputpos":{"target":final_cordinate['z']}
+            "icemotor_x_finalputpos": {"target":final_cordinate['x'],"speed":speed_x},
+            "icemotor_y_finalputpos":{"target":final_cordinate['y'],"speed":speed_y},
+            "icemotor_z_finalputpos":{"target":final_cordinate['z'],"speed":speed_z}
         }
     )
-    
+
     success = False
     success,msg =  system["iceservice"].run_task(actionname,int(repeat))
     if success :
@@ -968,6 +968,14 @@ def iceMotorPutTaskByStep():
         print("动作名异常!")
         return jsonify({"status": "fail","message": f"运转失败!错误:动作名异常"})
 
+    apply_action_params_override(
+        actionname,
+        {
+            "icemotor_x_finalputpos": {"target":final_cordinate['x'],"speed":speed_x},
+            "icemotor_y_finalputpos":{"target":final_cordinate['y'],"speed":speed_y},
+            "icemotor_z_finalputpos":{"target":final_cordinate['z'],"speed":speed_z}
+        }
+    )
 
     success = False
     success,msg =  system["iceservice"].run_task_bystep(actionname,int(index))
@@ -1020,7 +1028,7 @@ def iceMotorParallelTest():
     print("第一组并行速度：", speeds)
     speeds2 = calculate_task_parallel_speeds(
         task_name=taskname,
-        parallel_index=4,
+        parallel_index=3,
         current_positions={
             "x": ICE_X_TOUCH_POS,
             "y": ICE_Y_OUTTRACK_POS,

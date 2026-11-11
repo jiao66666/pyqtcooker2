@@ -361,7 +361,7 @@ ACTION_PARAMS_KEYLIST = {
         ("x","icemotor_x_touch","go"),
         ("ml","icemotor_ml_suck","on"),
         ("parallel",[
-            ("x","icemotor_x_safetrack","go"),
+            ("x","icemotor_x_finalputpos","go"),
             ("z","icemotor_z_finalputpos","go"),
             ("y","icemotor_y_finalputpos","go")
         ],{
@@ -371,7 +371,6 @@ ACTION_PARAMS_KEYLIST = {
             ("z", ICE_Z_FLY_TRACK, "y",-1)
         ]
         }),
-        ("x","icemotor_x_finalputpos","go"),
         ("ml","icemotor_ml_suck","off"),
         ("parallel",[
             ("z","icemotor_z_safezero","go"),
