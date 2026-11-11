@@ -2,7 +2,7 @@ import queue
 from lib.newstructure.runtime import runtime
 import time
 from lib.newstructure.constant import *
-from lib.newstructure.tools import get_motor_position
+from lib.newstructure.tools import get_motor_position,get_motor_homestatus
 #冰柜状态机模型
 class IceStateMachine:
     def __init__(self, bus):
@@ -725,7 +725,14 @@ class IceStateMachine:
             if current_position is None:
                 print(f"电机 {motor_id} 位置未知，无法确认零位")
                 return False
-
+            # 判断是否执行过归零操作
+            current_homed = get_motor_homestatus(
+                BOARDTYPE_ICE,
+                motor_id
+            )
+            if not current_homed:
+                print(f"电机 {motor_id} 尚未完成归零操作")
+                return False
             # 判断是否在零位误差范围内
             if abs(float(current_position)) > tolerance:
                 print(
