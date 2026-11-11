@@ -137,16 +137,7 @@ class PotStateMachine:
                         f"动作名称：{step['action']}"
                     )
                     return            
-                    
-                #可选动态调速
-                if  step["params"].get("varspeed", False) == True:
-                    startpos = runtime.get_position(step["motor"].motor_id,board_id=BOARDTYPE_STEP)
-                    self.motioncontroller.add_task(
-                        motor_id=step["motor"].motor_id,
-                        start=startpos,
-                        end=step["params"]["target"]
-                    )
-         
+                             
             elif step["type"] == "spin_pot":
                 print(f"<<<<<<<<<<<current action is {step['action']}>>>>>>>>>>>>")
                 print(f"spin motor运行参数如下:{step['params']['direction']}，{step['params']['duration']}，{step['params']['speed']}")

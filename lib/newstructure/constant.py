@@ -426,13 +426,11 @@ POT_RESET_POS  = 0
 POT_INTAKE_POS   = 10
 
 #子动作参数KEY->命令参数 映射
-#varspeed 决定是否需要变速运行
 #pot_params决定1，2锅具体参数的覆盖
 ACTION_PARAMS_CONFIG = {
     "flip_out_togetfood": {
         "speed": BASE_SPEED,
         "target": POT_RESET_POS,
-        "varspeed":False,
         "pot_params": {
             1: {
                 "target": POT1_VSAFE_POS
@@ -445,7 +443,6 @@ ACTION_PARAMS_CONFIG = {
     "move_out_togetfood": {
         "speed": BASE_SPEED,
         "target":POT_RESET_POS,
-        "varspeed":False,
         "pot_params": {
             1: {
                 "target": POT1_HSAFE_POS
@@ -458,7 +455,6 @@ ACTION_PARAMS_CONFIG = {
     "move_to_wait": {
         "speed": BASE_SPEED,
         "target":POT_RESET_POS,
-        "varspeed":False,
         "pot_params": {
             1: {
                 "target": POT1_WAIT_POS
@@ -471,7 +467,6 @@ ACTION_PARAMS_CONFIG = {
     "move_to_track": {
         "speed": BASE_SPEED,
         "target":POT_RESET_POS,
-        "varspeed":False,
         "pot_params": {
             1: {
                 "target": POT1_HSAFE_POS
@@ -484,27 +479,22 @@ ACTION_PARAMS_CONFIG = {
     "move_in_tofirefood": {
         "speed": BASE_SPEED,
         "target":POT_RESET_POS,
-        "varspeed":False,
     },
     "flip_in_tofirefood": {
         "speed": BASE_SPEED,
         "target":POT_RESET_POS,
-        "varspeed":False,
     },
     "flip_out_pour": {
         "speed": BASE_SPEED,
         "target":POT_POUR_POS,
-        "varspeed":False,
     },
     "flip_in_wash": {
         "speed": BASE_SPEED,
         "target":POT_WASH_POS,
-        "varspeed":False,
     },
     "flip_out_getfood": {
         "speed": BASE_SPEED,
         "target":POT_RESET_POS,
-        "varspeed":False,
         "pot_params": {
             1: {
                 "target": POT1_VSAFE_POS
@@ -517,7 +507,6 @@ ACTION_PARAMS_CONFIG = {
     "flip_to_safepos":{
         "speed": BASE_SPEED,
         "target":POT_RESET_POS,
-        "varspeed":False,
         "pot_params": {
             1: {
                 "target": POT1_VSAFE_POS
@@ -531,27 +520,22 @@ ACTION_PARAMS_CONFIG = {
     "flip_to_outfood":{
         "speed": BASE_SPEED,
         "target":POT_POUR_POS,
-        "varspeed":False,
     },
     "flip_to_infood":{
         "speed": BASE_SPEED,
         "target":POT_INTAKE_POS,
-        "varspeed":False,
     },
     "flip_to_washpot":{
         "speed": BASE_SPEED,
         "target":POT_WASH_POS,
-        "varspeed":False,
     },
     "flip_in_firepot":{
         "speed": BASE_SPEED,
         "target":POT_RESET_POS,
-        "varspeed":False,
     },
     "move_out":{
         "speed": BASE_SPEED,
         "target":POT_RESET_POS,
-        "varspeed":False,
         "pot_params": {
             1: {
                 "target": POT1_HSAFE_POS
@@ -564,12 +548,10 @@ ACTION_PARAMS_CONFIG = {
     "move_zero":{
         "speed": BASE_SPEED,
         "target":POT_RESET_POS,
-        "varspeed":False,
     },
     "flip_out":{
         "speed": BASE_SPEED,
         "target":POT_RESET_POS,
-        "varspeed":False,
         "pot_params": {
             1: {
                 "target": POT1_VSAFE_POS
@@ -582,17 +564,14 @@ ACTION_PARAMS_CONFIG = {
     "flip_zero":{
         "speed": BASE_SPEED,
         "target":POT_RESET_POS,
-        "varspeed":False,
     },
     "flip_pour":{
         "speed": BASE_SPEED,
         "target":POT_POUR_POS,
-        "varspeed":False,
     },
     "flip_wash":{
         "speed": BASE_SPEED,
         "target":POT_WASH_POS,
-        "varspeed":False,
     },
     "spin_for_wash":{
         "duration": 10000,
