@@ -78,7 +78,7 @@ MAX_Z_SPEED                 = 6000  #Z轴运动最大速度
 ICE_Y_OUTSPEED              = 66    #Y轴出去取盒多轴同步速度 
 ICE_X_OUTSPEED              = 138   #X轴出去取盒多轴同步速度
 ICE_Y_PUTSPEED              = 87    #Y轴去放盒多轴同步速度
-ICE_X_PUTSPEED              = 780   #X轴出去取盒多轴同步速度
+ICE_X_PUTSPEED              = 700   #X轴出去取盒多轴同步速度
 
 ICE_MOTORID_NAME_MAP ={
     ICE_MOTOR_X:"x",
