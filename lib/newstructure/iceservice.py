@@ -66,7 +66,7 @@ class IceService:
             print(steps)
 
             # 提交任务，repeat 整体执行期间持续占用资源
-            self.system["ice"].submit_task(task_id, steps, repeat)
+            self.system["ice"].submit_task(task_id, steps, repeat,task_name)
 
             return True, "submit task OK"
 
@@ -105,7 +105,7 @@ class IceService:
             print(steps)
 
             # 提交任务，repeat 整体执行期间持续占用资源
-            self.system["ice"].submit_task(task_id, steps, repeat)
+            self.system["ice"].submit_task(task_id, steps, repeat,task_name)
 
             return True, "submit task OK"
 
