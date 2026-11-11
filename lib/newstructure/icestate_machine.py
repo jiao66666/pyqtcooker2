@@ -279,6 +279,7 @@ class IceStateMachine:
 
             if self.current_repeat < self.total_repeat:
                 # 还有剩余次数，重新执行当前动作组
+                print(f"当前次数为{self.current_repeat}，小于执行总数{self.total_repeat},将执行下一次")
                 print(
                     f"准备执行第 {self.current_repeat + 1} 次，"
                     f"总次数 {self.total_repeat}"
@@ -289,6 +290,7 @@ class IceStateMachine:
 
             else:
                 # 所有次数执行完毕，通知 ResourceManager 释放任务资源
+                print(f"当前次数为{self.current_repeat}，大于等于执行总数{self.total_repeat},执行结束")
                 self.bus.publish("TASK_DONE", {
                     "task_id": self.running_task_id,
                     "owner_id": self.running_task_id,
