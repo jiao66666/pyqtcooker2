@@ -741,7 +741,7 @@ class IceStateMachine:
                 BOARDTYPE_ICE,
                 motor_id
             )
-            if not current_homed:
+            if motor_id != ICE_MOTOR_SPIN and not current_homed:
                 print(f"电机 {motor_id} 尚未完成归零操作")
                 return False
             # 判断是否在零位误差范围内
