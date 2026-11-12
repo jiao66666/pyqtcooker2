@@ -19,7 +19,7 @@ class IceStateMachine:
         self.current_repeat = 0
         self.error_info = None
 
-        self.running_task_name = None
+        self.running_task_type = None
 
 
         # 当前动作执行类型
@@ -56,7 +56,7 @@ class IceStateMachine:
         self.bus.subscribe("MOTOR_ERROR", self.on_motor_error)
 
 
-    def submit_task(self, running_task_id, steps, repeat=1,task_name=None):
+    def submit_task(self, running_task_id, steps, repeat=1,task_type="normal_task"):
 
         if not isinstance(repeat, int) or isinstance(repeat, bool) or repeat < 1:
             return False
@@ -86,7 +86,7 @@ class IceStateMachine:
             "task_id": running_task_id,
             "steps": steps,
             "repeat": repeat,
-            "task_name": task_name
+            "task_type": task_type
         }
 
         self.command_queue.put(task)
@@ -102,7 +102,7 @@ class IceStateMachine:
     def clear_running_task(self):
         self.running_tasks = set()
         self.running_task_id = None
-        self.running_task_name = None
+        self.running_task_type = None
         self.total_repeat = 0
         self.current_repeat = 0
 
@@ -129,7 +129,7 @@ class IceStateMachine:
 
                 # 只有真正开始执行时，才设置当前任务 ID
                 self.running_task_id = task["task_id"]
-                self.running_task_name = task["task_name"]
+                self.running_task_type = task["task_type"]
                 self.steps = task["steps"]
                 self.total_repeat = task["repeat"]
                 self.current_repeat = 0
@@ -145,8 +145,8 @@ class IceStateMachine:
 
         elif self.state == "CHECK_HOME":
             print(f"ice machine status is CHECK_HOME")
-            # 整体回零任务属于白名单，不需要检查当前零位
-            if self.running_task_name == HOME_TASK_NAME:
+            # 整体回零和分步任务属于白名单，不需要检查当前零位
+            if self.running_task_type in ("step_task", "reset_task"):
                 self.state = "RUNNING"
                 return
 
@@ -309,7 +309,7 @@ class IceStateMachine:
                 # 清理任务
                 self.running_tasks.discard(self.running_task_id)
                 self.running_task_id = None
-                self.running_task_name = None
+                self.running_task_type = None
                 self.steps = None
                 self.state = "IDLE"
 
@@ -693,7 +693,7 @@ class IceStateMachine:
         # 清理任务信息
         self.running_tasks.clear()
         self.running_task_id = None
-        self.running_task_name = None
+        self.running_task_type = None
 
         self.steps = None
         self.current_step = 0

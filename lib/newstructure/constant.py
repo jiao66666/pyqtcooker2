@@ -4,7 +4,6 @@ ORGSET_Z_OFFSET = 0.5
 ORGSET_X_OFFSET = 0.1
 ORGSET_Y_OFFSET = 0.1
 
-HOME_TASK_NAME = "ice_reset_task"
 
 ########电路板通用配置#########
 BOARDTYPE_FEEDER = 1     # 加料板
