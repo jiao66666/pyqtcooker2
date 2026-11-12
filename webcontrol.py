@@ -168,7 +168,7 @@ def runabs():
     print("收到参数 :", motorid, direction,speed)
 
     action_param = "pot_go"
-    success,msg =  system["cookservice"].run_potmotor_cmd(int(motorid),action_param,{"speed": int(int(speed)*360) ,"target":float(circles)})
+    success,msg =  system["cookservice"].run_potmotor_cmd(int(motorid),action_param,{"speed": int(speed) ,"target":float(circles)})
     currentpos = system["motors"]["stepmotor"][int(motorid)].get_current_pos()
     if success :
         print("电机单次运转成功!")
@@ -414,7 +414,6 @@ def gopos():
     postype = str(data.get('postype')) 
     speed= int(data.get('speed')) 
     
-    speed = speed * 360  # 转换为电机实际速度值
     speed = max(360, min(speed, 3600))
 
     success = False
@@ -449,7 +448,7 @@ def dynamicSpeed():
     print("dynamic speed")
     data = request.get_json()
     speed = data.get('speed')
-    success=system["stepmotorsmanager"].speed_all(speed*360)
+    success=system["stepmotorsmanager"].speed_all(speed)
     if success:
         print("动态修改速度成功!")
         return jsonify({"status": "success","message": "动态修改速度成功!"})
@@ -772,7 +771,7 @@ def runIceMotor():
     target = float(circles)
 
     action_param="go"
-    success,msg =  system["iceservice"].run_icmotor_cmd(int(motorid),action_param,{"target":target,"speed":int(int(speed)*360)})
+    success,msg =  system["iceservice"].run_icmotor_cmd(int(motorid),action_param,{"target":target,"speed":int(speed)})
     currentpos = system["motors"]["icemotor"][int(motorid)].get_current_pos()
     if success :
         print("电机单次运转成功!")
