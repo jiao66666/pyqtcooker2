@@ -110,6 +110,7 @@ class IceService:
             return True, "submit task OK"
 
         except Exception as e:
+            self.resource_manager.release_resources(task_id)
             print(f"冰柜任务提交失败：{e}")
             return False, f"冰柜任务提交失败：{e}"
 
