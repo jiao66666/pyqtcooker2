@@ -1245,7 +1245,7 @@ function iceMotorParallelTest() {
         });
 }
 
-function iceMotorPutTask() {
+function iceMotorTask(taskname) {
 
 
         var speed_x = document.getElementById("ice_taskspeed_x");
@@ -1299,7 +1299,7 @@ function iceMotorPutTask() {
         var pos = document.getElementById("icestorageid");
         console.log("position",pos.value)
 
-        fetch('/iceMotorPutTask', {
+        fetch('/iceMotorTask', {
             method: 'POST', 
             headers: {
                 'Content-Type': 'application/json'  
@@ -1309,7 +1309,8 @@ function iceMotorPutTask() {
                 speed_y:speed_y.value,
                 speed_z:speed_z.value,
                 repeat:repeat.value,
-                pos:pos.value
+                pos:pos.value,
+                taskname:taskname
             })
         })
         .then(response => response.json())
@@ -1324,7 +1325,7 @@ function iceMotorPutTask() {
 
 
 
-function iceMotorPutTaskByStep() {
+function iceMotorTaskByStep(taskname) {
 
         var speed_x = document.getElementById("ice_taskspeed_x");
         console.log("speed:", speed_x.value);
@@ -1376,11 +1377,18 @@ function iceMotorPutTaskByStep() {
         var pos = document.getElementById("icestorageid");
         console.log("position",pos.value)
 
-        var icestepindex = document.getElementById("icestepindex");
-        console.log("icestepindex",icestepindex.value)
+        if(taskname == "ice_put_task"){
+            var index = document.getElementById("icestepindex_put");
+            console.log("index",index.value)
+        }else if(taskname == "ice_get_task"){
+            var index = document.getElementById("icestepindex_get");
+            console.log("index",index.value)
+        }else{
+            alert("序号值非法！");
+            return;
+        }
 
-
-        fetch('/iceMotorPutTaskByStep', {
+        fetch('/iceMotorTaskByStep', {
             method: 'POST', 
             headers: {
                 'Content-Type': 'application/json'  
@@ -1390,7 +1398,8 @@ function iceMotorPutTaskByStep() {
                 speed_y:speed_y.value,
                 speed_z:speed_z.value,
                 pos:pos.value,
-                index:icestepindex.value
+                index:index.value,
+                taskname:taskname
             })
         })
         .then(response => response.json())

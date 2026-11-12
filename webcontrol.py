@@ -902,16 +902,17 @@ def zeroIceMotorAll():
         return jsonify({"status": "fail","message": f"运转失败!错误:{msg}"})
 
 
-@app.route('/iceMotorPutTask', methods=['POST'])
+@app.route('/iceMotorTask', methods=['POST'])
 @require_enabled
-def iceMotorPutTask():
-    print("运行冰柜取放盒子动作")
+def iceMotorTask():
+    print("运行冰柜任务型动作")
     data = request.get_json()
     speed_x = data.get("speed_x")
     speed_y = data.get("speed_y")
     speed_z = data.get("speed_z")
     pos = data.get("pos")
     repeat = data.get("repeat")
+    taskname = data.get("taskname")
 
     print(f"speed x:{speed_x},speed y:{speed_y},speed_z:{speed_z}")
     done_tested_pos = 1
@@ -923,7 +924,7 @@ def iceMotorPutTask():
     final_cordinate = system["icestorage"].get_position(int(pos))
     print(f"going to put at x:{final_cordinate['x']},y:{final_cordinate['y']},z:{final_cordinate['z']}")
    
-    actionname = "ice_put_task"
+    actionname = taskname
     if actionname not in ACTION_PARAMS_KEYLIST:
         print("动作名异常!")
         return jsonify({"status": "fail","message": f"运转失败!错误:动作名异常"})
@@ -947,22 +948,23 @@ def iceMotorPutTask():
         return jsonify({"status": "fail","message": f"运转失败!错误:{msg}"})
 
 
-@app.route('/iceMotorPutTaskByStep', methods=['POST'])
+@app.route('/iceMotorTaskByStep', methods=['POST'])
 @require_enabled
-def iceMotorPutTaskByStep():
-    print("运行冰柜取放盒子分步动作")
+def iceMotorTaskByStep():
+    print("运行冰柜分步动作")
     data = request.get_json()
     speed_x = data.get("speed_x")
     speed_y = data.get("speed_y")
     speed_z = data.get("speed_z")
     pos = data.get("pos")
     index = data.get("index")
+    taskname = data.get("taskname")
 
     print(f"speed x:{speed_x},speed y:{speed_y},speed_z:{speed_z}")
     final_cordinate = system["icestorage"].get_position(int(pos))
     print(f"going to put at x:{final_cordinate['x']},y:{final_cordinate['y']},z:{final_cordinate['z']}")
    
-    actionname = "ice_put_task"
+    actionname = taskname
     if actionname not in ACTION_PARAMS_KEYLIST:
         print("动作名异常!")
         return jsonify({"status": "fail","message": f"运转失败!错误:动作名异常"})

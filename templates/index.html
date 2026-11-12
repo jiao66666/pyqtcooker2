@@ -682,11 +682,11 @@
                 <option value="24">24</option>
             </select>
         </div>
-        <div class="ice_btn" onclick="iceMotorPutTask()">冰柜放盒子整体测试</div>
+        <div class="ice_btn" onclick="iceMotorTask('ice_put_task')">冰柜【放】盒子整体测试</div>
         <hr style="border: 1px dotted #ccc; width: 100%; margin: 15px auto;">
         <div class="tastmotorid_select_row">
-            <label for="icestepindex">动作列表:</label>
-            <select id="icestepindex" name="icestepindex">
+            <label for="icestepindex_put">动作列表:</label>
+            <select id="icestepindex_put" name="icestepindex_put">
                 <option value="0">[0]XYZ轴同步入取盒轨</option>
                 <option value="1">[1]X轴触碰盒子</option>
                 <option value="2">[2]左侧磁力开</option>
@@ -696,10 +696,18 @@
                 <option value="6">[6]XYZ轴同步回零</option>
             </select>
         </div>
-        <div class="ice_btn" onclick="iceMotorPutTaskByStep()">冰柜放盒子分步测试</div>
-
-
-
+        <div class="ice_btn" onclick="iceMotorTaskByStep('ice_put_task')">冰柜【放】盒子分步测试</div>
+        <hr style="border: 1px dotted #ccc; width: 100%; margin: 15px auto;">
+        <div class="tastmotorid_select_row">
+            <label for="icestepindex_get">动作列表:</label>
+            <select id="icestepindex_get" name="icestepindex_get">
+                <option value="0">[0]XYZ轴同步入取盒轨</option>
+                <option value="1">[1]X轴触碰盒子</option>
+                <option value="2">[2]左侧磁力开</option>
+                <option value="3">[3]XYZ轴同步入扔盒轨</option>
+            </select>
+        </div>
+        <div class="ice_btn" onclick="iceMotorTaskByStep('ice_get_task')">冰柜【取】盒子分步测试</div>
 
     </div>
 

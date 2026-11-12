@@ -60,6 +60,9 @@ ICE_MOTOR_LIST = [ICE_MOTOR_X,ICE_MOTOR_DOOR,ICE_MOTOR_Y,ICE_MOTOR_Z,ICE_MOTOR_S
 
 ICE_MOTOR_DOOR_TARGET_SPEED = 360    #冰柜门关门转速
 ICE_MOTOR_DOOR_TARGET_POS   = 3.28   #冰柜门关门绝对值坐标
+
+
+#放盒相关参数
 ICE_Z_OUTTRACK_POS          = 93.78  #Z轴准备碰盒子前位置 
 ICE_Y_OUTTRACK_POS          = 1.04   #Y轴准备取盒位置 
 ICE_X_OUTTRACK_POS          = 2.20   #X轴准备碰盒子前位置 
@@ -83,6 +86,17 @@ ICE_X_OUTSPEED              = 138   #X轴出去取盒多轴同步速度
 ICE_Y_PUTSPEED              = 87    #Y轴去放盒多轴同步速度
 ICE_X_PUTSPEED              = 700   #X轴出去取盒多轴同步速度
 
+
+#取盒相关参数
+ICE_X_THROW_POS             = 6.91  #X轴扔盒位置 
+ICE_Y_THROW_POS             = 1.96  #Y轴扔盒位置 
+ICE_Z_THROW_POS             = 76.49 #Z轴扔盒位置 
+ICE_SPIN_ROTATE_TARGET      = 0.5   #旋转轴180度目标位
+ICE_SPIN_SPEED              = 30    #旋转轴速度 
+
+
+
+# 冰柜相关映射
 ICE_MOTORID_NAME_MAP ={
     ICE_MOTOR_X:"x",
     ICE_MOTOR_Y:"y",
@@ -391,6 +405,26 @@ ACTION_PARAMS_KEYLIST = {
             ("y","icemotor_resetzero","reset"),
             ("z","icemotor_resetzero","reset")
         ])
+    ],
+    "ice_get_task":[
+        ("parallel",[
+            ("x","icemotor_x_getsafe_pos","go"),
+            ("y","icemotor_y_getsafe_pos","go"),
+            ("z","icemotor_z_getsafe_pos","go")
+        ]),
+        ("x","icemotor_x_get_touch","go"),
+        ("ml","icemotor_ml_suck","on"),
+        ("parallel",[
+            ("x","icemotor_x_throwsafe_pos","go"),
+            ("y","icemotor_y_throwsafe_pos","go"),
+            ("z","icemotor_z_throwsafe_pos","go"),
+        ],{
+        "start_mode": "position",
+        "triggers": [
+            ("x", ICE_X_SAFE_POS, "y",-1),
+            ("x", ICE_X_SAFE_POS, "z",-1)
+        ]
+        })
     ],
     "ice_trigger_task":[
         ("parallel",[
@@ -717,6 +751,34 @@ ACTION_PARAMS_CONFIG = {
     "icemotor_x_offset":{
         "speed":360,
         "target":ORGSET_X_OFFSET
+    },
+    "icemotor_x_getsafe_pos":{
+        "speed":360,
+        "target":9.5
+    },
+    "icemotor_y_getsafe_pos":{
+        "speed":360,
+        "target":0.2
+    },
+    "icemotor_z_getsafe_pos":{
+        "speed":720,
+        "target":4.27
+    },
+    "icemotor_x_get_touch":{
+        "speed":90,
+        "target":12
+    },
+    "icemotor_x_throwsafe_pos":{
+        "speed":360,
+        "target":ICE_X_THROW_POS
+    },
+    "icemotor_y_throwsafe_pos":{
+        "speed":360,
+        "target":ICE_Y_THROW_POS
+    },
+    "icemotor_z_throwsafe_pos":{
+        "speed":720,
+        "target":ICE_Z_THROW_POS
     }
 }
 
@@ -785,10 +847,10 @@ BOARD_TIMEOUT = 1.0  # 生产环境可修改为1.0
 MOTION_INTERVAL = 0.05  #动态调速度等参数控制器
 MOCK_INTERVAL = 0.05   #模拟频率
 
-STEP_POLLING_INTERVAL = 0.1   #步进电机轮询间隔时间
-SPIN_POLLING_INTERVAL = 0.1   #旋转电机轮询间隔时间
-FEEDER_POLLING_INTERVAL = 0.1 #加料电机轮询间隔时间
-ICE_POLLING_INTERVAL  = 0.1   #冰柜电机轮询间隔时间
+STEP_POLLING_INTERVAL = 0.1    #步进电机轮询间隔时间
+SPIN_POLLING_INTERVAL = 0.1    #旋转电机轮询间隔时间
+FEEDER_POLLING_INTERVAL = 0.1  #加料电机轮询间隔时间
+ICE_POLLING_INTERVAL  = 0.05   #冰柜电机轮询间隔时间
 
 VAR_MIN_SPEED = 100
 VAR_MAX_SPEED = 300
