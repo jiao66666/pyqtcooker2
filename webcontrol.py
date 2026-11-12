@@ -894,7 +894,7 @@ def zeroIceMotorAll():
         }
     )
 
-    success,msg =  system["iceservice"].run_task(actionname,1,"reset_task")
+    success,msg =  system["iceservice"].run_task(actionname,1,RESET_TASK_TYPE)
     if success :
         print("电机单次运转成功!")
         return jsonify({"status": "success","message": f"运行电机成功!"})
@@ -978,7 +978,7 @@ def iceMotorPutTaskByStep():
     )
 
     success = False
-    success,msg =  system["iceservice"].run_task_bystep(actionname,int(index),1,"step_task")
+    success,msg =  system["iceservice"].run_task_bystep(actionname,int(index),1,STEP_TASK_TYPE)
     if success :
         print("电机单次运转成功!")
         return jsonify({"status": "success","message": f"运行电机分步任务，序号{index}成功!"})

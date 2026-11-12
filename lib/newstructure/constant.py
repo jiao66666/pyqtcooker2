@@ -4,7 +4,9 @@ ORGSET_Z_OFFSET = 0.5
 ORGSET_X_OFFSET = 0.1
 ORGSET_Y_OFFSET = 0.1
 
-
+RESET_TASK_TYPE = "reset_task"
+STEP_TASK_TYPE  = "step_task"
+NORMAL_TASK_TYPE = "normal_task"
 ########电路板通用配置#########
 BOARDTYPE_FEEDER = 1     # 加料板
 BOARDTYPE_STEP = 2       # 锅步进板
