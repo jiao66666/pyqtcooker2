@@ -76,8 +76,8 @@ ICE_Y_SAFEZERO              = 0.15   #Y轴回零前安全位置
 ICE_Z_SAFEZERO              = 2.0   #Z轴回零前安全位置 
 ICE_X_SAFEZERO              = 1.0   #X轴回零前安全位置    
 
-ICE_Z_FINALPUT_POS          = 4.83  #Z轴最终放盒位置 
-ICE_Y_FINALPUT_POS          = 0.24  #Y轴最终放盒位置 
+ICE_Z_FINALPUT_POS          = 4.27  #Z轴最终放盒位置 
+ICE_Y_FINALPUT_POS          = 0.2   #Y轴最终放盒位置 
 ICE_X_FINALPUT_POS          = 12.0  #X轴最终放盒位置 
 
 MAX_Z_SPEED                 = 6000  #Z轴运动最大速度 
@@ -753,15 +753,15 @@ ACTION_PARAMS_CONFIG = {
         "target":ORGSET_X_OFFSET
     },
     "icemotor_x_getsafe_pos":{
-        "speed":360,
-        "target":9.5
+        "speed":1440,
+        "target":11.87
     },
     "icemotor_y_getsafe_pos":{
         "speed":360,
         "target":0.2
     },
     "icemotor_z_getsafe_pos":{
-        "speed":720,
+        "speed":360,
         "target":4.27
     },
     "icemotor_x_get_touch":{
@@ -769,15 +769,15 @@ ACTION_PARAMS_CONFIG = {
         "target":12
     },
     "icemotor_x_throwsafe_pos":{
-        "speed":360,
+        "speed":422,
         "target":ICE_X_THROW_POS
     },
     "icemotor_y_throwsafe_pos":{
-        "speed":360,
+        "speed":146,
         "target":ICE_Y_THROW_POS
     },
     "icemotor_z_throwsafe_pos":{
-        "speed":720,
+        "speed":6000,
         "target":ICE_Z_THROW_POS
     }
 }
