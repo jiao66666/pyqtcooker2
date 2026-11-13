@@ -741,7 +741,7 @@ class IceStateMachine:
                 self.enter_recovering(
                     motor_id,
                     "POSITION_UNKNOWN",
-                    f"异常：电机 {motor_id} 位置未知，无法确认零位"
+                    f"异常：电机 {ICE_MOTORID_NAME_MAP[motor_id]} 位置未知，无法确认零位"
                 )
                 return False
             # 判断是否执行过归零操作
@@ -753,7 +753,7 @@ class IceStateMachine:
                 self.enter_recovering(
                     motor_id,
                     "MOTOR_NOT_HOMED",
-                    f"异常：电机 {motor_id} 尚未完成归零操作"
+                    f"异常：电机 {ICE_MOTORID_NAME_MAP[motor_id]} 尚未完成归零操作"
                 )
 
                 print(f"电机 {motor_id} 尚未完成归零操作")
@@ -767,7 +767,7 @@ class IceStateMachine:
                 self.enter_recovering(
                     motor_id,
                     "MOTOR_NOT_ZERO",
-                    f"异常：电机 {motor_id} 未回到零位，当前位置：{current_position}"
+                    f"异常：电机 {ICE_MOTORID_NAME_MAP[motor_id]} 未回到零位，当前位置：{current_position}"
                 )
                 return False
 

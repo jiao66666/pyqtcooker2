@@ -370,6 +370,8 @@ ACTION_PARAMS_KEYLIST = {
         ("y","icemotor_resetzero","reset"),
         ("x","icemotor_x_offset","go"),
         ("x","icemotor_resetzero","reset"),
+        ("s","icemotor_s_offset","go"),
+        ("s","icemotor_s_gozero","go")
         #("d","icemotor_resetzero","reset"),
         #("d","icemotor_closedoor","go")
     ],
@@ -783,6 +785,14 @@ ACTION_PARAMS_CONFIG = {
     "icemotor_z_throwsafe_pos":{
         "speed":6000,
         "target":ICE_Z_THROW_POS
+    },
+    "icemotor_s_offset":{
+        "speed":10,
+        "target":0.05
+    },
+    "icemotor_s_gozero":{
+        "speed":10,
+        "target":0
     }
 }
 
