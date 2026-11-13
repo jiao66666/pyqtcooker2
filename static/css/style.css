@@ -1052,7 +1052,7 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
     margin-top:5px;
 }
 .mt10{
-    margin-top:10px;
+    margin-top:10px!important;
 }
 
 .ice_row_container{

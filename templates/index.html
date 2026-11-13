@@ -682,8 +682,6 @@
                 <option value="24">24</option>
             </select>
         </div>
-        <div class="ice_btn" onclick="iceMotorTask('ice_put_task')">冰柜【放】盒子整体测试</div>
-        <div class="ice_btn" onclick="iceMotorTask('ice_get_task')">冰柜【取】盒子整体测试</div>
         <hr style="border: 1px dotted #ccc; width: 100%; margin: 15px auto;">
         <div class="tastmotorid_select_row">
             <label for="icestepindex_put">动作列表:</label>
@@ -697,7 +695,8 @@
                 <option value="6">[6]XYZ轴同步回零</option>
             </select>
         </div>
-        <div class="ice_btn" onclick="iceMotorTaskByStep('ice_put_task')">冰柜【放】盒子分步测试</div>
+        <div class="ice_btn" onclick="iceMotorTask('ice_put_task')">冰柜【放】盒子整体测试</div>
+        <div class="ice_btn mt10" onclick="iceMotorTaskByStep('ice_put_task')">冰柜【放】盒子分步测试</div>
         <hr style="border: 1px dotted #ccc; width: 100%; margin: 15px auto;">
         <div class="tastmotorid_select_row">
             <label for="icestepindex_get">动作列表:</label>
@@ -714,6 +713,7 @@
             </select>
         </div>
         <div class="ice_btn" onclick="iceMotorTaskByStep('ice_get_task')">冰柜【取】盒子分步测试</div>
+        <div class="ice_btn mt10" onclick="iceMotorTask('ice_get_task')">冰柜【取】盒子整体测试</div>
 
     </div>
 
