@@ -88,11 +88,24 @@ ICE_X_PUTSPEED              = 700   #X轴出去取盒多轴同步速度
 
 
 #取盒相关参数
+ICE_X_GET_SAFEPOS           = 11.87  #X轴取盒安全位
+ICE_Y_GET_SAFEPOS           = 0.2    #Y轴取盒安全位
+ICE_Z_GET_SAFEPOS           = 4.27   #Z轴取盒安全位 
+ICE_X_GET_TOUCH             = 12.0   #X轴最终触碰盒子位
+
+ICE_X_GET_SPEED             = 1000   #X轴出去速度
+ICE_Y_GET_SPPED             = 17     #Y轴出去速度
+ICE_Z_GET_SPEED             = 360    #Z轴出去速度
+
 ICE_X_THROW_POS             = 7.10   #X轴扔盒位置 
 ICE_Y_THROW_POS             = 1.29   #Y轴扔盒位置 
 ICE_Z_THROW_POS             = 100.66 #Z轴扔盒位置 
 ICE_SPIN_ROTATE_TARGET      = 0.5    #旋转轴180度目标位
 ICE_SPIN_SPEED              = 30     #旋转轴速度 
+
+ICE_X_THROW_SPEED           = 305    #X轴扔盒同步速度
+ICE_Y_THROW_SPEED           = 68     #Y轴扔盒同步速度
+
 
 ICE_X_STAY_POS              = 2.33  #X轴空盒放置位
 ICE_Y_STAY_POS              = 1.04  #Y轴空盒放置位
@@ -446,8 +459,6 @@ ACTION_PARAMS_KEYLIST = {
         }),
         ("z","icemotor_z_goput_pos","go"),
         ("ml","icemotor_ml_suck","off")
-
-
     ],
     "ice_trigger_task":[
         ("parallel",[
@@ -776,31 +787,31 @@ ACTION_PARAMS_CONFIG = {
         "target":ORGSET_X_OFFSET
     },
     "icemotor_x_getsafe_pos":{
-        "speed":1440,
-        "target":11.87
+        "speed":ICE_X_GET_SPEED,
+        "target":ICE_X_GET_SAFEPOS
     },
     "icemotor_y_getsafe_pos":{
-        "speed":360,
-        "target":0.2
+        "speed":ICE_Y_GET_SPPED,
+        "target":ICE_Y_GET_SAFEPOS
     },
     "icemotor_z_getsafe_pos":{
-        "speed":360,
-        "target":4.27
+        "speed":ICE_Z_GET_SPEED,
+        "target":ICE_Z_GET_SAFEPOS
     },
     "icemotor_x_get_touch":{
         "speed":90,
-        "target":12
+        "target":ICE_X_GET_TOUCH
     },
     "icemotor_x_throwsafe_pos":{
-        "speed":422,
+        "speed":ICE_X_THROW_SPEED,
         "target":ICE_X_THROW_POS
     },
     "icemotor_y_throwsafe_pos":{
-        "speed":146,
+        "speed":ICE_Y_THROW_SPEED,
         "target":ICE_Y_THROW_POS
     },
     "icemotor_z_throwsafe_pos":{
-        "speed":6000,
+        "speed":MAX_Z_SPEED,
         "target":ICE_Z_THROW_POS
     },
     "icemotor_s_offset":{
