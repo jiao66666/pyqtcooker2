@@ -57,7 +57,7 @@ def build_system():
 
     pot1 = PotStateMachine(1, bus, trackmanager, motion_controller)
     pot2 = PotStateMachine(2, bus, trackmanager, motion_controller)
-    ice = IceStateMachine(bus)
+    ice = IceStateMachine(bus,resource_manager)
 
     potmockmotor = MockMotor(BOARDTYPE_STEP,websocket_server,MOCK_INTERVAL)
     icemockmotor = MockMotor(BOARDTYPE_ICE,websocket_server,MOCK_INTERVAL)

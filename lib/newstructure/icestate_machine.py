@@ -5,7 +5,7 @@ from lib.newstructure.constant import *
 from lib.newstructure.tools import get_motor_position,get_motor_homestatus
 #冰柜状态机模型
 class IceStateMachine:
-    def __init__(self, bus):
+    def __init__(self, bus, resource_manager):
         self.state = "IDLE"
 
         self.bus = bus
@@ -20,6 +20,7 @@ class IceStateMachine:
         self.error_info = None
 
         self.running_task_type = None
+        self.resource_manager = resource_manager
 
 
         # 当前动作执行类型
@@ -320,6 +321,17 @@ class IceStateMachine:
         elif self.state == "ERROR":
             print(f"ice machine state is ERROR")  
 
+
+        elif self.state == "RECOVERING":
+            print("ice machine state enter in recovering")   
+            # 1. 释放当前任务占用的资源
+            if self.running_task_id:
+                self.resource_manager.release_resources(
+                    self.running_task_id
+                )
+
+            # 2. 重置状态机
+            self.reset()  
 
 
     def start_parallel_actions(self, actions, start_config=None):
@@ -696,23 +708,14 @@ class IceStateMachine:
         self.running_task_type = None
 
         self.steps = None
-        self.current_step = 0
-
         self.total_repeat = 0
         self.current_repeat = 0
 
-        # 清理并行动作信息
-        self.parallel_pending.clear()
-        self.parallel_actions = []
-        self.parallel_waiting_start.clear()
-        self.parallel_trigger_directions.clear()
-        self.parallel_motor_start_times.clear()
-        self.parallel_wait_start_time = None
+        self.reset_step()
 
         # 清理普通动作计时
         self.wait_start_time = 0
 
-        self.current_action_type = "single"
 
         # 清理错误信息
         self.error_info = None
@@ -735,6 +738,11 @@ class IceStateMachine:
             # 没有获取到有效位置
             if current_position is None:
                 print(f"电机 {motor_id} 位置未知，无法确认零位")
+                self.enter_recovering(
+                    motor_id,
+                    "POSITION_UNKNOWN",
+                    f"电机 {motor_id} 位置未知，无法确认零位"
+                )
                 return False
             # 判断是否执行过归零操作
             current_homed = get_motor_homestatus(
@@ -742,6 +750,12 @@ class IceStateMachine:
                 motor_id
             )
             if motor_id != ICE_MOTOR_SPIN and not current_homed:
+                self.enter_recovering(
+                    motor_id,
+                    "MOTOR_NOT_HOMED",
+                    f"电机 {motor_id} 尚未完成归零操作"
+                )
+
                 print(f"电机 {motor_id} 尚未完成归零操作")
                 return False
             # 判断是否在零位误差范围内
@@ -750,10 +764,30 @@ class IceStateMachine:
                     f"电机 {motor_id} 未回到零位，"
                     f"当前位置：{current_position}"
                 )
+                self.enter_recovering(
+                    motor_id,
+                    "MOTOR_NOT_ZERO",
+                    f"电机 {motor_id} 未回到零位，当前位置：{current_position}"
+                )
                 return False
 
         print("冰柜四个电机全部处于零位")
         return True       
+
+
+    def enter_recovering(self, motor_id, reason, message):
+        self.state = "RECOVERING"
+        print(message)
+
+        #通知前端
+        self.bus.publish(
+            "ICE_RECOVERY_REQUIRED",
+            {
+                "motor_id": motor_id,
+                "reason": reason,
+                "message": message
+            }
+        )
 
 
     def go_next_step(self,actor="unknown"):
