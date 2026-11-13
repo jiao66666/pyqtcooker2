@@ -196,6 +196,7 @@ class IceStateMachine:
                 elif step["dotype"] == "go":
                     step["motor"].go(step["params"]["target"],step["params"]["speed"]) 
                 elif step["dotype"] == "go_delay":
+                    print("exectuing<<<<<[go_delay]>>>>>>do type")
                     step["motor"].go(step["params"]["target"],step["params"]["speed"])   
                     time.sleep(step["params"]["delay"])  
                 else:
