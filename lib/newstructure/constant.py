@@ -430,7 +430,9 @@ ACTION_PARAMS_KEYLIST = {
             ("x", ICE_X_SAFE_POS, "y",-1),
             ("x", ICE_X_SAFE_POS, "z",-1)
         ]
-        })
+        }),
+        ("s","icemotor_s_rotate","go"),
+        ("s","icemotor_s_gozero","go")
     ],
     "ice_trigger_task":[
         ("parallel",[
@@ -787,12 +789,16 @@ ACTION_PARAMS_CONFIG = {
         "target":ICE_Z_THROW_POS
     },
     "icemotor_s_offset":{
-        "speed":10,
+        "speed":ICE_SPIN_SPEED,
         "target":0.05
     },
     "icemotor_s_gozero":{
-        "speed":10,
+        "speed":ICE_SPIN_SPEED,
         "target":0
+    },
+    "icemotor_s_rotate":{
+        "speed":ICE_SPIN_SPEED,
+        "target":ICE_SPIN_ROTATE_TARGET
     }
 }
 
