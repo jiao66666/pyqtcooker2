@@ -431,7 +431,7 @@ ACTION_PARAMS_KEYLIST = {
             ("x", ICE_X_SAFE_POS, "z",-1)
         ]
         }),
-        ("s","icemotor_s_rotate","go"),
+        ("s","icemotor_s_rotate","go_delay"),
         ("s","icemotor_s_gozero","go")
     ],
     "ice_trigger_task":[
@@ -798,7 +798,8 @@ ACTION_PARAMS_CONFIG = {
     },
     "icemotor_s_rotate":{
         "speed":ICE_SPIN_SPEED,
-        "target":ICE_SPIN_ROTATE_TARGET
+        "target":ICE_SPIN_ROTATE_TARGET,
+        "delay":1.5
     }
 }
 

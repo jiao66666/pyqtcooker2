@@ -166,7 +166,7 @@ class IceStateMachine:
                 print(f"icemotor运行参数如下:{step['params']}")
 
 
-                if step["dotype"] not in ("go", "reset"):
+                if step["dotype"] not in ("go", "reset","go_delay"):
                     self.state = "ERROR"
                     self.error_info = f"未知的动作类型：{step['dotype']}"
                     return
@@ -195,6 +195,9 @@ class IceStateMachine:
                     step["motor"].reset_zero_byspeed(step["params"]["speed"])  
                 elif step["dotype"] == "go":
                     step["motor"].go(step["params"]["target"],step["params"]["speed"]) 
+                elif step["dotype"] == "go_delay":
+                    step["motor"].go(step["params"]["target"],step["params"]["speed"])   
+                    time.sleep(step["params"]["delay"])  
                 else:
                     self.state = "ERROR"
                     print(
