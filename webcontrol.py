@@ -21,6 +21,23 @@ test_connections = {}
 #  全局window实例
 window = None
 
+
+bus = system["bus"]
+websocket = system["websocket"]
+
+def handle_ice_recovery(data):
+
+    websocket.send([{
+        "type": "ice_recovery_required",
+        "info": data
+    }])
+
+
+bus.subscribe(
+    "ICE_RECOVERY_REQUIRED",
+    handle_ice_recovery
+)
+
 # 根据传入的命令行参数设置端口,方便测试和生产环境使用不同的端口
 if is_dev_mode():
     print("当前环境: 开发环境，使用测试端口")

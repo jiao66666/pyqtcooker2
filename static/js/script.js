@@ -2171,6 +2171,7 @@ function setupWebSocket(url) {
 
     ws.onmessage = (event) => {
         const arr = JSON.parse(event.data); // [{motor_id, position}, ...]
+        //console.log(arr)
         for (const item of arr) {
             if(item.type=="potcordinate"||item.type=="icecordinate"){
                 app.updateMotorData(item.type,item.motor_id, item.position);
@@ -2203,6 +2204,8 @@ function setupWebSocket(url) {
                 }
             }else if (item.type == "testdata"){
                 commandDebugApp.addReceive(item.msg)
+            }else if (item.type == "ice_recovery_required"){
+                  addMessage(item.info.message)
             }
         }
     };
