@@ -22,6 +22,9 @@ class IceStateMachine:
         self.running_task_type = None
         self.resource_manager = resource_manager
 
+        self.delay_start_time = None
+        self.delay_duration = None
+
 
         # 当前动作执行类型
         self.current_action_type = "single"
@@ -200,7 +203,6 @@ class IceStateMachine:
                 elif step["dotype"] == "go_delay":
                     print("exectuing<<<<<[go_delay]>>>>>>do type")
                     step["motor"].go(step["params"]["target"],step["params"]["speed"])   
-                    time.sleep(step["params"]["delay"])  
                 else:
                     self.state = "ERROR"
                     print(
@@ -338,6 +340,27 @@ class IceStateMachine:
 
             # 2. 重置状态机
             self.reset()  
+
+
+        elif self.state == "DELAY":
+
+            elapsed = time.time() - self.delay_start_time
+
+            if elapsed >= self.delay_duration:
+
+                print(
+                    f"步进电机延时结束，实际等待 {elapsed:.2f} 秒"
+                )
+
+                self.delay_start_time = None
+                self.delay_duration = None
+
+                self.go_next_step("on_delay_timeisup")
+
+                if self.current_step < len(self.steps):
+                    self.state = "RUNNING"
+                else:
+                    self.state = "DONE"            
 
 
     def start_parallel_actions(self, actions, start_config=None):
@@ -726,6 +749,9 @@ class IceStateMachine:
         # 清理错误信息
         self.error_info = None
 
+        self.delay_start_time = None
+        self.delay_duration = None
+
 
     def check_home(self):
         """
@@ -840,10 +866,24 @@ class IceStateMachine:
             return
 
         step = self.steps[self.current_step]
-       
+
         if ctx["action"] != step["action"] or data["motor_id"] != step["motor"].motor_id:  #确保数据的一致性
             print(f"》》》检查未过关《《《{ctx['action']},{step['action']},{data['motor_id']},{step['motor'].motor_id}")
             return
+
+        if step["dotype"] == "go_delay":
+
+            self.delay_start_time = time.time()
+            self.delay_duration = step["params"]["delay"]
+
+            print(
+                f"步进电机完成运动，进入延时状态，"
+                f"等待 {self.delay_duration} 秒"
+            )
+
+            self.state = "DELAY"
+            return
+        
         
         print(f"motor {motor_id} done the action {step['action']}")
         print(f"OK检查过关OK{ctx['action']},{step['action']},{data['motor_id']},{step['motor'].motor_id}")
