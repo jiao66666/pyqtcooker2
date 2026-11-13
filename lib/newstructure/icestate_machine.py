@@ -192,8 +192,10 @@ class IceStateMachine:
                     task_id=f"{self.running_task_id}"
                 )
                 if step["dotype"] == "reset":
+                    print("exectuing<<<<<[reset]>>>>>>do type")
                     step["motor"].reset_zero_byspeed(step["params"]["speed"])  
                 elif step["dotype"] == "go":
+                    print("exectuing<<<<<[go]>>>>>>do type")
                     step["motor"].go(step["params"]["target"],step["params"]["speed"]) 
                 elif step["dotype"] == "go_delay":
                     print("exectuing<<<<<[go_delay]>>>>>>do type")
