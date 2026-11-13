@@ -96,8 +96,8 @@ ICE_SPIN_SPEED              = 30    #旋转轴速度
 
 ICE_X_STAY_POS              = 2.33  #X轴空盒放置位
 ICE_Y_STAY_POS              = 1.04  #Y轴空盒放置位
-ICE_Z_STAY_POS              = 80    #Z轴空盒放置位
-
+ICE_Z_STAY_POS              = 60    #Z轴空盒放置位
+ICE_Z_FINAL_PUT             = 70    #Z轴最终松盒位
 
 
 # 冰柜相关映射
@@ -432,7 +432,22 @@ ACTION_PARAMS_KEYLIST = {
         ]
         }),
         ("s","icemotor_s_rotate","go_delay"),
-        ("s","icemotor_s_gozero","go")
+        ("s","icemotor_s_gozero","go"),
+        ("parallel",[
+            ("x","icemotor_x_putsafe_pos","go"),
+            ("y","icemotor_y_putsafe_pos","go"),
+            ("z","icemotor_z_putsafe_pos","go"),
+        ],{
+        "start_mode": "position",
+        "triggers": [
+            ("z", ICE_Z_STAY_POS, "x",-1),
+            ("z", ICE_Z_STAY_POS, "y",-1)
+        ]
+        }),
+        ("z","icemotor_z_goput_pos","go"),
+        ("ml","icemotor_ml_suck","off")
+
+
     ],
     "ice_trigger_task":[
         ("parallel",[
@@ -800,6 +815,22 @@ ACTION_PARAMS_CONFIG = {
         "speed":ICE_SPIN_SPEED,
         "target":ICE_SPIN_ROTATE_TARGET,
         "delay":1.5
+    },
+    "icemotor_x_putsafe_pos":{
+        "speed":360,
+        "target":ICE_X_STAY_POS
+    },
+    "icemotor_y_putsafe_pos":{
+        "speed":360,
+        "target":ICE_Y_STAY_POS
+    },
+    "icemotor_z_putsafe_pos":{
+        "speed":360,
+        "target":ICE_Z_STAY_POS
+    },
+    "icemotor_z_goput_pos":{
+        "speed":360,
+        "target":ICE_Z_FINAL_PUT
     }
 }
 
