@@ -88,11 +88,11 @@ ICE_X_PUTSPEED              = 700   #X轴出去取盒多轴同步速度
 
 
 #取盒相关参数
-ICE_X_THROW_POS             = 6.91  #X轴扔盒位置 
-ICE_Y_THROW_POS             = 1.96  #Y轴扔盒位置 
-ICE_Z_THROW_POS             = 76.49 #Z轴扔盒位置 
-ICE_SPIN_ROTATE_TARGET      = 0.5   #旋转轴180度目标位
-ICE_SPIN_SPEED              = 30    #旋转轴速度 
+ICE_X_THROW_POS             = 7.10   #X轴扔盒位置 
+ICE_Y_THROW_POS             = 1.29   #Y轴扔盒位置 
+ICE_Z_THROW_POS             = 100.66 #Z轴扔盒位置 
+ICE_SPIN_ROTATE_TARGET      = 0.5    #旋转轴180度目标位
+ICE_SPIN_SPEED              = 30     #旋转轴速度 
 
 ICE_X_STAY_POS              = 2.33  #X轴空盒放置位
 ICE_Y_STAY_POS              = 1.04  #Y轴空盒放置位
