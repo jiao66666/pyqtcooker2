@@ -73,7 +73,7 @@ ICE_Z_SAFE_POS              = 10.0   #Z轴安全轨道
 ICE_Z_FLY_TRACK             = 60     #Z轴取完盒子腾空
 
 ICE_Y_SAFEZERO              = 0.15   #Y轴回零前安全位置
-ICE_Z_SAFEZERO              = 2.0   #Z轴回零前安全位置 
+ICE_Z_SAFEZERO              = 3.0   #Z轴回零前安全位置 
 ICE_X_SAFEZERO              = 1.0   #X轴回零前安全位置    
 
 ICE_Z_FINALPUT_POS          = 4.27  #Z轴最终放盒位置 
@@ -111,7 +111,9 @@ ICE_X_STAY_POS              = 2.33  #X轴空盒放置位
 ICE_Y_STAY_POS              = 1.04  #Y轴空盒放置位
 ICE_Z_STAY_POS              = 60    #Z轴空盒放置位
 ICE_Z_TRIGGER_POS           = 65    #XY可同步动的触发位
-ICE_Z_FINAL_PUT             = 70    #Z轴最终松盒位
+ICE_Z_SAFE_READY_PUT        = 85    #Z最终放盒前提前位
+ICE_Z_FINAL_PUT             = 90    #Z轴最终松盒位
+ICE_X_TRIGGER_POS           = 2.15  #X轴安全回零前位置
 
 
 # 冰柜相关映射
@@ -458,8 +460,25 @@ ACTION_PARAMS_KEYLIST = {
             ("z", ICE_Z_TRIGGER_POS, "y",-1)
         ]
         }),
-        ("z","icemotor_z_goput_pos","go"),
-        ("ml","icemotor_ml_suck","off")
+        ("z","icemotor_z_readyput_pos","go"),
+        ("z","icemotor_z_finalput_pos","go"),
+        ("ml","icemotor_ml_suck","off"),
+        ("parallel",[
+            ("z","icemotor_z_safezero","go"),
+            ("y","icemotor_y_safezero","go"),
+            ("x","icemotor_x_safezero","go")
+        ],{
+        "start_mode": "position",
+        "triggers": [
+            ("x", ICE_X_TRIGGER_POS, "y",-1),
+            ("x", ICE_X_TRIGGER_POS, "z",-1)
+        ]
+        }),
+        ("parallel",[
+            ("x","icemotor_resetzero","reset"),
+            ("y","icemotor_resetzero","reset"),
+            ("z","icemotor_resetzero","reset")
+        ])
     ],
     "ice_trigger_task":[
         ("parallel",[
@@ -736,7 +755,7 @@ ACTION_PARAMS_CONFIG = {
         "target":ICE_X_FINALPUT_POS
     },
     "icemotor_z_safezero":{
-        "speed":3600,
+        "speed":MAX_Z_SPEED,
         "target":ICE_Z_SAFEZERO
     },
     "icemotor_y_safezero":{
@@ -837,10 +856,14 @@ ACTION_PARAMS_CONFIG = {
         "target":ICE_Y_STAY_POS
     },
     "icemotor_z_putsafe_pos":{
-        "speed":360,
+        "speed":MAX_Z_SPEED,
         "target":ICE_Z_STAY_POS
     },
-    "icemotor_z_goput_pos":{
+    "icemotor_z_readyput_pos":{
+        "speed":MAX_Z_SPEED,
+        "target":ICE_Z_SAFE_READY_PUT
+    },
+    "icemotor_z_finalput_pos":{
         "speed":360,
         "target":ICE_Z_FINAL_PUT
     }
