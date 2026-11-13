@@ -823,7 +823,7 @@ class IceStateMachine:
 
 
     def go_next_step(self,actor="unknown"):
-        print(f"*************actor:{actor} push the state to the next action*****************")
+        print(f"*************actor:{actor} push the state to the next action,current step is :{self.current_step},next step is {self.current_step + 1}*****************")
         self.current_step += 1
 
     def reset_step(self):
