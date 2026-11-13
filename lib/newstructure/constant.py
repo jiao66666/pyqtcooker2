@@ -110,6 +110,7 @@ ICE_Y_THROW_SPEED           = 68     #Y轴扔盒同步速度
 ICE_X_STAY_POS              = 2.33  #X轴空盒放置位
 ICE_Y_STAY_POS              = 1.04  #Y轴空盒放置位
 ICE_Z_STAY_POS              = 60    #Z轴空盒放置位
+ICE_Z_TRIGGER_POS           = 65    #XY可同步动的触发位
 ICE_Z_FINAL_PUT             = 70    #Z轴最终松盒位
 
 
@@ -453,8 +454,8 @@ ACTION_PARAMS_KEYLIST = {
         ],{
         "start_mode": "position",
         "triggers": [
-            ("z", ICE_Z_STAY_POS, "x",-1),
-            ("z", ICE_Z_STAY_POS, "y",-1)
+            ("z", ICE_Z_TRIGGER_POS, "x",-1),
+            ("z", ICE_Z_TRIGGER_POS, "y",-1)
         ]
         }),
         ("z","icemotor_z_goput_pos","go"),
