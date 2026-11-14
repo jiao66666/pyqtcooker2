@@ -738,7 +738,7 @@
                     </button>
                 </div>
 
-                <!-- 右侧储位区域 -->
+                <!-- 储位区域 -->
                 <div class="ice-storage">
 
                     <!-- 左侧：13-24号 -->
@@ -747,8 +747,11 @@
                             v-for="item in iceStorageLeft"
                             :key="item.id"
                             class="storage-item"
-                            :class="item.full ? 'occupied' : 'empty'"
-                            @click="toggleIceStorage(item.id)"
+                            :class="[
+                                item.full ? 'occupied' : 'empty',
+                                item.selected ? 'selected' : ''
+                            ]"
+                            @click="selectIceStorage(item.id)"
                         >
                             ${item.id}
                         </div>
@@ -760,8 +763,11 @@
                             v-for="item in iceStorageRight"
                             :key="item.id"
                             class="storage-item"
-                            :class="item.full ? 'occupied' : 'empty'"
-                            @click="toggleIceStorage(item.id)"
+                            :class="[
+                                item.full ? 'occupied' : 'empty',
+                                item.selected ? 'selected' : ''
+                            ]"
+                            @click="selectIceStorage(item.id)"
                         >
                             ${item.id}
                         </div>

@@ -1150,3 +1150,21 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
 .storage-item:hover {
     filter: brightness(1.12);
 }
+
+
+/* 空闲 */
+.storage-item.empty {
+    background: #4CAF50;
+}
+
+/* 已占用 */
+.storage-item.occupied {
+    background: #F44336;
+}
+
+/* 当前选中 */
+.storage-item.selected {
+    outline: 3px solid #2196F3;
+    outline-offset: -3px;
+    box-shadow: 0 0 8px rgba(33, 150, 243, 0.7);
+}

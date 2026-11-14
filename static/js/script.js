@@ -2162,6 +2162,7 @@ const potCommands = {
 
 
 
+
 const iceStorageApp = new Vue({
 
     el: "#ice_storage_app",
@@ -2173,28 +2174,38 @@ const iceStorageApp = new Vue({
         // 左侧：13-24
         iceStorageLeft: Array.from({length: 12}, (_, i) => ({
             id: i + 13,
-            full: false
+            full: false,
+            selected: false
         })),
 
         // 右侧：1-12
         iceStorageRight: Array.from({length: 12}, (_, i) => ({
             id: i + 1,
-            full: false
-        }))
+            full: false,
+            selected: false
+        })),
+
+        // 当前选中的储位编号
+        selectedStorageId: null
 
     },
 
     methods: {
 
-        // 设置单个储位
-        setIceStorage(id, full) {
-
-            const allItems = [
+        // 获取全部储位
+        getAllStorage() {
+            return [
                 ...this.iceStorageLeft,
                 ...this.iceStorageRight
             ];
+        },
 
-            const item = allItems.find(item => item.id === id);
+
+        // 设置单个储位空满状态
+        setIceStorage(id, full) {
+
+            const item = this.getAllStorage()
+                .find(item => item.id === id);
 
             if (!item) {
                 console.warn(`储位 ${id} 不存在`);
@@ -2207,7 +2218,7 @@ const iceStorageApp = new Vue({
         },
 
 
-        // 批量设置24个储位
+        // 批量设置24个储位状态
         setAllIceStorage(states) {
 
             if (!Array.isArray(states) || states.length !== 24) {
@@ -2228,35 +2239,93 @@ const iceStorageApp = new Vue({
         },
 
 
-        // 点击储位切换状态（测试使用）
-        toggleIceStorage(id) {
+        // 选择储位
+        selectIceStorage(id) {
 
-            const item = [
-                ...this.iceStorageLeft,
-                ...this.iceStorageRight
-            ].find(item => item.id === id);
+            const item = this.getAllStorage()
+                .find(item => item.id === id);
 
-            if (item) {
-                item.full = !item.full;
+            if (!item) {
+                console.warn(`储位 ${id} 不存在`);
+                return false;
             }
 
+            // 取消之前的选中状态
+            this.getAllStorage().forEach(item => {
+                item.selected = false;
+            });
+
+            // 设置当前选中状态
+            item.selected = true;
+
+            this.selectedStorageId = id;
+
+            return true;
+        },
+
+
+        // 获取当前选中的储位编号
+        getSelectedStorage() {
+
+            return this.selectedStorageId;
         },
 
 
         // 放
         icePut() {
-            console.log("执行放入操作");
+
+            const storageId = this.getSelectedStorage();
+
+            if (storageId === null) {
+                console.warn("请先选择储位");
+                return;
+            }
+
+            const item = this.getAllStorage()
+                .find(item => item.id === storageId);
+
+            // 只能向空储位放入
+            if (item.full) {
+                console.warn(`储位 ${storageId} 已被占用，不能放入`);
+                return;
+            }
+
+            console.log("执行放入操作，目标储位：", storageId);
+
+            // 后续在这里调用 Python 后端接口
+
         },
 
 
         // 取
         iceTake() {
-            console.log("执行取出操作");
+
+            const storageId = this.getSelectedStorage();
+
+            if (storageId === null) {
+                console.warn("请先选择储位");
+                return;
+            }
+
+            const item = this.getAllStorage()
+                .find(item => item.id === storageId);
+
+            // 只能从已占用储位取出
+            if (!item.full) {
+                console.warn(`储位 ${storageId} 为空，不能取出`);
+                return;
+            }
+
+            console.log("执行取出操作，目标储位：", storageId);
+
+            // 后续在这里调用 Python 后端接口
+
         }
 
     }
 
 });
+
 
 
 
