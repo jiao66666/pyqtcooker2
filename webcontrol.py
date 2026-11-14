@@ -949,11 +949,6 @@ def iceMotorTask():
         return jsonify({"status": "fail","message": f"只开放{done_tested_pos}以下取盒子任务"})
 
 
-    status = system["icestorage"].get_status(int(pos))
-    if status == system["icestorage"].FULL:
-        print(f"{pos}号储位已满")
-        return jsonify({"status": "fail","message": f"{pos}号储位已满"})
-
     final_cordinate = system["icestorage"].get_position(int(pos))
     print(f"going to put at x:{final_cordinate['x']},y:{final_cordinate['y']},z:{final_cordinate['z']}")
    
@@ -980,6 +975,19 @@ def iceMotorTask():
         storage_action = "unknown"    
 
     storage_id = int(pos)
+    status = system["icestorage"].get_status(storage_id)
+    if storage_action == "put":
+        if status == system["icestorage"].FULL:
+            print(f"{pos}号储位已满")
+            return jsonify({"status": "fail","message": f"{pos}号储位已满"})
+    elif storage_action == "get":   
+        if status == system["icestorage"].EMPTY:
+            print(f"{pos}号储位为空，无法获取")
+            return jsonify({"status": "fail","message": f"{pos}号储位为空"}) 
+    else:
+        print(f"动作类型有误")
+        return jsonify({"status": "fail","message": f"动作类型有误"})  
+
     success = False
     success,msg =  system["iceservice"].run_task(actionname,int(repeat),{"task_name":actionname,"task_type":NORMAL_TASK_TYPE,"storage_action":storage_action,"storage_id":storage_id})
     if success :
@@ -1005,11 +1013,7 @@ def iceMotorControl():
         return jsonify({"status": "fail","message": f"只开放{done_tested_pos}以下取盒子任务"})
 
 
-    status = system["icestorage"].get_status(int(pos))
-    if status == system["icestorage"].FULL:
-        print(f"{pos}号储位已满")
-        return jsonify({"status": "fail","message": f"{pos}号储位已满"})
-
+   
     final_cordinate = system["icestorage"].get_position(int(pos))
     print(f"going to put at x:{final_cordinate['x']},y:{final_cordinate['y']},z:{final_cordinate['z']}")
    
@@ -1035,6 +1039,19 @@ def iceMotorControl():
         storage_action = "unknown"    
 
     storage_id = int(pos)
+    status = system["icestorage"].get_status(storage_id)
+    if storage_action == "put":
+        if status == system["icestorage"].FULL:
+            print(f"{pos}号储位已满")
+            return jsonify({"status": "fail","message": f"{pos}号储位已满"})
+    elif storage_action == "get":   
+        if status == system["icestorage"].EMPTY:
+            print(f"{pos}号储位为空，无法获取")
+            return jsonify({"status": "fail","message": f"{pos}号储位为空"}) 
+    else:
+        print(f"动作类型有误")
+        return jsonify({"status": "fail","message": f"动作类型有误"})  
+
     success = False
     success,msg =  system["iceservice"].run_task(actionname,1,{"task_name":actionname,"task_type":NORMAL_TASK_TYPE,"storage_action":storage_action,"storage_id":storage_id})
     if success :
