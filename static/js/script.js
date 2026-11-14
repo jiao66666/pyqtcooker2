@@ -2159,6 +2159,109 @@ const potCommands = {
     2: []
 };
 
+
+
+
+const iceStorageApp = new Vue({
+
+    el: "#ice_storage_app",
+
+    delimiters: ['${', '}'],
+
+    data: {
+
+        // 左侧：13-24
+        iceStorageLeft: Array.from({length: 12}, (_, i) => ({
+            id: i + 13,
+            full: false
+        })),
+
+        // 右侧：1-12
+        iceStorageRight: Array.from({length: 12}, (_, i) => ({
+            id: i + 1,
+            full: false
+        }))
+
+    },
+
+    methods: {
+
+        // 设置单个储位
+        setIceStorage(id, full) {
+
+            const allItems = [
+                ...this.iceStorageLeft,
+                ...this.iceStorageRight
+            ];
+
+            const item = allItems.find(item => item.id === id);
+
+            if (!item) {
+                console.warn(`储位 ${id} 不存在`);
+                return false;
+            }
+
+            item.full = Boolean(full);
+
+            return true;
+        },
+
+
+        // 批量设置24个储位
+        setAllIceStorage(states) {
+
+            if (!Array.isArray(states) || states.length !== 24) {
+                console.warn("储位状态必须包含24个元素");
+                return false;
+            }
+
+            const allItems = [
+                ...this.iceStorageRight,
+                ...this.iceStorageLeft
+            ];
+
+            allItems.forEach((item, index) => {
+                item.full = Boolean(states[index]);
+            });
+
+            return true;
+        },
+
+
+        // 点击储位切换状态（测试使用）
+        toggleIceStorage(id) {
+
+            const item = [
+                ...this.iceStorageLeft,
+                ...this.iceStorageRight
+            ].find(item => item.id === id);
+
+            if (item) {
+                item.full = !item.full;
+            }
+
+        },
+
+
+        // 放
+        icePut() {
+            console.log("执行放入操作");
+        },
+
+
+        // 取
+        iceTake() {
+            console.log("执行取出操作");
+        }
+
+    }
+
+});
+
+
+
+
+
 // WebSocket 初始化方法
 function setupWebSocket(url) {
     ws = new WebSocket(url);  // 创建 WebSocket 连接

@@ -1059,3 +1059,94 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
     display: flex;
     flex-flow: row nowrap;
 }
+
+
+/* 整体控制面板 */
+.ice-control-panel {
+    display: flex;
+    align-items: stretch;
+    gap: 30px;
+    padding: 25px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* 左侧操作按钮 */
+.ice-actions {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 20px;
+    width: 80px;
+    flex-shrink: 0;
+}
+
+.ice-action-btn {
+    flex: 1;
+    border: none;
+    border-radius: 12px;
+    font-size: 30px;
+    font-weight: bold;
+    color: white;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.ice-action-btn:hover {
+    filter: brightness(1.1);
+}
+
+.put-btn {
+    background: #2196F3;
+}
+
+.take-btn {
+    background: #FF9800;
+}
+
+/* 储位整体区域 */
+.ice-storage {
+    display: flex;
+    flex: 1;
+    gap: 20px;
+    min-width: 0;
+}
+
+/* 每组储位 */
+.storage-group {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: repeat(6, 1fr);
+    gap: 10px;
+    flex: 1;
+    min-width: 0;
+}
+
+/* 单个储位 */
+.storage-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 65px;
+    border-radius: 8px;
+    font-size: 22px;
+    font-weight: bold;
+    color: white;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+/* 空闲 */
+.storage-item.empty {
+    background: #4CAF50;
+}
+
+/* 已占用 */
+.storage-item.occupied {
+    background: #F44336;
+}
+
+/* 鼠标悬停 */
+.storage-item:hover {
+    filter: brightness(1.12);
+}

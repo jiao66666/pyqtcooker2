@@ -54,6 +54,7 @@
     <div class="tab-buttons">
         <button class="active" onclick="showTab(7, this)">冰柜步进板</button>
         <button onclick="showTab(8, this)">冰柜任务区</button>
+        <button onclick="showTab(9, this)">冰柜控制面板</button>
         <button onclick="showTab(1, this)">锅手控区</button>
         <button onclick="showTab(2, this)">锅步进板</button>
         <button onclick="showTab(3, this)">锅旋转板</button>
@@ -719,6 +720,62 @@
         <div class="ice_btn mt10" onclick="iceMotorTask('ice_get_task')">冰柜【取】盒子整体测试</div>
 
     </div>
+
+    <div id="tab9" class="tab-content">
+
+        <div id="ice_storage_app">
+
+            <div class="ice-control-panel">
+
+                <!-- 左侧操作按钮 -->
+                <div class="ice-actions">
+                    <button class="ice-action-btn put-btn" @click="icePut">
+                        放
+                    </button>
+
+                    <button class="ice-action-btn take-btn" @click="iceTake">
+                        取
+                    </button>
+                </div>
+
+                <!-- 右侧储位区域 -->
+                <div class="ice-storage">
+
+                    <!-- 左侧：13-24号 -->
+                    <div class="storage-group">
+                        <div
+                            v-for="item in iceStorageLeft"
+                            :key="item.id"
+                            class="storage-item"
+                            :class="item.full ? 'occupied' : 'empty'"
+                            @click="toggleIceStorage(item.id)"
+                        >
+                            ${item.id}
+                        </div>
+                    </div>
+
+                    <!-- 右侧：1-12号 -->
+                    <div class="storage-group">
+                        <div
+                            v-for="item in iceStorageRight"
+                            :key="item.id"
+                            class="storage-item"
+                            :class="item.full ? 'occupied' : 'empty'"
+                            @click="toggleIceStorage(item.id)"
+                        >
+                            ${item.id}
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
 
     <div class="prompt">控制台消息</div>
     <div class="history_con">
