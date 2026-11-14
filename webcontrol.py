@@ -946,7 +946,7 @@ def iceMotorTask():
     done_tested_pos = 1
     if int(pos) > done_tested_pos:
         print("位置号异常!")
-        return jsonify({"status": "fail","message": f"只开放{done_tested_pos}以下取盒子任务"})
+        return jsonify({"status": "fail","message": f"只开放{done_tested_pos}以下任务"})
 
 
     final_cordinate = system["icestorage"].get_position(int(pos))
@@ -1010,7 +1010,7 @@ def iceMotorControl():
     done_tested_pos = 1
     if int(pos) > done_tested_pos:
         print("位置号异常!")
-        return jsonify({"status": "fail","message": f"只开放{done_tested_pos}以下取盒子任务"})
+        return jsonify({"status": "fail","message": f"只开放{done_tested_pos}以下任务"})
 
 
    
