@@ -33,9 +33,20 @@ def handle_ice_recovery(data):
     }])
 
 
+def handle_ice_storage_update(data):
+    websocket.send([{
+        "type": "ice_storage_status_updated",
+        "info": data
+    }])
+
 bus.subscribe(
     "ICE_RECOVERY_REQUIRED",
     handle_ice_recovery
+)
+
+bus.subscribe(
+    "ICE_STORAGE_UPDATED",
+    handle_ice_storage_update
 )
 
 # 根据传入的命令行参数设置端口,方便测试和生产环境使用不同的端口
@@ -970,7 +981,7 @@ def iceMotorTask():
 
     storage_id = int(pos)
     success = False
-    success,msg =  system["iceservice"].run_task(actionname,int(repeat),{"task_type":NORMAL_TASK_TYPE,"storage_action":storage_action,"storage_id":storage_id})
+    success,msg =  system["iceservice"].run_task(actionname,int(repeat),{"task_name":actionname,"task_type":NORMAL_TASK_TYPE,"storage_action":storage_action,"storage_id":storage_id})
     if success :
         print("电机单次运转成功!")
         return jsonify({"status": "success","message": f"运行电机成功!"})
@@ -1025,7 +1036,7 @@ def iceMotorControl():
 
     storage_id = int(pos)
     success = False
-    success,msg =  system["iceservice"].run_task(actionname,1,{"task_type":NORMAL_TASK_TYPE,"storage_action":storage_action,"storage_id":storage_id})
+    success,msg =  system["iceservice"].run_task(actionname,1,{"task_name":actionname,"task_type":NORMAL_TASK_TYPE,"storage_action":storage_action,"storage_id":storage_id})
     if success :
         print("电机单次运转成功!")
         return jsonify({"status": "success","message": f"运行电机成功!"})

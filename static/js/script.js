@@ -2414,7 +2414,9 @@ function setupWebSocket(url) {
             }else if (item.type == "testdata"){
                 commandDebugApp.addReceive(item.msg)
             }else if (item.type == "ice_recovery_required"){
-                  addMessage(item.info.message)
+                addMessage(item.info.message)
+            }else if (item.type == "ice_storage_status_updated"){
+                iceStorageApp.setAllIceStorage(item.info)
             }
         }
     };

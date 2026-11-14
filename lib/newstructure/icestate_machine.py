@@ -5,7 +5,7 @@ from lib.newstructure.constant import *
 from lib.newstructure.tools import get_motor_position,get_motor_homestatus
 #冰柜状态机模型
 class IceStateMachine:
-    def __init__(self, bus, resource_manager):
+    def __init__(self, bus, resource_manager, ice_storage=None):
         self.state = "IDLE"
 
         self.bus = bus
@@ -26,6 +26,8 @@ class IceStateMachine:
         self.delay_duration = None
 
         self.task_context = None
+
+        self.ice_storage = ice_storage
 
 
         # 当前动作执行类型
@@ -84,6 +86,7 @@ class IceStateMachine:
             print(f"任务 {running_task_id} 已经提交或正在执行")
             return False
 
+        task_type = None
         if task_context is not None:
             if not isinstance(task_context, dict):
                 print("任务上下文必须是字典")
@@ -95,7 +98,6 @@ class IceStateMachine:
                 print("任务上下文缺少 task_type")
                 return False
 
-            self.task_context = task_context
 
         # 记录任务 ID（包含排队任务）
         self.running_tasks.add(running_task_id)
@@ -104,7 +106,8 @@ class IceStateMachine:
             "task_id": running_task_id,
             "steps": steps,
             "repeat": repeat,
-            "task_type": task_type
+            "task_type": task_type,
+            "task_context": task_context
         }
 
         self.command_queue.put(task)
@@ -150,6 +153,7 @@ class IceStateMachine:
                 self.running_task_type = task["task_type"]
                 self.steps = task["steps"]
                 self.total_repeat = task["repeat"]
+                self.task_context = task.get("task_context")
                 self.current_repeat = 0
 
                 print(
@@ -323,6 +327,10 @@ class IceStateMachine:
             else:
                 # 所有次数执行完毕，通知 ResourceManager 释放任务资源
                 print(f"当前次数为{self.current_repeat}，大于等于执行总数{self.total_repeat},执行结束")
+
+                # 更新储位状态
+                self.handle_storage_action_done()
+
                 self.bus.publish("TASK_DONE", {
                     "task_id": self.running_task_id,
                     "owner_id": self.running_task_id,
@@ -1074,6 +1082,65 @@ class IceStateMachine:
                 return True
 
         return False
+
+
+    def handle_storage_action_done(self):
+        """处理储位相关任务完成后的状态更新"""
+
+        context = self.task_context
+
+        if not context:
+            return
+
+        storage_action = context.get("storage_action")
+        storage_id = context.get("storage_id")
+
+        # 没有储位操作信息，说明是普通任务
+        if storage_action is None or storage_id is None:
+            return
+
+        if self.ice_storage is None:
+            print("冰柜储位管理器未初始化")
+            return
+
+        # 放入操作
+        if storage_action == "put":
+
+            if not self.ice_storage.is_empty(storage_id):
+                print(f"储位 {storage_id} 非空，无法完成放入状态更新")
+                return
+
+            self.ice_storage.set_status(
+                storage_id,
+                self.ice_storage.FULL
+            )
+
+        # 取出操作
+        elif storage_action == "get":
+
+            if not self.ice_storage.is_full(storage_id):
+                print(f"储位 {storage_id} 非满，无法完成取出状态更新")
+                return
+
+            self.ice_storage.set_status(
+                storage_id,
+                self.ice_storage.EMPTY
+            )
+
+        else:
+            print(f"未知储位操作类型：{storage_action}")
+            return
+
+        print(
+            f"储位 {storage_id} 状态更新成功，"
+            f"操作类型：{storage_action}"
+        )
+
+        # 通知前端刷新全部储位状态
+        self.bus.publish("ICE_STORAGE_UPDATED", {
+            "type": "ice_storage",
+            "states": self.ice_storage.get_all_status()
+        })
 
 
 
