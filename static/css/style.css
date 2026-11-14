@@ -1069,15 +1069,15 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
     padding: 25px;
     width: 100%;
     box-sizing: border-box;
+    flex-flow:column nowrap
 }
 
 /* 左侧操作按钮 */
 .ice-actions {
     display: flex;
-    flex-direction: column;
+    flex-flow: row nowrap;
     justify-content: space-between;
     gap: 20px;
-    width: 80px;
     flex-shrink: 0;
 }
 
