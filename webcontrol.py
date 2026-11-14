@@ -992,7 +992,7 @@ def iceMotorTask():
     success,msg =  system["iceservice"].run_task(actionname,int(repeat),{"task_name":actionname,"task_type":NORMAL_TASK_TYPE,"storage_action":storage_action,"storage_id":storage_id})
     if success :
         print("电机单次运转成功!")
-        return jsonify({"status": "success","message": f"运行电机成功!"})
+        return jsonify({"status": "success","message": f"提交冰柜任务成功!"})
     else:
         print("电机单次运转失败!")
         return jsonify({"status": "fail","message": f"运转失败!错误:{msg}"})
@@ -1056,7 +1056,7 @@ def iceMotorControl():
     success,msg =  system["iceservice"].run_task(actionname,1,{"task_name":actionname,"task_type":NORMAL_TASK_TYPE,"storage_action":storage_action,"storage_id":storage_id})
     if success :
         print("电机单次运转成功!")
-        return jsonify({"status": "success","message": f"运行电机成功!"})
+        return jsonify({"status": "success","message": f"提交冰柜任务成功!"})
     else:
         print("电机单次运转失败!")
         return jsonify({"status": "fail","message": f"运转失败!错误:{msg}"})
