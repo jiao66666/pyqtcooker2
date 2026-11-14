@@ -2278,6 +2278,7 @@ const iceStorageApp = new Vue({
 
             if (storageId === null) {
                 console.warn("请先选择储位");
+                addMessage("请先选择储位")
                 return;
             }
 
@@ -2287,13 +2288,30 @@ const iceStorageApp = new Vue({
             // 只能向空储位放入
             if (item.full) {
                 console.warn(`储位 ${storageId} 已被占用，不能放入`);
+                addMessage(`储位 ${storageId} 已被占用，不能放入`)
                 return;
             }
 
             console.log("执行放入操作，目标储位：", storageId);
 
-            // 后续在这里调用 Python 后端接口
-
+            fetch('/iceMotorControl', {
+                method: 'POST', 
+                headers: {
+                    'Content-Type': 'application/json'  
+                },
+                body: JSON.stringify({
+                    pos:storageId,
+                    taskname:"ice_put_task"
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                addMessage(``+data.message);  // 将收到的消息保存并显示
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                addMessage("Error starting motor.");
+            });
         },
 
 
@@ -2304,6 +2322,7 @@ const iceStorageApp = new Vue({
 
             if (storageId === null) {
                 console.warn("请先选择储位");
+                addMessage("请先选择储位")
                 return;
             }
 
@@ -2313,13 +2332,31 @@ const iceStorageApp = new Vue({
             // 只能从已占用储位取出
             if (!item.full) {
                 console.warn(`储位 ${storageId} 为空，不能取出`);
+                addMessage(`储位 ${storageId} 为空，不能取出`)
                 return;
             }
 
             console.log("执行取出操作，目标储位：", storageId);
 
+            fetch('/iceMotorControl', {
+                method: 'POST', 
+                headers: {
+                    'Content-Type': 'application/json'  
+                },
+                body: JSON.stringify({
+                    pos:storageId,
+                    taskname:"ice_get_task"
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                addMessage(``+data.message);  // 将收到的消息保存并显示
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                addMessage("Error starting motor.");
+            });
             // 后续在这里调用 Python 后端接口
-
         }
 
     }
