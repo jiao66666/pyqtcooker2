@@ -910,7 +910,7 @@ def zeroIceMotorAll():
         }
     )
 
-    success,msg =  system["iceservice"].run_task(actionname,1,RESET_TASK_TYPE)
+    success,msg =  system["iceservice"].run_task(actionname,1,{"task_type":RESET_TASK_TYPE})
     if success :
         print("电机单次运转成功!")
         return jsonify({"status": "success","message": f"运行电机成功!"})
@@ -956,7 +956,7 @@ def iceMotorTask():
     )
 
     success = False
-    success,msg =  system["iceservice"].run_task(actionname,int(repeat))
+    success,msg =  system["iceservice"].run_task(actionname,int(repeat),{"task_type":NORMAL_TASK_TYPE})
     if success :
         print("电机单次运转成功!")
         return jsonify({"status": "success","message": f"运行电机成功!"})
@@ -996,7 +996,7 @@ def iceMotorTaskByStep():
     )
 
     success = False
-    success,msg =  system["iceservice"].run_task_bystep(actionname,int(index),1,STEP_TASK_TYPE)
+    success,msg =  system["iceservice"].run_task_bystep(actionname,int(index),1,{"task_type":STEP_TASK_TYPE})
     if success :
         print("电机单次运转成功!")
         return jsonify({"status": "success","message": f"运行电机分步任务，序号{index}成功!"})

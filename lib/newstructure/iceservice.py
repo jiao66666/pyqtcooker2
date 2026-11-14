@@ -38,7 +38,7 @@ class IceService:
         return True,"workable OK"
 
     # 运行电机动作组[多动作互斥]
-    def run_task(self, task_name, repeat=1,task_type="normal_task"):
+    def run_task(self, task_name, repeat=1,task_context=None):
         OK, msg = self.check_workable()
         if not OK:
             return False, msg
@@ -66,7 +66,7 @@ class IceService:
             print(steps)
 
             # 提交任务，repeat 整体执行期间持续占用资源
-            self.system["ice"].submit_task(task_id, steps, repeat,task_type)
+            self.system["ice"].submit_task(task_id, steps, repeat,task_context)
 
             return True, "submit task OK"
 
@@ -77,7 +77,7 @@ class IceService:
 
 
     # 运行电机动作组[动作]
-    def run_task_bystep(self, task_name, index,repeat=1,task_type="normal_task"):
+    def run_task_bystep(self, task_name, index,repeat=1,task_context=None):
         OK, msg = self.check_workable()
         if not OK:
             return False, msg
@@ -105,7 +105,7 @@ class IceService:
             print(steps)
 
             # 提交任务，repeat 整体执行期间持续占用资源
-            self.system["ice"].submit_task(task_id, steps, repeat,task_type)
+            self.system["ice"].submit_task(task_id, steps, repeat,task_context)
 
             return True, "submit task OK"
 

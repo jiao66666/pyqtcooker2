@@ -60,7 +60,7 @@ class IceStateMachine:
         self.bus.subscribe("MOTOR_ERROR", self.on_motor_error)
 
 
-    def submit_task(self, running_task_id, steps, repeat=1,task_type="normal_task"):
+    def submit_task(self, running_task_id, steps, repeat=1,task_context=None):
 
         if not isinstance(repeat, int) or isinstance(repeat, bool) or repeat < 1:
             return False
@@ -82,9 +82,19 @@ class IceStateMachine:
             print(f"任务 {running_task_id} 已经提交或正在执行")
             return False
 
+        if task_context is not None:
+            if not isinstance(task_context, dict):
+                print("任务上下文必须是字典")
+                return False
+
+            task_type = task_context.get("task_type")
+
+            if task_type is None:
+                print("任务上下文缺少 task_type")
+                return False
+
         # 记录任务 ID（包含排队任务）
         self.running_tasks.add(running_task_id)
-
         # 将任务 ID、动作步骤、重复次数绑定在一起
         task = {
             "task_id": running_task_id,
