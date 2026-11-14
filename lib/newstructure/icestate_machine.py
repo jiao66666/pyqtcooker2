@@ -25,6 +25,8 @@ class IceStateMachine:
         self.delay_start_time = None
         self.delay_duration = None
 
+        self.task_context = None
+
 
         # 当前动作执行类型
         self.current_action_type = "single"
@@ -92,6 +94,8 @@ class IceStateMachine:
             if task_type is None:
                 print("任务上下文缺少 task_type")
                 return False
+
+            self.task_context = task_context
 
         # 记录任务 ID（包含排队任务）
         self.running_tasks.add(running_task_id)
@@ -325,16 +329,9 @@ class IceStateMachine:
                     "owner_type": "task",
                 })
 
-                # 清理任务
-                self.running_tasks.discard(self.running_task_id)
-                self.running_task_id = None
-                self.running_task_type = None
-                self.steps = None
+                self.clear_current_task()
                 self.state = "IDLE"
 
-                # 重置重复执行计数
-                self.total_repeat = 0
-                self.current_repeat = 0
 
         elif self.state == "ERROR":
             print(f"ice machine state is ERROR")  
@@ -741,8 +738,19 @@ class IceStateMachine:
         while not self.command_queue.empty():
             self.command_queue.get()
 
-        # 清理任务信息
+        # 清理所有任务记录
         self.running_tasks.clear()
+
+        # 清理当前任务
+        self.clear_current_task()
+
+        # 清理错误信息
+        self.error_info = None
+
+    def clear_current_task(self):
+
+        self.running_tasks.discard(self.running_task_id)
+
         self.running_task_id = None
         self.running_task_type = None
 
@@ -750,17 +758,15 @@ class IceStateMachine:
         self.total_repeat = 0
         self.current_repeat = 0
 
+        self.task_context = None
+
         self.reset_step()
 
-        # 清理普通动作计时
+        # 清理动作计时
         self.wait_start_time = 0
-
-
-        # 清理错误信息
-        self.error_info = None
-
         self.delay_start_time = None
         self.delay_duration = None
+
 
 
     def check_home(self):
