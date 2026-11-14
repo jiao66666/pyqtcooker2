@@ -938,6 +938,11 @@ def iceMotorTask():
         return jsonify({"status": "fail","message": f"只开放{done_tested_pos}以下取盒子任务"})
 
 
+    status = system["icestorage"].get_status(int(pos))
+    if status == system["icestorage"].FULL:
+        print(f"{pos}号储位已满")
+        return jsonify({"status": "fail","message": f"{pos}号储位已满"})
+
     final_cordinate = system["icestorage"].get_position(int(pos))
     print(f"going to put at x:{final_cordinate['x']},y:{final_cordinate['y']},z:{final_cordinate['z']}")
    
@@ -955,8 +960,17 @@ def iceMotorTask():
         }
     )
 
+
+    if taskname == "ice_put_task":
+        storage_action = "put"
+    elif taskname == "ice_get_task":
+        storage_action = "get"
+    else:
+        storage_action = "unknown"    
+
+    storage_id = int(pos)
     success = False
-    success,msg =  system["iceservice"].run_task(actionname,int(repeat),{"task_type":NORMAL_TASK_TYPE})
+    success,msg =  system["iceservice"].run_task(actionname,int(repeat),{"task_type":NORMAL_TASK_TYPE,"storage_action":storage_action,"storage_id":storage_id})
     if success :
         print("电机单次运转成功!")
         return jsonify({"status": "success","message": f"运行电机成功!"})
