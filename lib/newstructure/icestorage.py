@@ -62,3 +62,12 @@ class IceStorage:
                 for position_id, position in self.positions.items()
                 if position["status"] == self.FULL
             ]
+        
+    #返回给前端更新状态
+    def get_all_status(self):
+        """获取全部24个储位状态，按照储位编号1-24排列"""
+        with self._lock:
+            return [
+                self.positions[position_id]["status"] == self.FULL
+                for position_id in sorted(self.positions)
+            ]        
