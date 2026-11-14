@@ -1106,7 +1106,7 @@ class IceStateMachine:
         # 放入操作
         if storage_action == "put":
 
-            if not self.ice_storage.is_empty(storage_id):
+            if self.ice_storage.get_status(storage_id) == self.ice_storage.FULL:
                 print(f"储位 {storage_id} 非空，无法完成放入状态更新")
                 return
 
@@ -1118,7 +1118,7 @@ class IceStateMachine:
         # 取出操作
         elif storage_action == "get":
 
-            if not self.ice_storage.is_full(storage_id):
+            if self.ice_storage.get_status(storage_id) == self.ice_storage.EMPTY:
                 print(f"储位 {storage_id} 非满，无法完成取出状态更新")
                 return
 

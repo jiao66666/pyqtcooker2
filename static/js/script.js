@@ -2418,7 +2418,7 @@ function setupWebSocket(url) {
             }else if (item.type == "ice_storage_status_updated"){
                 console.log("ice storage status updated")
                 console.log(item)
-                iceStorageApp.setAllIceStorage(item.info)
+                iceStorageApp.setAllIceStorage(item.info.states)
             }
         }
     };
