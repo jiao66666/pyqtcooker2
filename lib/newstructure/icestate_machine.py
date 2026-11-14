@@ -1086,7 +1086,7 @@ class IceStateMachine:
 
     def handle_storage_action_done(self):
         """处理储位相关任务完成后的状态更新"""
-
+        print("处理储位相关任务完成后的状态更新")
         context = self.task_context
 
         if not context:
