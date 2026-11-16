@@ -420,7 +420,7 @@ ACTION_PARAMS_KEYLIST = {
         "start_mode": "position",
         "triggers": [
             ("z", ICE_Z_SAFE_TRIGGER, "x",-1),
-            ("x", ICE_X_SAFE_POS, "y",-1)
+            ("z", ICE_Z_SAFE_TRIGGER, "y",-1)
         ]
         }),
         ("parallel",[
