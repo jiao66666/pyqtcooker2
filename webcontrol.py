@@ -943,7 +943,7 @@ def iceMotorTask():
     taskname = data.get("taskname")
 
     print(f"speed x:{speed_x},speed y:{speed_y},speed_z:{speed_z}")
-    done_tested_pos = 2
+    done_tested_pos = ICE_TESTED_POS
     if int(pos) > done_tested_pos:
         print("位置号异常!")
         return jsonify({"status": "fail","message": f"只开放{done_tested_pos}以下任务"})
@@ -957,19 +957,24 @@ def iceMotorTask():
         print("动作名异常!")
         return jsonify({"status": "fail","message": f"运转失败!错误:动作名异常"})
 
-    apply_action_params_override(
+    if taskname == "ice_put_task":
+        apply_action_params_override(
         actionname,
         {
             "icemotor_x_finalputpos": {"target":final_cordinate['x'],"speed":speed_x},
             "icemotor_y_finalputpos":{"target":final_cordinate['y'],"speed":speed_y},
             "icemotor_z_finalputpos":{"target":final_cordinate['z'],"speed":speed_z}
         }
-    )
-
-
-    if taskname == "ice_put_task":
+        )
         storage_action = "put"
     elif taskname == "ice_get_task":
+        apply_action_params_override(
+        actionname,
+        {
+            "icemotor_y_getsafe_pos":{"target":final_cordinate['y'],"speed":speed_y},
+            "icemotor_z_getsafe_pos":{"target":final_cordinate['z'],"speed":speed_z}
+        }
+        )
         storage_action = "get"
     else:
         storage_action = "unknown"    
@@ -1007,7 +1012,7 @@ def iceMotorControl():
     pos = data.get("pos")
     taskname = data.get("taskname")
 
-    done_tested_pos = 2
+    done_tested_pos = ICE_TESTED_POS
     if int(pos) > done_tested_pos:
         print("位置号异常!")
         return jsonify({"status": "fail","message": f"只开放{done_tested_pos}以下任务"})
@@ -1022,18 +1027,26 @@ def iceMotorControl():
         print("动作名异常!")
         return jsonify({"status": "fail","message": f"运转失败!错误:动作名异常"})
 
-    apply_action_params_override(
+
+
+    if taskname == "ice_put_task":
+        apply_action_params_override(
         actionname,
         {
             "icemotor_x_finalputpos": {"target":final_cordinate['x']},
             "icemotor_y_finalputpos":{"target":final_cordinate['y']},
             "icemotor_z_finalputpos":{"target":final_cordinate['z']}
         }
-    )
-
-    if taskname == "ice_put_task":
+        )
         storage_action = "put"
     elif taskname == "ice_get_task":
+        apply_action_params_override(
+        actionname,
+        {
+            "icemotor_y_getsafe_pos":{"target":final_cordinate['y']},
+            "icemotor_z_getsafe_pos":{"target":final_cordinate['z']}
+        }
+        )
         storage_action = "get"
     else:
         storage_action = "unknown"    

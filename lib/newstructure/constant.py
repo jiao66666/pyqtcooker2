@@ -4,6 +4,7 @@ ORGSET_Z_OFFSET = 0.5
 ORGSET_X_OFFSET = 0.1
 ORGSET_Y_OFFSET = 0.1
 
+
 RESET_TASK_TYPE = "reset_task"
 STEP_TASK_TYPE  = "step_task"
 NORMAL_TASK_TYPE = "normal_task"
@@ -50,6 +51,11 @@ POT2_FLIP_MOTOR =  3  # 2号锅翻转电机编号
 POT_MOTOR_LIST = [POT_BACKUP_MOTOR,POT1_MOVE_MOTOR,POT1_FLIP_MOTOR,POT2_MOVE_MOTOR,POT2_FLIP_MOTOR]
 
 ########冰柜步进配置#######
+
+
+ICE_TESTED_POS = 2       #当前开放的测试冰柜位置
+
+
 ICE_MOTOR_X = 0          #冰柜x   正转向右
 ICE_MOTOR_DOOR = 1       #冰柜门  
 ICE_MOTOR_Y = 2          #冰柜y   正转向左
