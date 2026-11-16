@@ -101,7 +101,7 @@ ICE_Z_GET_SAFEPOS           = 4.27   #Z轴取盒安全位
 ICE_X_GET_TOUCH             = 12.0   #X轴最终触碰盒子位
 
 ICE_X_GET_SPEED             = 1000   #X轴出去速度
-ICE_Y_GET_SPPED             = 17     #Y轴出去速度
+ICE_Y_GET_SPPED             = 360     #Y轴出去速度
 ICE_Z_GET_SPEED             = 360    #Z轴出去速度
 
 ICE_X_THROW_POS             = 7.10   #X轴扔盒位置 
