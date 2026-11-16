@@ -1007,7 +1007,7 @@ def iceMotorControl():
     pos = data.get("pos")
     taskname = data.get("taskname")
 
-    done_tested_pos = 1
+    done_tested_pos = 2
     if int(pos) > done_tested_pos:
         print("位置号异常!")
         return jsonify({"status": "fail","message": f"只开放{done_tested_pos}以下任务"})
