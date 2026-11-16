@@ -73,7 +73,8 @@ ICE_Z_SAFE_POS              = 10.0   #Z轴安全轨道
 ICE_Z_FLY_TRACK             = 60     #Z轴取完盒子腾空
 
 ICE_Y_SAFEZERO              = 0.15   #Y轴回零前安全位置
-ICE_Z_SAFEZERO              = 3.0   #Z轴回零前安全位置 
+ICE_Z_SAFEZERO              = 2.0   #Z轴回零前安全位置 
+ICE_Z_SAFE_TRIGGER          = 3.0   #Z轴同步安全位
 ICE_X_SAFEZERO              = 1.0   #X轴回零前安全位置    
 
 ICE_Z_FINALPUT_POS          = 4.27  #Z轴最终放盒位置 
@@ -128,7 +129,7 @@ ICE_MOTORID_NAME_MAP ={
 
 ICE_STORAGE_MAP = {
     1:  {"x": 12, "y": 0.20, "z": 4.27},
-    2:  {"x": 12, "y": 2.14, "z": 1.83},
+    2:  {"x": 12, "y": 2.14, "z": 3.6},
     3:  {"x": 12, "y": 0.20, "z": 22.88},
     4:  {"x": 12, "y": 2.15, "z": 20.88},
     5:  {"x": 0, "y": 0, "z": 0},
@@ -418,8 +419,8 @@ ACTION_PARAMS_KEYLIST = {
         ],{
         "start_mode": "position",
         "triggers": [
-            ("x", ICE_X_SAFE_POS, "y",-1),
-            ("x", ICE_X_SAFE_POS, "z",-1)
+            ("z", ICE_Z_SAFE_TRIGGER, "x",-1),
+            ("x", ICE_X_SAFE_POS, "y",-1)
         ]
         }),
         ("parallel",[
