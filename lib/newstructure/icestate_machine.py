@@ -187,7 +187,7 @@ class IceStateMachine:
                 print(f"icemotor运行参数如下:{step['params']}")
 
 
-                if step["dotype"] not in ("go", "reset","go_delay"):
+                if step["dotype"] not in ICE_STEP_ALLOWED_ACTIONS:
                     self.state = "ERROR"
                     self.error_info = f"未知的动作类型：{step['dotype']}"
                     return
@@ -233,7 +233,7 @@ class IceStateMachine:
 
             elif step["type"] == "dc_ice":
 
-                if step["dotype"] not in ("on", "off"):
+                if step["dotype"] not in ICE_DC_ALLOWED_ACTIONS:
                     self.state = "ERROR"
                     self.error_info = f"未知的动作类型：{step['dotype']}"
                     return
@@ -459,7 +459,7 @@ class IceStateMachine:
 
             seen_resources.add(resource_id)
 
-            if step["dotype"] not in ("go", "reset"):
+            if step["dotype"] not in ICE_STEP_ALLOWED_ACTIONS:
                 print(f"未知并行动作类型: {step['dotype']}")
                 self.state = "ERROR"
                 return
@@ -612,7 +612,7 @@ class IceStateMachine:
             self.state = "ERROR"
             return False
 
-        if step["dotype"] not in ("go", "reset"):
+        if step["dotype"] not in ICE_STEP_ALLOWED_ACTIONS:
             print(f"未知并行动作类型: {step['dotype']}")
             self.state = "ERROR"
             return False
