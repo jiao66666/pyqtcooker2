@@ -486,26 +486,6 @@ ACTION_PARAMS_KEYLIST = {
             ("y","icemotor_resetzero","reset"),
             ("z","icemotor_resetzero","reset")
         ])
-    ],
-    "ice_trigger_task":[
-        ("parallel",[
-            ("z","icemotor_z_testpoint","go"),
-            ("y","icemotor_y_testpoint","go"),
-            ("x","icemotor_x_testpoint","go")
-        ]),
-        ("x","icemotor_x_testpoint3","go"),
-        ("parallel",[
-            ("z","icemotor_resetzero","go"),
-            ("y","icemotor_resetzero","go"),
-            ("x","icemotor_resetzero","go")
-        ],{
-        "start_mode": "position",
-        "triggers": [
-            ("x", 5, "y",-1),
-            ("x", 5, "z",-1)
-        ]
-        }),
-        ("z","icemotor_z_testpoint4","go")
     ]
 }
 
