@@ -221,6 +221,13 @@ class IceStateMachine:
                 elif step["dotype"] == "go_delay":
                     print("exectuing<<<<<[go_delay]>>>>>>do type")
                     step["motor"].go(step["params"]["target"],step["params"]["speed"])   
+                elif step["dotype"] == "go_optional":
+                    print("exectuing<<<<<[go_optional]>>>>>>do type")
+                    success, msg, result = step["motor"].go_optional(step["params"]["target"],step["params"]["speed"]) 
+                    if success and result == "SKIP":
+                        print("无需运动，直接结束动作")
+                        print("处理电机完成》》》》》》》》》")
+                        self.handle_direction_done(step["motor"].motor_id,BOARDTYPE_ICE,self.running_task_id)
                 else:
                     self.state = "ERROR"
                     print(
@@ -1168,4 +1175,37 @@ class IceStateMachine:
     def destroy(self):
         self.bus.unsubscribe("ICE_MOTOR_DONE", self.on_icemotor_done)
         self.bus.unsubscribe("ESTOP_TRIGGERED", self.on_estop)
-        self.bus.unsubscribe("MOTOR_ERROR", self.on_motor_error)     
+        self.bus.unsubscribe("MOTOR_ERROR", self.on_motor_error)  
+
+
+    def handle_direction_done(self,motor_id,board_id,task_id):
+
+        execution = runtime.set_done(
+            motor_id,
+            board_id=BOARDTYPE_ICE
+        )
+
+        if execution is None:
+            print("runtime内容异常")
+            return
+        self.bus.publish(
+            "ACTION_DONE",
+            {
+                "board_id": board_id,
+                "motor_id": motor_id,
+                "action_id": task_id,
+                "owner_id": task_id,
+                "owner_type": "action",
+                "action": execution.get("action"),
+                "task_id":task_id
+            }
+        )      
+
+        self.bus.publish(
+            "ICE_MOTOR_DONE",
+            {
+                "board_id": board_id,
+                "motor_id": motor_id,
+                "task_id": task_id,
+            }
+        )

@@ -122,6 +122,42 @@ class StepMotor:
         
         print("执行成功")
         return True,["执行成功"]    
+
+
+
+    def go_optional(self, target: float, anglespeed: int):  
+        """单次运转电机"""  ##绝对运动
+        print("####运行电机####")
+        print(f"[{self.name}] ID:{self.motor_id} 运行到位置{target}, 角速度 {anglespeed}, 主板类型:{self.board_id}")
+
+        # 计算脉冲数
+        success, msg, params = MotionPlanner.plan_zero_offset_move(
+            motor=self,
+            target=target,
+            current_position=self.current_position,
+            speed=anglespeed
+        )
+
+        if not success:
+            print("错误: 运行命令失败")
+            return False,[msg],"FAIL"  
+
+        if params is None:
+            print(msg)
+            return True,["无需执行偏移量，直接完成"],"SKIP"
+
+        # 发送运行命令
+        success = self.run(
+            params["circles"],
+            params["speed"],
+            params["direction"]
+        )
+
+        if is_dev_mode():  #模拟更新位置
+            self.update_current_pos(target)
+        
+        print("执行成功")
+        return True,["执行成功"],"EXECUTED"        
       
     def run(self, circles: float, anglespeed: int, direction: int):
         """异步运行电机（基于通信队列，无线程）"""

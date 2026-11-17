@@ -3,6 +3,7 @@ ORGSET_REBOUNCE = 0
 ORGSET_Z_OFFSET = 0.5
 ORGSET_X_OFFSET = 0.1
 ORGSET_Y_OFFSET = 0.1
+ORGSET_HOME_THRESHOLD = 0.5
 
 
 RESET_TASK_TYPE = "reset_task"
@@ -52,7 +53,7 @@ POT_MOTOR_LIST = [POT_BACKUP_MOTOR,POT1_MOVE_MOTOR,POT1_FLIP_MOTOR,POT2_MOVE_MOT
 
 ########冰柜步进配置#######
 
-ICE_STEP_ALLOWED_ACTIONS  = ["go", "reset","go_delay"]
+ICE_STEP_ALLOWED_ACTIONS  = ["go", "reset","go_delay","go_optional"]
 ICE_DC_ALLOWED_ACTIONS    = ["on", "off"]
 ICE_TESTED_POS = 3       #当前开放的测试冰柜位置
 
@@ -388,13 +389,13 @@ ACTION_PARAMS_KEYLIST = {
         ("d","icemotor_resetzero","reset")
     ],
     "ice_reset_task":[
-        ("z","icemotor_z_offset","go"),
+        ("z","icemotor_z_offset","go_optional"),
         ("z","icemotor_resetzero","reset"),
-        ("y","icemotor_y_offset","go"),
+        ("y","icemotor_y_offset","go_optional"),
         ("y","icemotor_resetzero","reset"),
-        ("x","icemotor_x_offset","go"),
+        ("x","icemotor_x_offset","go_optional"),
         ("x","icemotor_resetzero","reset"),
-        ("s","icemotor_s_offset","go"),
+        ("s","icemotor_s_offset","go_optional"),
         ("s","icemotor_s_gozero","go")
         #("d","icemotor_resetzero","reset"),
         #("d","icemotor_closedoor","go")
