@@ -19,6 +19,7 @@ class StepMotorPollingService:
         self.mock_started = False
         self.mockmotor = mockmotor
         self.websocket_server = websocket_server
+        self.error_query_done = False
 
     # =========================
     # 启动 / 停止
@@ -238,6 +239,12 @@ class StepMotorPollingService:
                         f"电机 {motor_id} 状态：ERROR（故障）"
                     )
                     #暂时不发消息
+                    # 首次发现故障，读取所有电机故障码
+                    if not self.error_query_done:
+
+                        self.error_query_done = True
+
+                        self.send_error_value()
                     
                     self.bus.publish(
                         "MOTOR_ERROR",
@@ -263,6 +270,20 @@ class StepMotorPollingService:
                 "处理所有电机状态异常:",
                 e
             )
+
+    def send_error_value(self):
+        self.rs485.execute_command_async(
+            "Error_Value",
+            [str(self.board_id),"0"],
+            callback=self._on_motor_errors
+        )
+
+    def _on_motor_errors(self, command, success, resp):
+        if not success:
+            print("读取电机故障码失败：", resp)
+            return
+        print("当浅错误结果")
+        print(resp)
 
 
     def dev_handle_motorstatus_all(self):
