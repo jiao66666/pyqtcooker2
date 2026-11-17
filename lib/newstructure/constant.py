@@ -53,7 +53,7 @@ POT_MOTOR_LIST = [POT_BACKUP_MOTOR,POT1_MOVE_MOTOR,POT1_FLIP_MOTOR,POT2_MOVE_MOT
 ########冰柜步进配置#######
 
 
-ICE_TESTED_POS = 2       #当前开放的测试冰柜位置
+ICE_TESTED_POS = 3       #当前开放的测试冰柜位置
 
 
 ICE_MOTOR_X = 0          #冰柜x   正转向右
