@@ -1801,6 +1801,7 @@ function createMotorStatusApp(el) {
         methods: {
 
             updateMotorData(motortype,motor_id, position) {
+               position = Number(position).toFixed(2);
                if(motortype=="potcordinate"){
                     if (motor_id == 1) {
                         this.motor1_flip = position;
