@@ -347,7 +347,7 @@ class PotStateMachine:
         # 更新 runtime
         runtime.clear_pot(self.pot_id)            
 
-    def on_motor_error(self):
+    def on_motor_error(self, data=None):
         self.state = "ERROR"    
 
 
