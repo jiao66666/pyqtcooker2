@@ -152,9 +152,21 @@ class ThermalSensor:
 
         self.running = False
 
-        self.rpc.unsubscribe_thermal_stream()
-        self.serial_tx.disconnect()
+        # 取消热成像订阅
+        if self.rpc is not None:
+            try:
+                self.rpc.unsubscribe_thermal_stream()
+            except Exception as e:
+                print(f"取消热成像订阅失败: {e}")
 
+        # 关闭串口
+        if self.serial_tx is not None:
+            try:
+                self.serial_tx.disconnect()
+            except Exception as e:
+                print(f"关闭温度传感器串口失败: {e}")
+
+        # 等待数据处理线程退出
         if self.worker and self.worker.is_alive():
             self.worker.join(timeout=2)
 
