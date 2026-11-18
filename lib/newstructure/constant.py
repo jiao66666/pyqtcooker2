@@ -55,7 +55,7 @@ POT_MOTOR_LIST = [POT_BACKUP_MOTOR,POT1_MOVE_MOTOR,POT1_FLIP_MOTOR,POT2_MOVE_MOT
 
 ICE_STEP_ALLOWED_ACTIONS  = ["go", "reset","go_delay","go_optional"]
 ICE_DC_ALLOWED_ACTIONS    = ["on", "off"]
-ICE_TESTED_POS = 3       #当前开放的测试冰柜位置
+ICE_TESTED_POS = 4       #当前开放的测试冰柜位置
 
 
 ICE_MOTOR_X = 0          #冰柜x   正转向右
