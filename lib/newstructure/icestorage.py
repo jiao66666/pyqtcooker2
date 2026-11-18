@@ -71,3 +71,12 @@ class IceStorage:
                 self.positions[position_id]["status"] == self.FULL
                 for position_id in sorted(self.positions)
             ]        
+
+
+    def reset(self):
+        """重置所有储位状态为空"""
+        with self._lock:
+            for position in self.positions.values():
+                position["status"] = self.EMPTY
+
+        return True        
