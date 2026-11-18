@@ -13,8 +13,8 @@ class ThermalSensor:
         self.port = port
         self.on_data = on_data
 
-        self.rpc = MRpcClient()
-        self.serial_tx = SerialTransport(self.rpc)
+        self.rpc = None
+        self.serial_tx = None
 
         self.frame_queue = queue.Queue(maxsize=1)
         self.running = False
@@ -23,23 +23,31 @@ class ThermalSensor:
         self.last_time = None
         self.fps = 0.0
 
-        # 注册热成像数据回调
-        self.rpc.add_stream_listener(self._on_stream)
+
 
     def start(self, username="admin", password=""):
 
-        # 连接串口
-        self.serial_tx.connect(self.port, baudrate=921600)
-
-        # 启动数据处理线程
-        self.running = True
-        self.worker = threading.Thread(
-            target=self._process_loop,
-            daemon=True
-        )
-        self.worker.start()
-
         try:
+            # 创建 RPC 客户端
+            self.rpc = MRpcClient()
+
+            # 创建串口传输对象
+            self.serial_tx = SerialTransport(self.rpc)
+
+            # 注册热成像数据回调
+            self.rpc.add_stream_listener(self._on_stream)
+
+            # 连接串口
+            self.serial_tx.connect(self.port, baudrate=921600)
+
+            # 启动数据处理线程
+            self.running = True
+            self.worker = threading.Thread(
+                target=self._process_loop,
+                daemon=True
+            )
+            self.worker.start()
+
             # 登录设备
             result = self.rpc.login(
                 username,

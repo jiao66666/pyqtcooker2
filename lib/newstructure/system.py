@@ -361,7 +361,7 @@ def start_thermal_sensor(system):
 
 #启动主TICK循环
 def run_system(system):
-    system["thermal_thread"] = start_thermal_sensor(system)
+    #system["thermal_thread"] = start_thermal_sensor(system)
 
     #暂时关闭冰柜以外的轮询和状态机控制 
     #system["stepmotorpolling"].start()
