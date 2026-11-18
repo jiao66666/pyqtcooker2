@@ -39,6 +39,15 @@ def handle_ice_storage_update(data):
         "info": data
     }])
 
+
+def handle_thermal_data(data):
+    print(
+        f"MAX:{data['max']} "
+        f"MIN:{data['min']} "
+        f"AVG:{data['avg']} "
+        f"FIX:{data['fix']}"
+    )
+
 bus.subscribe(
     "ICE_RECOVERY_REQUIRED",
     handle_ice_recovery
@@ -47,6 +56,11 @@ bus.subscribe(
 bus.subscribe(
     "ICE_STORAGE_UPDATED",
     handle_ice_storage_update
+)
+
+bus.subscribe(
+    "THERMAL_DATA",
+    handle_thermal_data
 )
 
 # 根据传入的命令行参数设置端口,方便测试和生产环境使用不同的端口

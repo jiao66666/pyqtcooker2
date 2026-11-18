@@ -33,6 +33,7 @@ from lib.newstructure.mock import MockMotor
 import time
 
 from lib.newstructure.icestorage import IceStorage
+from lib.newstructure.thermal_sensor import ThermalSensor
 
 
 #系统构建中心
@@ -51,6 +52,10 @@ def build_system():
     icestepbuilder = IceStepBuilder(motors)
     icestorage     = IceStorage()
     motion_controller = MotionController(boards["stepmotor"],MOTION_INTERVAL)
+    thermal_sensor = ThermalSensor(
+                        port=THERMAL_PORT,
+                        on_data=lambda data: bus.publish("THERMAL_DATA", data)
+                    )
 
     from lib.newstructure.cookservice import CookerService
     from lib.newstructure.iceservice import IceService
@@ -97,7 +102,8 @@ def build_system():
         "potmockmotor":potmockmotor,
         "icemockmotor":icemockmotor,
         "resource_manager":resource_manager,
-        "icestorage": icestorage
+        "icestorage": icestorage,
+        "thermal_sensor":thermal_sensor
     }
 
     cookservice = CookerService(system,resource_manager)
@@ -224,7 +230,10 @@ def shutdown_system(system):
         system["motioncontroller"].stop()  
 
     if "websocket" in system:
-        system["websocket"].stop()          
+        system["websocket"].stop()     
+
+    if "thermal_sensor" in system:
+        system["thermal_sensor"].stop()             
 
     # 3. 关闭所有 RS485 连接
     boards = system.get("boards", {})
@@ -330,8 +339,30 @@ def init_system():
     for motor_id in ICE_MOTOR_LIST:
         runtime.init_motor(BOARDTYPE_ICE,motor_id,"step_ice")            
 
+
+
+def start_thermal_sensor(system):
+    def _start():
+        try:
+            system["thermal_sensor"].start()
+            print("温度传感器启动成功")
+        except Exception as e:
+            print(f"温度传感器启动失败: {e}")
+
+    thread = threading.Thread(
+        target=_start,
+        name="ThermalSensorStart",
+        daemon=True
+    )
+    thread.start()
+
+    return thread
+
+
 #启动主TICK循环
 def run_system(system):
+    system["thermal_thread"] = start_thermal_sensor(system)
+
     #暂时关闭冰柜以外的轮询和状态机控制 
     #system["stepmotorpolling"].start()
     #system["spinmotorpolling"].start()
@@ -345,6 +376,7 @@ def run_system(system):
         system["ice"]
     ],STATEMACHINE_INTERVAL)
     system["scancycle"].start()
+
 
 _system = None
 _system_lock = threading.Lock()
