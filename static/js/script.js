@@ -1528,6 +1528,59 @@ function pauseIceMotor() {
         });
 }
 
+
+function go_sk_pos() {
+        fetch('/test_sk_action', {
+            method: 'POST', 
+            headers: {
+                'Content-Type': 'application/json'  
+            },
+            body: JSON.stringify({
+                action:"test_sk_gopos",
+                repeat:1
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+             addMessage(``+data.message);  // 将收到的消息保存并显示
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            addMessage("Error starting motor.");
+        });
+}
+
+function repeat_sk_action() {
+        var repeat = document.getElementById("ice_sk_taskrepeat");
+        if((isNaN(repeat.value) ||repeat.value<=0)){
+            alert("请输入有效的重复值！");
+            return;
+        }
+        console.log("repeatnums:"+repeat.value)
+
+        fetch('/test_sk_action', {
+            method: 'POST', 
+            headers: {
+                'Content-Type': 'application/json'  
+            },
+            body: JSON.stringify({
+                 repeat:repeat.value,
+                 action:"test_sk_repeat"
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+             addMessage(``+data.message);  // 将收到的消息保存并显示
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            addMessage("Error starting motor.");
+        });
+}
+
+
+
+
 function pauseIceMotorByid() {
         var motorid = getSelectedValue("icemotor_name");
 

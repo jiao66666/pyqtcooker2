@@ -55,6 +55,7 @@
         <button class="active" onclick="showTab(7, this)">冰柜步进板</button>
         <button onclick="showTab(8, this)">冰柜任务区</button>
         <button onclick="showTab(9, this)">冰柜控制面板</button>
+        <button onclick="showTab(10, this)">研磨测试区</button>
         <button onclick="showTab(1, this)">锅手控区</button>
         <button onclick="showTab(2, this)">锅步进板</button>
         <button onclick="showTab(3, this)">锅旋转板</button>
@@ -585,7 +586,7 @@
             <div class="ice_container_col br">
                 <div class="new_input_circle">
                     <label for="circle_speeconstant" class="input_tag">速度值:</label>
-                    <input class="input-classic w60" type="number" id="circleice_speedconstant" placeholder="请输入速度值" value="360"/>
+                    <input class="input-classic w60" type="number" id="circleice_speedconstant" placeholder="请输入速度值" value="90"/>
                 </div>
                 <div class="new_input_circle">
                     <label for="circleice_valabs" class="input_tag">目标位置:</label>
@@ -781,6 +782,15 @@
     </div>
 
 
+    <div id="tab10" class="tab-content">
+        <div class="new_input_circle">
+            <label for="ice_sk_taskrepeat" class="input_tag">执行次数:</label>
+            <input class="input-classic w60" type="number" id="ice_sk_taskrepeat" placeholder="请输入想要执行次数" value= "1"/>
+        </div>
+
+        <div class="ice_btn" onclick="go_sk_pos()">移动到位</div>
+        <div class="ice_btn" onclick="repeat_sk_action()">研磨取-摇-放</div>
+    </div>
 
     <div class="prompt">控制台消息</div>
     <div class="history_con">

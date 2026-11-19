@@ -9,6 +9,7 @@ ORGSET_HOME_THRESHOLD = 0.5
 RESET_TASK_TYPE = "reset_task"
 STEP_TASK_TYPE  = "step_task"
 NORMAL_TASK_TYPE = "normal_task"
+TEST_TASK_TYPE = "test_sk_repeat"
 ########电路板通用配置#########
 BOARDTYPE_FEEDER = 1     # 加料板
 BOARDTYPE_STEP = 2       # 锅步进板
@@ -125,9 +126,12 @@ ICE_Z_FINAL_PUT             = 90    #Z轴最终松盒位
 ICE_X_TRIGGER_POS           = 2.15  #X轴安全回零前位置
 
 
-ICE_SK_POS1_X               = 2.72  #研磨1号位x轴
-ICE_SK_POS1_Y               = 2.72  #研磨1号位y轴
-ICE_SK_POS1_Z               = 97.51 #研磨1号位z轴
+ICE_SK_POS1_X               = 2.72  #研磨1号位x轴悬空位
+ICE_SK_POS1_Y               = 2.72  #研磨1号位y轴悬空位
+ICE_SK_POS1_Z               = 73.34 #研磨1号位z轴悬空位
+ICE_SK_POS1_Z_READY         = 90    #研磨1号位z轴准备取盒
+ICE_SK_POS1_Z_FINAL         = 97.39 #研磨1号位z轴最终取盒
+ICE_SK_POS1_Z_FIX           = 93.78 #研磨1号位z轴调整旋转位
 
 
 # 冰柜相关映射
@@ -493,6 +497,24 @@ ACTION_PARAMS_KEYLIST = {
             ("y","icemotor_resetzero","reset"),
             ("z","icemotor_resetzero","reset")
         ])
+    ],
+    "test_sk_gopos":[
+        ("x","icemotor_sk_x","go"),
+        ("y","icemotor_sk_y","go"),
+        ("z","icemotor_sk_z","go")
+    ],
+    "test_sk_repeat":[
+        ("z","icemotor_sk_z_ready","go"),
+        ("z","icemotor_sk_z_final","go"),
+        ("z","icemotor_sk_z","go"),
+        ("sk","icemotor_sk_do","on"),
+        ("sk","icemotor_sk_do","off"),
+        ("z","icemotor_sk_z_ready","go"),
+        ("z","icemotor_sk_z_final","go"),
+        ("z","icemotor_sk_z_fix","go"),
+        ("sk","icemotor_sk_do_fix","on"),
+        ("sk","icemotor_sk_do_fix","off"),
+        ("z","icemotor_sk_z","go")
     ]
 }
 
@@ -860,6 +882,36 @@ ACTION_PARAMS_CONFIG = {
     "icemotor_z_finalput_pos":{
         "speed":360,
         "target":ICE_Z_FINAL_PUT
+    },
+    "icemotor_sk_x":{
+        "speed":720,
+        "target":ICE_SK_POS1_X
+    },
+    "icemotor_sk_y":{
+        "speed":720,
+        "target":ICE_SK_POS1_Y
+    },
+    "icemotor_sk_z":{
+        "speed":3600,
+        "target":ICE_SK_POS1_Z
+    },
+    "icemotor_sk_z_ready":{
+        "speed":720,
+        "target":ICE_SK_POS1_Z_READY
+    },    
+    "icemotor_sk_z_final":{
+        "speed":360,
+        "target":ICE_SK_POS1_Z_FINAL
+    },
+    "icemotor_sk_z_fix":{
+        "speed":360,
+        "target":ICE_SK_POS1_Z_FIX
+    },
+    "icemotor_sk_do":{
+        "delay":5
+    },
+    "icemotor_sk_do_fix":{
+        "delay":1.5
     }
 }
 

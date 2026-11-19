@@ -168,7 +168,7 @@ class IceStateMachine:
         elif self.state == "CHECK_HOME":
             print(f"ice machine status is CHECK_HOME")
             # 整体回零和分步任务属于白名单，不需要检查当前零位
-            if self.running_task_type in (STEP_TASK_TYPE, RESET_TASK_TYPE):
+            if self.running_task_type in (STEP_TASK_TYPE, RESET_TASK_TYPE,TEST_TASK_TYPE):
                 self.state = "RUNNING"
                 return
 
