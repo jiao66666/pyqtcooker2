@@ -911,7 +911,7 @@ ACTION_PARAMS_CONFIG = {
         "delay":5
     },
     "icemotor_sk_do_fix":{
-        "delay":1.5
+        "delay":3
     }
 }
 
