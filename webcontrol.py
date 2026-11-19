@@ -1038,6 +1038,28 @@ def iceMotorTask():
 
 
 
+@app.route('/iceMotorTask_SK', methods=['POST'])
+@require_enabled
+def iceMotorTask_SK():
+    print("运行冰柜任务型动作")
+    data = request.get_json()
+    taskname = data.get("taskname")
+
+    actionname = taskname
+    if actionname not in ACTION_PARAMS_KEYLIST:
+        print("动作名异常!")
+        return jsonify({"status": "fail","message": f"运转失败!错误:动作名异常"})
+ 
+    success = False
+    success,msg =  system["iceservice"].run_task(actionname,1)
+    if success :
+        print("电机单次运转成功!")
+        return jsonify({"status": "success","message": f"提交冰柜任务成功!"})
+    else:
+        print("电机单次运转失败!")
+        return jsonify({"status": "fail","message": f"运转失败!错误:{msg}"})
+
+
 @app.route('/iceMotorControl', methods=['POST'])
 @require_enabled
 def iceMotorControl():

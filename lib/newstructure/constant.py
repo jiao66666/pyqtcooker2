@@ -131,8 +131,10 @@ ICE_SK_POS1_Y               = 2.81  #研磨1号位y轴悬空位
 ICE_SK_POS1_Z               = 73.34 #研磨1号位z轴悬空位
 ICE_SK_POS1_Z_READY         = 90    #研磨1号位z轴准备取盒
 ICE_SK_POS1_Z_FINAL         = 97.16 #研磨1号位z轴最终取盒
-ICE_SK_POS1_Z_FIX           = 93.78 #研磨1号位z轴调整旋转位
-
+ICE_SK_POS1_Z_SAFE          = 80
+ICE_SK_POS1_SHAKE_X         = 7.10
+ICE_SK_POS1_SHAKE_Y         = 1.29
+ICE_SK_POS1_SHAKE_Z         = 75
 
 # 冰柜相关映射
 ICE_MOTORID_NAME_MAP ={
@@ -511,10 +513,58 @@ ACTION_PARAMS_KEYLIST = {
         ("sk","icemotor_sk_do","off_fast"),
         ("z","icemotor_sk_z_ready","go"),
         ("z","icemotor_sk_z_final","go"),
-        #("z","icemotor_sk_z_fix","go"),
-        #("sk","icemotor_sk_do_fix","on"),
-        #("sk","icemotor_sk_do_fix","off_fast"),
         ("z","icemotor_sk_z","go")
+    ],
+    "ice_sk_task":[
+        ("parallel",[
+            ("x","icemotor_sk_x","go"),
+            ("y","icemotor_sk_y","go"),
+            ("z","icemotor_sk_z","go")
+        ]),
+        ("z","icemotor_sk_z_ready","go"),
+        ("z","icemotor_sk_z_final","go"),
+        ("parallel",[
+            ("x","icemotor_x_sksafe_pos","go"),
+            ("y","icemotor_y_sksafe_pos","go"),
+            ("z","icemotor_z_sksafe_pos","go"),
+        ],{
+        "start_mode": "position",
+        "triggers": [
+            ("z", ICE_SK_POS1_Z_SAFE, "x",-1),
+            ("z", ICE_SK_POS1_Z_SAFE, "y",-1)
+        ]
+        }),
+        ("sk","icemotor_sk_do","on"),
+        ("sk","icemotor_sk_do","off_fast"),
+        ("parallel",[
+            ("x","icemotor_sk_x","go"),
+            ("y","icemotor_sk_y","go"),
+            ("z","icemotor_sk_z","go"),
+        ],{
+        "start_mode": "position",
+        "triggers": [
+            ("z", ICE_SK_POS1_Z_SAFE, "x",-1),
+            ("z", ICE_SK_POS1_Z_SAFE, "y",-1)
+        ]
+        }),
+        ("z","icemotor_sk_z_ready","go"),
+        ("z","icemotor_sk_z_final","go"),
+        ("parallel",[
+            ("z","icemotor_z_safezero","go"),
+            ("y","icemotor_y_safezero","go"),
+            ("x","icemotor_x_safezero","go")
+        ],{
+        "start_mode": "position",
+        "triggers": [
+            ("z", ICE_SK_POS1_Z_SAFE, "x",-1),
+            ("z", ICE_SK_POS1_Z_SAFE, "y",-1)
+        ]
+        }),
+        ("parallel",[
+            ("x","icemotor_resetzero","reset"),
+            ("y","icemotor_resetzero","reset"),
+            ("z","icemotor_resetzero","reset")
+        ])
     ]
 }
 
@@ -903,15 +953,20 @@ ACTION_PARAMS_CONFIG = {
         "speed":360,
         "target":ICE_SK_POS1_Z_FINAL
     },
-    "icemotor_sk_z_fix":{
-        "speed":360,
-        "target":ICE_SK_POS1_Z_FIX
-    },
     "icemotor_sk_do":{
         "delay":5
     },
-    "icemotor_sk_do_fix":{
-        "delay":3
+    "icemotor_x_sksafe_pos":{
+        "speed":720,
+        "target":ICE_SK_POS1_SHAKE_X
+    },
+    "icemotor_y_sksafe_pos":{
+        "speed":720,
+        "target":ICE_SK_POS1_SHAKE_Y
+    },
+    "icemotor_z_sksafe_pos":{
+        "speed":3600,
+        "target":ICE_SK_POS1_SHAKE_Z
     }
 }
 

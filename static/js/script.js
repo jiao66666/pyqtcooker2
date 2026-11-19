@@ -1324,6 +1324,27 @@ function iceMotorTask(taskname) {
 }
 
 
+function iceMotorTask_SK(taskname) {
+
+        fetch('/iceMotorTask_SK', {
+            method: 'POST', 
+            headers: {
+                'Content-Type': 'application/json'  
+            },
+            body: JSON.stringify({
+                taskname:taskname
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+             addMessage(``+data.message);  // 将收到的消息保存并显示
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            addMessage("Error starting motor.");
+        });
+}
+
 
 function iceMotorTaskByStep(taskname) {
 
@@ -1382,6 +1403,9 @@ function iceMotorTaskByStep(taskname) {
             console.log("index",index.value)
         }else if(taskname == "ice_get_task"){
             var index = document.getElementById("icestepindex_get");
+            console.log("index",index.value)
+        }else if(taskname == "ice_sk_task"){
+            var index = document.getElementById("icestepindex_sk");
             console.log("index",index.value)
         }else{
             alert("序号值非法！");
