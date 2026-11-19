@@ -126,11 +126,11 @@ ICE_Z_FINAL_PUT             = 90    #Z轴最终松盒位
 ICE_X_TRIGGER_POS           = 2.15  #X轴安全回零前位置
 
 
-ICE_SK_POS1_X               = 2.72  #研磨1号位x轴悬空位
-ICE_SK_POS1_Y               = 2.72  #研磨1号位y轴悬空位
+ICE_SK_POS1_X               = 2.77  #研磨1号位x轴悬空位
+ICE_SK_POS1_Y               = 2.81  #研磨1号位y轴悬空位
 ICE_SK_POS1_Z               = 73.34 #研磨1号位z轴悬空位
 ICE_SK_POS1_Z_READY         = 90    #研磨1号位z轴准备取盒
-ICE_SK_POS1_Z_FINAL         = 97.51 #研磨1号位z轴最终取盒
+ICE_SK_POS1_Z_FINAL         = 97.06 #研磨1号位z轴最终取盒
 ICE_SK_POS1_Z_FIX           = 93.78 #研磨1号位z轴调整旋转位
 
 
@@ -511,9 +511,9 @@ ACTION_PARAMS_KEYLIST = {
         ("sk","icemotor_sk_do","off_fast"),
         ("z","icemotor_sk_z_ready","go"),
         ("z","icemotor_sk_z_final","go"),
-        ("z","icemotor_sk_z_fix","go"),
-        ("sk","icemotor_sk_do_fix","on"),
-        ("sk","icemotor_sk_do_fix","off_fast"),
+        #("z","icemotor_sk_z_fix","go"),
+        #("sk","icemotor_sk_do_fix","on"),
+        #("sk","icemotor_sk_do_fix","off_fast"),
         ("z","icemotor_sk_z","go")
     ]
 }
