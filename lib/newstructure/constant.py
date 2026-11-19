@@ -55,7 +55,7 @@ POT_MOTOR_LIST = [POT_BACKUP_MOTOR,POT1_MOVE_MOTOR,POT1_FLIP_MOTOR,POT2_MOVE_MOT
 ########冰柜步进配置#######
 
 ICE_STEP_ALLOWED_ACTIONS  = ["go", "reset","go_delay","go_optional"]
-ICE_DC_ALLOWED_ACTIONS    = ["on", "off"]
+ICE_DC_ALLOWED_ACTIONS    = ["on", "off","off_fast"]
 ICE_TESTED_POS = 4       #当前开放的测试冰柜位置
 
 
@@ -508,12 +508,12 @@ ACTION_PARAMS_KEYLIST = {
         ("z","icemotor_sk_z_final","go"),
         ("z","icemotor_sk_z","go"),
         ("sk","icemotor_sk_do","on"),
-        ("sk","icemotor_sk_do","off"),
+        ("sk","icemotor_sk_do","off_fast"),
         ("z","icemotor_sk_z_ready","go"),
         ("z","icemotor_sk_z_final","go"),
         ("z","icemotor_sk_z_fix","go"),
         ("sk","icemotor_sk_do_fix","on"),
-        ("sk","icemotor_sk_do_fix","off"),
+        ("sk","icemotor_sk_do_fix","off_fast"),
         ("z","icemotor_sk_z","go")
     ]
 }

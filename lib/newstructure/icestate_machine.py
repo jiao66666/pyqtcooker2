@@ -265,6 +265,8 @@ class IceStateMachine:
                 elif step["dotype"] == "off":
                     step["motor"].output_off()    
                     time.sleep(step["params"]["delay"])  #阻塞一定时间以确保吸住
+                elif step["dotype"] == "off_fast":
+                    step["motor"].output_off()    
                 else:
                     self.state = "ERROR"
                     print(
