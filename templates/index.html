@@ -718,25 +718,6 @@
         </div>
         <div class="ice_btn" onclick="iceMotorTaskByStep('ice_get_task')">冰柜【取】盒子分步测试</div>
         <div class="ice_btn mt10" onclick="iceMotorTask('ice_get_task')">冰柜【取】盒子整体测试</div>
-        <hr style="border: 1px dotted #ccc; width: 100%; margin: 15px auto;">
-        <div class="tastmotorid_select_row">
-            <label for="icestepindex_sk">研磨动作列表:</label>
-            <select id="icestepindex_sk" name="icestepindex_sk">
-                <option value="0">[0]XYZ轴同步入研磨轨</option>
-                <option value="1">[1]Z轴快速下落</option>
-                <option value="2">[2]Z轴到最终位</option>
-                <option value="3">[3]XYZ轴触发移动到位</option>
-                <option value="4">[4]研磨-开</option>
-                <option value="5">[5]研磨-关</option>
-                <option value="6">[6]XYZ轴同步入研磨轨</option>
-                <option value="7">[7]Z轴快速下落</option>
-                <option value="8">[8]Z轴到最终位</option>
-                <option value="9">[9]XYZ轴同步快速安全位</option>
-                <option value="10">[10]XYZ轴同步回零</option>
-            </select>
-        </div>
-        <div class="ice_btn" onclick="iceMotorTaskByStep('ice_sk_task')">冰柜【研磨】分步测试</div>
-        <div class="ice_btn mt10" onclick="iceMotorTask_SK('ice_sk_task')">冰柜【研磨】整体测试</div>
     </div>
 
     <div id="tab9" class="tab-content">
@@ -801,6 +782,16 @@
 
 
     <div id="tab10" class="tab-content">
+        <div class="tastmotorid_select_row">
+            <label for="icestorage_sk_id">位置号:</label>
+            <select id="icestorage_sk_id" name="icestorage_sk_id">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+            </select>
+        </div>
+
         <div class="new_input_circle">
             <label for="ice_sk_taskrepeat" class="input_tag">执行次数:</label>
             <input class="input-classic w60" type="number" id="ice_sk_taskrepeat" placeholder="请输入想要执行次数" value= "1"/>
@@ -808,6 +799,28 @@
 
         <div class="ice_btn" onclick="go_sk_pos()">移动到位</div>
         <div class="ice_btn" onclick="repeat_sk_action()">研磨取-摇-放</div>
+
+        <hr style="border: 1px dotted #ccc; width: 100%; margin: 15px auto;">
+        <div class="tastmotorid_select_row">
+            <label for="icestepindex_sk">研磨动作列表:</label>
+            <select id="icestepindex_sk" name="icestepindex_sk">
+                <option value="0">[0]XYZ轴同步入研磨轨</option>
+                <option value="1">[1]Z轴快速下落</option>
+                <option value="2">[2]Z轴到最终位</option>
+                <option value="3">[3]XYZ轴触发移动到位</option>
+                <option value="4">[4]研磨-开</option>
+                <option value="5">[5]研磨-关</option>
+                <option value="6">[6]XYZ轴同步入研磨轨</option>
+                <option value="7">[7]Z轴快速下落</option>
+                <option value="8">[8]Z轴到最终位</option>
+                <option value="9">[9]XYZ轴同步快速安全位</option>
+                <option value="10">[10]XYZ轴同步回零</option>
+            </select>
+        </div>
+        <div class="ice_btn" onclick="iceMotorTaskByStep('ice_sk_task')">冰柜【研磨】分步测试</div>
+        <div class="ice_btn mt10" onclick="iceMotorTask_SK('ice_sk_task')">冰柜【研磨】整体测试</div>
+
+
     </div>
 
     <div class="prompt">控制台消息</div>

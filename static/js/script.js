@@ -1326,13 +1326,25 @@ function iceMotorTask(taskname) {
 
 function iceMotorTask_SK(taskname) {
 
+        var repeat = document.getElementById("ice_sk_taskrepeat");
+        if((isNaN(repeat.value) ||repeat.value<=0)){
+            alert("请输入有效的重复值！");
+            return;
+        }
+        console.log("repeatnums:"+repeat.value)
+
+        var pos = document.getElementById("icestorage_sk_id");
+        console.log("position",pos.value)
+
         fetch('/iceMotorTask_SK', {
             method: 'POST', 
             headers: {
                 'Content-Type': 'application/json'  
             },
             body: JSON.stringify({
-                taskname:taskname
+                taskname:taskname,
+                repeat:repeat.value,
+                pos:pos.value
             })
         })
         .then(response => response.json())
