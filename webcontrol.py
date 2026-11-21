@@ -1044,6 +1044,8 @@ def iceMotorTask_SK():
     print("运行冰柜任务型动作")
     data = request.get_json()
     taskname = data.get("taskname")
+    repeat = data.get('repeat')
+    pos = data.get("pos")
 
     actionname = taskname
     if actionname not in ACTION_PARAMS_KEYLIST:
