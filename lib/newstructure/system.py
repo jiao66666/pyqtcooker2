@@ -137,6 +137,7 @@ def recovery_system(system):
     system["ice"].reset()
     system["resource_manager"].reset()
     system["icestorage"].reset()
+    system["icestorage_sk"].reset()
     return True
 
 def start_system_state(system):
