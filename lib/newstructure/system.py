@@ -32,7 +32,7 @@ from lib.newstructure.websocket_runtime import websocket_server
 from lib.newstructure.mock import MockMotor
 import time
 
-from lib.newstructure.icestorage import IceStorage
+from lib.newstructure.icestorage import IceStorage,IceStorage_SK
 from lib.newstructure.thermal_sensor import ThermalSensor
 
 
@@ -51,6 +51,7 @@ def build_system():
     potstepbuilder = PotStepBuilder(motors)
     icestepbuilder = IceStepBuilder(motors)
     icestorage     = IceStorage()
+    icestorage_sk  = IceStorage_SK()
     motion_controller = MotionController(boards["stepmotor"],MOTION_INTERVAL)
     thermal_sensor = ThermalSensor(
                         port=THERMAL_PORT,
@@ -103,6 +104,7 @@ def build_system():
         "icemockmotor":icemockmotor,
         "resource_manager":resource_manager,
         "icestorage": icestorage,
+        "icestorage_sk":icestorage_sk,
         "thermal_sensor":thermal_sensor
     }
 
