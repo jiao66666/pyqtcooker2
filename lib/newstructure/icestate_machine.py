@@ -5,7 +5,7 @@ from lib.newstructure.constant import *
 from lib.newstructure.tools import get_motor_position,get_motor_homestatus
 #冰柜状态机模型
 class IceStateMachine:
-    def __init__(self, bus, resource_manager, ice_storage=None):
+    def __init__(self, bus, resource_manager, ice_storage=None,ice_storage_sk=None):
         self.state = "IDLE"
 
         self.bus = bus
@@ -28,6 +28,7 @@ class IceStateMachine:
         self.task_context = None
 
         self.ice_storage = ice_storage
+        self.ice_storage_sk = ice_storage_sk
 
 
         # 当前动作执行类型
@@ -1101,6 +1102,7 @@ class IceStateMachine:
         if not context:
             return
 
+        task_type = context.get("task_type")
         storage_action = context.get("storage_action")
         storage_id = context.get("storage_id")
 
@@ -1108,32 +1110,44 @@ class IceStateMachine:
         if storage_action is None or storage_id is None:
             return
 
-        if self.ice_storage is None:
+
+        # 根据任务类型选择对应的储位管理器
+        if task_type == ICE_STORAGE_TYPE:
+            storage = self.ice_storage
+
+        elif task_type == ICE_STORSGE_SK_TYPE:
+            storage = self.ice_storage_sk
+
+        else:
+            print(f"未知储位任务类型：{task_type}")
+            return
+
+        if storage is None:
             print("冰柜储位管理器未初始化")
             return
 
         # 放入操作
         if storage_action == "put":
 
-            if self.ice_storage.get_status(storage_id) == self.ice_storage.FULL:
+            if storage.get_status(storage_id) == storage.FULL:
                 print(f"储位 {storage_id} 非空，无法完成放入状态更新")
                 return
 
-            self.ice_storage.set_status(
+            storage.set_status(
                 storage_id,
-                self.ice_storage.FULL
+                storage.FULL
             )
 
         # 取出操作
         elif storage_action == "get":
 
-            if self.ice_storage.get_status(storage_id) == self.ice_storage.EMPTY:
+            if storage.get_status(storage_id) == storage.EMPTY:
                 print(f"储位 {storage_id} 非满，无法完成取出状态更新")
                 return
 
-            self.ice_storage.set_status(
+            storage.set_status(
                 storage_id,
-                self.ice_storage.EMPTY
+                storage.EMPTY
             )
 
         else:
@@ -1147,8 +1161,8 @@ class IceStateMachine:
 
         # 通知前端刷新全部储位状态
         self.bus.publish("ICE_STORAGE_UPDATED", {
-            "type": "ice_storage",
-            "states": self.ice_storage.get_all_status()
+            "type": task_type,
+            "states": storage.get_all_status()
         })
 
 

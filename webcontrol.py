@@ -1062,6 +1062,7 @@ def iceMotorTask_SK():
         return jsonify({"status": "fail","message": f"运转失败!错误:{msg}"})
 
 
+#冰柜控制面板接口
 @app.route('/iceMotorControl', methods=['POST'])
 @require_enabled
 def iceMotorControl():
@@ -1124,7 +1125,7 @@ def iceMotorControl():
         return jsonify({"status": "fail","message": f"动作类型有误"})  
 
     success = False
-    success,msg =  system["iceservice"].run_task(actionname,1,{"task_name":actionname,"task_type":NORMAL_TASK_TYPE,"storage_action":storage_action,"storage_id":storage_id})
+    success,msg =  system["iceservice"].run_task(actionname,1,{"task_name":actionname,"task_type":ICE_STORAGE_TYPE,"storage_action":storage_action,"storage_id":storage_id})
     if success :
         print("电机单次运转成功!")
         return jsonify({"status": "success","message": f"提交冰柜任务成功!"})
