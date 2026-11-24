@@ -1115,7 +1115,7 @@ class IceStateMachine:
         if task_type == ICE_STORAGE_TYPE:
             storage = self.ice_storage
 
-        elif task_type == ICE_STORSGE_SK_TYPE:
+        elif task_type == ICE_STORAGE_SK_TYPE:
             storage = self.ice_storage_sk
 
         else:

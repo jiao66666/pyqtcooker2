@@ -11,7 +11,7 @@ STEP_TASK_TYPE  = "step_task"      #分步执行任务
 NORMAL_TASK_TYPE = "normal_task"   #默认任务类型
 TEST_TASK_TYPE = "test_sk_repeat"  #测试任务类型
 ICE_STORAGE_TYPE = "ice_storage"   #冰柜仓储存取类型
-ICE_STORSGE_SK_TYPE = "ice_storage_sk" #冰柜研磨存取类型
+ICE_STORAGE_SK_TYPE = "ice_storage_sk" #冰柜研磨存取类型
 ########电路板通用配置#########
 BOARDTYPE_FEEDER = 1     # 加料板
 BOARDTYPE_STEP = 2       # 锅步进板
