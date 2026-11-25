@@ -48,6 +48,48 @@ class StepMotorPollingService:
 
             time.sleep(self.interval)
 
+
+    # 判断板子是否在线
+    def is_active(self, timeout=1.0):
+
+        # 开发模式直接认为板子在线
+        if is_dev_mode():
+            return True
+
+        event = threading.Event()
+        result = {"active": False}
+
+        def callback(command, success, resp):
+
+            if success and resp and resp[0].strip():
+                result["active"] = True
+
+            event.set()
+
+        try:
+            self.rs485.execute_command_async(
+                "ALLRunStatus",
+                [str(self.board_id), "0"],
+                callback=callback
+            )
+
+            # 等待板子响应，最多等待 timeout 秒
+            if not event.wait(timeout):
+                print(f"板子 {self.board_id} 联通检测超时")
+                return False
+
+            if not result["active"]:
+                print(f"板子 {self.board_id} 无响应或通信失败")
+                return False
+
+            print(f"板子 {self.board_id} 联通正常")
+            return True
+
+        except Exception as e:
+            print(f"板子 {self.board_id} 联通检测异常: {e}")
+            return False
+
+
     #为最大化查询效率可考虑替换此方法
     def _check_all_motors_status(self):
 

@@ -75,7 +75,7 @@ def build_system():
   
     system = {
         "state": {
-            "mode": "INIT",   # READY / EMERGENCY / RECOVERING / ERROR
+            "mode": "INIT",   # READY / EMERGENCY / RECOVERING / ERROR / UNCONNECTED
             "dirty": False     # 是否需要恢复重新初始化
         },
 
@@ -365,21 +365,49 @@ def start_thermal_sensor(system):
 
 #启动主TICK循环
 def run_system(system):
-    #system["thermal_thread"] = start_thermal_sensor(system)
-
-    #暂时关闭冰柜以外的轮询和状态机控制 
-    #system["stepmotorpolling"].start()
-    #system["spinmotorpolling"].start()
-    system["icemotorpolling"].start()
-    #system["feedermotorpolling"].start()
+    start_scan_cycle(system)
     system["motioncontroller"].start()
     system["websocket"].start()
-    system["scancycle"]=ScanCycle([
-        #system["pots"][1],
-        #system["pots"][2],
-        system["ice"]
-    ],STATEMACHINE_INTERVAL)
+
+
+def start_scan_cycle(system):
+
+    scan_devices = []
+    # 每次调用都重新检测步进板
+    if system["stepmotorpolling"].is_active():
+        system["stepmotorpolling"].start()
+        scan_devices.extend([
+            system["pots"][1],
+            system["pots"][2]
+        ])
+        print("步进板已联通")
+    # 每次调用都重新检测冰柜板
+    if system["icemotorpolling"].is_active():
+        system["icemotorpolling"].start()
+        scan_devices.append(system["ice"])
+        print("冰柜板已联通")
+
+    # 更新系统状态
+    if not scan_devices:
+        system["state"]["mode"] = "UNCONNECTED"
+        print("没有可用控制板，机器未准备就绪")
+        return False
+
+    system["state"]["mode"] = "INIT"
+    # 已经启动则不重复创建
+    if "scancycle" in system:
+        if system["scancycle"].is_running():
+            print("ScanCycle 已经运行")
+            return True
+        
+    system["scancycle"] = ScanCycle(
+        scan_devices,
+        STATEMACHINE_INTERVAL
+    )
     system["scancycle"].start()
+    print("ScanCycle 启动成功")
+    return True
+
 
 
 _system = None

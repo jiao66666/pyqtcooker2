@@ -5,7 +5,7 @@ from lib.newstructure.constant import *
 from lib.newstructure.tools import calculate_task_parallel_speeds,is_dev_mode,apply_action_params_override,apply_action_params_override_bymotortype,get_pot_pos,build_dc_action,getTestDCMsg,validate_board_command,get_step_from_task,calculate_parallel_speeds
 import webview
 import threading
-from lib.newstructure.system import run_system,init_system,shutdown_system,set_system_dirty,recovery_system,shutdown_device,start_system_state,stop_system_state,set_system_state
+from lib.newstructure.system import run_system,init_system,shutdown_system,set_system_dirty,recovery_system,shutdown_device,start_system_state,stop_system_state,set_system_state,start_scan_cycle
 from lib.newstructure.system_runtime import system
 from lib.newstructure.runtime import runtime
 from lib.newstructure.monitor import start_memory_monitor
@@ -103,6 +103,12 @@ def connect():
     print("start Enable Power")
     if system["state"]["mode"] == "READY":
         return jsonify({"status": "success","message": "已使能，请勿重复提交!"})
+
+    if system["state"]["mode"] == "UNCONNECTED":
+        if start_scan_cycle(system):
+           pass
+        else:    
+          return jsonify({"status": "fail","message": "板子未通电，无法启动，请检测!"})
 
     success1,msg1=system["stepmotorsmanager"].enable_all_motors()
     success2,msg2=system["icemotorsmanager"].enable_all_motors()

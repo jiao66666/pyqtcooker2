@@ -30,3 +30,6 @@ class ScanCycle:
 
     def stop(self):
         self.running = False
+
+    def is_running(self):
+        return self.thread is not None and self.thread.is_alive() 
