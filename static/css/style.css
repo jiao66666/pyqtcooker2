@@ -760,13 +760,11 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
 
     padding: 2px 8px;
 
-    font-size: 12px;
+    font-size: 10px;
     font-weight: 600;
 
     color: #333333;
-    background: #CCCCCC;
 
-    border: 1px solid #ccc;
     border-radius: 4px;
 
     white-space: nowrap;
