@@ -36,6 +36,8 @@ class StepMotorPollingService:
 
         self.running = False
 
+    def reset_mock(self):
+        self.mock_started = False
     # =========================
     # 主循环
     # =========================

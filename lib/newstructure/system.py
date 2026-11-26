@@ -138,6 +138,10 @@ def recovery_system(system):
     system["resource_manager"].reset()
     system["icestorage"].reset()
     system["icestorage_sk"].reset()
+    if "stepmotorpolling" in system:
+        system["stepmotorpolling"].reset_mock()
+    if "icemotorpolling"  in system:
+        system["icemotorpolling"].reset_mock()    
     return True
 
 def start_system_state(system):
@@ -164,7 +168,6 @@ def shutdown_device(system):
     system["potmockmotor"].stop()
     system["icemockmotor"].stop()
     runtime.clear_all_executions()
-
     return True
 
 
