@@ -1166,3 +1166,13 @@ html::-webkit-scrollbar, body::-webkit-scrollbar {
     outline-offset: -3px;
     box-shadow: 0 0 8px rgba(33, 150, 243, 0.7);
 }
+
+
+.storage-group-sk {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-rows: repeat(3, 1fr);
+    gap: 10px;
+    flex: 1;
+    min-width: 0;
+}

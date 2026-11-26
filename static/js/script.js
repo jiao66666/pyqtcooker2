@@ -2252,7 +2252,7 @@ const potCommands = {
 
 
 
-
+//冰柜仓储实例
 const iceStorageApp = new Vue({
 
     el: "#ice_storage_app",
@@ -2452,6 +2452,199 @@ const iceStorageApp = new Vue({
     }
 
 });
+
+
+//研磨实例
+const iceStorageSKApp = new Vue({
+
+    el: "#ice_storage_sk_app",
+
+    delimiters: ['${', '}'],
+
+    data: {
+        //位置号 ：1-4
+        iceStorageSK: Array.from({length: 4}, (_, i) => ({
+            id: i + 1,
+            full: false,
+            selected: false
+        })),
+
+        // 当前选中的储位编号
+        selectedStorageId: null
+
+    },
+
+    methods: {
+
+        // 获取全部储位
+        getAllStorage() {
+            return [
+                ...this.iceStorageSK
+            ];
+        },
+
+
+        // 设置单个储位空满状态
+        setIceStorage(id, full) {
+
+            const item = this.getAllStorage()
+                .find(item => item.id === id);
+
+            if (!item) {
+                console.warn(`储位 ${id} 不存在`);
+                return false;
+            }
+
+            item.full = Boolean(full);
+
+            return true;
+        },
+
+
+        // 批量设置24个储位状态
+        setAllIceStorage(states) {
+
+            if (!Array.isArray(states) || states.length !== 4) {
+                console.warn("储位状态必须包含4个元素");
+                return false;
+            }
+
+            const allItems = [
+                ...this.iceStorageSK
+            ];
+
+            allItems.forEach((item, index) => {
+                item.full = Boolean(states[index]);
+            });
+
+            return true;
+        },
+
+
+        // 选择储位
+        selectIceStorage(id) {
+
+            const item = this.getAllStorage()
+                .find(item => item.id === id);
+
+            if (!item) {
+                console.warn(`储位 ${id} 不存在`);
+                return false;
+            }
+
+            // 取消之前的选中状态
+            this.getAllStorage().forEach(item => {
+                item.selected = false;
+            });
+
+            // 设置当前选中状态
+            item.selected = true;
+
+            this.selectedStorageId = id;
+
+            return true;
+        },
+
+
+        // 获取当前选中的储位编号
+        getSelectedStorage() {
+            return this.selectedStorageId;
+        },
+
+
+        // 放
+        icePut() {
+
+            const storageId = this.getSelectedStorage();
+
+            if (storageId === null) {
+                console.warn("请先选择储位");
+                addMessage("请先选择储位")
+                return;
+            }
+
+            const item = this.getAllStorage()
+                .find(item => item.id === storageId);
+
+            // 只能向空储位放入
+            if (item.full) {
+                console.warn(`储位 ${storageId} 已被占用，不能放入`);
+                addMessage(`储位 ${storageId} 已被占用，不能放入`)
+                return;
+            }
+
+            console.log("执行放入操作，目标储位：", storageId);
+
+            fetch('/iceMotorSKControl', {
+                method: 'POST', 
+                headers: {
+                    'Content-Type': 'application/json'  
+                },
+                body: JSON.stringify({
+                    pos:storageId,
+                    taskname:"ice_sk_put_task"
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                addMessage(``+data.message);  // 将收到的消息保存并显示
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                addMessage("Error starting motor.");
+            });
+        },
+
+
+        // 取
+        iceTake() {
+
+            const storageId = this.getSelectedStorage();
+
+            if (storageId === null) {
+                console.warn("请先选择储位");
+                addMessage("请先选择储位")
+                return;
+            }
+
+            const item = this.getAllStorage()
+                .find(item => item.id === storageId);
+
+            // 只能从已占用储位取出
+            if (!item.full) {
+                console.warn(`储位 ${storageId} 为空，不能取出`);
+                addMessage(`储位 ${storageId} 为空，不能取出`)
+                return;
+            }
+
+            console.log("执行取出操作，目标储位：", storageId);
+
+            fetch('/iceMotorSKControl', {
+                method: 'POST', 
+                headers: {
+                    'Content-Type': 'application/json'  
+                },
+                body: JSON.stringify({
+                    pos:storageId,
+                    taskname:"ice_sk_get_task"
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                addMessage(``+data.message);  // 将收到的消息保存并显示
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                addMessage("Error starting motor.");
+            });
+            // 后续在这里调用 Python 后端接口
+        }
+
+    }
+
+});
+
+
 
 
 

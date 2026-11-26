@@ -1141,6 +1141,78 @@ def iceMotorControl():
 
 
 
+#研磨仓储控制面板接口
+@app.route('/iceMotorSKControl', methods=['POST'])
+@require_enabled
+def iceMotorSKControl():
+    print("运行冰柜任务型动作")
+    data = request.get_json()
+    pos = data.get("pos")
+    taskname = data.get("taskname")
+
+    done_tested_pos = ICE_TESTED_SK_POS
+    if int(pos) > done_tested_pos:
+        print("位置号异常!")
+        return jsonify({"status": "fail","message": f"只开放{done_tested_pos}以下任务"})
+
+
+   
+    final_cordinate = system["icestorage_sk"].get_position(int(pos))
+    print(f"going to put at x:{final_cordinate['x']},y:{final_cordinate['y']},z:{final_cordinate['z']}")
+   
+    actionname = taskname
+    if actionname not in ACTION_PARAMS_KEYLIST:
+        print("动作名异常!")
+        return jsonify({"status": "fail","message": f"运转失败!错误:动作名异常"})
+
+
+
+    if taskname == "ice_sk_put_task":
+        apply_action_params_override(
+        actionname,
+        {
+            "icemotor_x_finalputpos": {"target":final_cordinate['x']},
+            "icemotor_y_finalputpos":{"target":final_cordinate['y']},
+            "icemotor_z_finalputpos":{"target":final_cordinate['z']}
+        }
+        )
+        storage_action = "put"
+    elif taskname == "ice_sk_get_task":
+        apply_action_params_override(
+        actionname,
+        {
+            "icemotor_y_getsafe_pos":{"target":final_cordinate['y']},
+            "icemotor_z_getsafe_pos":{"target":final_cordinate['z']}
+        }
+        )
+        storage_action = "get"
+    else:
+        storage_action = "unknown"    
+
+    storage_id = int(pos)
+    status = system["icestorage_sk"].get_status(storage_id)
+    if storage_action == "put":
+        if status == system["icestorage_sk"].FULL:
+            print(f"{pos}号储位已满")
+            return jsonify({"status": "fail","message": f"{pos}号储位已满"})
+    elif storage_action == "get":   
+        if status == system["icestorage_sk"].EMPTY:
+            print(f"{pos}号储位为空，无法获取")
+            return jsonify({"status": "fail","message": f"{pos}号储位为空"}) 
+    else:
+        print(f"动作类型有误")
+        return jsonify({"status": "fail","message": f"动作类型有误"})  
+
+    success = False
+    success,msg =  system["iceservice"].run_task(actionname,1,{"task_name":actionname,"task_type":ICE_STORAGE_SK_TYPE,"storage_action":storage_action,"storage_id":storage_id})
+    if success :
+        print("电机单次运转成功!")
+        return jsonify({"status": "success","message": f"提交冰柜任务成功!"})
+    else:
+        print("电机单次运转失败!")
+        return jsonify({"status": "fail","message": f"运转失败!错误:{msg}"})
+
+
 
 @app.route('/iceMotorTaskByStep', methods=['POST'])
 @require_enabled

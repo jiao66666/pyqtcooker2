@@ -91,7 +91,7 @@ class IceStorage_SK:
     def __init__(self):
         self._lock = RLock()
 
-        # 初始化24个位置的运行状态
+        # 初始化4个位置的运行状态
         self.positions = {
             position_id: {
                 "status": self.EMPTY
@@ -146,7 +146,7 @@ class IceStorage_SK:
         
     #返回给前端更新状态
     def get_all_status(self):
-        """获取全部24个储位状态，按照储位编号1-24排列"""
+        """获取全部4个储位状态，按照储位编号1-4排列"""
         with self._lock:
             return [
                 self.positions[position_id]["status"] == self.FULL
