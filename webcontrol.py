@@ -39,6 +39,11 @@ def handle_ice_storage_update(data):
         "info": data
     }])
 
+def handle_system_message(data):
+    websocket.send([{
+        "type": "system_message",
+        "info": data
+    }])
 
 def handle_thermal_data(data):
     print(
@@ -61,6 +66,11 @@ bus.subscribe(
 bus.subscribe(
     "THERMAL_DATA",
     handle_thermal_data
+)
+
+bus.subscribe(
+    "SYSTEM_MESSAGE",
+    handle_system_message
 )
 
 # 根据传入的命令行参数设置端口,方便测试和生产环境使用不同的端口

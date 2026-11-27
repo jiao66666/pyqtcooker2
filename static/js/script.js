@@ -2702,6 +2702,8 @@ function setupWebSocket(url) {
                 console.log("ice storage status updated")
                 console.log(item)
                 iceStorageApp.setAllIceStorage(item.info.states)
+            }else if (item.type == "system_message"){
+                addMessage(item.info.message)
             }
         }
     };
